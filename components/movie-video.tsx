@@ -16,40 +16,41 @@ const MovieVideo: React.FC<MovieVideoProps> = ({ id, className }) => {
 
   if (error) {
     return (
-      <div className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
+      <section className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
         <h1>Failed to fetch data</h1>
-      </div>
+      </section>
     );
   }
 
   if (isLoading || movieVideos === null) {
     return (
-      <div>
+      <section>
         <Skeleton className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px]" />
-      </div>
+      </section>
     );
   }
 
   if (movieVideos.results.length === 0) {
     return (
-      <div className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
+      <section className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
         <h1>No Video Available</h1>
-      </div>
+      </section>
     );
   }
 
   const youtubeUrl = `https://www.youtube.com/embed/${movieVideos?.results[0].key}`;
 
   return (
-    <Iframe
-      url={youtubeUrl}
-      id=""
-      className={`sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] ${
-        className ? className : ""
-      }`}
-      display="block"
-      position="relative"
-    />
+    <section>
+      <Iframe
+        url={youtubeUrl}
+        className={`sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] ${
+          className ? className : ""
+        }`}
+        display="block"
+        position="relative"
+      />
+    </section>
   );
 };
 

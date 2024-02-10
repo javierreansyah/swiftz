@@ -22,24 +22,22 @@ const Search: React.FC<SearchProps> = ({ currentQuery }) => {
     router.push(`/search/${query}/1`);
   };
   return (
-    <div className="py-2">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="sm:flex gap-4 space-y-4 sm:space-y-0">
-          <Input
-            type="text"
-            placeholder="Search for movies"
-            {...register("query", { required: true })}
-            defaultValue={currentQuery}
-          />
-          <Button type="submit" className="hidden sm:block">
-            Search
-          </Button>
-          <Button type="submit" className="block sm:hidden" size="full">
-            Search
-          </Button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="py-2">
+      <div className="sm:flex gap-4 space-y-4 sm:space-y-0">
+        <Input
+          type="text"
+          placeholder="Search for movies"
+          {...register("query", { required: true })}
+          defaultValue={currentQuery}
+        />
+        <Button type="submit" className="hidden sm:block">
+          Search
+        </Button>
+        <Button type="submit" className="block sm:hidden" size="full">
+          Search
+        </Button>
+      </div>
+    </form>
   );
 };
 

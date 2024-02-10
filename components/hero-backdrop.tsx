@@ -26,7 +26,7 @@ const HeroBackdrop = () => {
 
   if (isLoading || !popularMovies || !topMovie || error) {
     return (
-      <div className="lg:container">
+      <section className="lg:container">
         <div className="relative aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full overflow-hidden lg:rounded-xl border bg-secondary">
           <div className="absolute aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full flex items-end">
             <div className="">
@@ -47,7 +47,7 @@ const HeroBackdrop = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -55,7 +55,7 @@ const HeroBackdrop = () => {
   const backdropUrl = `https://image.tmdb.org/t/p/w1280${currentMovie.backdrop_path}`;
 
   return (
-    <div className="lg:container">
+    <section className="lg:container">
       <div className="relative aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full overflow-hidden lg:rounded-xl">
         <div className="">
           {transitioning && (
@@ -91,7 +91,7 @@ const HeroBackdrop = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

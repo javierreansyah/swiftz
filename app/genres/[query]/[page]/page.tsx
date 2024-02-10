@@ -21,15 +21,15 @@ const GenreQueryPage: React.FC<GenreQueryPageProps> = ({ params }) => {
 
   if (error) {
     return (
-      <div className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+      <main className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
         <h1 className="text-center">Failed to fetch recommended movies</h1>
-      </div>
+      </main>
     );
   }
 
   if (isLoading || moviesWithGenres === null) {
     return (
-      <div className="container space-y-6">
+      <main className="container space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {Array.from({ length: 5 }, (_, index) => (
             <div key={index}>
@@ -37,37 +37,36 @@ const GenreQueryPage: React.FC<GenreQueryPageProps> = ({ params }) => {
             </div>
           ))}
         </div>
-      </div>
+      </main>
     );
   }
 
   if (moviesWithGenres.results.length === 0) {
-    return null;
+    return (
+      <main className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+        <h1 className="text-center">There is no movies with these genres</h1>
+      </main>
+    );
   }
 
   const url = `/genres/${params.query}`;
 
   return (
-    <div className="container space-y-8 pb-10">
-      {/* <h1 className="font-bold text-2xl sm:text-4xl md:text-5xl pt-4">
-        Popular
-      </h1> */}
-      <div>
-        <RenderMovieCards
-          movies={moviesWithGenres.results}
-          count={
-            moviesWithGenres.results.length === 21
-              ? 20
-              : moviesWithGenres.results.length
-          }
-        />
-      </div>
+    <main className="container space-y-8 pb-10">
+      <RenderMovieCards
+        movies={moviesWithGenres.results}
+        count={
+          moviesWithGenres.results.length === 21
+            ? 20
+            : moviesWithGenres.results.length
+        }
+      />
       <PaginationSystem
         currentPage={Number(params.page)}
         totalPage={Number(moviesWithGenres.total_pages)}
         url={url}
       />
-    </div>
+    </main>
   );
 };
 

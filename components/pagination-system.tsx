@@ -24,7 +24,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
     return `${url}/${pageNumber}`;
   };
   return (
-    <div>
+    <>
       <div className="hidden sm:block">
         <Pagination>
           <PaginationContent>
@@ -127,7 +127,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
           </PaginationContent>
         </Pagination>
       </div>
-    </div>
+    </>
   );
 };
 

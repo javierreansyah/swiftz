@@ -15,17 +15,17 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
 
   if (error) {
     return (
-      <div className="h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px] bg-card flex justify-center items-center">
+      <section className="h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px] bg-card flex justify-center items-center">
         <h1>Failed to fetch movie details</h1>
-      </div>
+      </section>
     );
   }
 
   if (isLoading || movieDetails === null || movieReleaseDates === null) {
     return (
-      <div>
+      <section>
         <MovieDetailsSkeleton />
-      </div>
+      </section>
     );
   }
 
@@ -41,7 +41,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
   const runtimeString = `${hours}h ${minutes}m`;
 
   return (
-    <div>
+    <section>
       <div className="relative bg-secondary dark:bg-card overflow-clip">
         <div className="flex xl:container justify-end relative ">
           <div className="relative flex h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px]">
@@ -79,7 +79,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
                   />
                 </div>
 
-                <div className="sm:py-8 xl:max-w-[680px] lg:max-w-[480px] md:max-w-[300px] sm:max-w-[520px] max-w-[250px] flex items-end">
+                <div className="md:py-8 xl:max-w-[680px] lg:max-w-[480px] md:max-w-[300px] sm:max-w-[520px] max-w-[250px] flex items-end">
                   <div className="space-y-4">
                     <h1 className="xl:text-5xl sm:text-4xl text-2xl font-bold text-white">
                       {movieDetails.title}
@@ -88,7 +88,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
                         ({year})
                       </span>
                     </h1>
-                    <div className="space-y-4 hidden sm:block">
+                    <div className="space-y-4 hidden lg:block">
                       <div className="flex gap-2 items-center">
                         <div className="bg-black w-fit px-1 h-6 flex items-center justify-center rounded-sm opacity-70 border border-black text-sm">
                           <p className="text-white">
@@ -133,7 +133,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
           </div>
         </div>
       </div>
-      <div className="container py-6 block sm:hidden">
+      <div className="container py-6 sm:py-0 sm:pt-8 sm:pb-0 block lg:hidden">
         <div className="space-y-4 ">
           <div className="flex gap-2 items-center">
             <div className="bg-card w-fit px-1 h-6 flex items-center justify-center rounded-sm opacity-70 border text-sm">
@@ -156,7 +156,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
           <p className="text-sm lg:text-base">{movieDetails.overview}</p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

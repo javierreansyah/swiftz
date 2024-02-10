@@ -12,14 +12,14 @@ interface MovieDetailsProps {
 
 const MovieDetailsPage: React.FC<MovieDetailsProps> = ({ params }) => {
   return (
-    <div>
+    <main>
       <MovieDetails id={params.id} />
       <div className="sm:container lg:flex gap-8 pb-8 justify-between sm:space-y-8 lg:space-y-0 sm:pt-12">
         <MovieVideo id={params.id} />
         <MovieCast id={params.id} />
       </div>
       <MovieRecommendation id={params.id} />
-    </div>
+    </main>
   );
 };
 

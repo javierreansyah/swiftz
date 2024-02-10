@@ -29,7 +29,6 @@ export default function RootLayout({
               <div className="min-h-screen">{children}</div>
 
               <Footer />
-              <ResponsiveHelper />
             </div>
           </ThemeProvider>
         </body>

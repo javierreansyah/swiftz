@@ -51,9 +51,9 @@ const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
 
   if (error) {
     return (
-      <div className="sm:rounded-lg sm:border h-[378px] lg:h-[380px] xl:h-[480px] 2xl:h-[590px] w-full bg-card flex items-center justify-center p-4">
+      <section className="sm:rounded-lg sm:border h-[378px] lg:h-[380px] xl:h-[480px] 2xl:h-[590px] w-full bg-card flex items-center justify-center p-4">
         <h1>Failed to fetch cast data</h1>
-      </div>
+      </section>
     );
   }
 
@@ -66,14 +66,14 @@ const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
   const movieCastPageUrl = `/movie/${id}/casts`;
 
   return (
-    <div className="space-y-4 w-full">
+    <section className="space-y-4 w-full">
       <ScrollArea className="sm:rounded-lg sm:border h-[378px] lg:h-[324px] xl:h-[424px] 2xl:h-[534px] w-full bg-card">
-        <div className="p-4 lg:space-y-3 flex lg:block gap-2 lg:h-auto">
+        <ul className="p-4 lg:space-y-3 flex lg:block gap-2 lg:h-auto">
           <h1 className="font-bold text-3xl hidden lg:block">Cast</h1>
           {movieCast.cast.map((cast, index) => {
             const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
             return (
-              <div
+              <li
                 key={index}
                 className="rounded-md w-40 overflow-clip border lg:w-auto"
               >
@@ -97,13 +97,13 @@ const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
                   <h2 className="font-bold text-sm">{cast.name}</h2>
                   <p className="font-light text-sm">{cast.character}</p>
                 </div>
-              </div>
+              </li>
             );
           })}
           {movieCast.crew.map((cast, index) => {
             const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
             return (
-              <div
+              <li
                 key={index}
                 className="rounded-md w-40 overflow-clip border lg:w-auto"
               >
@@ -129,10 +129,10 @@ const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
                     {cast.known_for_department}
                   </p>
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="container sm:hidden">
@@ -145,7 +145,7 @@ const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
           <Link href={movieCastPageUrl}>See Full Cast</Link>
         </Button>
       </div>
-    </div>
+    </section>
   );
 };
 

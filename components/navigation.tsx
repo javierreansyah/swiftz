@@ -22,47 +22,45 @@ const Navigation = () => {
     { route: "/search", name: "Search" },
   ];
   return (
-    <>
-      <div className="h-16 flex sticky top-0 w-full bg-background z-40">
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-8">
-            <Link href="/">
-              <Logo className="w-16 h-16" />
-            </Link>
+    <header className="h-16 flex sticky top-0 w-full bg-background z-40">
+      <div className="container flex justify-between items-center">
+        <div className="flex items-center gap-8">
+          <Link href="/">
+            <Logo className="w-16 h-16" />
+          </Link>
 
-            <nav className="hidden lg:block">
-              <ul className="flex gap-8">
-                {navigationList.map((item, index) => (
-                  <li key={index}>
-                    <Link href={item.route}>
-                      <p className="hover:text-primary transition-all font-light">
-                        {item.name}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-          <div className="flex gap-2">
-            <div className="hidden lg:block">
-              <ThemeSwitcher variant="outline" />
-            </div>
-
-            <Button
-              variant="outline"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <Menu className="h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">Toggle sidebar</span>
-            </Button>
-          </div>
+          <nav className="hidden lg:block">
+            <ul className="flex gap-8">
+              {navigationList.map((item, index) => (
+                <li key={index}>
+                  <Link href={item.route}>
+                    <p className="hover:text-primary transition-all font-light">
+                      {item.name}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div className="flex gap-2">
+          <div className="hidden lg:block">
+            <ThemeSwitcher variant="outline" />
+          </div>
+
+          <Button
+            variant="outline"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <Menu className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+        </div>
       </div>
-    </>
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+    </header>
   );
 };
 

@@ -2,7 +2,7 @@ import Search from "@/components/search";
 
 const SearchPage = () => {
   return (
-    <div className="w-full flex justify-center container">
+    <main className="w-full flex justify-center container">
       <div className="sm:w-[500px] md:w-[600px] flex flex-col items-center pt-[40px] sm:pt-[40px] md:pt-[80px]  lg:pt-[100px] xl:pt-[180px] 2xl:pt-[240px] w-full">
         <div className="py-8">
           <h1
@@ -22,7 +22,7 @@ const SearchPage = () => {
           <Search />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

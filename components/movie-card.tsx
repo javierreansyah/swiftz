@@ -14,7 +14,7 @@ const MovieCard: React.FC<MovieData> = ({ id, title, poster, rating }) => {
   const posterUrl = `https://image.tmdb.org/t/p/w500${poster}`;
   return (
     <Link href={`/movie/${id}`}>
-      <div className="border rounded-lg overflow-clip hover:scale-105 transition-all bg-card">
+      <div className="border rounded-lg overflow-clip lg:hover:scale-105 lg:transition-all bg-card">
         {poster ? (
           <div className="relative w-full aspect-[2/3]">
             <Image src={posterUrl} alt={title} fill />

@@ -39,47 +39,51 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           isOpen ? "opacity-100 backdrop-blur-sm" : ""
         }`}
       />
-      <div
+      <aside
         className={`fixed top-0 right-0 h-screen w-[240px] sm:w-[320px] z-50 bg-card border-l transition-all duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="px-3">
-          <div className="h-16 flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <ArrowRightToLine className="h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">Toggle sidebar</span>
-            </Button>
-            <h1
-              className="font-black text-primary text-3xl"
-              style={{ fontStyle: "italic" }}
-            >
-              Swiftz
-            </h1>
-            <ThemeSwitcher variant="ghost" />
+        <div className="flex flex-col h-full">
+          <div className="px-3">
+            <div className="">
+              <div className="h-16 flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <ArrowRightToLine className="h-[1.2rem] w-[1.2rem]" />
+                  <span className="sr-only">Toggle sidebar</span>
+                </Button>
+                <h1
+                  className="font-black text-primary text-3xl"
+                  style={{ fontStyle: "italic" }}
+                >
+                  Swiftz
+                </h1>
+                <ThemeSwitcher variant="ghost" />
+              </div>
+              <nav>
+                <ul className="space-y-2">
+                  {navigationList.map((route, index) => (
+                    <li key={index}>
+                      <Button
+                        asChild
+                        size="full"
+                        variant="itemleft"
+                        onClick={() => setIsOpen(!isOpen)}
+                      >
+                        <Link href={route.route}>{route.name}</Link>
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
           </div>
-          <aside>
-            <ul className="space-y-2">
-              {navigationList.map((route, index) => (
-                <li key={index}>
-                  <Button
-                    asChild
-                    size="full"
-                    variant="itemleft"
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    <Link href={route.route}>{route.name}</Link>
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </aside>
         </div>
-      </div>
+      </aside>
     </>
   );
 };

@@ -4,7 +4,7 @@ import GenresCard from "@/components/genres-card";
 
 export default function Home() {
   return (
-    <main>
+    <main className="space-y-12">
       <HeroBackdrop />
       <HomeInfoCard />
       <GenresCard />
