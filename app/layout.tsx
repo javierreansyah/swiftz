@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import ResponsiveHelper from "@/components/responsive-helper";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
@@ -27,7 +26,6 @@ export default function RootLayout({
             <div className="overflow-clip">
               <Navigation />
               <div className="min-h-screen">{children}</div>
-
               <Footer />
             </div>
           </ThemeProvider>
