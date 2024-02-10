@@ -44,7 +44,7 @@ const MovieCastPage: React.FC<MovieCastPage> = ({ params }) => {
           const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
           return (
             <li key={index}>
-              <div className="flex bg-card rounded-md overflow-clip sm:border">
+              <div className="flex bg-card rounded-md overflow-clip border">
                 {cast.profile_path ? (
                   <div className="relative aspect-[2/3] h-[150px] sm:h-[200px]">
                     <Image src={castProfileUrl} alt={cast.name} fill />
@@ -78,7 +78,7 @@ const MovieCastPage: React.FC<MovieCastPage> = ({ params }) => {
           const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
           return (
             <li key={index}>
-              <div className="flex bg-card rounded-md overflow-clip sm:border">
+              <div className="flex bg-card rounded-md overflow-clip border">
                 {cast.profile_path ? (
                   <div className="relative aspect-[2/3] h-[150px] sm:h-[200px]">
                     <Image src={castProfileUrl} alt={cast.name} fill />
