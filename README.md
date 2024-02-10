@@ -2,7 +2,7 @@
 
 Next JS front end application imnplementing TMDB Database.
 
-You can look it up at [Swiftz](swiftz.vercel.app)
+You can look it up at [Swiftz](https://swiftz.vercel.app/)
 
 ## Tech Stack
 
