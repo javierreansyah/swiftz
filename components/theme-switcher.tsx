@@ -26,16 +26,7 @@ interface ThemeSwitcherProps {
 }
 
 export function ThemeSwitcher({ variant }: ThemeSwitcherProps) {
-  const [mounted, setMounted] = useState(false);
   const { setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <DropdownMenu>
