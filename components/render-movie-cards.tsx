@@ -1,6 +1,5 @@
 import React from "react";
 import MovieCard from "./movie-card";
-import MovieCardSkeleton from "./movie-card-skeleton";
 
 interface Movie {
   adult: boolean;

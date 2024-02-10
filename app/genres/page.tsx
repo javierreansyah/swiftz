@@ -60,7 +60,7 @@ const GenresPage: React.FC = () => {
           size="full"
           disabled={selectedGenres.length === 0}
         >
-          Submit
+          Search
         </Button>
       </form>
     </main>

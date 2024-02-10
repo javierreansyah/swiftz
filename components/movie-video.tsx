@@ -1,8 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import Iframe from "react-iframe";
-import globalApiKey from "@/public/data/api-key";
 import { Skeleton } from "./ui/skeleton";
 import useMovieVideo from "@/hooks/use-movie-video";
 
