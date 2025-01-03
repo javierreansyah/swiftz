@@ -19,7 +19,6 @@ interface navigationRoute {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const navigationList: navigationRoute[] = [
     { route: "/", name: "Home" },
-    { route: "https://chatgpt.com/", name: "About" },
     { route: "/discover", name: "Discover" },
     { route: "/genres", name: "Genres" },
     { route: "/search", name: "Search" },

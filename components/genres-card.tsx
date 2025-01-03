@@ -45,7 +45,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="https://chatgpt.com/">
+          <Link href="/genres/12/1">
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
