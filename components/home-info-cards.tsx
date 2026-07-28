@@ -6,7 +6,7 @@ const HomeInfoCard = () => {
   const cardStyle =
     "w-full h-[430px] sm:h-[300px] lg:h-[450px] bg-card rounded-xl border p-6 sm:p-8 space-y-3 flex flex-col justify-between";
   return (
-    <section className="container grid grid-cols-1 lg:grid-cols-3 gap-4 xl:gap-12">
+    <section className="container grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-12">
       <div className={cardStyle}>
         <div className="space-y-3">
           <h2 className="text-4xl font-extrabold text-primary">Discover</h2>
@@ -18,20 +18,6 @@ const HomeInfoCard = () => {
 
         <Button asChild size="full">
           <Link href={"/discover"}>Discover Now</Link>
-        </Button>
-      </div>
-      <div className={cardStyle}>
-        <div className="space-y-3">
-          <h2 className="text-4xl font-extrabold text-primary">Search</h2>
-
-          <p className="font-light">
-            {`Unlock a world of movies with Swiftz search! Effortlessly find your next favorite flick from a vast library. 
-            Say goodbye to endless scrolling and hello to movie magic at your fingertips!`}
-          </p>
-        </div>
-
-        <Button asChild size="full">
-          <Link href={"/search"}>Search Now</Link>
         </Button>
       </div>
       <div className={cardStyle}>

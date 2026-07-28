@@ -41,7 +41,7 @@ const HeroBackdrop = () => {
                   className="pl-1 text-sm sm:text-base"
                   style={{ fontStyle: "italic" }}
                 >
-                  Discover movies at the speed of Taylor Swift
+                  Discover movies at the speed of light
                 </p>
               </div>
             </div>
@@ -85,7 +85,7 @@ const HeroBackdrop = () => {
                 className="pl-1 text-white text-sm sm:text-base"
                 style={{ fontStyle: "italic" }}
               >
-                Discover movies at the speed of Taylor Swift
+                Discover movies at the speed of light
               </p>
             </div>
           </div>

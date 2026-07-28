@@ -1,3 +1,3 @@
-const globalApiKey: string = "935b502752aa27d20b50dd7bc0aae41f";
+const globalApiKey: string = process.env.NEXT_PUBLIC_TMDB_API_KEY as string;
 
 export default globalApiKey;

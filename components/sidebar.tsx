@@ -21,7 +21,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
     { route: "/genres", name: "Genres" },
-    { route: "/search", name: "Search" },
   ];
 
   useEffect(() => {

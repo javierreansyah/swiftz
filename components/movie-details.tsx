@@ -1,5 +1,7 @@
 "use client";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { FastAverageColor } from "fast-average-color";
 import StarRating from "./star-rating";
 import useMovieDetails from "@/hooks/use-movie-details";
 import MovieDetailsSkeleton from "./movie-details-skeleton";
@@ -12,6 +14,21 @@ interface MovieDetailsProps {
 const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
   const { movieDetails, movieReleaseDates, isLoading, error } =
     useMovieDetails(id);
+  const [averageColor, setAverageColor] = useState<string>("");
+
+  useEffect(() => {
+    if (movieDetails?.backdrop_path) {
+      const fac = new FastAverageColor();
+      const url = `https://image.tmdb.org/t/p/w1280${movieDetails.backdrop_path}`;
+      fac.getColorAsync(url, { crossOrigin: "anonymous" })
+        .then(color => {
+          setAverageColor(color.rgba);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
+  }, [movieDetails?.backdrop_path]);
 
   if (error) {
     return (
@@ -42,19 +59,19 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({ id }) => {
 
   return (
     <section>
-      <div className="relative bg-secondary dark:bg-card overflow-clip">
-        <div className="flex xl:container justify-end relative ">
-          <div className="relative flex h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px]">
+      <div className="relative bg-secondary dark:bg-card overflow-clip transition-colors duration-500" style={averageColor ? { backgroundColor: averageColor } : {}}>
+        <div className="flex xl:container justify-end relative w-full mx-auto">
+          <div className="relative flex h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px] w-full">
             <Image
               src={backdropUrl}
               alt={movieDetails.title}
               width={1280}
               height={720}
               layout="responsive"
-              className="brightness-[60%] md:block hidden"
+              className="brightness-[60%] md:block hidden object-cover object-right"
             />
-            <div className="h-[80vw] w-[200px] absolute bg-secondary dark:bg-card top-[-10vw] left-[-100px] blur-xl hidden md:block"></div>
-            <div className="h-[80vw] w-[200px] absolute bg-secondary dark:bg-card top-[-10vw] right-[-100px] blur-xl hidden xl:block"></div>
+            <div className="h-[80vw] w-[200px] absolute bg-secondary dark:bg-card top-[-10vw] left-[-100px] blur-xl hidden md:block transition-colors duration-500" style={averageColor ? { backgroundColor: averageColor } : {}}></div>
+            <div className="h-[80vw] w-[200px] absolute bg-secondary dark:bg-card top-[-10vw] right-[-100px] blur-xl hidden xl:block transition-colors duration-500" style={averageColor ? { backgroundColor: averageColor } : {}}></div>
           </div>
         </div>
         <Image

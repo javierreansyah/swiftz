@@ -2,30 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import globalApiKey from "@/public/data/api-key";
 
-interface Movie {
-  adult: boolean;
-  backdrop_path: string;
-  id: number;
-  title: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  poster_path: string;
-  media_type: string;
-  genre_ids: number[];
-  popularity: number;
-  release_date: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface SearchData {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_result: number;
-}
+import { Movie, SearchData } from "@/types";
 
 const useMovieSearch = (query: string, page: number) => {
   const [searchData, setSearchData] = useState<SearchData | null>(null);

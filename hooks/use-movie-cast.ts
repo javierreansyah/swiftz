@@ -2,40 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import globalApiKey from "@/public/data/api-key";
 
-interface CastData {
-  id: number;
-  cast: Cast[];
-  crew: Crew[];
-}
-
-interface Cast {
-  adult: boolean;
-  gender: number;
-  id: number;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-  cast_id: number;
-  character: string;
-  credit_id: string;
-  order: number;
-}
-
-interface Crew {
-  adult: boolean;
-  credit_id: string;
-  department: string;
-  gender: number;
-  id: number;
-  job: string;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-}
+import { CastData, Cast, Crew } from "@/types";
 
 const useMovieCast = (id: string) => {
   const [movieCast, setMovieCast] = useState<CastData | null>(null);

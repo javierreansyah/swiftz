@@ -3,23 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import globalApiKey from "@/public/data/api-key";
 
-interface VideoData {
-  id: string;
-  results: Video[];
-}
-
-interface Video {
-  iso_639_1: string;
-  iso_3166_1: string;
-  name: string;
-  key: string;
-  site: string;
-  size: number;
-  type: string;
-  official: boolean;
-  published_at: string;
-  id: string;
-}
+import { VideoData, Video } from "@/types";
 
 const useMovieVideo = (id: string) => {
   const [movieVideos, setVideos] = useState<VideoData | null>(null);

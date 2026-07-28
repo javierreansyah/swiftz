@@ -19,7 +19,6 @@ const Navigation = () => {
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
     { route: "/genres", name: "Genres" },
-    { route: "/search", name: "Search" },
   ];
   return (
     <header className="h-16 flex sticky top-0 w-full bg-background z-40">
