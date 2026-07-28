@@ -9,17 +9,17 @@
 ## Screenshots
 
 <div align="center">
-  <img src="docs/assets/homescreen.png" width="48%" alt="Home screen" />
-  <img src="docs/assets/discover.png" width="48%" alt="Discover screen" />
-  <img src="docs/assets/movie_details.png" width="48%" alt="Movie details screen" />
-  <img src="docs/assets/related_movies.png" width="48%" alt="Related movies screen" />
+  <img src="docs/assets/homescreen.jpg" width="48%" alt="Home screen" />
+  <img src="docs/assets/discover.jpg" width="48%" alt="Discover screen" />
+  <img src="docs/assets/movie_details.jpg" width="48%" alt="Movie details screen" />
+  <img src="docs/assets/related_movies.jpg" width="48%" alt="Related movies screen" />
 </div>
 
 ## Features
 
 - **Movie Discovery:** Explore diverse catalogs featuring trending, popular, and highly-rated movies. Find your next favorite film effortlessly.
 - **Detailed Movie Insights:** Dive deep into detailed movie profiles, complete with high-quality hero backdrops, comprehensive cast lists, and star ratings.
-- **Video Trailers:** Watch movie trailers directly within the app without breaking yk
+- **Video Trailers:** Watch movie trailers directly within the app.
 
 ## Tech Stack
 
