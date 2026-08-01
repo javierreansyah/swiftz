@@ -1,43 +1,27 @@
-"use client";
-import useMovieCast from "@/hooks/use-movie-cast";
+import React from "react";
 import Image from "next/image";
 import { User } from "lucide-react";
-import MovieCastSkeleton from "@/components/movie-cast-skeleton";
+import { getMovieCast } from "@/lib/tmdb";
 
-interface MovieCastPage {
+interface MovieCastPageProps {
   params: {
     id: string;
   };
 }
 
-const MovieCastPage: React.FC<MovieCastPage> = ({ params }) => {
-  const { movieCast, isLoading, error } = useMovieCast(params.id);
+const MovieCastPage = async ({ params }: MovieCastPageProps) => {
+  const movieCast = await getMovieCast(params.id);
 
-  if (isLoading || movieCast === null)
-    return (
-      <main className="container space-y-6 py-4">
-        <h1 className="font-bold text-5xl">Cast</h1>
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {Array.from({ length: 9 }, (_, index) => (
-            <div key={index}>
-              <MovieCastSkeleton />
-            </div>
-          ))}
-        </div>
-      </main>
-    );
-
-  if (error)
+  if (!movieCast || (!movieCast.cast.length && !movieCast.crew.length)) {
     return (
       <main className="container py-4">
-        <h1 className="text-3xl font-bold">
-          Failed to fetch data, Try again later.
-        </h1>
+        <h1 className="text-3xl font-bold">No cast or crew information found.</h1>
       </main>
     );
+  }
 
   return (
-    <main className="container space-y-6 py-4">
+    <main className="container space-y-6 pt-20 pb-8">
       <h1 className="font-bold text-5xl">Cast</h1>
       <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
         {movieCast.cast.map((cast, index) => {

@@ -35,7 +35,7 @@ const GenresPage: React.FC = () => {
   };
 
   return (
-    <main className="container space-y-4">
+    <main className="container space-y-4 pt-20">
       <h1 className="font-bold text-6xl sm:text-7xl pt-4">Genres</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}

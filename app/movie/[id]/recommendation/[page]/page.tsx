@@ -1,18 +1,7 @@
-"use client";
+import React from "react";
 import RenderMovieCards from "@/components/render-movie-cards";
-import useMovieRecommendation from "@/hooks/use-movie-recommendation";
-import useMovieDetails from "@/hooks/use-movie-details";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import PaginationSystem from "@/components/pagination-system";
+import { getMovieRecommendations, getMovieDetails } from "@/lib/tmdb";
 
 interface MovieRecommendationPageProps {
   params: {
@@ -21,41 +10,22 @@ interface MovieRecommendationPageProps {
   };
 }
 
-const MovieRecommendationPage: React.FC<MovieRecommendationPageProps> = ({
+const MovieRecommendationPage = async ({
   params,
-}) => {
-  const {
-    movieRecommendation,
-    isLoading: recommendationIsLoading,
-    error: recommendationError,
-  } = useMovieRecommendation(params.id, Number(params.page));
-  const {
-    movieDetails,
-    movieReleaseDates,
-    isLoading: detailIsLoading,
-    error: detailError,
-  } = useMovieDetails(params.id);
-
-  if (recommendationError || detailError) {
-    return (
-      <main className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
-        <h1 className="text-center">Failed to fetch recommended movies</h1>
-      </main>
-    );
-  }
+}: MovieRecommendationPageProps) => {
+  const pageNum = Number(params.page) || 1;
+  const [movieRecommendation, movieDetails] = await Promise.all([
+    getMovieRecommendations(params.id, pageNum),
+    getMovieDetails(params.id).catch(() => null),
+  ]);
 
   if (
-    recommendationIsLoading ||
-    detailIsLoading ||
-    movieRecommendation === null
+    !movieRecommendation.results ||
+    movieRecommendation.results.length === 0
   ) {
     return (
-      <main className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-        {Array.from({ length: 7 }, (_, index) => (
-          <div key={index}>
-            <MovieCardSkeleton />
-          </div>
-        ))}
+      <main className="container h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8 mt-4">
+        <h1 className="text-center">No recommendations found</h1>
       </main>
     );
   }
@@ -63,9 +33,9 @@ const MovieRecommendationPage: React.FC<MovieRecommendationPageProps> = ({
   const url = `/movie/${params.id}/recommendation`;
 
   return (
-    <main className="container space-y-8">
+    <main className="container space-y-8 pb-10 pt-20">
       <h1 className="font-bold text-2xl sm:text-4xl md:text-5xl pt-4">
-        {movieDetails?.title} Recommendation
+        {movieDetails?.title ? `${movieDetails.title} Recommendation` : "Recommendation"}
       </h1>
       <RenderMovieCards
         movies={movieRecommendation.results}
@@ -76,7 +46,7 @@ const MovieRecommendationPage: React.FC<MovieRecommendationPageProps> = ({
         }
       />
       <PaginationSystem
-        currentPage={Number(params.page)}
+        currentPage={pageNum}
         totalPage={Number(movieRecommendation.total_pages)}
         url={url}
       />

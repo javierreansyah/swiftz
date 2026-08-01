@@ -4,7 +4,7 @@ import Logo from "@/public/assets/svg-components/logo";
 import { ThemeSwitcher } from "./theme-switcher";
 import Link from "next/link";
 import Sidebar from "./sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
 
@@ -15,14 +15,41 @@ interface navigationRoute {
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const navigationList: navigationRoute[] = [
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
     { route: "/genres", name: "Genres" },
   ];
+
   return (
-    <header className="h-16 flex sticky top-0 w-full bg-background z-40">
-      <div className="container flex justify-between items-center">
+    <header className="h-16 fixed top-0 left-0 right-0 w-full z-50">
+      {/* Top Gradient Background (At top of page) */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-transparent transition-opacity duration-300 ease-in-out pointer-events-none ${
+          isScrolled ? "opacity-0" : "opacity-100"
+        }`}
+      />
+
+      {/* Scrolled Frosted Header + Bottom Border (Appears & disappears together on scroll) */}
+      <div
+        className={`absolute inset-0 bg-background/80 backdrop-blur-md border-b border-border shadow-sm transition-opacity duration-300 ease-in-out pointer-events-none ${
+          isScrolled ? "opacity-100" : "opacity-0"
+        }`}
+      />
+
+      {/* Content Layer */}
+      <div className="relative z-10 container h-full flex justify-between items-center">
         <div className="flex items-center gap-8">
           <Link href="/">
             <Logo className="w-16 h-16" />
@@ -33,7 +60,13 @@ const Navigation = () => {
               {navigationList.map((item, index) => (
                 <li key={index}>
                   <Link href={item.route}>
-                    <p className="hover:text-primary transition-all font-light">
+                    <p
+                      className={`transition-colors duration-300 font-medium ${
+                        isScrolled
+                          ? "hover:text-primary"
+                          : "text-white hover:text-primary drop-shadow"
+                      }`}
+                    >
                       {item.name}
                     </p>
                   </Link>

@@ -1,32 +1,11 @@
-"use client";
+import React from "react";
 import RenderMovieCards from "./render-movie-cards";
-import usePopularMovies from "@/hooks/use-popular-movies";
-import MovieCardSkeleton from "./movie-card-skeleton";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { getPopularMovies } from "@/lib/tmdb";
 
-const PopularMovies: React.FC = () => {
-  const { popularMovies, isLoading, error } = usePopularMovies(1);
-
-  if (error) {
-    return (
-      <section className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
-        <h1 className="text-center">Failed to fetch popular movies</h1>
-      </section>
-    );
-  }
-
-  if (isLoading || popularMovies === null) {
-    return (
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-        {Array.from({ length: 8 }, (_, index) => (
-          <div key={index}>
-            <MovieCardSkeleton />
-          </div>
-        ))}
-      </section>
-    );
-  }
+const PopularMovies: React.FC = async () => {
+  const popularMovies = await getPopularMovies(1);
 
   return (
     <section className="space-y-6">

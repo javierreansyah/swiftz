@@ -1,49 +1,28 @@
-"use client";
 import React from "react";
-import useTrendingMovies from "@/hooks/use-trending-movies";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
 import RenderMovieCards from "@/components/render-movie-cards";
 import PaginationSystem from "@/components/pagination-system";
+import { getTrendingMovies } from "@/lib/tmdb";
 
-interface PopularMoviesPageProps {
+interface TrendingMoviesPageProps {
   params: {
     page: string;
   };
 }
 
-const TrendingMoviesPage: React.FC<PopularMoviesPageProps> = ({ params }) => {
-  const { trendingMovies, isLoading, error } = useTrendingMovies(
-    Number(params.page)
-  );
+const TrendingMoviesPage = async ({ params }: TrendingMoviesPageProps) => {
+  const pageNum = Number(params.page) || 1;
+  const trendingMovies = await getTrendingMovies(pageNum);
 
-  if (error) {
+  if (!trendingMovies.results || trendingMovies.results.length === 0) {
     return (
-      <main className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
-        <h1 className="text-center">Failed to fetch trending movies</h1>
+      <main className="container h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+        <h1 className="text-center">No trending movies</h1>
       </main>
     );
-  }
-
-  if (isLoading || trendingMovies === null) {
-    return (
-      <main className="container space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div key={index}>
-              <MovieCardSkeleton />
-            </div>
-          ))}
-        </div>
-      </main>
-    );
-  }
-
-  if (trendingMovies.results.length === 0) {
-    return null;
   }
 
   return (
-    <main className="container space-y-8 pb-10">
+    <main className="container space-y-8 pb-10 pt-20">
       <h1 className="font-bold text-2xl sm:text-4xl md:text-5xl pt-4">
         Trending
       </h1>
@@ -56,9 +35,9 @@ const TrendingMoviesPage: React.FC<PopularMoviesPageProps> = ({ params }) => {
         }
       />
       <PaginationSystem
-        currentPage={Number(params.page)}
+        currentPage={pageNum}
         totalPage={Number(trendingMovies.total_pages)}
-        url="/popular"
+        url="/trending"
       />
     </main>
   );

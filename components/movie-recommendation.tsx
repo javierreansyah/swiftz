@@ -1,41 +1,19 @@
-"use client";
+import React from "react";
 import RenderMovieCards from "./render-movie-cards";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import useMovieRecommendation from "@/hooks/use-movie-recommendation";
-import MovieCardSkeleton from "./movie-card-skeleton";
+import { getMovieRecommendations } from "@/lib/tmdb";
 
 interface MovieRecommendationProps {
   id: string;
 }
 
-const MovieRecommendation: React.FC<MovieRecommendationProps> = ({ id }) => {
-  const { movieRecommendation, isLoading, error } = useMovieRecommendation(
-    id,
-    1
-  );
+const MovieRecommendation: React.FC<MovieRecommendationProps> = async ({
+  id,
+}) => {
+  const movieRecommendation = await getMovieRecommendations(id, 1);
 
-  if (error) {
-    return (
-      <section className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
-        <h1 className="text-center">Failed to fetch recommended movies</h1>
-      </section>
-    );
-  }
-
-  if (isLoading || movieRecommendation === null) {
-    return (
-      <section className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-        {Array.from({ length: 7 }, (_, index) => (
-          <div key={index}>
-            <MovieCardSkeleton />
-          </div>
-        ))}
-      </section>
-    );
-  }
-
-  if (movieRecommendation.results.length === 0) {
+  if (!movieRecommendation.results || movieRecommendation.results.length === 0) {
     return null;
   }
 

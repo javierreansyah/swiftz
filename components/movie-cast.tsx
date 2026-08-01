@@ -1,68 +1,17 @@
-"use client";
+import React from "react";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import Image from "next/image";
-import useMovieCast from "@/hooks/use-movie-cast";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { User } from "lucide-react";
-import { Skeleton } from "./ui/skeleton";
-
-interface CastData {
-  id: number;
-  cast: Cast[];
-  crew: Crew[];
-}
-
-interface Cast {
-  adult: boolean;
-  gender: number;
-  id: number;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-  cast_id: number;
-  character: string;
-  credit_id: string;
-  order: number;
-}
-
-interface Crew {
-  adult: boolean;
-  credit_id: string;
-  department: string;
-  gender: number;
-  id: number;
-  job: string;
-  known_for_department: string;
-  name: string;
-  original_name: string;
-  popularity: number;
-  profile_path: string | null;
-}
+import { getMovieCast } from "@/lib/tmdb";
 
 interface MovieCastsProps {
   id: string;
 }
 
-const MovieCast: React.FC<MovieCastsProps> = ({ id }) => {
-  const { movieCast, isLoading, error } = useMovieCast(id);
-
-  if (error) {
-    return (
-      <section className="sm:rounded-lg sm:border h-[378px] lg:h-[380px] xl:h-[480px] 2xl:h-[590px] w-full bg-card flex items-center justify-center p-4">
-        <h1>Failed to fetch cast data</h1>
-      </section>
-    );
-  }
-
-  if (isLoading || movieCast === null) {
-    return (
-      <Skeleton className="sm:rounded-lg h-[378px] lg:h-[380px] xl:h-[480px] 2xl:h-[590px] w-full" />
-    );
-  }
-
+const MovieCast: React.FC<MovieCastsProps> = async ({ id }) => {
+  const movieCast = await getMovieCast(id);
   const movieCastPageUrl = `/movie/${id}/casts`;
 
   return (

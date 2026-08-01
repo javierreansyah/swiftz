@@ -1,33 +1,16 @@
-"use client";
+import React from "react";
 import Iframe from "react-iframe";
-import { Skeleton } from "./ui/skeleton";
-import useMovieVideo from "@/hooks/use-movie-video";
+import { getMovieVideos } from "@/lib/tmdb";
 
 interface MovieVideoProps {
   id: string;
   className?: string;
 }
 
-const MovieVideo: React.FC<MovieVideoProps> = ({ id, className }) => {
-  const { movieVideos, isLoading, error } = useMovieVideo(id);
+const MovieVideo: React.FC<MovieVideoProps> = async ({ id, className }) => {
+  const movieVideos = await getMovieVideos(id);
 
-  if (error) {
-    return (
-      <section className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
-        <h1>Failed to fetch data</h1>
-      </section>
-    );
-  }
-
-  if (isLoading || movieVideos === null) {
-    return (
-      <section>
-        <Skeleton className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px]" />
-      </section>
-    );
-  }
-
-  if (movieVideos.results.length === 0) {
+  if (!movieVideos.results || movieVideos.results.length === 0) {
     return (
       <section className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
         <h1>No Video Available</h1>
@@ -35,7 +18,16 @@ const MovieVideo: React.FC<MovieVideoProps> = ({ id, className }) => {
     );
   }
 
-  const youtubeUrl = `https://www.youtube.com/embed/${movieVideos?.results[0].key}`;
+  const trailer =
+    movieVideos.results.find(
+      (video) => video.type?.toLowerCase() === "trailer" && video.official
+    ) ||
+    movieVideos.results.find(
+      (video) => video.type?.toLowerCase() === "trailer"
+    ) ||
+    movieVideos.results[0];
+
+  const youtubeUrl = `https://www.youtube.com/embed/${trailer.key}`;
 
   return (
     <section>
