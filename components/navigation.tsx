@@ -5,6 +5,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 import Link from "next/link";
 import Sidebar from "./sidebar";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
 
@@ -16,6 +17,9 @@ interface navigationRoute {
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  const isMovieDetailPage = pathname?.startsWith("/movie/");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,14 +38,7 @@ const Navigation = () => {
 
   return (
     <header className="h-16 fixed top-0 left-0 right-0 w-full z-50">
-      {/* Top Gradient Background (At top of page) */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-transparent transition-opacity duration-300 ease-in-out pointer-events-none ${
-          isScrolled ? "opacity-0" : "opacity-100"
-        }`}
-      />
-
-      {/* Scrolled Frosted Header + Bottom Border (Appears & disappears together on scroll) */}
+      {/* Scrolled Frosted Header + Bottom Border (Appears on scroll) */}
       <div
         className={`absolute inset-0 bg-background/80 backdrop-blur-md border-b border-border shadow-sm transition-opacity duration-300 ease-in-out pointer-events-none ${
           isScrolled ? "opacity-100" : "opacity-0"
@@ -62,9 +59,9 @@ const Navigation = () => {
                   <Link href={item.route}>
                     <p
                       className={`transition-colors duration-300 font-medium ${
-                        isScrolled
-                          ? "hover:text-primary"
-                          : "text-white hover:text-primary drop-shadow"
+                        !isScrolled && isMovieDetailPage
+                          ? "text-white hover:text-primary drop-shadow"
+                          : "text-foreground hover:text-primary"
                       }`}
                     >
                       {item.name}
