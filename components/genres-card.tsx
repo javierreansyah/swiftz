@@ -27,7 +27,7 @@ const GenresCard = () => {
     <section className="container">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <article>
-          <Link href="/genres/28/1">
+          <Link href="/genres?with=28" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -37,7 +37,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Action</h1>
+                  <h2 className={styles.h1}>Action</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -45,7 +45,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/12/1">
+          <Link href="/genres?with=12" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -55,7 +55,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Adventure</h1>
+                  <h2 className={styles.h1}>Adventure</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -63,7 +63,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/16/1">
+          <Link href="/genres?with=16" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -73,7 +73,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Animation</h1>
+                  <h2 className={styles.h1}>Animation</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -81,7 +81,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/35/1">
+          <Link href="/genres?with=35" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -91,7 +91,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Comedy</h1>
+                  <h2 className={styles.h1}>Comedy</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -99,14 +99,14 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/27/1">
+          <Link href="/genres?with=27" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
                   <Ghost size={styles.iconSize} className={`${styles.icon}`} />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Horror</h1>
+                  <h2 className={styles.h1}>Horror</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -114,14 +114,14 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/878/1">
+          <Link href="/genres?with=878" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
                   <Rocket size={styles.iconSize} className={`${styles.icon}`} />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Sci Fi</h1>
+                  <h2 className={styles.h1}>Sci Fi</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -129,7 +129,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/10749/1">
+          <Link href="/genres?with=10749" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -139,7 +139,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Romance</h1>
+                  <h2 className={styles.h1}>Romance</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>
@@ -147,7 +147,7 @@ const GenresCard = () => {
           </Link>
         </article>
         <article>
-          <Link href="/genres/53/1">
+          <Link href="/genres?with=53" prefetch={false}>
             <div className={styles.card1}>
               <div className={styles.card2}>
                 <figure className={styles.card3}>
@@ -157,7 +157,7 @@ const GenresCard = () => {
                   />
                 </figure>
                 <div>
-                  <h1 className={styles.h1}>Thriller</h1>
+                  <h2 className={styles.h1}>Thriller</h2>
                   <p className={styles.p}>View</p>
                 </div>
               </div>

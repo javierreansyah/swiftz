@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Pagination,
@@ -12,35 +14,55 @@ import {
 interface PaginationProp {
   currentPage: number;
   totalPage: number;
-  url: string;
+  url?: string;
+  onPageChange?: (page: number) => void;
 }
 
 const PaginationSystem: React.FC<PaginationProp> = ({
   currentPage,
   totalPage,
   url,
+  onPageChange,
 }) => {
   const getPageUrl = (pageNumber: number): string => {
-    return `${url}/${pageNumber}`;
+    if (url) return `${url}/${pageNumber}`;
+    return "#";
   };
+
+  const handlePageClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    pageNumber: number
+  ) => {
+    if (onPageChange) {
+      e.preventDefault();
+      onPageChange(pageNumber);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const safeTotalPage = Math.max(1, Math.min(500, totalPage || 1));
+
   return (
     <>
       <div className="hidden sm:block">
         <Pagination>
           <PaginationContent>
-            {currentPage !== 1 && (
+            {currentPage > 1 && (
               <PaginationItem>
-                <PaginationPrevious href={getPageUrl(currentPage - 1)} />
+                <PaginationPrevious
+                  href={getPageUrl(currentPage - 1)}
+                  onClick={(e) => handlePageClick(e, currentPage - 1)}
+                />
               </PaginationItem>
             )}
 
-            {Array.from({ length: Math.min(500, totalPage) }, (_, index) => {
+            {Array.from({ length: safeTotalPage }, (_, index) => {
               const pageNumber = index + 1;
               const isInRange = Math.abs(pageNumber - currentPage) <= 2;
 
               if (
                 pageNumber === 1 ||
-                pageNumber === Math.min(500, totalPage) ||
+                pageNumber === safeTotalPage ||
                 isInRange
               ) {
                 return (
@@ -48,6 +70,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
                     <PaginationLink
                       href={getPageUrl(pageNumber)}
                       isActive={pageNumber === currentPage}
+                      onClick={(e) => handlePageClick(e, pageNumber)}
                     >
                       {pageNumber}
                     </PaginationLink>
@@ -55,7 +78,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
                 );
               } else if (
                 pageNumber === 2 ||
-                pageNumber === Math.min(500, totalPage) - 1
+                pageNumber === safeTotalPage - 1
               ) {
                 return (
                   <PaginationItem key={index}>
@@ -67,9 +90,12 @@ const PaginationSystem: React.FC<PaginationProp> = ({
               }
             })}
 
-            {currentPage !== Math.min(500, totalPage) && (
+            {currentPage < safeTotalPage && (
               <PaginationItem>
-                <PaginationNext href={getPageUrl(currentPage + 1)} />
+                <PaginationNext
+                  href={getPageUrl(currentPage + 1)}
+                  onClick={(e) => handlePageClick(e, currentPage + 1)}
+                />
               </PaginationItem>
             )}
           </PaginationContent>
@@ -78,13 +104,13 @@ const PaginationSystem: React.FC<PaginationProp> = ({
       <div className="block sm:hidden">
         <Pagination>
           <PaginationContent>
-            {Array.from({ length: Math.min(500, totalPage) }, (_, index) => {
+            {Array.from({ length: safeTotalPage }, (_, index) => {
               const pageNumber = index + 1;
               const isInRange = Math.abs(pageNumber - currentPage) <= 1;
 
               if (
                 pageNumber === 1 ||
-                pageNumber === Math.min(500, totalPage) ||
+                pageNumber === safeTotalPage ||
                 isInRange
               ) {
                 return (
@@ -92,6 +118,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
                     <PaginationLink
                       href={getPageUrl(pageNumber)}
                       isActive={pageNumber === currentPage}
+                      onClick={(e) => handlePageClick(e, pageNumber)}
                     >
                       {pageNumber}
                     </PaginationLink>
@@ -99,7 +126,7 @@ const PaginationSystem: React.FC<PaginationProp> = ({
                 );
               } else if (
                 pageNumber === 2 ||
-                pageNumber === Math.min(500, totalPage) - 1
+                pageNumber === safeTotalPage - 1
               ) {
                 return (
                   <PaginationItem key={index}>
@@ -114,14 +141,20 @@ const PaginationSystem: React.FC<PaginationProp> = ({
         </Pagination>
         <Pagination className="pt-2">
           <PaginationContent>
-            {currentPage !== 1 && (
+            {currentPage > 1 && (
               <PaginationItem>
-                <PaginationPrevious href={getPageUrl(currentPage - 1)} />
+                <PaginationPrevious
+                  href={getPageUrl(currentPage - 1)}
+                  onClick={(e) => handlePageClick(e, currentPage - 1)}
+                />
               </PaginationItem>
             )}
-            {currentPage !== Math.min(500, totalPage) && (
+            {currentPage < safeTotalPage && (
               <PaginationItem>
-                <PaginationNext href={getPageUrl(currentPage + 1)} />
+                <PaginationNext
+                  href={getPageUrl(currentPage + 1)}
+                  onClick={(e) => handlePageClick(e, currentPage + 1)}
+                />
               </PaginationItem>
             )}
           </PaginationContent>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import QueryProvider from "@/components/providers/query-provider";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
@@ -18,19 +19,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body className={inter.className}>
-          <ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={inter.className}>
+        <ThemeProvider>
+          <QueryProvider>
             <div className="overflow-clip">
               <Navigation />
               <div className="min-h-screen">{children}</div>
               <Footer />
             </div>
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
+          </QueryProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import Iframe from "react-iframe";
 import { getMovieVideos } from "@/lib/tmdb";
 
 interface MovieVideoProps {
@@ -31,13 +30,14 @@ const MovieVideo: React.FC<MovieVideoProps> = async ({ id, className }) => {
 
   return (
     <section>
-      <Iframe
-        url={youtubeUrl}
-        className={`sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] ${
+      <iframe
+        src={youtubeUrl}
+        title="Movie Trailer"
+        className={`sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] border-0 ${
           className ? className : ""
         }`}
-        display="block"
-        position="relative"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
       />
     </section>
   );

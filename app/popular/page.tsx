@@ -1,0 +1,80 @@
+"use client";
+
+import React, { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import RenderMovieCards from "@/components/render-movie-cards";
+import PaginationSystem from "@/components/pagination-system";
+import MovieCardSkeleton from "@/components/movie-card-skeleton";
+import { usePopularMoviesQuery } from "@/hooks/use-tmdb";
+
+function PopularContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const pageParam = searchParams.get("page");
+  const currentPage = Number(pageParam) || 1;
+
+  const { data, isLoading, isError } = usePopularMoviesQuery(currentPage);
+
+  const handlePageChange = (newPage: number) => {
+    router.push(`/popular?page=${newPage}`);
+  };
+
+  const movies = data?.results || [];
+  const totalPages = data?.total_pages || 1;
+
+  return (
+    <main className="container space-y-8 pb-10 pt-20">
+      <div className="flex justify-between items-baseline pt-4">
+        <h1 className="font-bold text-3xl sm:text-4xl md:text-5xl">
+          Popular Movies
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Page {currentPage} of {totalPages}
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          {Array.from({ length: 15 }, (_, i) => (
+            <MovieCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : isError || movies.length === 0 ? (
+        <div className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+          <h2 className="text-center text-lg">Unable to load popular movies right now.</h2>
+        </div>
+      ) : (
+        <>
+          <RenderMovieCards movies={movies} count={movies.length} />
+          <PaginationSystem
+            currentPage={currentPage}
+            totalPage={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+    </main>
+  );
+}
+
+export default function PopularPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="container space-y-8 pb-10 pt-20">
+          <h1 className="font-bold text-3xl sm:text-4xl md:text-5xl pt-4">
+            Popular Movies
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            {Array.from({ length: 10 }, (_, i) => (
+              <MovieCardSkeleton key={i} />
+            ))}
+          </div>
+        </main>
+      }
+    >
+      <PopularContent />
+    </Suspense>
+  );
+}

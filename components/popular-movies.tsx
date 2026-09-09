@@ -10,28 +10,11 @@ const PopularMovies: React.FC = async () => {
   return (
     <section className="space-y-6">
       <h2 className="font-extrabold text-4xl">Popular</h2>
-      <RenderMovieCards
-        movies={popularMovies.results}
-        count={4}
-        className="md:hidden"
-      />
-      <RenderMovieCards
-        movies={popularMovies.results}
-        count={6}
-        className="md:grid hidden lg:hidden"
-      />
-      <RenderMovieCards
-        movies={popularMovies.results}
-        count={8}
-        className="lg:grid hidden xl:hidden"
-      />
-      <RenderMovieCards
-        movies={popularMovies.results}
-        count={10}
-        className="xl:grid hidden"
-      />
+      <RenderMovieCards movies={popularMovies.results} count={10} />
       <Button size="full" asChild>
-        <Link href="/popular/1">More Popular Movies</Link>
+        <Link href="/popular" prefetch={false}>
+          More Popular Movies
+        </Link>
       </Button>
     </section>
   );

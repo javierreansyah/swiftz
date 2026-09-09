@@ -15,7 +15,8 @@ const BASE_URL = "https://api.themoviedb.org/3";
 
 async function fetchTMDB<T>(
   endpoint: string,
-  params: Record<string, string | number> = {}
+  params: Record<string, string | number> = {},
+  revalidate: number = 86400 // 24 hours default
 ): Promise<T> {
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.set("api_key", API_KEY);
@@ -25,7 +26,7 @@ async function fetchTMDB<T>(
   }
 
   const res = await fetch(url.toString(), {
-    next: { revalidate: 3600 },
+    next: { revalidate },
   });
 
   if (!res.ok) {
@@ -38,53 +39,66 @@ async function fetchTMDB<T>(
 export async function getPopularMovies(
   page: number = 1
 ): Promise<PopularMoviesData> {
-  return fetchTMDB<PopularMoviesData>("/movie/popular", { page });
+  return fetchTMDB<PopularMoviesData>("/movie/popular", { page }, 86400);
 }
 
 export async function getTrendingMovies(
   page: number = 1
 ): Promise<TrendingMoviesData> {
-  return fetchTMDB<TrendingMoviesData>("/trending/movie/day", { page });
+  return fetchTMDB<TrendingMoviesData>("/trending/movie/day", { page }, 86400);
 }
 
+// 7 days (604,800s) revalidation for movie details and sub-resources
 export async function getMovieDetails(id: string): Promise<MovieDetailsData> {
-  return fetchTMDB<MovieDetailsData>(`/movie/${id}`);
+  return fetchTMDB<MovieDetailsData>(`/movie/${id}`, {}, 604800);
 }
 
 export async function getMovieReleaseDates(
   id: string
 ): Promise<MovieReleaseDateData> {
-  return fetchTMDB<MovieReleaseDateData>(`/movie/${id}/release_dates`);
+  return fetchTMDB<MovieReleaseDateData>(
+    `/movie/${id}/release_dates`,
+    {},
+    604800
+  );
 }
 
 export async function getMovieCast(id: string): Promise<CastData> {
-  return fetchTMDB<CastData>(`/movie/${id}/credits`);
+  return fetchTMDB<CastData>(`/movie/${id}/credits`, {}, 604800);
 }
 
 export async function getMovieVideos(id: string): Promise<VideoData> {
-  return fetchTMDB<VideoData>(`/movie/${id}/videos`);
+  return fetchTMDB<VideoData>(`/movie/${id}/videos`, {}, 604800);
 }
 
 export async function getMovieRecommendations(
   id: string,
   page: number = 1
 ): Promise<RecommendationData> {
-  return fetchTMDB<RecommendationData>(`/movie/${id}/recommendations`, { page });
+  return fetchTMDB<RecommendationData>(
+    `/movie/${id}/recommendations`,
+    { page },
+    86400
+  );
 }
 
 export async function searchMovies(
   query: string,
   page: number = 1
 ): Promise<SearchData> {
-  return fetchTMDB<SearchData>("/search/movie", { query, page });
+  return fetchTMDB<SearchData>("/search/movie", { query, page }, 86400);
 }
 
 export async function getMoviesByGenres(
   genreQuery: string,
   page: number = 1
 ): Promise<MovieGenresSearchData> {
-  return fetchTMDB<MovieGenresSearchData>("/discover/movie", {
-    with_genres: genreQuery,
-    page,
-  });
+  return fetchTMDB<MovieGenresSearchData>(
+    "/discover/movie",
+    {
+      with_genres: genreQuery,
+      page,
+    },
+    86400
+  );
 }

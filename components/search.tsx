@@ -19,7 +19,7 @@ const Search: React.FC<SearchProps> = ({ currentQuery }) => {
 
   const onSubmit = (data: FormData) => {
     const query = encodeURIComponent(data.query);
-    router.push(`/search/${query}/1`);
+    router.push(`/search?q=${query}&page=1`);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="py-2">

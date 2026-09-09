@@ -34,6 +34,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
             src={backdropUrl}
             alt=""
             fill
+            sizes="100vw"
             className="object-cover brightness-[45%] blur-3xl scale-125 pointer-events-none"
             priority
           />
@@ -62,6 +63,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
           src={backdropUrl}
           alt={movieDetails.title}
           fill
+          sizes="100vw"
           style={{ objectFit: "cover" }}
           className="brightness-[60%] md:hidden z-0"
         />

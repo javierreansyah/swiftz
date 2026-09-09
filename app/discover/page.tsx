@@ -3,6 +3,7 @@ import PopularMovies from "@/components/popular-movies";
 import TrendingMovies from "@/components/movie-trending";
 import Search from "@/components/search";
 import MovieCardSkeleton from "@/components/movie-card-skeleton";
+export const revalidate = 86400; // 24 hours ISR
 
 const Discover = () => {
   return (

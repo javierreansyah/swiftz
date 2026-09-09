@@ -62,6 +62,7 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
             <Link
               key={movie.id}
               href={`/movie/${movie.id}`}
+              prefetch={false}
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                 isSelected
                   ? "opacity-100 z-10 pointer-events-auto"
@@ -72,6 +73,7 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
                 src={backdropUrl}
                 alt={movie.title}
                 fill
+                sizes="100vw"
                 priority={index === 0}
                 className="object-cover brightness-[60%] group-hover:scale-105 transition-transform duration-700 ease-out"
               />

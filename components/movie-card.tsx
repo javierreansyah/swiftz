@@ -15,11 +15,16 @@ const MovieCard: React.FC<MovieData> = ({ id, title, poster, rating }) => {
   const posterUrl = `https://image.tmdb.org/t/p/w500${poster}`;
   const truncatedTitle = title.length > 35 ? title.slice(0, 35) + "..." : title;
   return (
-    <Link href={`/movie/${id}`}>
+    <Link href={`/movie/${id}`} prefetch={false}>
       <div className="border rounded-lg overflow-clip lg:hover:scale-105 lg:transition-all bg-card">
         {poster ? (
           <div className="relative w-full aspect-[2/3]">
-            <Image src={posterUrl} alt={title} fill />
+            <Image
+              src={posterUrl}
+              alt={title}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            />
           </div>
         ) : (
           <div className="relative w-full aspect-[2/3] bg-secondary flex justify-center items-center">
