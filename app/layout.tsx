@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import QueryProvider from "@/components/providers/query-provider";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
@@ -24,11 +25,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <QueryProvider>
-            <div className="overflow-clip">
-              <Navigation />
-              <div className="min-h-screen">{children}</div>
-              <Footer />
-            </div>
+            <AuthProvider>
+              <div className="overflow-clip">
+                <Navigation />
+                <div className="min-h-screen">{children}</div>
+                <Footer />
+              </div>
+            </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

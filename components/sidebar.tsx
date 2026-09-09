@@ -1,10 +1,12 @@
 "use client";
 
 import { Button } from "./ui/button";
-import { ArrowRightToLine } from "lucide-react";
+import { ArrowRightToLine, LogIn, LogOut, Film, Heart, Bookmark, Star } from "lucide-react";
 import { useEffect } from "react";
 import { ThemeSwitcher } from "./theme-switcher";
 import Link from "next/link";
+import { useAuth } from "./providers/auth-provider";
+import Image from "next/image";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -17,10 +19,13 @@ interface navigationRoute {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+  const { user, isAuthenticated, login, logout } = useAuth();
+
   const navigationList: navigationRoute[] = [
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
     { route: "/genres", name: "Genres" },
+    ...(isAuthenticated ? [{ route: "/library", name: "My Library" }] : []),
   ];
 
   useEffect(() => {
@@ -31,55 +36,119 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     }
   }, [isOpen]);
 
+  const avatarUrl = user?.avatar?.tmdb?.avatar_path
+    ? `https://image.tmdb.org/t/p/w185${user.avatar.tmdb.avatar_path}`
+    : user?.avatar?.gravatar?.hash
+    ? `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}?d=identicon`
+    : null;
+
   return (
     <>
       <div
         className={`fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-40 transition-opacity duration-300 ease-in-out pointer-events-none opacity-0 ${
           isOpen ? "opacity-100 backdrop-blur-sm" : ""
         }`}
+        onClick={() => setIsOpen(false)}
       />
       <aside
-        className={`fixed top-0 right-0 h-screen w-[240px] sm:w-[320px] z-50 bg-card border-l transition-all duration-300 ease-in-out transform ${
+        className={`fixed top-0 right-0 h-screen w-[260px] sm:w-[320px] z-50 bg-card border-l transition-all duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full">
-          <div className="px-3">
-            <div className="">
-              <div className="h-16 flex items-center justify-between">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <ArrowRightToLine className="h-[1.2rem] w-[1.2rem]" />
-                  <span className="sr-only">Toggle sidebar</span>
-                </Button>
-                <h1
-                  className="font-black text-primary text-3xl"
-                  style={{ fontStyle: "italic" }}
-                >
-                  Swiftz
-                </h1>
-                <ThemeSwitcher variant="ghost" />
-              </div>
-              <nav>
-                <ul className="space-y-2">
-                  {navigationList.map((route, index) => (
-                    <li key={index}>
-                      <Button
-                        asChild
-                        size="full"
-                        variant="itemleft"
-                        onClick={() => setIsOpen(!isOpen)}
-                      >
-                        <Link href={route.route}>{route.name}</Link>
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+        <div className="flex flex-col h-full justify-between p-4">
+          <div className="space-y-6">
+            <div className="h-12 flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <ArrowRightToLine className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">Close sidebar</span>
+              </Button>
+              <h1
+                className="font-black text-primary text-2xl"
+                style={{ fontStyle: "italic" }}
+              >
+                Swiftz
+              </h1>
+              <ThemeSwitcher variant="ghost" />
             </div>
+
+            {/* User Profile Card */}
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg border">
+                {avatarUrl ? (
+                  <div className="relative h-10 w-10 rounded-full overflow-clip flex-none">
+                    <Image
+                      src={avatarUrl}
+                      alt={user.username}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm flex-none">
+                    {user.username.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="overflow-hidden">
+                  <p className="font-semibold text-sm truncate">
+                    {user.name || user.username}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    @{user.username}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+
+            <nav>
+              <ul className="space-y-2">
+                {navigationList.map((route, index) => (
+                  <li key={index}>
+                    <Button
+                      asChild
+                      size="full"
+                      variant="itemleft"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Link href={route.route}>{route.name}</Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div className="pt-4 border-t">
+            {isAuthenticated ? (
+              <Button
+                variant="outline"
+                size="full"
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="gap-2 text-destructive border-destructive/20 hover:bg-destructive/10"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out</span>
+              </Button>
+            ) : (
+              <Button
+                size="full"
+                onClick={() => {
+                  login();
+                  setIsOpen(false);
+                }}
+                className="gap-2 font-medium"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Sign In with TMDB</span>
+              </Button>
+            )}
           </div>
         </div>
       </aside>

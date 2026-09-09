@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import StarRating from "./star-rating";
+import MovieUserActions from "./movie-user-actions";
 import { getMovieDetails, getMovieReleaseDates } from "@/lib/tmdb";
 
 interface MovieDetailsProps {
@@ -130,6 +131,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
                       <p className="text-sm lg:text-base text-white/90 drop-shadow">
                         {movieDetails.overview}
                       </p>
+
+                      <div>
+                        <MovieUserActions id={id} title={movieDetails.title} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -139,7 +144,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
         </div>
       </div>
       <div className="container py-6 sm:py-0 sm:pt-8 sm:pb-0 block lg:hidden">
-        <div className="space-y-4 ">
+        <div className="space-y-4">
           <div className="flex gap-2 items-center">
             <div className="bg-card w-fit px-1 h-6 flex items-center justify-center rounded-sm opacity-70 border text-sm">
               <p className="">{certification ? certification : "NA"}</p>
@@ -159,6 +164,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
           </div>
 
           <p className="text-sm lg:text-base">{movieDetails.overview}</p>
+
+          <div className="pt-1">
+            <MovieUserActions id={id} title={movieDetails.title} />
+          </div>
         </div>
       </div>
     </section>

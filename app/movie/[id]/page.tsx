@@ -4,6 +4,7 @@ import MovieDetails from "@/components/movie-details";
 import MovieVideo from "@/components/movie-video";
 import MovieCast from "@/components/movie-cast";
 import MovieRecommendation from "@/components/movie-recommendation";
+import MovieReviews from "@/components/movie-reviews";
 import { Skeleton } from "@/components/ui/skeleton";
 import MovieCardSkeleton from "@/components/movie-card-skeleton";
 import { getMovieDetails, getPopularMovies } from "@/lib/tmdb";
@@ -95,6 +96,11 @@ const MovieDetailsPage = async ({ params }: MovieDetailsProps) => {
         >
           <MovieCast id={id} />
         </Suspense>
+      </div>
+
+      {/* Community Reviews Section */}
+      <div className="container pb-12">
+        <MovieReviews id={id} />
       </div>
 
       <Suspense
