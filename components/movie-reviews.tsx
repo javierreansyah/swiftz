@@ -35,11 +35,11 @@ function ReviewCard({ review }: { review: any }) {
     : null;
 
   return (
-    <article className="border rounded-xl p-5 bg-card/60 space-y-3 hover:border-primary/30 transition-colors">
+    <article className="space-y-3 rounded-xl border bg-card/60 p-5 transition-colors hover:border-primary/30">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           {avatarUrl ? (
-            <div className="relative h-10 w-10 rounded-full overflow-clip flex-none">
+            <div className="relative size-10 flex-none overflow-clip rounded-full">
               <Image
                 src={avatarUrl}
                 alt={review.author}
@@ -50,12 +50,12 @@ function ReviewCard({ review }: { review: any }) {
               />
             </div>
           ) : (
-            <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center flex-none">
+            <div className="flex size-10 flex-none items-center justify-center rounded-full bg-secondary">
               <User size={20} className="text-muted-foreground" />
             </div>
           )}
           <div>
-            <h4 className="font-bold text-sm sm:text-base">{review.author}</h4>
+            <h4 className="text-sm font-bold sm:text-base">{review.author}</h4>
             {dateFormatted && (
               <p className="text-xs text-muted-foreground">{dateFormatted}</p>
             )}
@@ -63,29 +63,29 @@ function ReviewCard({ review }: { review: any }) {
         </div>
 
         {rating !== null && rating !== undefined && (
-          <div className="flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-md text-amber-500 font-bold text-xs">
-            <Star className="h-3 w-3 fill-current" />
+          <div className="flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-500">
+            <Star className="size-3 fill-current" />
             <span>{rating}/10</span>
           </div>
         )}
       </div>
 
-      <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+      <div className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
         {isLong && !isExpanded ? `${content.slice(0, 380)}...` : content}
       </div>
 
       {isLong && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-xs font-semibold text-primary flex items-center gap-1 hover:underline"
+          className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
         >
           {isExpanded ? (
             <>
-              Show Less <ChevronUp className="h-3.5 w-3.5" />
+              Show Less <ChevronUp className="size-3.5" />
             </>
           ) : (
             <>
-              Read Full Review <ChevronDown className="h-3.5 w-3.5" />
+              Read Full Review <ChevronDown className="size-3.5" />
             </>
           )}
         </button>
@@ -105,15 +105,15 @@ export default function MovieReviews({ id }: MovieReviewsProps) {
   if (isLoading) {
     return (
       <section className="container space-y-4 pb-8">
-        <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-          <MessageSquare className="h-6 w-6 text-primary" />
+        <h2 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+          <MessageSquare className="size-6 text-primary" />
           <span>Reviews</span>
         </h2>
         <div className="space-y-3">
           {Array.from({ length: 2 }, (_, i) => (
             <div
               key={i}
-              className="h-36 rounded-xl border bg-card animate-pulse"
+              className="h-36 animate-pulse rounded-xl border bg-card"
             />
           ))}
         </div>
@@ -128,8 +128,8 @@ export default function MovieReviews({ id }: MovieReviewsProps) {
   return (
     <section className="container space-y-6 pb-12">
       <div className="flex items-center justify-between border-b pb-4">
-        <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-          <MessageSquare className="h-6 w-6 text-primary" />
+        <h2 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+          <MessageSquare className="size-6 text-primary" />
           <span>Reviews ({totalResults})</span>
         </h2>
       </div>

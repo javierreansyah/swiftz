@@ -4,11 +4,11 @@ import { Skeleton } from "./ui/skeleton";
 const MovieCastSkeleton = () => {
   return (
     <div>
-      <div className="flex bg-card rounded-md overflow-clip sm:border">
-        <Skeleton className="aspect-[2/3] h-[150px] sm:h-[200px] rounded-none" />
-        <div className="p-6 space-y-2">
-          <Skeleton className="w-36 h-6" />
-          <Skeleton className="w-24 h-4" />
+      <div className="flex overflow-clip rounded-md bg-card sm:border">
+        <Skeleton className="aspect-2/3 h-37.5 rounded-none sm:h-50" />
+        <div className="space-y-2 p-6">
+          <Skeleton className="h-6 w-36" />
+          <Skeleton className="h-4 w-24" />
         </div>
       </div>
     </div>

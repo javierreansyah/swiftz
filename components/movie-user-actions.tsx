@@ -128,12 +128,12 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
           disabled={toggleFavorite.isPending}
           className={`gap-2 transition-all ${
             isFavorite
-              ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
-              : "hover:text-red-500 hover:border-red-500/50"
+              ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
+              : "hover:border-red-500/50 hover:text-red-500"
           }`}
         >
           <Heart
-            className={`h-4 w-4 ${
+            className={`size-4 ${
               isFavorite ? "fill-current text-white" : ""
             }`}
           />
@@ -148,12 +148,12 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
           disabled={toggleWatchlist.isPending}
           className={`gap-2 transition-all ${
             isWatchlist
-              ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-              : "hover:text-blue-500 hover:border-blue-500/50"
+              ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
+              : "hover:border-blue-500/50 hover:text-blue-500"
           }`}
         >
           <Bookmark
-            className={`h-4 w-4 ${
+            className={`size-4 ${
               isWatchlist ? "fill-current text-white" : ""
             }`}
           />
@@ -167,12 +167,12 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
           onClick={handleRateClick}
           className={`gap-2 transition-all ${
             userRating
-              ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
-              : "hover:text-amber-500 hover:border-amber-500/50"
+              ? "border-amber-600 bg-amber-600 text-white hover:bg-amber-700"
+              : "hover:border-amber-500/50 hover:text-amber-500"
           }`}
         >
           <Star
-            className={`h-4 w-4 ${
+            className={`size-4 ${
               userRating ? "fill-current text-white" : ""
             }`}
           />
@@ -182,25 +182,25 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
 
       {/* Auth Modal Prompt */}
       {showAuthModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md bg-card border rounded-2xl p-6 shadow-2xl space-y-4">
+        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200">
+          <div className="relative w-full max-w-md space-y-4 rounded-2xl border bg-card p-6 shadow-2xl">
             <button
               onClick={() => setShowAuthModal(false)}
-              className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
-              <X className="h-5 w-5" />
+              <X className="size-5" />
             </button>
-            <div className="h-12 w-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto">
-              <LogIn className="h-6 w-6" />
+            <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-primary/20 text-primary">
+              <LogIn className="size-6" />
             </div>
-            <div className="text-center space-y-1">
+            <div className="space-y-1 text-center">
               <h3 className="text-xl font-bold">Sign in with TMDB</h3>
               <p className="text-sm text-muted-foreground">
                 Connect your free TMDB account to save {title || "this movie"} to
                 your favorites, build your watchlist, and leave ratings.
               </p>
             </div>
-            <div className="pt-2 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pt-2">
               <Button
                 onClick={() => {
                   setShowAuthModal(false);
@@ -208,7 +208,7 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
                 }}
                 className="w-full gap-2 font-bold"
               >
-                <LogIn className="h-4 w-4" />
+                <LogIn className="size-4" />
                 <span>Connect TMDB Account</span>
               </Button>
               <Button
@@ -219,7 +219,7 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
                 }}
                 className="w-full gap-2 text-xs"
               >
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                <Sparkles className="size-3.5 text-primary" />
                 <span>Try Demo Account (Instant Preview)</span>
               </Button>
               <Button
@@ -236,25 +236,25 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
 
       {/* Rating Modal */}
       {showRatingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md bg-card border rounded-2xl p-6 shadow-2xl space-y-5">
+        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200">
+          <div className="relative w-full max-w-md space-y-5 rounded-2xl border bg-card p-6 shadow-2xl">
             <button
               onClick={() => setShowRatingModal(false)}
-              className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
-              <X className="h-5 w-5" />
+              <X className="size-5" />
             </button>
 
-            <div className="text-center space-y-1">
+            <div className="space-y-1 text-center">
               <h3 className="text-xl font-bold">Rate Movie</h3>
-              <p className="text-sm text-muted-foreground truncate max-w-xs mx-auto">
+              <p className="mx-auto max-w-xs truncate text-sm text-muted-foreground">
                 {title || "Select your score"}
               </p>
             </div>
 
             {/* Stars Row (1 to 10) */}
             <div className="flex flex-col items-center space-y-3 py-2">
-              <div className="flex items-center justify-center gap-1.5 flex-wrap">
+              <div className="flex flex-wrap items-center justify-center gap-1.5">
                 {Array.from({ length: 10 }, (_, i) => {
                   const starValue = i + 1;
                   const active =
@@ -267,10 +267,10 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
                       onMouseEnter={() => setHoverRating(starValue)}
                       onMouseLeave={() => setHoverRating(null)}
                       onClick={() => setSelectedRating(starValue)}
-                      className="p-1 hover:scale-125 transition-transform"
+                      className="p-1 transition-transform hover:scale-125"
                     >
                       <Star
-                        className={`h-7 w-7 transition-colors ${
+                        className={`size-7 transition-colors ${
                           active
                             ? "fill-amber-400 text-amber-400"
                             : "text-muted-foreground/40"
@@ -294,12 +294,12 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
                   variant="outline"
                   onClick={handleDeleteRating}
                   disabled={deleteRating.isPending}
-                  className="gap-2 text-destructive border-destructive/20 hover:bg-destructive/10"
+                  className="gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
                 >
                   {deleteRating.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="size-4 animate-spin" />
                   ) : (
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                   )}
                   <span>Clear</span>
                 </Button>
@@ -310,9 +310,9 @@ export default function MovieUserActions({ id, title }: MovieUserActionsProps) {
                 className="flex-1 gap-2 font-bold"
               >
                 {rateMovie.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Check className="h-4 w-4" />
+                  <Check className="size-4" />
                 )}
                 <span>Save Rating</span>
               </Button>

@@ -36,16 +36,16 @@ function RecommendationContent({ id }: { id: string }) {
   const totalPages = data?.total_pages || 1;
 
   return (
-    <main className="container space-y-8 pb-10 pt-20">
+    <main className="container space-y-8 pt-20 pb-10">
       <div className="flex items-center gap-3 pt-4">
         <Button variant="outline" size="icon" asChild>
           <Link href={`/movie/${id}`}>
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="size-5" />
             <span className="sr-only">Back to movie</span>
           </Link>
         </Button>
-        <div className="flex-1 flex justify-between items-baseline">
-          <h1 className="font-bold text-2xl sm:text-4xl md:text-5xl">
+        <div className="flex flex-1 items-baseline justify-between">
+          <h1 className="text-2xl font-bold sm:text-4xl md:text-5xl">
             Recommendations
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -55,13 +55,13 @@ function RecommendationContent({ id }: { id: string }) {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 15 }, (_, i) => (
             <MovieCardSkeleton key={i} />
           ))}
         </div>
       ) : isError || movies.length === 0 ? (
-        <div className="h-[300px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+        <div className="flex h-75 w-full items-center justify-center rounded-lg border bg-card p-8">
           <h2 className="text-center text-lg">No recommendations found for this movie.</h2>
         </div>
       ) : (
@@ -86,11 +86,11 @@ export default function MovieRecommendationPage({
   return (
     <Suspense
       fallback={
-        <main className="container space-y-8 pb-10 pt-20">
-          <h1 className="font-bold text-2xl sm:text-4xl md:text-5xl pt-4">
+        <main className="container space-y-8 pt-20 pb-10">
+          <h1 className="pt-4 text-2xl font-bold sm:text-4xl md:text-5xl">
             Recommendations
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 10 }, (_, i) => (
               <MovieCardSkeleton key={i} />
             ))}

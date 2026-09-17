@@ -47,21 +47,21 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
 
   return (
     <main className="container space-y-6 pt-20 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4">
+      <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="icon" asChild>
             <Link href={`/movie/${id}`}>
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="size-5" />
               <span className="sr-only">Back to movie</span>
             </Link>
           </Button>
-          <h1 className="font-bold text-3xl sm:text-4xl md:text-5xl">
+          <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
             Cast & Crew
           </h1>
         </div>
 
         <div className="relative w-full sm:w-72">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Filter by name..."
@@ -98,37 +98,37 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 8 }, (_, i) => (
             <div
               key={i}
-              className="flex bg-card rounded-md border h-[150px] animate-pulse"
+              className="flex h-37.5 animate-pulse rounded-md border bg-card"
             >
-              <div className="w-[100px] h-full bg-secondary" />
-              <div className="p-4 space-y-2 flex-1">
-                <div className="h-4 w-3/4 bg-secondary rounded" />
-                <div className="h-3 w-1/2 bg-secondary rounded" />
+              <div className="h-full w-25 bg-secondary" />
+              <div className="flex-1 space-y-2 p-4">
+                <div className="h-4 w-3/4 rounded bg-secondary" />
+                <div className="h-3 w-1/2 rounded bg-secondary" />
               </div>
             </div>
           ))}
         </div>
       ) : isError || (!castList.length && !crewList.length) ? (
-        <div className="h-[250px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+        <div className="flex h-62.5 w-full items-center justify-center rounded-lg border bg-card p-8">
           <h2 className="text-xl font-medium">No cast or crew information found.</h2>
         </div>
       ) : (
         <div className="space-y-8">
           {(activeTab === "all" || activeTab === "cast") && filteredCast.length > 0 && (
             <section className="space-y-4">
-              <h2 className="font-bold text-2xl">Cast ({filteredCast.length})</h2>
-              <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <h2 className="text-2xl font-bold">Cast ({filteredCast.length})</h2>
+              <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCast.map((cast, index) => {
                   const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
                   return (
                     <li key={cast.id ? `cast-${cast.id}-${index}` : index}>
-                      <div className="flex bg-card rounded-md overflow-clip border hover:border-primary/50 transition-colors">
+                      <div className="flex overflow-clip rounded-md border bg-card transition-colors hover:border-primary/50">
                         {cast.profile_path ? (
-                          <div className="relative aspect-[2/3] h-[140px] sm:h-[160px] flex-none">
+                          <div className="relative aspect-2/3 h-35 flex-none sm:h-40">
                             <Image
                               src={castProfileUrl}
                               alt={cast.name}
@@ -138,19 +138,19 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
                             />
                           </div>
                         ) : (
-                          <div className="relative aspect-[2/3] h-[140px] sm:h-[160px] flex-none bg-secondary flex items-center justify-center">
+                          <div className="relative flex aspect-2/3 h-35 flex-none items-center justify-center bg-secondary sm:h-40">
                             <User size={40} className="text-muted-foreground" />
                           </div>
                         )}
 
-                        <div className="p-4 flex flex-col justify-between flex-1 min-w-0">
+                        <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
                           <div>
-                            <h3 className="font-bold text-base truncate">{cast.name}</h3>
-                            <p className="font-light text-sm text-muted-foreground truncate">
+                            <h3 className="truncate text-base font-bold">{cast.name}</h3>
+                            <p className="truncate text-sm font-light text-muted-foreground">
                               {cast.character || "Unknown Character"}
                             </p>
                           </div>
-                          <p className="font-light text-xs text-muted-foreground">
+                          <p className="text-xs font-light text-muted-foreground">
                             Popularity: {Number(cast.popularity).toFixed(1)}
                           </p>
                         </div>
@@ -164,15 +164,15 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
 
           {(activeTab === "all" || activeTab === "crew") && filteredCrew.length > 0 && (
             <section className="space-y-4">
-              <h2 className="font-bold text-2xl">Crew ({filteredCrew.length})</h2>
-              <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <h2 className="text-2xl font-bold">Crew ({filteredCrew.length})</h2>
+              <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCrew.map((crew, index) => {
                   const crewProfileUrl = `https://image.tmdb.org/t/p/w185${crew.profile_path}`;
                   return (
                     <li key={crew.id ? `crew-${crew.id}-${index}` : index}>
-                      <div className="flex bg-card rounded-md overflow-clip border hover:border-primary/50 transition-colors">
+                      <div className="flex overflow-clip rounded-md border bg-card transition-colors hover:border-primary/50">
                         {crew.profile_path ? (
-                          <div className="relative aspect-[2/3] h-[140px] sm:h-[160px] flex-none">
+                          <div className="relative aspect-2/3 h-35 flex-none sm:h-40">
                             <Image
                               src={crewProfileUrl}
                               alt={crew.name}
@@ -182,19 +182,19 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
                             />
                           </div>
                         ) : (
-                          <div className="relative aspect-[2/3] h-[140px] sm:h-[160px] flex-none bg-secondary flex items-center justify-center">
+                          <div className="relative flex aspect-2/3 h-35 flex-none items-center justify-center bg-secondary sm:h-40">
                             <User size={40} className="text-muted-foreground" />
                           </div>
                         )}
 
-                        <div className="p-4 flex flex-col justify-between flex-1 min-w-0">
+                        <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
                           <div>
-                            <h3 className="font-bold text-base truncate">{crew.name}</h3>
-                            <p className="font-light text-sm text-muted-foreground truncate">
+                            <h3 className="truncate text-base font-bold">{crew.name}</h3>
+                            <p className="truncate text-sm font-light text-muted-foreground">
                               {crew.job || crew.known_for_department}
                             </p>
                           </div>
-                          <p className="font-light text-xs text-muted-foreground">
+                          <p className="text-xs font-light text-muted-foreground">
                             Department: {crew.department || crew.known_for_department}
                           </p>
                         </div>
@@ -207,7 +207,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
           )}
 
           {searchFilter && filteredCast.length === 0 && filteredCrew.length === 0 && (
-            <div className="h-[200px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+            <div className="flex h-50 w-full items-center justify-center rounded-lg border bg-card p-8">
               <p className="text-muted-foreground">
                 No cast or crew matching &quot;{searchFilter}&quot;
               </p>

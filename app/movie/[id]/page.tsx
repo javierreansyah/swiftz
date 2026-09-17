@@ -81,17 +81,17 @@ const MovieDetailsPage = async ({ params }: MovieDetailsProps) => {
       <MovieDetails id={id} />
 
       {/* Below fold components wrapped in Suspense */}
-      <div className="sm:container lg:flex gap-8 pb-8 justify-between sm:space-y-8 lg:space-y-0 sm:pt-12">
+      <div className="container mx-auto justify-between gap-8 pb-8 sm:space-y-8 sm:pt-12 lg:flex lg:space-y-0">
         <Suspense
           fallback={
-            <Skeleton className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px]" />
+            <Skeleton className="aspect-video w-full flex-none sm:rounded-xl lg:h-95 lg:w-auto xl:h-120 2xl:h-147.5" />
           }
         >
           <MovieVideo id={id} />
         </Suspense>
         <Suspense
           fallback={
-            <Skeleton className="sm:rounded-lg h-[378px] lg:h-[380px] xl:h-[480px] 2xl:h-[590px] w-full" />
+            <Skeleton className="h-94.5 w-full sm:rounded-lg lg:h-95 xl:h-120 2xl:h-147.5" />
           }
         >
           <MovieCast id={id} />
@@ -105,7 +105,7 @@ const MovieDetailsPage = async ({ params }: MovieDetailsProps) => {
 
       <Suspense
         fallback={
-          <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 pb-8">
+          <div className="container grid grid-cols-1 gap-8 pb-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 5 }, (_, i) => (
               <MovieCardSkeleton key={i} />
             ))}

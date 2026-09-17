@@ -36,19 +36,19 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover brightness-[45%] blur-3xl scale-125 pointer-events-none"
+            className="pointer-events-none scale-125 object-cover blur-3xl brightness-45"
             priority
           />
         )}
 
-        <div className="flex xl:container justify-end relative w-full mx-auto z-10">
-          <div className="relative flex h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px] w-full overflow-hidden">
+        <div className="relative z-10 mx-auto flex w-full justify-end xl:container">
+          <div className="relative flex h-55 w-full overflow-hidden sm:h-80 md:h-105 lg:h-130 2xl:h-155">
             <Image
               src={backdropUrl}
               alt={movieDetails.title}
               width={1280}
               height={720}
-              className="brightness-[65%] md:block hidden object-cover object-right w-full h-auto"
+              className="hidden h-auto w-full object-cover object-right brightness-65 md:block"
               style={{
                 maskImage:
                   "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
@@ -66,69 +66,69 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
           fill
           sizes="100vw"
           style={{ objectFit: "cover" }}
-          className="brightness-[60%] md:hidden z-0"
+          className="z-0 brightness-60 md:hidden"
         />
 
-        <div className="absolute w-full top-0 z-20">
+        <div className="absolute top-0 z-20 w-full">
           <div className="relative container">
             <div className="absolute top-0 flex">
-              <div className="h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px] 2xl:h-[620px] flex gap-10 pt-16 sm:pt-20 pb-6 sm:pb-8">
+              <div className="flex h-55 gap-10 pt-16 pb-6 sm:h-80 sm:pt-20 sm:pb-8 md:h-105 lg:h-130 2xl:h-155">
                 <div className="hidden md:flex">
                   <Image
                     src={posterUrl}
                     alt={movieDetails.title}
                     width={500}
                     height={750}
-                    className="rounded-sm w-full h-auto shadow-2xl"
+                    className="h-auto w-full rounded-sm shadow-2xl"
                   />
                 </div>
 
-                <div className="md:py-8 xl:max-w-[680px] lg:max-w-[480px] md:max-w-[300px] sm:max-w-[520px] max-w-[250px] flex items-end">
+                <div className="flex max-w-62.5 items-end sm:max-w-130 md:max-w-75 md:py-8 lg:max-w-120 xl:max-w-170">
                   <div className="space-y-4">
-                    <h1 className="xl:text-5xl sm:text-4xl text-2xl font-bold text-white drop-shadow-md">
+                    <h1 className="text-2xl font-bold text-white drop-shadow-md sm:text-4xl xl:text-5xl">
                       {movieDetails.title}
                       {year && (
-                        <span className="font-normal text-white sm:text-2xl text-sm">
+                        <span className="text-sm font-normal text-white sm:text-2xl">
                           {" "}
                           ({year})
                         </span>
                       )}
                     </h1>
-                    <div className="space-y-4 hidden lg:block">
-                      <div className="flex gap-2 items-center">
-                        <div className="bg-black/80 w-fit px-1 h-6 flex items-center justify-center rounded-sm border border-white/20 text-sm">
-                          <p className="text-white font-medium">
+                    <div className="hidden space-y-4 lg:block">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-6 w-fit items-center justify-center rounded-sm border border-white/20 bg-black/80 px-1 text-sm">
+                          <p className="font-medium text-white">
                             {certification ? certification : "NA"}
                           </p>
                         </div>
 
-                        <p className="hidden xl:block text-white">
+                        <p className="hidden text-white xl:block">
                           {movieDetails.release_date}
                         </p>
-                        <div className="hidden xl:block text-white">-</div>
+                        <div className="hidden text-white xl:block">-</div>
                         {movieDetails.genres.map((genre, index) => (
                           <p key={index} className="text-white">
                             {genre.name}
                           </p>
                         ))}
-                        <div className="hidden xl:block text-white">-</div>
-                        <p className="hidden xl:block text-white">
+                        <div className="hidden text-white xl:block">-</div>
+                        <p className="hidden text-white xl:block">
                           {runtimeString}
                         </p>
                       </div>
-                      <div className="flex gap-2 items-center">
+                      <div className="flex items-center gap-2">
                         <StarRating rating={movieDetails.vote_average} />
-                        <div className="block xl:hidden text-white">-</div>
-                        <p className="block xl:hidden text-white">
+                        <div className="block text-white xl:hidden">-</div>
+                        <p className="block text-white xl:hidden">
                           {movieDetails.release_date}
                         </p>
-                        <div className="block xl:hidden text-white">-</div>
-                        <p className="block xl:hidden text-white">
+                        <div className="block text-white xl:hidden">-</div>
+                        <p className="block text-white xl:hidden">
                           {runtimeString}
                         </p>
                       </div>
 
-                      <p className="text-sm lg:text-base text-white/90 drop-shadow">
+                      <p className="text-sm text-white/90 drop-shadow lg:text-base">
                         {movieDetails.overview}
                       </p>
 
@@ -143,10 +143,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
           </div>
         </div>
       </div>
-      <div className="container py-6 sm:py-0 sm:pt-8 sm:pb-0 block lg:hidden">
+      <div className="container block py-6 sm:py-0 sm:pt-8 sm:pb-0 lg:hidden">
         <div className="space-y-4">
-          <div className="flex gap-2 items-center">
-            <div className="bg-card w-fit px-1 h-6 flex items-center justify-center rounded-sm opacity-70 border text-sm">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-fit items-center justify-center rounded-sm border bg-card px-1 text-sm opacity-70">
               <p className="">{certification ? certification : "NA"}</p>
             </div>
             <div>-</div>
@@ -154,10 +154,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = async ({ id }) => {
             <div>-</div>
             <p>{runtimeString}</p>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <StarRating rating={movieDetails.vote_average} />
           </div>
-          <div className="flex gap-2 items-center flex-wrap">
+          <div className="flex flex-wrap items-center gap-2">
             {movieDetails.genres.map((genre, index) => (
               <p key={index}>{genre.name}</p>
             ))}

@@ -25,7 +25,7 @@ const GenresCard = () => {
 
   return (
     <section className="container">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <article>
           <Link href="/genres?with=28" prefetch={false}>
             <div className={styles.card1}>
@@ -87,7 +87,7 @@ const GenresCard = () => {
                 <figure className={styles.card3}>
                   <Laugh
                     size={styles.iconSize}
-                    className={`group-hover:text-primary transition-all group-hover:animate-spin`}
+                    className={`transition-all group-hover:animate-spin group-hover:text-primary`}
                   />
                 </figure>
                 <div>
@@ -135,7 +135,7 @@ const GenresCard = () => {
                 <figure className={styles.card3}>
                   <BedDouble
                     size={styles.iconSize}
-                    className={`group-hover:text-primary transition-all group-hover:animate-bounce`}
+                    className={`transition-all group-hover:animate-bounce group-hover:text-primary`}
                   />
                 </figure>
                 <div>

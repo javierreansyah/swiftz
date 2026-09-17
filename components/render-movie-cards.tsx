@@ -15,7 +15,7 @@ const RenderMovieCards: React.FC<RenderCardsProps> = ({
 }) => {
   return (
     <ul
-      className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 ${className}`}
+      className={`grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ${className}`}
     >
       {movies.slice(0, count).map((movie) => (
         <li key={movie.id}>

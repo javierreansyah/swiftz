@@ -16,9 +16,9 @@ const MovieCard: React.FC<MovieData> = ({ id, title, poster, rating }) => {
   const truncatedTitle = title.length > 35 ? title.slice(0, 35) + "..." : title;
   return (
     <Link href={`/movie/${id}`} prefetch={false}>
-      <div className="border rounded-lg overflow-clip lg:hover:scale-105 lg:transition-all bg-card">
+      <div className="overflow-clip rounded-lg border bg-card lg:transition-all lg:hover:scale-105">
         {poster ? (
-          <div className="relative w-full aspect-[2/3]">
+          <div className="relative aspect-2/3 w-full">
             <Image
               src={posterUrl}
               alt={title}
@@ -27,16 +27,16 @@ const MovieCard: React.FC<MovieData> = ({ id, title, poster, rating }) => {
             />
           </div>
         ) : (
-          <div className="relative w-full aspect-[2/3] bg-secondary flex justify-center items-center">
+          <div className="relative flex aspect-2/3 w-full items-center justify-center bg-secondary">
             <ImageOff size={42} />
           </div>
         )}
 
-        <div className="p-4 h-[110px] space-y-1 flex flex-col justify-between">
+        <div className="flex h-27.5 flex-col justify-between space-y-1 p-4">
           <h2 className="font-bold">{truncatedTitle}</h2>
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <StarRatingMovieCard rating={rating} />
-            <p className="text-muted-foreground text-sm">{rating}</p>
+            <p className="text-sm text-muted-foreground">{rating}</p>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ const Search: React.FC<SearchProps> = ({ currentQuery }) => {
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="py-2">
-      <div className="sm:flex gap-4 space-y-4 sm:space-y-0">
+      <div className="gap-4 space-y-4 sm:flex sm:space-y-0">
         <Input
           type="text"
           placeholder="Search for movies"

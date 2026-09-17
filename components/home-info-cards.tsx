@@ -4,9 +4,9 @@ import Link from "next/link";
 
 const HomeInfoCard = () => {
   const cardStyle =
-    "w-full h-[430px] sm:h-[300px] lg:h-[450px] bg-card rounded-xl border p-6 sm:p-8 space-y-3 flex flex-col justify-between";
+    "flex h-107.5 w-full flex-col justify-between space-y-3 rounded-xl border bg-card p-6 sm:h-75 sm:p-8 lg:h-112.5";
   return (
-    <section className="container grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-12">
+    <section className="container grid grid-cols-1 gap-4 lg:grid-cols-2 xl:gap-12">
       <div className={cardStyle}>
         <div className="space-y-3">
           <h2 className="text-4xl font-extrabold text-primary">Discover</h2>

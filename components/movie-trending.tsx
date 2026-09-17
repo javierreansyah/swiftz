@@ -9,7 +9,7 @@ const TrendingMovies: React.FC = async () => {
 
   return (
     <section className="space-y-6">
-      <h2 className="font-extrabold text-4xl">Trending</h2>
+      <h2 className="text-4xl font-extrabold">Trending</h2>
       <RenderMovieCards movies={trendingMovies.results} count={10} />
       <Button size="full" asChild>
         <Link href="/trending" prefetch={false}>

@@ -27,12 +27,12 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
 
   if (movies.length === 0) {
     return (
-      <section className="lg:container">
-        <div className="relative aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full overflow-hidden lg:rounded-xl border bg-secondary">
-          <div className="absolute aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full flex items-end">
+      <section className="mx-auto lg:container">
+        <div className="relative aspect-4/5 w-full overflow-hidden border bg-secondary sm:aspect-7/4 lg:aspect-video lg:rounded-xl">
+          <div className="absolute flex aspect-4/5 w-full items-end sm:aspect-7/4 lg:aspect-video">
             <div className="p-8">
               <h1
-                className="font-black text-6xl sm:text-7xl"
+                className="text-6xl font-black sm:text-7xl"
                 style={{ fontStyle: "italic" }}
               >
                 Swiftz
@@ -51,8 +51,8 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
   }
 
   return (
-    <section className="lg:container">
-      <div className="relative aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full overflow-hidden lg:rounded-xl group">
+    <section className="mx-auto lg:container">
+      <div className="group relative aspect-4/5 w-full overflow-hidden sm:aspect-7/4 lg:aspect-video lg:rounded-xl">
         {/* Render all backdrop images absolutely positioned for seamless CSS crossfade */}
         {movies.map((movie, index) => {
           const backdropUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
@@ -65,8 +65,8 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
               prefetch={false}
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                 isSelected
-                  ? "opacity-100 z-10 pointer-events-auto"
-                  : "opacity-0 z-0 pointer-events-none"
+                  ? "pointer-events-auto z-10 opacity-100"
+                  : "pointer-events-none z-0 opacity-0"
               }`}
             >
               <Image
@@ -75,23 +75,23 @@ const HeroBackdropCarousel: React.FC<HeroBackdropCarouselProps> = ({
                 fill
                 sizes="100vw"
                 priority={index === 0}
-                className="object-cover brightness-[60%] group-hover:scale-105 transition-transform duration-700 ease-out"
+                className="object-cover brightness-60 transition-transform duration-700 ease-out group-hover:scale-105"
               />
             </Link>
           );
         })}
 
         {/* Text Overlay matching original Swiftz design */}
-        <div className="absolute aspect-[4/5] sm:aspect-[7/4] lg:aspect-[16/9] w-full flex items-end z-20 pointer-events-none">
+        <div className="pointer-events-none absolute z-20 flex aspect-4/5 w-full items-end sm:aspect-7/4 lg:aspect-video">
           <div className="p-8">
             <h1
-              className="font-black text-white text-6xl sm:text-7xl"
+              className="text-6xl font-black text-white sm:text-7xl"
               style={{ fontStyle: "italic" }}
             >
               Swiftz
             </h1>
             <p
-              className="pl-1 text-white text-sm sm:text-base"
+              className="pl-1 text-sm text-white sm:text-base"
               style={{ fontStyle: "italic" }}
             >
               Discover movies at the speed of light

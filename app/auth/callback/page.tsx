@@ -71,11 +71,11 @@ function AuthCallbackContent() {
   }, [searchParams, router, setSessionAndUser]);
 
   return (
-    <main className="min-h-[80vh] flex items-center justify-center p-4 pt-20">
-      <div className="max-w-md w-full border bg-card rounded-xl p-8 shadow-xl text-center space-y-4">
+    <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
+      <div className="w-full max-w-md space-y-4 rounded-xl border bg-card p-8 text-center shadow-xl">
         {status === "loading" && (
           <div className="space-y-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+            <Loader2 className="mx-auto size-12 animate-spin text-primary" />
             <h1 className="text-2xl font-bold">Authorizing with TMDB...</h1>
             <p className="text-sm text-muted-foreground">
               Establishing your session and fetching account details.
@@ -85,7 +85,7 @@ function AuthCallbackContent() {
 
         {status === "success" && (
           <div className="space-y-4">
-            <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto" />
+            <CheckCircle2 className="mx-auto size-12 text-green-500" />
             <h1 className="text-2xl font-bold">Welcome Back!</h1>
             <p className="text-sm text-muted-foreground">
               Successfully authenticated. Redirecting you to your destination...
@@ -95,7 +95,7 @@ function AuthCallbackContent() {
 
         {status === "error" && (
           <div className="space-y-4">
-            <XCircle className="h-12 w-12 text-destructive mx-auto" />
+            <XCircle className="mx-auto size-12 text-destructive" />
             <h1 className="text-2xl font-bold">Authentication Failed</h1>
             <p className="text-sm text-muted-foreground">{errorMessage}</p>
             <div className="pt-2">
@@ -114,9 +114,9 @@ export default function AuthCallbackPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-[80vh] flex items-center justify-center p-4 pt-20">
-          <div className="max-w-md w-full border bg-card rounded-xl p-8 text-center space-y-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+        <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
+          <div className="w-full max-w-md space-y-4 rounded-xl border bg-card p-8 text-center">
+            <Loader2 className="mx-auto size-12 animate-spin text-primary" />
             <h1 className="text-2xl font-bold">Connecting to TMDB...</h1>
           </div>
         </main>

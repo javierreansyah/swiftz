@@ -21,7 +21,7 @@ const GenreCheckbox: React.FC<GenreCheckboxProps> = ({
   };
 
   return (
-    <label className="cursor-pointer block">
+    <label className="block cursor-pointer">
       <input
         type="checkbox"
         className="peer sr-only"
@@ -29,7 +29,7 @@ const GenreCheckbox: React.FC<GenreCheckboxProps> = ({
         {...register(name)}
         onChange={handleCheckboxChange}
       />
-      <div className="w-full px-4 py-2 sm:py-3 text-foreground text-sm sm:text-base rounded-md hover:bg-secondary ring-2 ring-transparent bg-card peer-checked:bg-primary border peer-checked:border-primary peer-checked:text-white">
+      <div className="w-full rounded-md border bg-card px-4 py-2 text-sm text-foreground ring-2 ring-transparent peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white hover:bg-secondary sm:py-3 sm:text-base">
         <h1 className="font-bold">{label}</h1>
       </div>
     </label>

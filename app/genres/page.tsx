@@ -65,10 +65,10 @@ function GenresExplorer() {
 
   return (
     <main className="container space-y-6 pt-20 pb-12">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-2 pt-4">
+      <div className="flex flex-col justify-between gap-2 pt-4 sm:flex-row sm:items-end">
         <div>
-          <h1 className="font-bold text-5xl sm:text-6xl">Genres</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <h1 className="text-5xl font-bold sm:text-6xl">Genres</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Select one or more genres to discover matching movies in real-time.
           </p>
         </div>
@@ -84,7 +84,7 @@ function GenresExplorer() {
         )}
       </div>
 
-      <div className="py-2 flex flex-wrap sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 w-full">
+      <div className="flex w-full flex-wrap gap-2 py-2 sm:grid sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {movieGenres.map((genre) => {
           const isSelected = selectedGenres.includes(String(genre.id));
           return (
@@ -104,27 +104,27 @@ function GenresExplorer() {
 
       <div className="pt-6">
         {selectedGenres.length === 0 ? (
-          <div className="h-[220px] rounded-lg w-full border border-dashed flex flex-col items-center justify-center bg-card p-8 text-center space-y-2">
+          <div className="flex h-55 w-full flex-col items-center justify-center space-y-2 rounded-lg border border-dashed bg-card p-8 text-center">
             <h2 className="text-xl font-semibold">No Genres Selected</h2>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               Click any genre checkbox above to instantly browse movies.
             </p>
           </div>
         ) : isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 10 }, (_, i) => (
               <MovieCardSkeleton key={i} />
             ))}
           </div>
         ) : movies.length === 0 ? (
-          <div className="h-[250px] rounded-lg w-full border flex items-center justify-center bg-card p-8">
+          <div className="flex h-62.5 w-full items-center justify-center rounded-lg border bg-card p-8">
             <h2 className="text-lg">No movies found matching all selected genres.</h2>
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">
-                Matching Movies {isFetching && <span className="text-sm font-normal text-muted-foreground animate-pulse">(Updating...)</span>}
+                Matching Movies {isFetching && <span className="animate-pulse text-sm font-normal text-muted-foreground">(Updating...)</span>}
               </h2>
               <p className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
@@ -150,10 +150,10 @@ export default function GenresPage() {
     <Suspense
       fallback={
         <main className="container space-y-6 pt-20 pb-12">
-          <h1 className="font-bold text-5xl sm:text-6xl pt-4">Genres</h1>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <h1 className="pt-4 text-5xl font-bold sm:text-6xl">Genres</h1>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {Array.from({ length: 8 }, (_, i) => (
-              <div key={i} className="h-12 bg-secondary animate-pulse rounded-md" />
+              <div key={i} className="h-12 animate-pulse rounded-md bg-secondary" />
             ))}
           </div>
         </main>

@@ -2,15 +2,15 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t mt-12">
-      <div className="container flex flex-col sm:flex-row sm:items-center justify-center sm:justify-between h-28 sm:h-16">
+    <footer className="mt-12 border-t bg-card">
+      <div className="container flex h-28 flex-col justify-center sm:h-16 sm:flex-row sm:items-center sm:justify-between">
         <h1
-          className="font-black text-primary text-3xl"
+          className="text-3xl font-black text-primary"
           style={{ fontStyle: "italic" }}
         >
           Swiftz
         </h1>
-        <p className="text-sm text-muted-foreground pl-1 sm:pl-0">
+        <p className="pl-1 text-sm text-muted-foreground sm:pl-0">
           Copyright © 2025 Swiftz | All Rights Reserved
         </p>
       </div>

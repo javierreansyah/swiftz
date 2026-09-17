@@ -11,7 +11,7 @@ const MovieVideo: React.FC<MovieVideoProps> = async ({ id, className }) => {
 
   if (!movieVideos.results || movieVideos.results.length === 0) {
     return (
-      <section className="sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] flex items-center justify-center bg-card border">
+      <section className="flex aspect-video w-full flex-none items-center justify-center border bg-card sm:rounded-xl lg:h-95 lg:w-auto xl:h-120 2xl:h-147.5">
         <h1>No Video Available</h1>
       </section>
     );
@@ -33,7 +33,7 @@ const MovieVideo: React.FC<MovieVideoProps> = async ({ id, className }) => {
       <iframe
         src={youtubeUrl}
         title="Movie Trailer"
-        className={`sm:rounded-xl aspect-video flex-none w-full lg:w-auto lg:h-[380px] xl:h-[480px] 2xl:h-[590px] border-0 ${
+        className={`aspect-video w-full flex-none border-0 sm:rounded-xl lg:h-95 lg:w-auto xl:h-120 2xl:h-147.5 ${
           className ? className : ""
         }`}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

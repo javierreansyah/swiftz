@@ -24,7 +24,7 @@ const StarRating: React.FC<MovieRatingProps> = ({ rating }) => {
   const hasHalfStar = roundedRating % 2 !== 0;
 
   return (
-    <div className="h-5 flex items-center">
+    <div className="flex h-5 items-center">
       <div className="flex">
         {Array.from({ length: fullStars }, (_, index) => (
           <Star key={index} fill="#fff220" strokeWidth={0} />

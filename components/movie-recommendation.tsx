@@ -21,7 +21,7 @@ const MovieRecommendation: React.FC<MovieRecommendationProps> = async ({
 
   return (
     <section className="container space-y-8 pb-8">
-      <h2 className="text-2xl md:text-5xl font-bold">Recommendations</h2>
+      <h2 className="text-2xl font-bold md:text-5xl">Recommendations</h2>
       <RenderMovieCards movies={movieRecommendation.results} count={10} />
       <Button className="font-bold" size="full" asChild>
         <Link href={`/movie/${id}/recommendation`} prefetch={false}>

@@ -32,14 +32,14 @@ type LibraryTab = "favorites" | "watchlist" | "rated";
 
 function LibrarySkeleton() {
   return (
-    <div className="container min-h-screen pt-24 pb-16 space-y-8 animate-pulse">
+    <div className="container min-h-screen animate-pulse space-y-8 pt-24 pb-16">
       {/* Profile Header Skeleton */}
-      <div className="border rounded-2xl p-6 sm:p-8 bg-card/50 flex flex-col sm:flex-row items-center sm:items-start gap-6">
-        <Skeleton className="h-20 w-20 rounded-full flex-none" />
-        <div className="space-y-3 flex-1 text-center sm:text-left">
-          <Skeleton className="h-6 w-48 mx-auto sm:mx-0" />
-          <Skeleton className="h-4 w-32 mx-auto sm:mx-0" />
-          <div className="flex gap-4 justify-center sm:justify-start pt-2">
+      <div className="flex flex-col items-center gap-6 rounded-2xl border bg-card/50 p-6 sm:flex-row sm:items-start sm:p-8">
+        <Skeleton className="size-20 flex-none rounded-full" />
+        <div className="flex-1 space-y-3 text-center sm:text-left">
+          <Skeleton className="mx-auto h-6 w-48 sm:mx-0" />
+          <Skeleton className="mx-auto h-4 w-32 sm:mx-0" />
+          <div className="flex justify-center gap-4 pt-2 sm:justify-start">
             <Skeleton className="h-8 w-24 rounded-full" />
             <Skeleton className="h-8 w-24 rounded-full" />
           </div>
@@ -54,7 +54,7 @@ function LibrarySkeleton() {
       </div>
 
       {/* Movie Grid Skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {Array.from({ length: 10 }, (_, i) => (
           <MovieCardSkeleton key={i} />
         ))}
@@ -130,50 +130,50 @@ function LibraryContent() {
   if (!isAuthenticated || !user) {
     return (
       <div className="container min-h-screen pt-28 pb-16">
-        <div className="max-w-3xl mx-auto space-y-10">
+        <div className="mx-auto max-w-3xl space-y-10">
           {/* Welcome Card */}
-          <div className="relative overflow-hidden border rounded-3xl p-8 sm:p-12 bg-gradient-to-b from-card/90 to-card/50 shadow-xl text-center space-y-6">
-            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
-              <Film className="w-8 h-8 sm:w-10 sm:h-10" />
+          <div className="relative space-y-6 overflow-hidden rounded-3xl border bg-linear-to-b from-card/90 to-card/50 p-8 text-center shadow-xl sm:p-12">
+            <div className="mx-auto flex size-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-inner sm:size-20">
+              <Film className="size-8 sm:size-10" />
             </div>
 
             <div className="space-y-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-                <Sparkles className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                <Sparkles className="size-3.5" />
                 TMDB Cloud Sync
               </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+              <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
                 Your Personal Cinema Library
               </h1>
-              <p className="text-muted-foreground text-sm sm:text-base max-w-xl mx-auto">
+              <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-base">
                 Sign in with your TMDB account to access your personal Favorites,
                 curated Watchlist, and film Ratings anytime, on any device.
               </p>
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <div className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row">
               <Button
                 size="lg"
                 onClick={() => login()}
-                className="w-full sm:w-auto font-semibold gap-2 shadow-lg shadow-primary/20 px-8"
+                className="w-full gap-2 px-8 font-semibold shadow-lg shadow-primary/20 sm:w-auto"
               >
-                <LogIn className="w-5 h-5" />
+                <LogIn className="size-5" />
                 <span>Connect with TMDB</span>
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 onClick={() => loginDemo()}
-                className="w-full sm:w-auto gap-2"
+                className="w-full gap-2 sm:w-auto"
               >
-                <Sparkles className="w-4 h-4 text-primary" />
+                <Sparkles className="size-4 text-primary" />
                 <span>Try Demo Account</span>
               </Button>
               <Button
                 asChild
                 variant="ghost"
                 size="lg"
-                className="w-full sm:w-auto text-muted-foreground"
+                className="w-full text-muted-foreground sm:w-auto"
               >
                 <a
                   href="https://www.themoviedb.org/signup"
@@ -182,40 +182,40 @@ function LibraryContent() {
                   className="gap-2"
                 >
                   <span>Create Account</span>
-                  <ExternalLink className="w-4 h-4" />
+                  <ExternalLink className="size-4" />
                 </a>
               </Button>
             </div>
           </div>
 
           {/* Feature highlights grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="border rounded-2xl p-6 bg-card/40 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center">
-                <Heart className="w-5 h-5" />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-red-500/10 text-red-500">
+                <Heart className="size-5" />
               </div>
-              <h3 className="font-bold text-base">Favorites</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <h3 className="text-base font-bold">Favorites</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">
                 Bookmark the films you love most and quickly revisit them anytime.
               </p>
             </div>
 
-            <div className="border rounded-2xl p-6 bg-card/40 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
-                <Bookmark className="w-5 h-5" />
+            <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+                <Bookmark className="size-5" />
               </div>
-              <h3 className="font-bold text-base">Watchlist</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <h3 className="text-base font-bold">Watchlist</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">
                 Build your queue of upcoming releases and must-watch movies.
               </p>
             </div>
 
-            <div className="border rounded-2xl p-6 bg-card/40 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-                <Star className="w-5 h-5" />
+            <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
+                <Star className="size-5" />
               </div>
-              <h3 className="font-bold text-base">1-10 Ratings</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <h3 className="text-base font-bold">1-10 Ratings</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">
                 Rate films you have seen and maintain a personal record of your scores.
               </p>
             </div>
@@ -238,14 +238,14 @@ function LibraryContent() {
   const totalPages = currentQuery.data?.total_pages ?? 1;
 
   return (
-    <div className="container min-h-screen pt-24 pb-16 space-y-8">
+    <div className="container min-h-screen space-y-8 pt-24 pb-16">
       {/* User Profile Banner */}
-      <div className="relative overflow-hidden border rounded-3xl p-6 sm:p-8 bg-card/60 backdrop-blur-md shadow-lg">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+      <div className="relative overflow-hidden rounded-3xl border bg-card/60 p-6 shadow-lg backdrop-blur-md sm:p-8">
+        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row sm:items-start">
+          <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
             {/* Avatar */}
             {avatarUrl ? (
-              <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-clip ring-2 ring-primary/30 shadow-md flex-none">
+              <div className="relative size-20 flex-none overflow-clip rounded-2xl shadow-md ring-2 ring-primary/30 sm:size-24">
                 <Image
                   src={avatarUrl}
                   alt={user.name || user.username}
@@ -256,36 +256,36 @@ function LibraryContent() {
                 />
               </div>
             ) : (
-              <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/20 text-primary flex items-center justify-center font-black text-2xl shadow-md flex-none">
+              <div className="flex size-20 flex-none items-center justify-center rounded-2xl border border-primary/20 bg-linear-to-br from-primary/30 to-primary/10 text-2xl font-black text-primary shadow-md sm:size-24">
                 {user.username.charAt(0).toUpperCase()}
               </div>
             )}
 
             {/* User Meta */}
             <div className="space-y-2">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
                   {user.name || user.username}
                 </h1>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-500">
+                  <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
                   TMDB Connected
                 </span>
               </div>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-muted-foreground">
                 @{user.username} • TMDB ID #{user.id}
               </p>
 
               {/* Action Links */}
-              <div className="flex items-center justify-center sm:justify-start gap-3 pt-1">
+              <div className="flex items-center justify-center gap-3 pt-1 sm:justify-start">
                 <a
                   href={`https://www.themoviedb.org/u/${user.username}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <span>View on TMDB</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="size-3" />
                 </a>
               </div>
             </div>
@@ -297,9 +297,9 @@ function LibraryContent() {
               variant="outline"
               size="sm"
               onClick={logout}
-              className="gap-2 text-xs hover:text-red-500 hover:border-red-500/40"
+              className="gap-2 text-xs hover:border-red-500/40 hover:text-red-500"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="size-3.5" />
               <span>Sign Out</span>
             </Button>
           </div>
@@ -307,7 +307,7 @@ function LibraryContent() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center justify-between border-b pb-2 gap-4 overflow-x-auto">
+      <div className="flex items-center justify-between gap-4 overflow-x-auto border-b pb-2">
         <div className="flex items-center gap-2">
           {/* Favorites Tab */}
           <Button
@@ -317,14 +317,14 @@ function LibraryContent() {
             className="gap-2 rounded-xl transition-all"
           >
             <Heart
-              className={`w-4 h-4 ${
+              className={`size-4 ${
                 activeTab === "favorites" ? "fill-current" : "text-red-500"
               }`}
             />
             <span className="font-semibold">Favorites</span>
             {favoritesQuery.data?.total_results !== undefined && (
               <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
+                className={`rounded-full px-2 py-0.5 text-xs ${
                   activeTab === "favorites"
                     ? "bg-primary-foreground/20 text-primary-foreground"
                     : "bg-secondary text-muted-foreground"
@@ -343,14 +343,14 @@ function LibraryContent() {
             className="gap-2 rounded-xl transition-all"
           >
             <Bookmark
-              className={`w-4 h-4 ${
+              className={`size-4 ${
                 activeTab === "watchlist" ? "fill-current" : "text-blue-500"
               }`}
             />
             <span className="font-semibold">Watchlist</span>
             {watchlistQuery.data?.total_results !== undefined && (
               <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
+                className={`rounded-full px-2 py-0.5 text-xs ${
                   activeTab === "watchlist"
                     ? "bg-primary-foreground/20 text-primary-foreground"
                     : "bg-secondary text-muted-foreground"
@@ -369,14 +369,14 @@ function LibraryContent() {
             className="gap-2 rounded-xl transition-all"
           >
             <Star
-              className={`w-4 h-4 ${
+              className={`size-4 ${
                 activeTab === "rated" ? "fill-current" : "text-amber-500"
               }`}
             />
             <span className="font-semibold">Rated</span>
             {ratedQuery.data?.total_results !== undefined && (
               <span
-                className={`text-xs px-2 py-0.5 rounded-full ${
+                className={`rounded-full px-2 py-0.5 text-xs ${
                   activeTab === "rated"
                     ? "bg-primary-foreground/20 text-primary-foreground"
                     : "bg-secondary text-muted-foreground"
@@ -398,7 +398,7 @@ function LibraryContent() {
           title="Refresh items"
         >
           <RefreshCw
-            className={`w-3.5 h-3.5 ${
+            className={`size-3.5 ${
               currentQuery.isFetching ? "animate-spin" : ""
             }`}
           />
@@ -410,7 +410,7 @@ function LibraryContent() {
       <section className="space-y-8">
         {/* Loading State */}
         {currentQuery.isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 10 }, (_, i) => (
               <MovieCardSkeleton key={i} />
             ))}
@@ -419,11 +419,11 @@ function LibraryContent() {
 
         {/* Error State */}
         {currentQuery.isError && (
-          <div className="border rounded-2xl p-10 text-center space-y-4 bg-card/40">
-            <p className="text-red-500 font-semibold">
+          <div className="space-y-4 rounded-2xl border bg-card/40 p-10 text-center">
+            <p className="font-semibold text-red-500">
               Failed to load your {activeTab}.
             </p>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+            <p className="mx-auto max-w-sm text-xs text-muted-foreground">
               There was an issue communicating directly with TMDB. Please check
               your internet connection or try again.
             </p>
@@ -433,7 +433,7 @@ function LibraryContent() {
               onClick={() => currentQuery.refetch()}
               className="gap-2"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="size-3.5" />
               <span>Try Again</span>
             </Button>
           </div>
@@ -441,15 +441,15 @@ function LibraryContent() {
 
         {/* Empty State */}
         {!currentQuery.isLoading && !currentQuery.isError && movies.length === 0 && (
-          <div className="border border-dashed rounded-3xl p-12 sm:p-16 text-center space-y-5 bg-card/20">
-            <div className="mx-auto w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center text-muted-foreground">
-              {activeTab === "favorites" && <Heart className="w-8 h-8 text-red-400" />}
-              {activeTab === "watchlist" && <Bookmark className="w-8 h-8 text-blue-400" />}
-              {activeTab === "rated" && <Star className="w-8 h-8 text-amber-400" />}
+          <div className="space-y-5 rounded-3xl border border-dashed bg-card/20 p-12 text-center sm:p-16">
+            <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
+              {activeTab === "favorites" && <Heart className="size-8 text-red-400" />}
+              {activeTab === "watchlist" && <Bookmark className="size-8 text-blue-400" />}
+              {activeTab === "rated" && <Star className="size-8 text-amber-400" />}
             </div>
 
-            <div className="space-y-2 max-w-md mx-auto">
-              <h3 className="font-bold text-xl sm:text-2xl">
+            <div className="mx-auto max-w-md space-y-2">
+              <h3 className="text-xl font-bold sm:text-2xl">
                 {activeTab === "favorites" && "No favorite movies yet"}
                 {activeTab === "watchlist" && "Your watchlist is empty"}
                 {activeTab === "rated" && "No rated movies yet"}
@@ -467,7 +467,7 @@ function LibraryContent() {
             <div className="pt-2">
               <Button asChild size="sm" className="gap-2">
                 <Link href="/discover">
-                  <SlidersHorizontal className="w-4 h-4" />
+                  <SlidersHorizontal className="size-4" />
                   <span>Discover Movies</span>
                 </Link>
               </Button>
@@ -479,18 +479,18 @@ function LibraryContent() {
         {!currentQuery.isLoading && !currentQuery.isError && movies.length > 0 && (
           <>
             <div className="flex items-center justify-between">
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground sm:text-sm">
                 Showing {movies.length} of {totalResults} {activeTab}
               </p>
             </div>
 
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {movies.map((movie: any) => {
                 // If this is rated movies tab, TMDB returns personal rating as `rating`
                 const personalRating = movie.rating;
 
                 return (
-                  <li key={movie.id} className="relative group">
+                  <li key={movie.id} className="group relative">
                     <MovieCard
                       id={movie.id}
                       title={movie.title}
@@ -500,8 +500,8 @@ function LibraryContent() {
 
                     {/* Personal Rating Tag */}
                     {activeTab === "rated" && typeof personalRating === "number" && (
-                      <div className="absolute top-2 right-2 bg-amber-500 text-black font-extrabold text-xs px-2 py-0.5 rounded-md shadow-md flex items-center gap-1 z-10 pointer-events-none">
-                        <Star className="w-3 h-3 fill-black text-black" />
+                      <div className="pointer-events-none absolute top-2 right-2 z-10 flex items-center gap-1 rounded-md bg-amber-500 px-2 py-0.5 text-xs font-extrabold text-black shadow-md">
+                        <Star className="size-3 fill-black text-black" />
                         <span>{personalRating}/10</span>
                       </div>
                     )}
