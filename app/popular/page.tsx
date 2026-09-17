@@ -2,9 +2,9 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import RenderMovieCards from "@/components/render-movie-cards";
-import PaginationSystem from "@/components/pagination-system";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
+import { MovieGrid } from "@/components/common/movie-grid";
+import { PaginationSystem } from "@/components/common/pagination-system";
+import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
 import { usePopularMoviesQuery } from "@/hooks/use-tmdb";
 
 function PopularContent() {
@@ -46,7 +46,7 @@ function PopularContent() {
         </div>
       ) : (
         <>
-          <RenderMovieCards movies={movies} count={movies.length} />
+          <MovieGrid movies={movies} count={movies.length} />
           <PaginationSystem
             currentPage={currentPage}
             totalPage={totalPages}

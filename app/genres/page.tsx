@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import GenreCheckbox from "@/components/genre-checkbox";
+import { useForm } from "react-hook-form";
 import movieGenres from "@/public/data/genres";
-import RenderMovieCards from "@/components/render-movie-cards";
-import PaginationSystem from "@/components/pagination-system";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
+import { GenreCheckbox } from "@/components/genres/genre-checkbox";
+import { MovieGrid } from "@/components/common/movie-grid";
+import { PaginationSystem } from "@/components/common/pagination-system";
+import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
 import { Button } from "@/components/ui/button";
 import { useMoviesByGenresQuery } from "@/hooks/use-tmdb";
-import { useForm } from "react-hook-form";
 
 function GenresExplorer() {
   const searchParams = useSearchParams();
@@ -86,7 +86,6 @@ function GenresExplorer() {
 
       <div className="flex w-full flex-wrap gap-2 py-2 sm:grid sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {movieGenres.map((genre) => {
-          const isSelected = selectedGenres.includes(String(genre.id));
           return (
             <GenreCheckbox
               key={genre.id}
@@ -124,13 +123,18 @@ function GenresExplorer() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">
-                Matching Movies {isFetching && <span className="animate-pulse text-sm font-normal text-muted-foreground">(Updating...)</span>}
+                Matching Movies{" "}
+                {isFetching && (
+                  <span className="animate-pulse text-sm font-normal text-muted-foreground">
+                    (Updating...)
+                  </span>
+                )}
               </h2>
               <p className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </p>
             </div>
-            <RenderMovieCards movies={movies} count={movies.length} />
+            <MovieGrid movies={movies} count={movies.length} />
             {totalPages > 1 && (
               <PaginationSystem
                 currentPage={currentPage}

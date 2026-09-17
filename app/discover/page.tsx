@@ -1,15 +1,16 @@
 import React, { Suspense } from "react";
-import PopularMovies from "@/components/popular-movies";
-import TrendingMovies from "@/components/movie-trending";
-import Search from "@/components/search";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
+import { PopularMoviesSection } from "@/components/discover/popular-movies-section";
+import { TrendingMoviesSection } from "@/components/discover/trending-movies-section";
+import { SearchBar } from "@/components/common/search-bar";
+import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
+
 export const revalidate = 86400; // 24 hours ISR
 
-const Discover = () => {
+export default function Discover() {
   return (
     <main className="container min-h-screen space-y-3 pt-20">
       <div className="w-full py-4">
-        <Search />
+        <SearchBar />
       </div>
       <div className="space-y-8">
         <Suspense
@@ -21,7 +22,7 @@ const Discover = () => {
             </div>
           }
         >
-          <PopularMovies />
+          <PopularMoviesSection />
         </Suspense>
         <Suspense
           fallback={
@@ -32,11 +33,9 @@ const Discover = () => {
             </div>
           }
         >
-          <TrendingMovies />
+          <TrendingMoviesSection />
         </Suspense>
       </div>
     </main>
   );
-};
-
-export default Discover;
+}

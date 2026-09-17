@@ -1,12 +1,13 @@
 "use client";
 
 import React, { use, useState, useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { User, ArrowLeft, Search as SearchIcon } from "lucide-react";
+import { ArrowLeft, Search as SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMovieCastQuery } from "@/hooks/use-tmdb";
+import { CastMemberCard } from "@/components/movie-detail/casts/cast-member-card";
+import { CastSkeletonGrid } from "@/components/movie-detail/casts/cast-skeleton-grid";
 
 interface MovieCastPageProps {
   params: Promise<{
@@ -40,14 +41,15 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
     return crewList.filter(
       (c) =>
         c.name.toLowerCase().includes(term) ||
-        c.known_for_department?.toLowerCase().includes(term) ||
-        c.job?.toLowerCase().includes(term)
+        c.job?.toLowerCase().includes(term) ||
+        c.department?.toLowerCase().includes(term)
     );
   }, [crewList, searchFilter]);
 
   return (
-    <main className="container space-y-6 pt-20 pb-12">
-      <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:items-center">
+    <main className="container min-h-screen space-y-8 pt-20 pb-12">
+      {/* Header with back button */}
+      <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="icon" asChild>
             <Link href={`/movie/${id}`}>
@@ -55,16 +57,22 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
               <span className="sr-only">Back to movie</span>
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
-            Cast & Crew
-          </h1>
+          <div>
+            <h1 className="text-2xl font-bold sm:text-4xl md:text-5xl">
+              Cast &amp; Crew
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {castList.length} Cast Members · {crewList.length} Crew Members
+            </p>
+          </div>
         </div>
 
+        {/* Search filter input */}
         <div className="relative w-full sm:w-72">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Filter by name..."
+            placeholder="Search cast or crew..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             className="pl-9"
@@ -75,21 +83,21 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
       {/* Tabs */}
       <div className="flex gap-2 border-b pb-2">
         <Button
-          variant={activeTab === "all" ? "default" : "ghost"}
+          variant={activeTab === "all" ? "default" : "outline"}
           size="sm"
           onClick={() => setActiveTab("all")}
         >
           All ({castList.length + crewList.length})
         </Button>
         <Button
-          variant={activeTab === "cast" ? "default" : "ghost"}
+          variant={activeTab === "cast" ? "default" : "outline"}
           size="sm"
           onClick={() => setActiveTab("cast")}
         >
           Cast ({castList.length})
         </Button>
         <Button
-          variant={activeTab === "crew" ? "default" : "ghost"}
+          variant={activeTab === "crew" ? "default" : "outline"}
           size="sm"
           onClick={() => setActiveTab("crew")}
         >
@@ -98,121 +106,60 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div
-              key={i}
-              className="flex h-37.5 animate-pulse rounded-md border bg-card"
-            >
-              <div className="h-full w-25 bg-secondary" />
-              <div className="flex-1 space-y-2 p-4">
-                <div className="h-4 w-3/4 rounded bg-secondary" />
-                <div className="h-3 w-1/2 rounded bg-secondary" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <CastSkeletonGrid />
       ) : isError || (!castList.length && !crewList.length) ? (
         <div className="flex h-62.5 w-full items-center justify-center rounded-lg border bg-card p-8">
           <h2 className="text-xl font-medium">No cast or crew information found.</h2>
         </div>
       ) : (
         <div className="space-y-8">
-          {(activeTab === "all" || activeTab === "cast") && filteredCast.length > 0 && (
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">Cast ({filteredCast.length})</h2>
-              <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filteredCast.map((cast, index) => {
-                  const castProfileUrl = `https://image.tmdb.org/t/p/w185${cast.profile_path}`;
-                  return (
+          {(activeTab === "all" || activeTab === "cast") &&
+            filteredCast.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-2xl font-bold">Cast ({filteredCast.length})</h2>
+                <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredCast.map((cast, index) => (
                     <li key={cast.id ? `cast-${cast.id}-${index}` : index}>
-                      <div className="flex overflow-clip rounded-md border bg-card transition-colors hover:border-primary/50">
-                        {cast.profile_path ? (
-                          <div className="relative aspect-2/3 h-35 flex-none sm:h-40">
-                            <Image
-                              src={castProfileUrl}
-                              alt={cast.name}
-                              fill
-                              sizes="120px"
-                              className="object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="relative flex aspect-2/3 h-35 flex-none items-center justify-center bg-secondary sm:h-40">
-                            <User size={40} className="text-muted-foreground" />
-                          </div>
-                        )}
-
-                        <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
-                          <div>
-                            <h3 className="truncate text-base font-bold">{cast.name}</h3>
-                            <p className="truncate text-sm font-light text-muted-foreground">
-                              {cast.character || "Unknown Character"}
-                            </p>
-                          </div>
-                          <p className="text-xs font-light text-muted-foreground">
-                            Popularity: {Number(cast.popularity).toFixed(1)}
-                          </p>
-                        </div>
-                      </div>
+                      <CastMemberCard
+                        name={cast.name}
+                        role={cast.character || "Unknown Character"}
+                        subtitle={`Popularity: ${Number(cast.popularity).toFixed(1)}`}
+                        profilePath={cast.profile_path}
+                      />
                     </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
+                  ))}
+                </ul>
+              </section>
+            )}
 
-          {(activeTab === "all" || activeTab === "crew") && filteredCrew.length > 0 && (
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">Crew ({filteredCrew.length})</h2>
-              <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filteredCrew.map((crew, index) => {
-                  const crewProfileUrl = `https://image.tmdb.org/t/p/w185${crew.profile_path}`;
-                  return (
+          {(activeTab === "all" || activeTab === "crew") &&
+            filteredCrew.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-2xl font-bold">Crew ({filteredCrew.length})</h2>
+                <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredCrew.map((crew, index) => (
                     <li key={crew.id ? `crew-${crew.id}-${index}` : index}>
-                      <div className="flex overflow-clip rounded-md border bg-card transition-colors hover:border-primary/50">
-                        {crew.profile_path ? (
-                          <div className="relative aspect-2/3 h-35 flex-none sm:h-40">
-                            <Image
-                              src={crewProfileUrl}
-                              alt={crew.name}
-                              fill
-                              sizes="120px"
-                              className="object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="relative flex aspect-2/3 h-35 flex-none items-center justify-center bg-secondary sm:h-40">
-                            <User size={40} className="text-muted-foreground" />
-                          </div>
-                        )}
-
-                        <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
-                          <div>
-                            <h3 className="truncate text-base font-bold">{crew.name}</h3>
-                            <p className="truncate text-sm font-light text-muted-foreground">
-                              {crew.job || crew.known_for_department}
-                            </p>
-                          </div>
-                          <p className="text-xs font-light text-muted-foreground">
-                            Department: {crew.department || crew.known_for_department}
-                          </p>
-                        </div>
-                      </div>
+                      <CastMemberCard
+                        name={crew.name}
+                        role={crew.job || crew.known_for_department}
+                        subtitle={`Department: ${crew.department || crew.known_for_department}`}
+                        profilePath={crew.profile_path}
+                      />
                     </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
+                  ))}
+                </ul>
+              </section>
+            )}
 
-          {searchFilter && filteredCast.length === 0 && filteredCrew.length === 0 && (
-            <div className="flex h-50 w-full items-center justify-center rounded-lg border bg-card p-8">
-              <p className="text-muted-foreground">
-                No cast or crew matching &quot;{searchFilter}&quot;
-              </p>
-            </div>
-          )}
+          {searchFilter &&
+            filteredCast.length === 0 &&
+            filteredCrew.length === 0 && (
+              <div className="flex h-50 w-full items-center justify-center rounded-lg border bg-card p-8">
+                <p className="text-muted-foreground">
+                  No cast or crew matching &quot;{searchFilter}&quot;
+                </p>
+              </div>
+            )}
         </div>
       )}
     </main>

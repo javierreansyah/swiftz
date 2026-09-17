@@ -6,6 +6,8 @@ import {
   RecommendationData,
   SearchData,
   MovieGenresSearchData,
+  VideoData,
+  MovieImagesData,
 } from "@/types";
 import {
   TMDBAccount,
@@ -117,6 +119,18 @@ export async function getMovieReviewsClient(
   return fetchTMDBClient<TMDBReviewsResponse>(`/movie/${movieId}/reviews`, {
     page,
   });
+}
+
+export async function getMovieVideosClient(
+  id: string | number
+): Promise<VideoData> {
+  return fetchTMDBClient<VideoData>(`/movie/${id}/videos`);
+}
+
+export async function getMovieImagesClient(
+  id: string | number
+): Promise<MovieImagesData> {
+  return fetchTMDBClient<MovieImagesData>(`/movie/${id}/images`);
 }
 
 // -------------------------------------------------------------

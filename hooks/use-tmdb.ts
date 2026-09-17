@@ -14,6 +14,8 @@ import {
   getMovieCastClient,
   getMovieRecommendationsClient,
   getMovieReviewsClient,
+  getMovieVideosClient,
+  getMovieImagesClient,
   getMovieAccountStates,
   setMovieFavorite,
   setMovieWatchlist,
@@ -85,6 +87,22 @@ export function useMovieReviewsQuery(
     queryFn: () => getMovieReviewsClient(movieId, page),
     enabled: Boolean(movieId),
     placeholderData: keepPreviousData,
+  });
+}
+
+export function useMovieVideosQuery(id: string | number) {
+  return useQuery({
+    queryKey: ["movie-videos", String(id)],
+    queryFn: () => getMovieVideosClient(id),
+    enabled: Boolean(id),
+  });
+}
+
+export function useMovieImagesQuery(id: string | number) {
+  return useQuery({
+    queryKey: ["movie-images", String(id)],
+    queryFn: () => getMovieImagesClient(id),
+    enabled: Boolean(id),
   });
 }
 

@@ -2,10 +2,10 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Search from "@/components/search";
-import RenderMovieCards from "@/components/render-movie-cards";
-import PaginationSystem from "@/components/pagination-system";
-import MovieCardSkeleton from "@/components/movie-card-skeleton";
+import { SearchBar } from "@/components/common/search-bar";
+import { MovieGrid } from "@/components/common/movie-grid";
+import { PaginationSystem } from "@/components/common/pagination-system";
+import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
 import { useSearchMoviesQuery } from "@/hooks/use-tmdb";
 
 function SearchContent() {
@@ -28,7 +28,7 @@ function SearchContent() {
 
   return (
     <main className="container space-y-8 pt-20 pb-10">
-      <Search currentQuery={query} />
+      <SearchBar currentQuery={query} />
 
       {!query ? (
         <div className="flex h-62.5 w-full flex-col items-center justify-center space-y-2 rounded-lg border bg-card p-8 text-center">
@@ -59,7 +59,7 @@ function SearchContent() {
               Page {currentPage} of {totalPages}
             </p>
           </div>
-          <RenderMovieCards movies={movies} count={movies.length} />
+          <MovieGrid movies={movies} count={movies.length} />
           {totalPages > 1 && (
             <PaginationSystem
               currentPage={currentPage}

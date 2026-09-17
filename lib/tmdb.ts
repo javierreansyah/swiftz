@@ -8,6 +8,7 @@ import {
   RecommendationData,
   SearchData,
   MovieGenresSearchData,
+  MovieImagesData,
 } from "@/types";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
@@ -69,6 +70,10 @@ export async function getMovieCast(id: string): Promise<CastData> {
 
 export async function getMovieVideos(id: string): Promise<VideoData> {
   return fetchTMDB<VideoData>(`/movie/${id}/videos`, {}, 604800);
+}
+
+export async function getMovieImages(id: string): Promise<MovieImagesData> {
+  return fetchTMDB<MovieImagesData>(`/movie/${id}/images`, {}, 604800);
 }
 
 export async function getMovieRecommendations(
