@@ -12,8 +12,15 @@ import { ReviewsModal } from "./reviews-modal";
 import { VideosModal } from "./videos-modal";
 import { PhotosModal } from "./photos-modal";
 import { CastModal } from "./cast-modal";
+import { RecommendationsModal } from "./recommendations-modal";
 
-export type ModalType = "reviews" | "videos" | "photos" | "cast" | null;
+export type ModalType =
+  | "reviews"
+  | "videos"
+  | "photos"
+  | "cast"
+  | "recommendations"
+  | null;
 
 export interface MovieBottomModalsProps {
   activeModal: ModalType;
@@ -79,6 +86,12 @@ export function MovieBottomModals({
         movie={movie}
         cast={cast}
         crew={crew}
+      />
+
+      <RecommendationsModal
+        isOpen={activeModal === "recommendations"}
+        onClose={onClose}
+        movie={movie}
       />
     </>
   );

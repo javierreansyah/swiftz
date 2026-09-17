@@ -8,7 +8,6 @@ import { MovieHeroHeader } from "./movie-hero-header";
 import { MovieHeroMedia } from "./movie-hero-media";
 import { MovieHeroActions } from "./movie-hero-actions";
 import { MovieRatingDialog } from "./movie-rating-dialog";
-import { MovieHeroBackdrop } from "./movie-hero-backdrop";
 
 export interface MovieHeroProps {
   movie: MovieDetailsData;
@@ -105,42 +104,37 @@ export function MovieHero({
   };
 
   return (
-    <section className="relative isolate overflow-hidden pt-20 pb-10">
-      {/* Corner-to-corner blurred parallax backdrop covering down to the bottom of the main info card */}
-      <MovieHeroBackdrop backdropUrl={backdropUrl} alt={movie.title} />
+    <div className="space-y-6">
+      <MovieHeroHeader
+        movie={movie}
+        certification={certification}
+        releaseYear={releaseYear}
+        runtimeFormatted={runtimeFormatted}
+        userRating={userRating}
+        onRateClick={handleRateOpen}
+        onShareClick={handleShareClick}
+        copiedShare={copiedShare}
+      />
 
-      <div className="relative z-10 container space-y-6">
-        <MovieHeroHeader
-          movie={movie}
-          certification={certification}
-          releaseYear={releaseYear}
-          runtimeFormatted={runtimeFormatted}
-          userRating={userRating}
-          onRateClick={handleRateOpen}
-          onShareClick={handleShareClick}
-          copiedShare={copiedShare}
-        />
+      <MovieHeroMedia
+        movieTitle={movie.title}
+        posterUrl={posterUrl}
+        backdropUrl={backdropUrl}
+        playableVideos={playableVideos}
+      />
 
-        <MovieHeroMedia
-          movieTitle={movie.title}
-          posterUrl={posterUrl}
-          backdropUrl={backdropUrl}
-          playableVideos={playableVideos}
-        />
-
-        <MovieHeroActions
-          movie={movie}
-          cast={cast}
-          crew={crew}
-          reviewCount={reviewCount}
-          isWatchlist={isWatchlist}
-          isFavorite={isFavorite}
-          userRating={userRating}
-          onOpenModal={onOpenModal}
-          onOpenRating={handleRateOpen}
-          onShareClick={handleShareClick}
-        />
-      </div>
+      <MovieHeroActions
+        movie={movie}
+        cast={cast}
+        crew={crew}
+        reviewCount={reviewCount}
+        isWatchlist={isWatchlist}
+        isFavorite={isFavorite}
+        userRating={userRating}
+        onOpenModal={onOpenModal}
+        onOpenRating={handleRateOpen}
+        onShareClick={handleShareClick}
+      />
 
       <MovieRatingDialog
         isOpen={showRatingModal}
@@ -151,7 +145,7 @@ export function MovieHero({
         currentRating={userRating}
         onSuccess={() => refetchStates()}
       />
-    </section>
+    </div>
   );
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  ChevronDown,
+  ChevronRight,
   Film,
   Users,
   Video,
@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useMovieNav } from "@/components/providers/movie-nav-provider";
 import {
   useMovieAccountStatesQuery,
   useToggleFavoriteMutation,
@@ -28,7 +29,9 @@ import {
 export interface MovieQuickRailProps {
   movieId: number;
   movieTitle: string;
-  onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
+  onOpenModal: (
+    modal: "reviews" | "videos" | "photos" | "cast" | "recommendations"
+  ) => void;
   onOpenRating?: () => void;
   mode?: "all" | "desktop" | "mobile";
   className?: string;
@@ -42,10 +45,56 @@ export function MovieQuickRail({
   mode = "all",
   className,
 }: MovieQuickRailProps) {
-  const [mobileExpanded, setMobileExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("section-overview");
 
   const { user, sessionId, isAuthenticated, login } = useAuth();
+  const {
+    isOpen: isMobileNavOpen,
+    close: closeMobileNav,
+    setIsAvailable,
+  } = useMovieNav();
+
+  // Register availability on mount
+  useEffect(() => {
+    setIsAvailable(true);
+    return () => {
+      setIsAvailable(false);
+    };
+  }, [setIsAvailable]);
+
+  // Section scroll tracking for active indicator
+  useEffect(() => {
+    const sectionIds = [
+      "section-overview",
+      "section-cast",
+      "section-videos",
+      "section-photos",
+      "section-reviews",
+      "section-recommendations",
+    ];
+
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 140;
+      let current = sectionIds[0];
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPos >= top) {
+            current = id;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const { data: accountStates } = useMovieAccountStatesQuery(
     movieId,
     sessionId
@@ -65,8 +114,14 @@ export function MovieQuickRail({
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      setMobileExpanded(false);
+      const headerOffset = 96; // 64px fixed header + 32px padding
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+      closeMobileNav();
     }
   };
 
@@ -129,66 +184,78 @@ export function MovieQuickRail({
     { id: "section-videos", label: "Videos", icon: Video, modal: "videos" as const },
     { id: "section-photos", label: "Photos", icon: ImageIcon, modal: "photos" as const },
     { id: "section-reviews", label: "Reviews", icon: MessageSquare, modal: "reviews" as const },
-    { id: "section-recommendations", label: "Related", icon: Sparkles },
+    { id: "section-recommendations", label: "Related", icon: Sparkles, modal: "recommendations" as const },
   ];
 
+  /* ----------------- DESKTOP SIDEBAR CONTENT ----------------- */
   const renderDesktopSidebar = () => (
-    <div
-      className={cn(
-        "flex flex-col space-y-5 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur-xl transition-all",
-        className
-      )}
-    >
-      {/* Sidebar Header */}
-      <div className="flex items-center justify-between border-b border-border/60 pb-3">
-        <div className="flex items-center gap-2">
-          <Film className="size-4 text-primary" />
-          <h3 className="font-heading text-sm font-bold tracking-tight text-foreground">
-            On This Page
-          </h3>
-        </div>
-        <span className="text-[11px] font-semibold text-muted-foreground">
-          Quick Jump
-        </span>
-      </div>
+    <div className="flex flex-col space-y-4">
+      {/* Navigation Links with continuous vertical bar and active primary indicator */}
+      <nav className="relative space-y-1 pl-3">
+        {/* Continuous vertical track */}
+        <div className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-border/40" />
 
-      {/* Navigation Links */}
-      <nav className="space-y-1">
         {sections.map((item) => {
+          const isActive = activeSection === item.id;
           const Icon = item.icon;
           return (
-            <button
+            <div
               key={item.id}
-              onClick={() => {
-                if (item.modal) {
-                  onOpenModal(item.modal);
-                } else {
-                  scrollToSection(item.id);
-                }
-              }}
-              className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
+              onClick={() => scrollToSection(item.id)}
+              className="group relative flex w-full cursor-pointer items-center justify-between py-1.5 text-xs font-semibold select-none"
             >
-              <div className="flex items-center gap-2.5">
-                <Icon className="size-4 text-muted-foreground/80" />
-                <span>{item.label}</span>
-              </div>
-              {item.modal && (
-                <span className="text-[10px] text-muted-foreground/60">
-                  Open
-                </span>
+              {/* Primary colored bar on the activated section */}
+              {isActive && (
+                <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-full bg-primary transition-all duration-300" />
               )}
-            </button>
+
+              <div className="flex items-center gap-2.5">
+                <Icon
+                  className={cn(
+                    "size-3.5 transition-colors duration-200",
+                    isActive
+                      ? "text-primary"
+                      : "text-muted-foreground/60 group-hover:text-foreground"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "transition-colors duration-200",
+                    isActive
+                      ? "font-bold text-foreground"
+                      : "text-muted-foreground/70 group-hover:text-foreground"
+                  )}
+                >
+                  {item.label}
+                </span>
+              </div>
+
+              {item.modal && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenModal(item.modal);
+                  }}
+                  className="flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/60 transition-colors hover:text-primary"
+                  title={`Open ${item.label} sheet`}
+                >
+                  <span>Open</span>
+                  <ChevronRight className="size-3" />
+                </button>
+              )}
+            </div>
           );
         })}
       </nav>
 
-      {/* Quick Actions Header */}
-      <div className="space-y-2.5 border-t border-border/60 pt-1">
+      {/* Quick Actions */}
+      <div className="space-y-2 border-t border-border/60 pt-3">
         <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
           Actions
         </p>
 
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 gap-1.5">
           {/* Watchlist button */}
           <Button
             size="sm"
@@ -198,14 +265,14 @@ export function MovieQuickRail({
             className={cn(
               "h-9 w-full justify-start gap-2.5 rounded-xl text-xs font-semibold",
               isWatchlist
-                ? "bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "border-border/70 hover:bg-muted"
             )}
           >
             {toggleWatchlist.isPending ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 className="size-3.5 animate-spin" />
             ) : (
-              <Bookmark className={cn("size-4", isWatchlist && "fill-current")} />
+              <Bookmark className={cn("size-3.5", isWatchlist && "fill-current")} />
             )}
             <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
           </Button>
@@ -224,9 +291,14 @@ export function MovieQuickRail({
             )}
           >
             {toggleFavorite.isPending ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 className="size-3.5 animate-spin" />
             ) : (
-              <Heart className={cn("size-4", isFavorite && "fill-current text-red-500")} />
+              <Heart
+                className={cn(
+                  "size-3.5",
+                  isFavorite && "fill-current text-red-500"
+                )}
+              />
             )}
             <span>{isFavorite ? "In Favorites" : "Add to Favorites"}</span>
           </Button>
@@ -240,7 +312,7 @@ export function MovieQuickRail({
           >
             <Star
               className={cn(
-                "size-4",
+                "size-3.5",
                 userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
               )}
             />
@@ -257,9 +329,9 @@ export function MovieQuickRail({
             className="h-9 w-full justify-start gap-2.5 rounded-xl border-border/70 text-xs font-semibold hover:bg-muted"
           >
             {copied ? (
-              <Check className="size-4 text-emerald-500" />
+              <Check className="size-3.5 text-emerald-500" />
             ) : (
-              <Share2 className="size-4" />
+              <Share2 className="size-3.5" />
             )}
             <span>{copied ? "Copied Link!" : "Share Movie"}</span>
           </Button>
@@ -268,168 +340,181 @@ export function MovieQuickRail({
     </div>
   );
 
-  const renderMobileStickyBar = () => (
-    <div
-      className={cn(
-        "sticky top-16 z-30 w-full border-y border-border/70 bg-background/90 shadow-sm backdrop-blur-xl lg:hidden",
-        className
-      )}
-    >
-      {/* Top Bar: Horizontal pills + expand toggle */}
-      <div className="flex h-12 items-center justify-between gap-2 px-3 sm:px-4">
-        {/* Horizontal scrollable pills */}
-        <div className="flex flex-1 scrollbar-none items-center gap-1.5 overflow-x-auto py-1">
+  /* ----------------- MOBILE 2-COLUMN COLLAPSIBLE CONTENT ----------------- */
+  const renderMobileContent = () => (
+    <div className="flex flex-col space-y-4">
+      {/* 2-Column Section Jumpers with Icon Highlighting */}
+      <div className="space-y-2">
+        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+          Sections
+        </p>
+
+        <div className="grid grid-cols-2 gap-2">
           {sections.map((item) => {
+            const isActive = activeSection === item.id;
             const Icon = item.icon;
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  if (item.modal) {
-                    onOpenModal(item.modal);
-                  } else {
-                    scrollToSection(item.id);
-                  }
-                }}
-                className="flex shrink-0 items-center gap-1.5 rounded-full border border-border/70 bg-muted/60 px-3 py-1 text-xs font-semibold text-foreground/80 transition-all hover:bg-muted hover:text-foreground active:scale-95"
+                type="button"
+                onClick={() => scrollToSection(item.id)}
+                className={cn(
+                  "active:scale-0.98 flex items-center gap-2.5 rounded-xl border p-2.5 text-left text-xs transition-colors select-none",
+                  isActive
+                    ? "border-primary/50 bg-primary/10 font-bold text-foreground shadow-xs"
+                    : "border-border/50 bg-card/40 font-medium text-muted-foreground hover:border-border/80 hover:text-foreground"
+                )}
               >
-                <Icon className="size-3.5 text-muted-foreground" />
-                <span>{item.label}</span>
+                <div
+                  className={cn(
+                    "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "bg-muted/70 text-muted-foreground/80"
+                  )}
+                >
+                  <Icon className="size-3.5" />
+                </div>
+                <span className="truncate">{item.label}</span>
               </button>
             );
           })}
         </div>
-
-        {/* Expand/Collapse Actions Toggle */}
-        <button
-          onClick={() => setMobileExpanded(!mobileExpanded)}
-          className={cn(
-            "flex shrink-0 items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs font-bold transition-all",
-            mobileExpanded
-              ? "border-primary bg-primary text-primary-foreground"
-              : "bg-card text-foreground hover:bg-muted"
-          )}
-          aria-expanded={mobileExpanded}
-          aria-label="Toggle quick actions"
-        >
-          <span>Actions</span>
-          <ChevronDown
-            className={cn(
-              "size-3.5 transition-transform duration-200",
-              mobileExpanded && "rotate-180"
-            )}
-          />
-        </button>
       </div>
 
-      {/* Expandable Actions Drawer */}
-      {mobileExpanded && (
-        <div className="animate-in border-t border-border/60 bg-card/95 px-4 py-3 backdrop-blur-2xl duration-200 slide-in-from-top-2">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {/* Watchlist */}
-            <Button
-              size="sm"
-              variant={isWatchlist ? "default" : "outline"}
-              onClick={() => {
-                handleWatchlist();
-              }}
-              disabled={toggleWatchlist.isPending}
-              className={cn(
-                "gap-1.5 rounded-xl text-xs font-semibold",
-                isWatchlist
-                  ? "bg-amber-600 text-white hover:bg-amber-700"
-                  : "border-border/70"
-              )}
-            >
-              {toggleWatchlist.isPending ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <Bookmark
-                  className={cn("size-3.5", isWatchlist && "fill-current")}
-                />
-              )}
-              <span>{isWatchlist ? "In Watchlist" : "Watchlist"}</span>
-            </Button>
+      {/* 2-Column Quick Actions */}
+      <div className="space-y-2 border-t border-border/60 pt-3">
+        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+          Actions
+        </p>
 
-            {/* Favorite */}
-            <Button
-              size="sm"
-              variant={isFavorite ? "default" : "outline"}
-              onClick={() => {
-                handleFavorite();
-              }}
-              disabled={toggleFavorite.isPending}
-              className={cn(
-                "gap-1.5 rounded-xl text-xs font-semibold",
-                isFavorite
-                  ? "bg-red-600 text-white hover:bg-red-700"
-                  : "border-border/70"
-              )}
-            >
-              {toggleFavorite.isPending ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <Heart
-                  className={cn(
-                    "size-3.5",
-                    isFavorite && "fill-current text-red-500"
-                  )}
-                />
-              )}
-              <span>{isFavorite ? "Favorited" : "Favorite"}</span>
-            </Button>
+        <div className="grid grid-cols-2 gap-2">
+          {/* Watchlist */}
+          <Button
+            size="sm"
+            variant={isWatchlist ? "default" : "outline"}
+            onClick={() => {
+              handleWatchlist();
+              closeMobileNav();
+            }}
+            disabled={toggleWatchlist.isPending}
+            className={cn(
+              "h-9 w-full justify-start gap-2 rounded-xl text-xs font-semibold",
+              isWatchlist
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "border-border/70 bg-card/40 hover:bg-muted"
+            )}
+          >
+            {toggleWatchlist.isPending ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Bookmark className={cn("size-3.5", isWatchlist && "fill-current")} />
+            )}
+            <span className="truncate">
+              {isWatchlist ? "In Watchlist" : "Watchlist"}
+            </span>
+          </Button>
 
-            {/* Rate Movie */}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                setMobileExpanded(false);
-                handleRateClick();
-              }}
-              className="gap-1.5 rounded-xl border-border/70 text-xs font-semibold"
-            >
-              <Star
+          {/* Favorite */}
+          <Button
+            size="sm"
+            variant={isFavorite ? "default" : "outline"}
+            onClick={() => {
+              handleFavorite();
+              closeMobileNav();
+            }}
+            disabled={toggleFavorite.isPending}
+            className={cn(
+              "h-9 w-full justify-start gap-2 rounded-xl text-xs font-semibold",
+              isFavorite
+                ? "bg-red-600 text-white hover:bg-red-700"
+                : "border-border/70 bg-card/40 hover:bg-muted"
+            )}
+          >
+            {toggleFavorite.isPending ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <Heart
                 className={cn(
                   "size-3.5",
-                  userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
+                  isFavorite && "fill-current text-red-500"
                 )}
               />
-              <span>{userRating ? `${userRating}/10` : "Rate"}</span>
-            </Button>
+            )}
+            <span className="truncate">
+              {isFavorite ? "Favorited" : "Favorite"}
+            </span>
+          </Button>
 
-            {/* Share */}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleShare}
-              className="gap-1.5 rounded-xl border-border/70 text-xs font-semibold"
-            >
-              {copied ? (
-                <Check className="size-3.5 text-emerald-500" />
-              ) : (
-                <Share2 className="size-3.5" />
+          {/* Rate */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              closeMobileNav();
+              handleRateClick();
+            }}
+            className="h-9 w-full justify-start gap-2 rounded-xl border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+          >
+            <Star
+              className={cn(
+                "size-3.5",
+                userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
               )}
-              <span>{copied ? "Copied!" : "Share"}</span>
-            </Button>
-          </div>
+            />
+            <span className="truncate">
+              {userRating ? `${userRating}/10` : "Rate"}
+            </span>
+          </Button>
+
+          {/* Share */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleShare}
+            className="h-9 w-full justify-start gap-2 rounded-xl border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+          >
+            {copied ? (
+              <Check className="size-3.5 text-emerald-500" />
+            ) : (
+              <Share2 className="size-3.5" />
+            )}
+            <span className="truncate">{copied ? "Copied!" : "Share"}</span>
+          </Button>
         </div>
-      )}
+      </div>
     </div>
   );
 
-  if (mode === "desktop") {
-    return renderDesktopSidebar();
-  }
-
-  if (mode === "mobile") {
-    return renderMobileStickyBar();
-  }
-
   return (
     <>
-      <div className="lg:hidden">{renderMobileStickyBar()}</div>
-      <div className="hidden lg:block">{renderDesktopSidebar()}</div>
+      {/* Desktop Sidebar */}
+      {(mode === "desktop" || mode === "all") && (
+        <div className={cn("flex flex-col space-y-4", className)}>
+          {renderDesktopSidebar()}
+        </div>
+      )}
+
+      {/* Mobile Sticky Collapsible Dropdown below Header (Triggered by header Compass button) */}
+      {(mode === "mobile" || mode === "all") && isMobileNavOpen && (
+        <>
+          {/* Transparent Backdrop to dismiss outside (no solid black darkening overlay) */}
+          <div
+            className="fixed inset-0 z-40 lg:hidden"
+            onClick={closeMobileNav}
+            aria-hidden="true"
+          />
+
+          {/* Frosted Translucent Collapsible below Header (opens up and down) */}
+          <div
+            className="fixed inset-x-0 top-16 z-50 max-h-[85vh] animate-in overflow-y-auto border-b border-border/80 bg-background/85 p-4 shadow-xl backdrop-blur-md duration-200 slide-in-from-top-2 lg:hidden"
+          >
+            <div className="container max-w-md space-y-4">
+              {renderMobileContent()}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

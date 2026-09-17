@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Star, TrendingUp, Share2, Check } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -47,14 +46,13 @@ export function MovieHeroHeader({
         </h1>
         <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-muted-foreground sm:text-base">
           {releaseYear && <span>{releaseYear}</span>}
-          <span>·</span>
-          <Badge
-            variant="outline"
-            className="rounded border-border/80 bg-background/50 px-1.5 py-0.5 text-xs font-semibold tracking-wider uppercase"
-          >
-            {certification}
-          </Badge>
-          <span>·</span>
+          {releaseYear && <span>·</span>}
+          {certification && (
+            <>
+              <span>{certification}</span>
+              <span>·</span>
+            </>
+          )}
           <span>{runtimeFormatted}</span>
         </div>
       </div>
@@ -68,7 +66,7 @@ export function MovieHeroHeader({
               variant="outline"
               size="sm"
               onClick={onRateClick}
-              className={`gap-1.5 rounded-full border-border/80 bg-background/60 backdrop-blur-sm transition-colors ${
+              className={`h-9 gap-1.5 rounded-none border-border/80 bg-background/60 px-3.5 backdrop-blur-sm transition-colors ${
                 userRating
                   ? "border-amber-500/50 text-amber-500 hover:text-amber-400"
                   : "hover:border-primary/50 hover:text-primary"
@@ -92,7 +90,7 @@ export function MovieHeroHeader({
         </Tooltip>
 
         {/* IMDb / TMDB Score Badge: ★ 8.9/10 (200K) */}
-        <div className="flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-amber-500 backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-2 rounded-none border border-amber-500/30 bg-amber-500/10 px-3.5 text-amber-500 backdrop-blur-sm">
           <Star className="size-4 fill-amber-400 text-amber-400" />
           <div className="flex items-baseline gap-1">
             <span className="font-bold text-foreground">
@@ -106,7 +104,7 @@ export function MovieHeroHeader({
         </div>
 
         {/* Popularity / Trending Badge: ↗ 1 */}
-        <div className="flex items-center gap-1.5 rounded-full border border-border/80 bg-background/60 px-3 py-1.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-1.5 rounded-none border border-border/80 bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
           <TrendingUp className="size-4 text-primary" />
           <span>{Math.round(movie.popularity)}</span>
         </div>
@@ -116,9 +114,8 @@ export function MovieHeroHeader({
           <TooltipTrigger asChild>
             <Button
               variant="outline"
-              size="icon-sm"
               onClick={onShareClick}
-              className="rounded-full border-border/80 bg-background/60 backdrop-blur-sm"
+              className="size-9 rounded-none border-border/80 bg-background/60 p-0 backdrop-blur-sm"
             >
               {copiedShare ? (
                 <Check className="size-3.5 text-emerald-500" />

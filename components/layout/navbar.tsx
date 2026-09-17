@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Compass } from "lucide-react";
 import Logo from "@/public/assets/svg-components/logo";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { MobileDrawer } from "./mobile-drawer";
 import { UserNavDropdown } from "./user-nav-dropdown";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useMovieNav } from "@/components/providers/movie-nav-provider";
+import { cn } from "@/lib/utils";
 
 interface NavigationRoute {
   route: string;
@@ -39,6 +41,27 @@ export function Navbar() {
     { route: "/genres", name: "Genres" },
     ...(isAuthenticated ? [{ route: "/library", name: "Library" }] : []),
   ];
+
+  const {
+    isAvailable: isMovieNavAvailable,
+    isOpen: isMovieNavOpen,
+    toggle: toggleMovieNav,
+    close: closeMovieNav,
+  } = useMovieNav();
+
+  const handleToggleMenu = () => {
+    if (!isOpen && isMovieNavOpen) {
+      closeMovieNav();
+    }
+    setIsOpen(!isOpen);
+  };
+
+  const handleToggleMovieNav = () => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+    toggleMovieNav();
+  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-16 w-full">
@@ -87,11 +110,32 @@ export function Navbar() {
             <UserNavDropdown />
           </div>
 
+          {/* Mobile Movie Section Navigator Trigger (Compass) */}
+          {isMovieNavAvailable && (
+            <Button
+              variant="outline"
+              size="icon"
+              className={cn(
+                "transition-all lg:hidden",
+                isMovieNavOpen &&
+                  "border-primary bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+              )}
+              onClick={handleToggleMovieNav}
+              aria-expanded={isMovieNavOpen}
+              aria-label="Toggle movie section navigation"
+              title="Jump to section"
+            >
+              <Compass className="size-[1.2rem]" />
+            </Button>
+          )}
+
+          {/* Mobile Main Menu Drawer Trigger */}
           <Button
             variant="outline"
             size="icon"
             className="lg:hidden"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={handleToggleMenu}
+            aria-label="Toggle navigation"
           >
             <Menu className="size-[1.2rem]" />
             <span className="sr-only">Toggle navigation</span>

@@ -7,6 +7,7 @@ import {
   Crew,
   Video,
   MovieImagesData,
+  Movie,
 } from "@/types";
 import {
   useMovieReviewsQuery,
@@ -14,6 +15,7 @@ import {
 } from "@/hooks/use-tmdb";
 import { useAuth } from "@/components/providers/auth-provider";
 import { MovieHero } from "./hero/movie-hero";
+import { MovieHeroBackdrop } from "./hero/movie-hero-backdrop";
 import { MovieRatingDialog } from "./hero/movie-rating-dialog";
 import { MovieBottomModals, ModalType } from "./modals/movie-bottom-modals";
 import { MovieQuickRail } from "./movie-quick-rail";
@@ -21,6 +23,7 @@ import { MovieCastSection } from "./sections/movie-cast-section";
 import { MovieVideosSection } from "./sections/movie-videos-section";
 import { MoviePhotosSection } from "./sections/movie-photos-section";
 import { MovieReviewsSection } from "./sections/movie-reviews-section";
+import { MovieRecommendationsSection } from "./sections/movie-recommendations-section";
 
 export interface MovieDetailClientProps {
   movie: MovieDetailsData;
@@ -29,6 +32,7 @@ export interface MovieDetailClientProps {
   cast: Cast[];
   crew: Crew[];
   images: MovieImagesData;
+  recommendations?: Movie[];
   children?: React.ReactNode;
 }
 
@@ -39,6 +43,7 @@ export function MovieDetailClient({
   cast,
   crew,
   images,
+  recommendations = [],
   children,
 }: MovieDetailClientProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
@@ -72,38 +77,49 @@ export function MovieDetailClient({
     setActiveModal("videos");
   };
 
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+    : "/assets/images/movie-placeholder.png";
+
+  const backdropUrl = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
+    : posterUrl;
+
   return (
     <div className="relative min-h-screen">
-      {/* 1. Hero Showcase with corner-to-corner blurred parallax backdrop */}
-      <div id="section-overview">
-        <MovieHero
-          movie={movie}
-          certification={certification}
-          videos={videos}
-          cast={cast}
-          crew={crew}
-          reviewCount={totalReviews}
-          onOpenModal={(m) => setActiveModal(m)}
-          onOpenRating={() => setShowRatingModal(true)}
-        />
-      </div>
+      {/* Corner-to-corner blurred parallax backdrop bleeding smoothly down into page background */}
+      <MovieHeroBackdrop backdropUrl={backdropUrl} alt={movie.title} />
 
-      {/* Mobile Sticky Sub-Header Bar (only displayed on mobile when sidebar is NOT displayed) */}
-      <div className="lg:hidden">
-        <MovieQuickRail
-          mode="mobile"
-          movieId={movie.id}
-          movieTitle={movie.title}
-          onOpenModal={(m) => setActiveModal(m)}
-          onOpenRating={() => setShowRatingModal(true)}
-        />
-      </div>
-
-      {/* Main Content & Dedicated Desktop Sidebar Layout */}
-      <div className="container pt-8 pb-20">
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 xl:gap-10">
+      {/* Main Content & Dedicated Desktop Sidebar Layout starting from the top */}
+      <div className="relative z-10 container py-20">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_220px] xl:grid-cols-[1fr_240px] xl:gap-10">
           {/* Main Movie Content Column */}
-          <main className="min-w-0 space-y-12 lg:col-span-8 xl:col-span-9">
+          <main className="min-w-0 space-y-12">
+            {/* 1. Hero Showcase (Overview) */}
+            <div id="section-overview" className="scroll-mt-24">
+              <MovieHero
+                movie={movie}
+                certification={certification}
+                videos={videos}
+                cast={cast}
+                crew={crew}
+                reviewCount={totalReviews}
+                onOpenModal={(m) => setActiveModal(m)}
+                onOpenRating={() => setShowRatingModal(true)}
+              />
+            </div>
+
+            {/* Mobile Collapsible Dropdown below Header (Triggered by Compass Button) */}
+            <div className="lg:hidden">
+              <MovieQuickRail
+                mode="mobile"
+                movieId={movie.id}
+                movieTitle={movie.title}
+                onOpenModal={(m) => setActiveModal(m)}
+                onOpenRating={() => setShowRatingModal(true)}
+              />
+            </div>
+
             {/* 2. Cast Excerpt */}
             <MovieCastSection
               cast={cast}
@@ -131,11 +147,18 @@ export function MovieDetailClient({
             />
 
             {/* 6. Recommendations / Related */}
-            <div id="section-recommendations">{children}</div>
+            {recommendations.length > 0 ? (
+              <MovieRecommendationsSection
+                movies={recommendations}
+                onOpenRecommendationsModal={() => setActiveModal("recommendations")}
+              />
+            ) : (
+              children && <div id="section-recommendations" className="scroll-mt-24">{children}</div>
+            )}
           </main>
 
-          {/* Dedicated Sticky Sidebar Column (Desktop) */}
-          <aside className="sticky top-24 hidden self-start lg:col-span-4 lg:block xl:col-span-3">
+          {/* Dedicated Compact Sticky Sidebar Column (Desktop): Starts at the top alongside Hero, always sticky */}
+          <aside className="sticky top-24 hidden w-55 self-start lg:block xl:w-60">
             <MovieQuickRail
               mode="desktop"
               movieId={movie.id}
