@@ -89,17 +89,18 @@ export function VideosModal({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent
         side="bottom"
-        className="h-[90vh] max-h-[92vh] rounded-t-3xl border-t border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl sm:max-w-none"
+        showCloseButton={false}
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
-        <div className="flex size-full flex-col">
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4 sm:px-10 sm:py-5">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full hover:bg-muted"
+                className="shrink-0 rounded-full hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -113,7 +114,7 @@ export function VideosModal({
                     </span>
                   )}
                 </SheetTitle>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:text-sm">
+                <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase sm:text-sm">
                   Videos
                 </p>
               </div>
@@ -154,7 +155,7 @@ export function VideosModal({
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
             <div className="flex flex-wrap items-center gap-3">
               {/* Sort selector */}
               <div className="flex items-center gap-1.5">
@@ -194,7 +195,7 @@ export function VideosModal({
 
           {/* Active video player if user selected one */}
           {selectedVideoModal && (
-            <div className="border-b border-border/70 bg-black p-4">
+            <div className="shrink-0 border-b border-border/70 bg-black p-4">
               <div className="mx-auto aspect-video max-w-3xl overflow-hidden rounded-xl">
                 <iframe
                   src={`https://www.youtube.com/embed/${selectedVideoModal.key}?autoplay=1&rel=0`}
@@ -211,7 +212,7 @@ export function VideosModal({
           )}
 
           {/* 3-Column Video Grid */}
-          <ScrollArea className="flex-1 p-6">
+          <ScrollArea className="min-h-0 flex-1 p-6 sm:p-10">
             {filteredVideos.length === 0 ? (
               <div className="py-20 text-center text-muted-foreground">
                 No videos found matching the filter.
@@ -244,7 +245,7 @@ export function VideosModal({
                         <div className="absolute inset-0 bg-black/30 transition-opacity group-hover:bg-black/10" />
 
                         {/* Center play icon on hover */}
-                        <div className="absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                        <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
                           <Play className="ml-0.5 size-5 fill-current" />
                         </div>
 

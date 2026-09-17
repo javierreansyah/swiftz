@@ -354,7 +354,7 @@ export function MovieHeroActions({
 
             <div className="flex items-center gap-1.5">
               <span
-                className={`flex size-6 items-center justify-center rounded font-bold text-xs text-white ${
+                className={`flex size-6 items-center justify-center rounded text-xs font-bold text-white ${
                   metascore >= 70
                     ? "bg-emerald-600"
                     : metascore >= 50
@@ -374,7 +374,7 @@ export function MovieHeroActions({
 
       {/* AUTH PROMPT MODAL */}
       {showAuthModal && (
-        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200">
+        <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200 fade-in">
           <div className="relative w-full max-w-md space-y-4 rounded-2xl border bg-card p-6 shadow-2xl">
             <button
               onClick={() => setShowAuthModal(false)}

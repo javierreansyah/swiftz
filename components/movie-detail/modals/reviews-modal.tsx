@@ -138,15 +138,30 @@ export function ReviewsModal({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent
         side="bottom"
-        className="h-[90vh] max-h-[92vh] rounded-t-3xl border-t border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl sm:max-w-none"
+        showCloseButton={false}
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
-        <div className="flex h-full flex-col">
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/60 px-6 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-6 py-4 sm:px-10 sm:py-5">
             <div className="flex items-center gap-3">
-              <SheetTitle className="text-xl font-extrabold sm:text-2xl">
-                User Reviews
-              </SheetTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="shrink-0 rounded-full hover:bg-muted"
+              >
+                <X className="size-5" />
+                <span className="sr-only">Close</span>
+              </Button>
+              <div>
+                <SheetTitle className="text-xl font-extrabold sm:text-2xl">
+                  User Reviews
+                </SheetTitle>
+                <p className="text-xs text-muted-foreground">
+                  {movie.title} {releaseYear ? `(${releaseYear})` : ""}
+                </p>
+              </div>
               <Badge variant="secondary" className="rounded-full px-3 py-0.5">
                 {rawReviews.length} Total
               </Badge>
@@ -184,7 +199,7 @@ export function ReviewsModal({
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
             <div className="flex flex-wrap items-center gap-3">
               {/* Sort Selector */}
               <div className="flex items-center gap-1.5">
@@ -192,7 +207,7 @@ export function ReviewsModal({
                 <select
                   value={reviewSort}
                   onChange={(e) => setReviewSort(e.target.value as any)}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
                 >
                   <option value="featured">Featured</option>
                   <option value="rating_desc">Highest Rating</option>
@@ -207,7 +222,7 @@ export function ReviewsModal({
                 <select
                   value={ratingFilter}
                   onChange={(e) => setRatingFilter(e.target.value)}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
                 >
                   <option value="all">All Stars</option>
                   <option value="9">9+ Stars</option>
@@ -218,7 +233,7 @@ export function ReviewsModal({
               </div>
 
               {/* Hide Spoilers Toggle */}
-              <label className="flex cursor-pointer items-center gap-2 select-none text-muted-foreground hover:text-foreground">
+              <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">
                 <input
                   type="checkbox"
                   checked={hideSpoilers}
@@ -237,7 +252,7 @@ export function ReviewsModal({
           </div>
 
           {/* Reviews List */}
-          <ScrollArea className="flex-1 p-6">
+          <ScrollArea className="min-h-0 flex-1 p-6 sm:p-10">
             {isLoadingReviews ? (
               <div className="space-y-4 py-8">
                 {Array.from({ length: 3 }, (_, i) => (
@@ -327,12 +342,12 @@ export function ReviewsModal({
                               />
                             </div>
                           ) : (
-                            <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-primary font-bold text-sm">
+                            <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
                               {rev.author.charAt(0).toUpperCase()}
                             </div>
                           )}
                           <div>
-                            <p className="font-bold text-sm text-foreground">
+                            <p className="text-sm font-bold text-foreground">
                               {rev.author}
                             </p>
                             <p className="text-xs text-muted-foreground">
@@ -350,10 +365,10 @@ export function ReviewsModal({
                       </div>
 
                       <div>
-                        <h4 className="font-bold text-foreground text-sm sm:text-base">
+                        <h4 className="text-sm font-bold text-foreground sm:text-base">
                           {reviewHeadline}
                         </h4>
-                        <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
+                        <p className="mt-1.5 text-xs leading-relaxed whitespace-pre-line text-muted-foreground sm:text-sm">
                           {reviewBody}
                         </p>
                       </div>
@@ -364,7 +379,7 @@ export function ReviewsModal({
                           onClick={() => handleHelpfulVote(rev.id, "up")}
                           className={`flex items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-muted ${
                             votes.voted === "up"
-                              ? "text-emerald-500 font-bold bg-emerald-500/10"
+                              ? "bg-emerald-500/10 font-bold text-emerald-500"
                               : ""
                           }`}
                         >
@@ -375,7 +390,7 @@ export function ReviewsModal({
                           onClick={() => handleHelpfulVote(rev.id, "down")}
                           className={`flex items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-muted ${
                             votes.voted === "down"
-                              ? "text-red-500 font-bold bg-red-500/10"
+                              ? "bg-red-500/10 font-bold text-red-500"
                               : ""
                           }`}
                         >

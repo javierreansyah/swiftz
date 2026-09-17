@@ -17,7 +17,7 @@ export function MovieCard({ id, title, poster, rating }: MovieCardProps) {
 
   return (
     <Link href={`/movie/${id}`} prefetch={false} className="group block">
-      <div className="overflow-clip rounded-lg border bg-card transition-all duration-200 group-hover:scale-[1.03] group-hover:shadow-lg">
+      <div className="overflow-clip rounded-lg border bg-card transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg">
         {poster ? (
           <div className="relative aspect-2/3 w-full bg-muted">
             <Image
@@ -35,12 +35,12 @@ export function MovieCard({ id, title, poster, rating }: MovieCardProps) {
         )}
 
         <div className="flex h-27.5 flex-col justify-between space-y-1 p-4">
-          <h2 className="line-clamp-2 font-bold text-sm sm:text-base leading-tight">
+          <h2 className="line-clamp-2 text-sm leading-tight font-bold sm:text-base">
             {truncatedTitle}
           </h2>
           <div className="flex items-center gap-2">
             <StarRatingMovieCard rating={rating} />
-            <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+            <p className="text-xs font-medium text-muted-foreground sm:text-sm">
               {rating.toFixed(1)}
             </p>
           </div>

@@ -46,7 +46,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
     <>
       <div
         className={`pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300 ease-in-out ${
-          isOpen ? "opacity-100 backdrop-blur-sm pointer-events-auto" : ""
+          isOpen ? "pointer-events-auto opacity-100 backdrop-blur-sm" : ""
         }`}
         onClick={() => setIsOpen(false)}
       />

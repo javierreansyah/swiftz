@@ -69,17 +69,18 @@ export function PhotosModal({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent
         side="bottom"
-        className="h-[90vh] max-h-[92vh] rounded-t-3xl border-t border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl sm:max-w-none"
+        showCloseButton={false}
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
-        <div className="flex size-full flex-col">
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4 sm:px-10 sm:py-5">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full hover:bg-muted"
+                className="shrink-0 rounded-full hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -137,7 +138,7 @@ export function PhotosModal({
           </div>
 
           {/* Main Stage: Large Centered Photo Preview */}
-          <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-black/95 p-4 sm:p-8">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/95 p-4 sm:p-8">
             {activePhoto ? (
               <div className="relative size-full max-w-5xl">
                 <Image
@@ -175,7 +176,7 @@ export function PhotosModal({
           </div>
 
           {/* Bottom filmstrip thumbnail carousel */}
-          <div className="border-t border-border/70 bg-card px-6 py-4">
+          <div className="shrink-0 border-t border-border/70 bg-card px-6 py-4 sm:px-10 sm:py-5">
             <div className="flex items-center justify-between pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-foreground">
@@ -203,7 +204,7 @@ export function PhotosModal({
             </div>
 
             {/* Filmstrip row */}
-            <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex scrollbar-none gap-2.5 overflow-x-auto pb-1">
               {allPhotos.map((photo, i) => {
                 const isActive = i === activePhotoIdx;
                 return (
@@ -212,7 +213,7 @@ export function PhotosModal({
                     onClick={() => setActivePhotoIdx(i)}
                     className={`relative h-16 w-24 flex-none overflow-hidden rounded-lg border-2 transition-all ${
                       isActive
-                        ? "border-primary ring-2 ring-primary/40 scale-105"
+                        ? "scale-105 border-primary ring-2 ring-primary/40"
                         : "border-transparent opacity-60 hover:opacity-100"
                     }`}
                   >

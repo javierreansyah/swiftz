@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
 import { MovieDetailsData, Cast, Crew, Video } from "@/types";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useMovieAccountStatesQuery } from "@/hooks/use-tmdb";
@@ -9,6 +8,7 @@ import { MovieHeroHeader } from "./movie-hero-header";
 import { MovieHeroMedia } from "./movie-hero-media";
 import { MovieHeroActions } from "./movie-hero-actions";
 import { MovieRatingDialog } from "./movie-rating-dialog";
+import { MovieHeroBackdrop } from "./movie-hero-backdrop";
 
 export interface MovieHeroProps {
   movie: MovieDetailsData;
@@ -18,6 +18,7 @@ export interface MovieHeroProps {
   crew: Crew[];
   reviewCount?: number;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
+  onOpenRating?: () => void;
 }
 
 export function MovieHero({
@@ -28,10 +29,19 @@ export function MovieHero({
   crew,
   reviewCount = 0,
   onOpenModal,
+  onOpenRating,
 }: MovieHeroProps) {
   const { sessionId } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
+
+  const handleRateOpen = () => {
+    if (onOpenRating) {
+      onOpenRating();
+    } else {
+      setShowRatingModal(true);
+    }
+  };
 
   const { data: states, refetch: refetchStates } = useMovieAccountStatesQuery(
     movie.id,
@@ -95,28 +105,18 @@ export function MovieHero({
   };
 
   return (
-    <section className="relative overflow-hidden pt-20 pb-10">
-      {/* Ambient background glow from backdrop */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-35 dark:opacity-25">
-        <Image
-          src={backdropUrl}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="scale-110 object-cover blur-3xl brightness-50"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/80 to-background" />
-      </div>
+    <section className="relative isolate overflow-hidden pt-20 pb-10">
+      {/* Corner-to-corner blurred parallax backdrop covering down to the bottom of the main info card */}
+      <MovieHeroBackdrop backdropUrl={backdropUrl} alt={movie.title} />
 
-      <div className="container space-y-6">
+      <div className="relative z-10 container space-y-6">
         <MovieHeroHeader
           movie={movie}
           certification={certification}
           releaseYear={releaseYear}
           runtimeFormatted={runtimeFormatted}
           userRating={userRating}
-          onRateClick={() => setShowRatingModal(true)}
+          onRateClick={handleRateOpen}
           onShareClick={handleShareClick}
           copiedShare={copiedShare}
         />
@@ -137,7 +137,7 @@ export function MovieHero({
           isFavorite={isFavorite}
           userRating={userRating}
           onOpenModal={onOpenModal}
-          onOpenRating={() => setShowRatingModal(true)}
+          onOpenRating={handleRateOpen}
           onShareClick={handleShareClick}
         />
       </div>

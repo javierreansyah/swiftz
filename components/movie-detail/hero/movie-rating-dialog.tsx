@@ -66,8 +66,8 @@ export function MovieRatingDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-2xl text-center space-y-4">
+    <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/75 p-4 backdrop-blur-sm duration-200 fade-in">
+      <div className="relative w-full max-w-sm space-y-4 rounded-2xl border border-border bg-card p-6 text-center shadow-2xl">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 rounded-full p-1 text-muted-foreground hover:bg-muted"
@@ -82,7 +82,7 @@ export function MovieRatingDialog({
 
         <div>
           <h3 className="text-lg font-bold">Rate this Movie</h3>
-          <p className="text-xs text-muted-foreground truncate max-w-xs mx-auto">
+          <p className="mx-auto max-w-xs truncate text-xs text-muted-foreground">
             {movieTitle}
           </p>
         </div>
@@ -129,7 +129,7 @@ export function MovieRatingDialog({
               size="sm"
               onClick={handleDelete}
               disabled={deleteRatingMutation.isPending}
-              className="gap-1.5 border-destructive/30 text-destructive hover:bg-destructive/10 text-xs"
+              className="gap-1.5 border-destructive/30 text-xs text-destructive hover:bg-destructive/10"
             >
               {deleteRatingMutation.isPending ? (
                 <Loader2 className="size-3.5 animate-spin" />

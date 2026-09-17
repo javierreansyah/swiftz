@@ -54,7 +54,7 @@ export function MovieVideosSection({
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/30 transition-opacity group-hover:bg-black/10" />
-                <div className="absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform group-hover:scale-110">
+                <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform group-hover:scale-110">
                   <Play className="ml-0.5 size-5 fill-current" />
                 </div>
                 <div className="absolute bottom-2 left-2 rounded-full border border-white/20 bg-black/70 px-2.5 py-0.5 text-[11px] font-semibold text-white">

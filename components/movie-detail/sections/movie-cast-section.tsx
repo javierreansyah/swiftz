@@ -45,7 +45,7 @@ export function MovieCastSection({
               onClick={onOpenCastModal}
               className="group cursor-pointer overflow-hidden rounded-xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg"
             >
-              <div className="relative aspect-[2/3] w-full bg-muted">
+              <div className="relative aspect-2/3 w-full bg-muted">
                 {profileUrl ? (
                   <Image
                     src={profileUrl}

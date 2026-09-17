@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import {
-  ChevronRight,
-  ChevronLeft,
+  ChevronDown,
   Film,
   Users,
   Video,
@@ -15,13 +14,10 @@ import {
   Star,
   Share2,
   Check,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
   useMovieAccountStatesQuery,
@@ -34,6 +30,8 @@ export interface MovieQuickRailProps {
   movieTitle: string;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
   onOpenRating?: () => void;
+  mode?: "all" | "desktop" | "mobile";
+  className?: string;
 }
 
 export function MovieQuickRail({
@@ -41,9 +39,10 @@ export function MovieQuickRail({
   movieTitle,
   onOpenModal,
   onOpenRating,
+  mode = "all",
+  className,
 }: MovieQuickRailProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const { user, sessionId, isAuthenticated, login } = useAuth();
@@ -56,12 +55,18 @@ export function MovieQuickRail({
 
   const isFavorite = Boolean(accountStates?.favorite);
   const isWatchlist = Boolean(accountStates?.watchlist);
+  const userRating =
+    typeof accountStates?.rated === "object" && accountStates?.rated !== null
+      ? accountStates.rated.value
+      : accountStates?.rated === true
+      ? 10
+      : null;
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
-      setMobileOpen(false);
+      setMobileExpanded(false);
     }
   };
 
@@ -74,7 +79,7 @@ export function MovieQuickRail({
         });
         return;
       } catch {
-        // Fallback
+        // Fallback to clipboard
       }
     }
     if (navigator.clipboard) {
@@ -110,6 +115,14 @@ export function MovieQuickRail({
     });
   };
 
+  const handleRateClick = () => {
+    if (onOpenRating) {
+      onOpenRating();
+    } else {
+      onOpenModal("reviews");
+    }
+  };
+
   const sections = [
     { id: "section-overview", label: "Overview", icon: Film },
     { id: "section-cast", label: "Cast", icon: Users, modal: "cast" as const },
@@ -119,216 +132,304 @@ export function MovieQuickRail({
     { id: "section-recommendations", label: "Related", icon: Sparkles },
   ];
 
-  return (
-    <>
-      {/* DESKTOP SIDEBAR: Collapsible floating rail */}
-      <aside
-        className={`fixed top-28 right-4 z-30 hidden transition-all duration-300 xl:block ${
-          isCollapsed ? "w-12" : "w-48"
-        }`}
-      >
-        <div className="flex flex-col rounded-2xl border border-border/80 bg-card/85 p-2 shadow-2xl backdrop-blur-xl transition-all">
-          {/* Collapse Toggle Button */}
-          <div className="flex items-center justify-between px-1 pb-2 border-b border-border/50">
-            {!isCollapsed && (
-              <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Movie Rail
-              </span>
-            )}
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className="ml-auto rounded-md hover:bg-muted"
+  const renderDesktopSidebar = () => (
+    <div
+      className={cn(
+        "flex flex-col space-y-5 rounded-2xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur-xl transition-all",
+        className
+      )}
+    >
+      {/* Sidebar Header */}
+      <div className="flex items-center justify-between border-b border-border/60 pb-3">
+        <div className="flex items-center gap-2">
+          <Film className="size-4 text-primary" />
+          <h3 className="font-heading text-sm font-bold tracking-tight text-foreground">
+            On This Page
+          </h3>
+        </div>
+        <span className="text-[11px] font-semibold text-muted-foreground">
+          Quick Jump
+        </span>
+      </div>
+
+      {/* Navigation Links */}
+      <nav className="space-y-1">
+        {sections.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                if (item.modal) {
+                  onOpenModal(item.modal);
+                } else {
+                  scrollToSection(item.id);
+                }
+              }}
+              className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
             >
-              {isCollapsed ? (
-                <ChevronLeft className="size-3.5" />
-              ) : (
-                <ChevronRight className="size-3.5" />
+              <div className="flex items-center gap-2.5">
+                <Icon className="size-4 text-muted-foreground/80" />
+                <span>{item.label}</span>
+              </div>
+              {item.modal && (
+                <span className="text-[10px] text-muted-foreground/60">
+                  Open
+                </span>
               )}
-              <span className="sr-only">Toggle Sidebar</span>
-            </Button>
-          </div>
+            </button>
+          );
+        })}
+      </nav>
 
-          {/* Quick Jump Navigation */}
-          <nav className="space-y-1 pt-2">
-            {sections.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Tooltip key={item.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        if (item.modal) {
-                          onOpenModal(item.modal);
-                        } else {
-                          scrollToSection(item.id);
-                        }
-                      }}
-                      className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary ${
-                        isCollapsed ? "justify-center" : "justify-start"
-                      }`}
-                    >
-                      <Icon className="size-4 shrink-0 text-foreground/80" />
-                      {!isCollapsed && <span>{item.label}</span>}
-                    </button>
-                  </TooltipTrigger>
-                  {isCollapsed && (
-                    <TooltipContent side="left">{item.label}</TooltipContent>
-                  )}
-                </Tooltip>
-              );
-            })}
-          </nav>
+      {/* Quick Actions Header */}
+      <div className="space-y-2.5 border-t border-border/60 pt-1">
+        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+          Actions
+        </p>
 
-          {/* Quick Actions Separator */}
-          <div className="my-2 h-px bg-border/50" />
+        <div className="grid grid-cols-1 gap-2">
+          {/* Watchlist button */}
+          <Button
+            size="sm"
+            variant={isWatchlist ? "default" : "outline"}
+            onClick={handleWatchlist}
+            disabled={toggleWatchlist.isPending}
+            className={cn(
+              "h-9 w-full justify-start gap-2.5 rounded-xl text-xs font-semibold",
+              isWatchlist
+                ? "bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
+                : "border-border/70 hover:bg-muted"
+            )}
+          >
+            {toggleWatchlist.isPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Bookmark className={cn("size-4", isWatchlist && "fill-current")} />
+            )}
+            <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
+          </Button>
 
-          {/* Quick Action Buttons */}
-          <div className="space-y-1">
+          {/* Favorite button */}
+          <Button
+            size="sm"
+            variant={isFavorite ? "default" : "outline"}
+            onClick={handleFavorite}
+            disabled={toggleFavorite.isPending}
+            className={cn(
+              "h-9 w-full justify-start gap-2.5 rounded-xl text-xs font-semibold",
+              isFavorite
+                ? "bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                : "border-border/70 hover:bg-muted"
+            )}
+          >
+            {toggleFavorite.isPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Heart className={cn("size-4", isFavorite && "fill-current text-red-500")} />
+            )}
+            <span>{isFavorite ? "In Favorites" : "Add to Favorites"}</span>
+          </Button>
+
+          {/* Rate button */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleRateClick}
+            className="h-9 w-full justify-start gap-2.5 rounded-xl border-border/70 text-xs font-semibold hover:bg-muted"
+          >
+            <Star
+              className={cn(
+                "size-4",
+                userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
+              )}
+            />
+            <span>
+              {userRating ? `Your Rating: ${userRating}/10` : "Rate This Movie"}
+            </span>
+          </Button>
+
+          {/* Share button */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleShare}
+            className="h-9 w-full justify-start gap-2.5 rounded-xl border-border/70 text-xs font-semibold hover:bg-muted"
+          >
+            {copied ? (
+              <Check className="size-4 text-emerald-500" />
+            ) : (
+              <Share2 className="size-4" />
+            )}
+            <span>{copied ? "Copied Link!" : "Share Movie"}</span>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderMobileStickyBar = () => (
+    <div
+      className={cn(
+        "sticky top-16 z-30 w-full border-y border-border/70 bg-background/90 shadow-sm backdrop-blur-xl lg:hidden",
+        className
+      )}
+    >
+      {/* Top Bar: Horizontal pills + expand toggle */}
+      <div className="flex h-12 items-center justify-between gap-2 px-3 sm:px-4">
+        {/* Horizontal scrollable pills */}
+        <div className="flex flex-1 scrollbar-none items-center gap-1.5 overflow-x-auto py-1">
+          {sections.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.modal) {
+                    onOpenModal(item.modal);
+                  } else {
+                    scrollToSection(item.id);
+                  }
+                }}
+                className="flex shrink-0 items-center gap-1.5 rounded-full border border-border/70 bg-muted/60 px-3 py-1 text-xs font-semibold text-foreground/80 transition-all hover:bg-muted hover:text-foreground active:scale-95"
+              >
+                <Icon className="size-3.5 text-muted-foreground" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Expand/Collapse Actions Toggle */}
+        <button
+          onClick={() => setMobileExpanded(!mobileExpanded)}
+          className={cn(
+            "flex shrink-0 items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs font-bold transition-all",
+            mobileExpanded
+              ? "border-primary bg-primary text-primary-foreground"
+              : "bg-card text-foreground hover:bg-muted"
+          )}
+          aria-expanded={mobileExpanded}
+          aria-label="Toggle quick actions"
+        >
+          <span>Actions</span>
+          <ChevronDown
+            className={cn(
+              "size-3.5 transition-transform duration-200",
+              mobileExpanded && "rotate-180"
+            )}
+          />
+        </button>
+      </div>
+
+      {/* Expandable Actions Drawer */}
+      {mobileExpanded && (
+        <div className="animate-in border-t border-border/60 bg-card/95 px-4 py-3 backdrop-blur-2xl duration-200 slide-in-from-top-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {/* Watchlist */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleWatchlist}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-semibold transition-all ${
-                    isWatchlist
-                      ? "bg-amber-500/15 text-amber-500 font-bold"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  } ${isCollapsed ? "justify-center" : "justify-start"}`}
-                >
-                  <Bookmark
-                    className={`size-4 shrink-0 ${
-                      isWatchlist ? "fill-current text-amber-500" : ""
-                    }`}
-                  />
-                  {!isCollapsed && (
-                    <span>{isWatchlist ? "Saved" : "Watchlist"}</span>
-                  )}
-                </button>
-              </TooltipTrigger>
-              {isCollapsed && (
-                <TooltipContent side="left">
-                  {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
-                </TooltipContent>
+            <Button
+              size="sm"
+              variant={isWatchlist ? "default" : "outline"}
+              onClick={() => {
+                handleWatchlist();
+              }}
+              disabled={toggleWatchlist.isPending}
+              className={cn(
+                "gap-1.5 rounded-xl text-xs font-semibold",
+                isWatchlist
+                  ? "bg-amber-600 text-white hover:bg-amber-700"
+                  : "border-border/70"
               )}
-            </Tooltip>
+            >
+              {toggleWatchlist.isPending ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Bookmark
+                  className={cn("size-3.5", isWatchlist && "fill-current")}
+                />
+              )}
+              <span>{isWatchlist ? "In Watchlist" : "Watchlist"}</span>
+            </Button>
 
             {/* Favorite */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleFavorite}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-semibold transition-all ${
-                    isFavorite
-                      ? "bg-red-500/15 text-red-500 font-bold"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  } ${isCollapsed ? "justify-center" : "justify-start"}`}
-                >
-                  <Heart
-                    className={`size-4 shrink-0 ${
-                      isFavorite ? "fill-current text-red-500" : ""
-                    }`}
-                  />
-                  {!isCollapsed && (
-                    <span>{isFavorite ? "Favorited" : "Favorite"}</span>
-                  )}
-                </button>
-              </TooltipTrigger>
-              {isCollapsed && (
-                <TooltipContent side="left">
-                  {isFavorite ? "Favorited" : "Add to Favorites"}
-                </TooltipContent>
+            <Button
+              size="sm"
+              variant={isFavorite ? "default" : "outline"}
+              onClick={() => {
+                handleFavorite();
+              }}
+              disabled={toggleFavorite.isPending}
+              className={cn(
+                "gap-1.5 rounded-xl text-xs font-semibold",
+                isFavorite
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "border-border/70"
               )}
-            </Tooltip>
+            >
+              {toggleFavorite.isPending ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Heart
+                  className={cn(
+                    "size-3.5",
+                    isFavorite && "fill-current text-red-500"
+                  )}
+                />
+              )}
+              <span>{isFavorite ? "Favorited" : "Favorite"}</span>
+            </Button>
 
-            {/* Rate */}
-            {onOpenRating && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={onOpenRating}
-                    className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all hover:bg-muted hover:text-amber-500 ${
-                      isCollapsed ? "justify-center" : "justify-start"
-                    }`}
-                  >
-                    <Star className="size-4 shrink-0" />
-                    {!isCollapsed && <span>Rate Movie</span>}
-                  </button>
-                </TooltipTrigger>
-                {isCollapsed && (
-                  <TooltipContent side="left">Rate Movie</TooltipContent>
+            {/* Rate Movie */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setMobileExpanded(false);
+                handleRateClick();
+              }}
+              className="gap-1.5 rounded-xl border-border/70 text-xs font-semibold"
+            >
+              <Star
+                className={cn(
+                  "size-3.5",
+                  userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
                 )}
-              </Tooltip>
-            )}
+              />
+              <span>{userRating ? `${userRating}/10` : "Rate"}</span>
+            </Button>
 
             {/* Share */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleShare}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-all hover:bg-muted hover:text-primary ${
-                    isCollapsed ? "justify-center" : "justify-start"
-                  }`}
-                >
-                  {copied ? (
-                    <Check className="size-4 shrink-0 text-emerald-500" />
-                  ) : (
-                    <Share2 className="size-4 shrink-0" />
-                  )}
-                  {!isCollapsed && (
-                    <span>{copied ? "Copied!" : "Share"}</span>
-                  )}
-                </button>
-              </TooltipTrigger>
-              {isCollapsed && (
-                <TooltipContent side="left">
-                  {copied ? "Copied to clipboard!" : "Share movie"}
-                </TooltipContent>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleShare}
+              className="gap-1.5 rounded-xl border-border/70 text-xs font-semibold"
+            >
+              {copied ? (
+                <Check className="size-3.5 text-emerald-500" />
+              ) : (
+                <Share2 className="size-3.5" />
               )}
-            </Tooltip>
+              <span>{copied ? "Copied!" : "Share"}</span>
+            </Button>
           </div>
         </div>
-      </aside>
+      )}
+    </div>
+  );
 
-      {/* MOBILE FLOATING ACTION PILL */}
-      <div className="fixed right-4 bottom-6 z-30 xl:hidden">
-        <Button
-          size="sm"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-full bg-primary/95 px-4 shadow-xl backdrop-blur-md"
-        >
-          <Film className="mr-1.5 size-4" />
-          <span>Jump to</span>
-        </Button>
+  if (mode === "desktop") {
+    return renderDesktopSidebar();
+  }
 
-        {mobileOpen && (
-          <div className="absolute right-0 bottom-12 mb-2 w-48 rounded-2xl border border-border/80 bg-card/95 p-2 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95">
-            <div className="space-y-1">
-              {sections.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      if (item.modal) {
-                        onOpenModal(item.modal);
-                        setMobileOpen(false);
-                      } else {
-                        scrollToSection(item.id);
-                      }
-                    }}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-primary/10 hover:text-primary"
-                  >
-                    <Icon className="size-4 text-foreground/80" />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
+  if (mode === "mobile") {
+    return renderMobileStickyBar();
+  }
+
+  return (
+    <>
+      <div className="lg:hidden">{renderMobileStickyBar()}</div>
+      <div className="hidden lg:block">{renderDesktopSidebar()}</div>
     </>
   );
 }

@@ -8,8 +8,13 @@ import {
   Video,
   MovieImagesData,
 } from "@/types";
-import { useMovieReviewsQuery } from "@/hooks/use-tmdb";
+import {
+  useMovieReviewsQuery,
+  useMovieAccountStatesQuery,
+} from "@/hooks/use-tmdb";
+import { useAuth } from "@/components/providers/auth-provider";
 import { MovieHero } from "./hero/movie-hero";
+import { MovieRatingDialog } from "./hero/movie-rating-dialog";
 import { MovieBottomModals, ModalType } from "./modals/movie-bottom-modals";
 import { MovieQuickRail } from "./movie-quick-rail";
 import { MovieCastSection } from "./sections/movie-cast-section";
@@ -37,8 +42,20 @@ export function MovieDetailClient({
   children,
 }: MovieDetailClientProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [showRatingModal, setShowRatingModal] = useState(false);
   const [initialPhotoIndex, setInitialPhotoIndex] = useState(0);
   const [initialVideoIndex, setInitialVideoIndex] = useState(0);
+
+  const { sessionId } = useAuth();
+  const { data: accountStates, refetch: refetchStates } =
+    useMovieAccountStatesQuery(movie.id, sessionId);
+
+  const userRating =
+    typeof accountStates?.rated === "object" && accountStates?.rated !== null
+      ? accountStates.rated.value
+      : accountStates?.rated === true
+      ? 10
+      : null;
 
   // Client query for reviews count & sample
   const { data: reviewsData } = useMovieReviewsQuery(movie.id, 1);
@@ -57,7 +74,7 @@ export function MovieDetailClient({
 
   return (
     <div className="relative min-h-screen">
-      {/* 1. Hero Showcase */}
+      {/* 1. Hero Showcase with corner-to-corner blurred parallax backdrop */}
       <div id="section-overview">
         <MovieHero
           movie={movie}
@@ -67,45 +84,67 @@ export function MovieDetailClient({
           crew={crew}
           reviewCount={totalReviews}
           onOpenModal={(m) => setActiveModal(m)}
+          onOpenRating={() => setShowRatingModal(true)}
         />
       </div>
 
-      {/* Quick Access Sidebar / Floating Rail */}
-      <MovieQuickRail
-        movieId={movie.id}
-        movieTitle={movie.title}
-        onOpenModal={(m) => setActiveModal(m)}
-      />
-
-      <div className="container space-y-12 pb-16">
-        {/* 2. Cast Excerpt */}
-        <MovieCastSection
-          cast={cast}
-          onOpenCastModal={() => setActiveModal("cast")}
-        />
-
-        {/* 3. Videos Excerpt */}
-        <MovieVideosSection
-          videos={videos}
-          onOpenVideosModal={handleOpenVideo}
-        />
-
-        {/* 4. Photos Excerpt */}
-        <MoviePhotosSection
+      {/* Mobile Sticky Sub-Header Bar (only displayed on mobile when sidebar is NOT displayed) */}
+      <div className="lg:hidden">
+        <MovieQuickRail
+          mode="mobile"
+          movieId={movie.id}
           movieTitle={movie.title}
-          images={images}
-          onOpenPhotosModal={handleOpenPhoto}
+          onOpenModal={(m) => setActiveModal(m)}
+          onOpenRating={() => setShowRatingModal(true)}
         />
+      </div>
 
-        {/* 5. Reviews Excerpt */}
-        <MovieReviewsSection
-          reviews={reviews}
-          totalReviews={totalReviews}
-          onOpenReviewsModal={() => setActiveModal("reviews")}
-        />
+      {/* Main Content & Dedicated Desktop Sidebar Layout */}
+      <div className="container pt-8 pb-20">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 xl:gap-10">
+          {/* Main Movie Content Column */}
+          <main className="min-w-0 space-y-12 lg:col-span-8 xl:col-span-9">
+            {/* 2. Cast Excerpt */}
+            <MovieCastSection
+              cast={cast}
+              onOpenCastModal={() => setActiveModal("cast")}
+            />
 
-        {/* 6. Recommendations */}
-        <div id="section-recommendations">{children}</div>
+            {/* 3. Videos Excerpt */}
+            <MovieVideosSection
+              videos={videos}
+              onOpenVideosModal={handleOpenVideo}
+            />
+
+            {/* 4. Photos Excerpt */}
+            <MoviePhotosSection
+              movieTitle={movie.title}
+              images={images}
+              onOpenPhotosModal={handleOpenPhoto}
+            />
+
+            {/* 5. Reviews Excerpt */}
+            <MovieReviewsSection
+              reviews={reviews}
+              totalReviews={totalReviews}
+              onOpenReviewsModal={() => setActiveModal("reviews")}
+            />
+
+            {/* 6. Recommendations / Related */}
+            <div id="section-recommendations">{children}</div>
+          </main>
+
+          {/* Dedicated Sticky Sidebar Column (Desktop) */}
+          <aside className="sticky top-24 hidden self-start lg:col-span-4 lg:block xl:col-span-3">
+            <MovieQuickRail
+              mode="desktop"
+              movieId={movie.id}
+              movieTitle={movie.title}
+              onOpenModal={(m) => setActiveModal(m)}
+              onOpenRating={() => setShowRatingModal(true)}
+            />
+          </aside>
+        </div>
       </div>
 
       {/* Bottom Modals (Reviews, Videos, Photos, Cast) */}
@@ -119,6 +158,18 @@ export function MovieDetailClient({
         images={images}
         initialPhotoIndex={initialPhotoIndex}
         initialVideoIndex={initialVideoIndex}
+        onOpenRating={() => setShowRatingModal(true)}
+      />
+
+      {/* Unified Rating Dialog */}
+      <MovieRatingDialog
+        isOpen={showRatingModal}
+        onClose={() => setShowRatingModal(false)}
+        movieId={movie.id}
+        movieTitle={movie.title}
+        sessionId={sessionId}
+        currentRating={userRating}
+        onSuccess={() => refetchStates()}
       />
     </div>
   );

@@ -5,6 +5,7 @@ export * from "./hero/movie-hero";
 export * from "./hero/movie-hero-header";
 export * from "./hero/movie-hero-media";
 export * from "./hero/movie-hero-actions";
+export * from "./hero/movie-hero-backdrop";
 export * from "./hero/movie-rating-dialog";
 export * from "./modals/movie-bottom-modals";
 export * from "./modals/reviews-modal";

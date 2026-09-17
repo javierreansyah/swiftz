@@ -50,7 +50,7 @@ export function MovieHeroHeader({
           <span>·</span>
           <Badge
             variant="outline"
-            className="rounded border-border/80 bg-background/50 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider"
+            className="rounded border-border/80 bg-background/50 px-1.5 py-0.5 text-xs font-semibold tracking-wider uppercase"
           >
             {certification}
           </Badge>
