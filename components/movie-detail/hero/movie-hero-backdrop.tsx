@@ -39,11 +39,11 @@ export function MovieHeroBackdrop({
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[1250px] overflow-hidden select-none"
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-312.5 overflow-hidden select-none"
     >
       {/* Parallax Image Wrapper with generous bleed for continuous parallax motion */}
       <div
-        className="absolute -inset-x-12 -top-40 h-[1450px] will-change-transform"
+        className="absolute -inset-x-12 -top-40 h-362.5 will-change-transform"
         style={{
           transform: `translate3d(0, ${offsetY}px, 0)`,
         }}
