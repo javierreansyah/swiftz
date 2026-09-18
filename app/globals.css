@@ -193,8 +193,6 @@
   }
 
   html {
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
     @apply font-sans;
   }
 
@@ -205,39 +203,45 @@
     overflow: visible !important;
   }
 
-  /* Sleek modern scrollbars across all browsers */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+  /* Desktop-only custom sleek scrollbars (mobile uses native overlay scrollbars) */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+    }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
 
-  ::-webkit-scrollbar-thumb {
-    background: color-mix(in srgb, var(--foreground) 16%, transparent);
-    border-radius: 9999px;
-  }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--foreground) 30%, transparent);
-  }
+    ::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--foreground) 16%, transparent);
+      border-radius: 9999px;
+    }
 
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--foreground) 16%, transparent) transparent;
-  }
-}
+    ::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--foreground) 30%, transparent);
+    }
 
-/* Sidebar sleek custom scrollbar utility */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--foreground) 14%, transparent);
-  border-radius: 9999px;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--foreground) 28%, transparent);
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--foreground) 16%, transparent) transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--foreground) 14%, transparent);
+      border-radius: 9999px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--foreground) 28%, transparent);
+    }
+  }
 }

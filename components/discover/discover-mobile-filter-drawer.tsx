@@ -63,7 +63,7 @@ export function DiscoverMobileFilterDrawer({
 
         <SheetContent
           side="left"
-          className="w-[85vw] max-w-sm overflow-y-auto p-5"
+          className="w-full max-w-full overflow-y-auto p-5 sm:max-w-md"
         >
           <SheetHeader className="mb-4">
             <SheetTitle className="font-heading text-lg font-bold">

@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 import { MovieGrid } from "@/components/common/movie-grid";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
-import { useDiscoverMoviesQuery } from "@/hooks/use-tmdb";
+import {
+  useDiscoverMoviesQuery,
+  usePopularMoviesQuery,
+  useTrendingMoviesQuery,
+  useNowPlayingMoviesQuery,
+  useTopRatedMoviesQuery,
+  useUpcomingMoviesQuery,
+} from "@/hooks/use-tmdb";
 import {
   DiscoverFilterState,
   SORT_OPTIONS,
@@ -18,33 +25,67 @@ import movieGenres from "@/public/data/genres";
 
 export interface DiscoverFilteredResultsProps {
   filters: DiscoverFilterState;
+  view?: "popular" | "trending" | "now_playing" | "top_rated" | "upcoming" | null;
   currentPage: number;
   onPageChange: (page: number) => void;
   onRemoveGenre: (genreId: string) => void;
   onRemoveKeyword: (keywordId: number) => void;
   onRemoveProvider: (providerId: number) => void;
   onResetFilterKey: (key: keyof DiscoverFilterState) => void;
+  onClearView?: () => void;
   onClearAll: () => void;
 }
 
 export function DiscoverFilteredResults({
   filters,
+  view,
   currentPage,
   onPageChange,
   onRemoveGenre,
   onRemoveKeyword,
   onRemoveProvider,
   onResetFilterKey,
+  onClearView,
   onClearAll,
 }: DiscoverFilteredResultsProps) {
   const tmdbFilters = buildTMDBFilters(filters, currentPage);
-  const { data, isLoading, isFetching, isError } =
-    useDiscoverMoviesQuery(tmdbFilters);
+
+  const discoverQuery = useDiscoverMoviesQuery(tmdbFilters);
+  const popularQuery = usePopularMoviesQuery(currentPage);
+  const trendingQuery = useTrendingMoviesQuery(currentPage);
+  const nowPlayingQuery = useNowPlayingMoviesQuery(currentPage);
+  const topRatedQuery = useTopRatedMoviesQuery(currentPage);
+  const upcomingQuery = useUpcomingMoviesQuery(currentPage);
+
+  const activeQuery =
+    view === "popular"
+      ? popularQuery
+      : view === "trending"
+      ? trendingQuery
+      : view === "now_playing"
+      ? nowPlayingQuery
+      : view === "top_rated"
+      ? topRatedQuery
+      : view === "upcoming"
+      ? upcomingQuery
+      : discoverQuery;
+
+  const { data, isLoading, isFetching, isError } = activeQuery;
 
   const movies = data?.results || [];
   const totalPages = Math.min(data?.total_pages || 1, 500); // TMDB caps discover at 500 pages
   const totalResults = data?.total_results || 0;
   const activeCount = countActiveFilters(filters);
+
+  const viewTitleMap: Record<string, string> = {
+    popular: "Popular Movies",
+    trending: "Trending Movies Today",
+    now_playing: "Now Playing in Theatres",
+    top_rated: "Top Rated Movies",
+    upcoming: "Upcoming Movie Releases",
+  };
+
+  const headerTitle = view ? viewTitleMap[view] || "Movies" : "Discover Results";
 
   // Helper names
   const sortLabel = SORT_OPTIONS.find((s) => s.value === filters.sort_by)?.label;
@@ -58,7 +99,7 @@ export function DiscoverFilteredResults({
       <div className="flex flex-col gap-3 border-b border-border/50 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Discover Results
+            {headerTitle}
           </h1>
           <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
             {isLoading ? (
@@ -80,7 +121,7 @@ export function DiscoverFilteredResults({
           </p>
         </div>
 
-        {activeCount > 0 && (
+        {(activeCount > 0 || Boolean(view)) && (
           <Button
             variant="outline"
             size="sm"
@@ -88,17 +129,34 @@ export function DiscoverFilteredResults({
             className="w-fit gap-1.5 text-xs"
           >
             <RotateCcw className="size-3.5" />
-            <span>Clear all filters</span>
+            <span>{view ? "Back to Discover" : "Clear all filters"}</span>
           </Button>
         )}
       </div>
 
       {/* Active Filter Chips */}
-      {activeCount > 0 && (
+      {(activeCount > 0 || Boolean(view)) && (
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="mr-1 text-xs font-semibold text-muted-foreground">
             Active:
           </span>
+
+          {/* Dedicated Collection Chip */}
+          {view && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary">
+              <span>Collection: {viewTitleMap[view] || view}</span>
+              {onClearView && (
+                <button
+                  type="button"
+                  onClick={onClearView}
+                  className="hover:text-primary/70"
+                  aria-label="Back to all collections"
+                >
+                  <X className="size-3" />
+                </button>
+              )}
+            </span>
+          )}
 
           {/* Sort Pill */}
           {filters.sort_by !== "popularity.desc" && (

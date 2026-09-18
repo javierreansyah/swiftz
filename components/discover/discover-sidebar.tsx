@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Star,
   Users,
+  ArrowDownUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,33 +157,12 @@ export function DiscoverSidebar({
         className
       )}
     >
-      {/* Top Header & Search Action Button */}
-      <div className="space-y-3 border-b border-border/50 pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-4 text-primary" />
-            <h2 className="text-base font-semibold tracking-tight text-foreground">
-              Filter & Sort
-            </h2>
-          </div>
-          {pendingActiveCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleReset}
-              className="h-8 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <RotateCcw className="size-3" />
-              <span>Reset</span>
-            </Button>
-          )}
-        </div>
-
-        {/* Search / Apply Button (Required by user) */}
+      {/* Top Search & Reset Action Bar (Submit button on top, zero layout shift) */}
+      <div className="flex items-center gap-2 border-b border-border/50 pb-4">
         <Button
           onClick={handleApply}
           size="default"
-          className="w-full gap-2 rounded-none font-medium shadow-sm transition-all"
+          className="flex-1 gap-2 rounded-xl font-medium shadow-sm transition-all"
         >
           <Search className="size-4" />
           <span>
@@ -191,12 +171,25 @@ export function DiscoverSidebar({
               : "Search Movies"}
           </span>
         </Button>
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleReset}
+          disabled={pendingActiveCount === 0}
+          title="Reset all filters"
+          aria-label="Reset all filters"
+          className="size-9 shrink-0 rounded-xl transition-opacity disabled:opacity-40"
+        >
+          <RotateCcw className="size-4" />
+        </Button>
       </div>
 
-      {/* 1. SORT SECTION (On Top) */}
+      {/* 1. SORT SECTION (With Icon) */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <label className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-          Sort Results By
+        <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+          <ArrowDownUp className="size-3.5 text-primary/80" />
+          <span>Sort Results By</span>
         </label>
         <Select
           value={pendingFilters.sort_by}

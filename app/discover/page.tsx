@@ -22,24 +22,34 @@ function DiscoverContent() {
   const router = useRouter();
 
   const currentFilters = parseFiltersFromParams(searchParams);
+  const viewParam = searchParams.get("view") as
+    | "popular"
+    | "trending"
+    | "now_playing"
+    | "top_rated"
+    | "upcoming"
+    | null;
+
   const pageParam = searchParams.get("page");
   const currentPage = Number(pageParam) || 1;
 
-  const isInitial = isDefaultFilterState(currentFilters);
+  const isInitial = isDefaultFilterState(currentFilters) && !viewParam;
 
-  // Apply new filters and push to URL (resets page to 1)
+  // Apply new filters from sidebar and push to URL (clears dedicated view)
   const handleApplyFilters = (newFilters: DiscoverFilterState) => {
     const query = serializeFiltersToParams(newFilters, 1);
     router.push(`/discover${query ? `?${query}` : ""}`, { scroll: false });
   };
 
-  // Quick filter update from "View all" buttons or specific actions
-  const handlePartialFilters = (partial: Partial<DiscoverFilterState>) => {
-    const merged: DiscoverFilterState = {
-      ...currentFilters,
-      ...partial,
-    };
-    handleApplyFilters(merged);
+  // Dedicated view selection from "View all" section buttons
+  const handleSelectView = (
+    view: "popular" | "trending" | "now_playing" | "top_rated" | "upcoming"
+  ) => {
+    router.push(`/discover?view=${view}&page=1`, { scroll: false });
+  };
+
+  const handleClearView = () => {
+    router.push("/discover", { scroll: false });
   };
 
   // Reset all filters back to initial state
@@ -49,8 +59,12 @@ function DiscoverContent() {
 
   // Pagination page change
   const handlePageChange = (newPage: number) => {
-    const query = serializeFiltersToParams(currentFilters, newPage);
-    router.push(`/discover?${query}`, { scroll: true });
+    if (viewParam) {
+      router.push(`/discover?view=${viewParam}&page=${newPage}`, { scroll: true });
+    } else {
+      const query = serializeFiltersToParams(currentFilters, newPage);
+      router.push(`/discover?${query}`, { scroll: true });
+    }
   };
 
   // Remove individual filters from active chips
@@ -106,16 +120,18 @@ function DiscoverContent() {
         {/* Right: Content Area */}
         <div className="min-w-0 flex-1">
           {isInitial ? (
-            <DiscoverSections onApplyFilters={handlePartialFilters} />
+            <DiscoverSections onSelectView={handleSelectView} />
           ) : (
             <DiscoverFilteredResults
               filters={currentFilters}
+              view={viewParam}
               currentPage={currentPage}
               onPageChange={handlePageChange}
               onRemoveGenre={handleRemoveGenre}
               onRemoveKeyword={handleRemoveKeyword}
               onRemoveProvider={handleRemoveProvider}
               onResetFilterKey={handleResetFilterKey}
+              onClearView={handleClearView}
               onClearAll={handleResetFilters}
             />
           )}

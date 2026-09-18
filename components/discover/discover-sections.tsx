@@ -72,10 +72,12 @@ function SectionRow({ title, movies, isLoading, onViewAll }: SectionProps) {
 }
 
 export interface DiscoverSectionsProps {
-  onApplyFilters: (filters: Partial<DiscoverFilterState>) => void;
+  onSelectView: (
+    view: "popular" | "trending" | "now_playing" | "top_rated" | "upcoming"
+  ) => void;
 }
 
-export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
+export function DiscoverSections({ onSelectView }: DiscoverSectionsProps) {
   const { data: popularData, isLoading: isPopularLoading } =
     usePopularMoviesQuery(1);
   const { data: trendingData, isLoading: isTrendingLoading } =
@@ -94,11 +96,7 @@ export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
         title="Popular"
         movies={popularData?.results}
         isLoading={isPopularLoading}
-        onViewAll={() =>
-          onApplyFilters({
-            sort_by: "popularity.desc",
-          })
-        }
+        onViewAll={() => onSelectView("popular")}
       />
 
       {/* 2. Trending Today */}
@@ -106,11 +104,7 @@ export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
         title="Trending Today"
         movies={trendingData?.results}
         isLoading={isTrendingLoading}
-        onViewAll={() =>
-          onApplyFilters({
-            sort_by: "popularity.desc",
-          })
-        }
+        onViewAll={() => onSelectView("trending")}
       />
 
       {/* 3. Now Playing in Theatres */}
@@ -118,12 +112,7 @@ export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
         title="Now Playing"
         movies={nowPlayingData?.results}
         isLoading={isNowPlayingLoading}
-        onViewAll={() =>
-          onApplyFilters({
-            release_date_preset: "2026",
-            sort_by: "popularity.desc",
-          })
-        }
+        onViewAll={() => onSelectView("now_playing")}
       />
 
       {/* 4. Top Rated Movies */}
@@ -131,12 +120,7 @@ export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
         title="Top Rated"
         movies={topRatedData?.results}
         isLoading={isTopRatedLoading}
-        onViewAll={() =>
-          onApplyFilters({
-            sort_by: "vote_average.desc",
-            vote_count_gte: 300,
-          })
-        }
+        onViewAll={() => onSelectView("top_rated")}
       />
 
       {/* 5. Upcoming Releases */}
@@ -144,14 +128,11 @@ export function DiscoverSections({ onApplyFilters }: DiscoverSectionsProps) {
         title="Upcoming"
         movies={upcomingData?.results}
         isLoading={isUpcomingLoading}
-        onViewAll={() =>
-          onApplyFilters({
-            sort_by: "primary_release_date.desc",
-          })
-        }
+        onViewAll={() => onSelectView("upcoming")}
       />
     </div>
   );
 }
 
 export default DiscoverSections;
+
