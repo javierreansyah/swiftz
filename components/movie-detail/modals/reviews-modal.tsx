@@ -189,7 +189,7 @@ export function ReviewsModal({
                     onClose();
                     onOpenRating();
                   }}
-                  className="gap-1.5 rounded-none bg-amber-400 font-bold text-neutral-950 hover:bg-amber-300 dark:bg-amber-400 dark:text-neutral-950"
+                  className="gap-1.5 rounded-none bg-primary font-bold text-primary-foreground hover:bg-primary/90"
                 >
                   <Plus className="size-4" />
                   <span>Review this title</span>
@@ -277,7 +277,7 @@ export function ReviewsModal({
                       onClose();
                       onOpenRating();
                     }}
-                    className="mt-4 gap-2 bg-amber-400 font-bold text-neutral-950 hover:bg-amber-300"
+                    className="mt-4 gap-2 bg-primary font-bold text-primary-foreground hover:bg-primary/90"
                   >
                     <Plus className="size-4" />
                     <span>Review this title</span>
@@ -357,8 +357,8 @@ export function ReviewsModal({
                         </div>
 
                         {rating !== undefined && rating !== null && (
-                          <div className="flex items-center gap-1 rounded-none bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-500">
-                            <Star className="size-3.5 fill-amber-400 text-amber-400" />
+                          <div className="flex items-center gap-1 rounded-none bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                            <Star className="size-3.5 fill-primary text-primary" />
                             <span>{rating}/10</span>
                           </div>
                         )}

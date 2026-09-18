@@ -38,7 +38,9 @@ export function Navbar() {
 
   const navigationList: NavigationRoute[] = [
     { route: "/", name: "Home" },
-    { route: "/discover", name: "Discover" },
+    { route: "/movie", name: "Movies" },
+    { route: "/tv", name: "TV Shows" },
+    { route: "/person", name: "People" },
     ...(isAuthenticated ? [{ route: "/library", name: "Library" }] : []),
   ];
 

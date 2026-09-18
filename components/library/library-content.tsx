@@ -190,8 +190,8 @@ export function LibraryContent() {
                     {/* Personal Rating Tag */}
                     {activeTab === "rated" &&
                       typeof personalRating === "number" && (
-                        <div className="pointer-events-none absolute top-2 right-2 z-10 flex items-center gap-1 rounded-none bg-amber-500 px-2 py-0.5 text-xs font-extrabold text-black shadow-md">
-                          <Star className="size-3 fill-black text-black" />
+                        <div className="pointer-events-none absolute top-2 right-2 z-10 flex items-center gap-1 rounded-none bg-primary px-2 py-0.5 text-xs font-extrabold text-primary-foreground shadow-md">
+                          <Star className="size-3 fill-primary-foreground text-primary-foreground" />
                           <span>{personalRating}/10</span>
                         </div>
                       )}

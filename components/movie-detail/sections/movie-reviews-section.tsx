@@ -77,8 +77,8 @@ export function MovieReviewsSection({
                   </div>
 
                   {rev.author_details?.rating && (
-                    <div className="flex items-center gap-1 text-xs font-bold text-amber-500">
-                      <Star className="size-3.5 fill-amber-400 text-amber-400" />
+                    <div className="flex items-center gap-1 text-xs font-bold text-primary">
+                      <Star className="size-3.5 fill-primary text-primary" />
                       <span>{rev.author_details.rating}/10</span>
                     </div>
                   )}

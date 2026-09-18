@@ -76,7 +76,7 @@ export function MovieRatingDialog({
           <span className="sr-only">Close</span>
         </button>
 
-        <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-amber-500/10 text-amber-500">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-primary/10 text-primary">
           <Star className="size-6 fill-current" />
         </div>
 
@@ -106,8 +106,8 @@ export function MovieRatingDialog({
                   <Star
                     className={`size-6 transition-colors ${
                       isFilled
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-muted-foreground/40 hover:text-amber-400/70"
+                        ? "fill-primary text-primary"
+                        : "text-muted-foreground/40 hover:text-primary/70"
                     }`}
                   />
                 </button>
@@ -115,7 +115,7 @@ export function MovieRatingDialog({
             })}
           </div>
 
-          <span className="text-2xl font-black text-amber-400">
+          <span className="text-2xl font-black text-primary">
             {displayRating}{" "}
             <span className="text-sm font-normal text-muted-foreground">/ 10</span>
           </span>
@@ -143,7 +143,7 @@ export function MovieRatingDialog({
           <Button
             onClick={() => handleRate(selectedRating)}
             disabled={rateMutation.isPending}
-            className="flex-1 gap-2 bg-amber-500 font-bold text-black hover:bg-amber-400"
+            className="flex-1 gap-2 bg-primary font-bold text-primary-foreground hover:bg-primary/90"
           >
             {rateMutation.isPending ? (
               <Loader2 className="size-4 animate-spin" />

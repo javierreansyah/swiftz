@@ -87,7 +87,7 @@ export function LibraryTabs({
         >
           <Star
             className={`size-4 ${
-              activeTab === "rated" ? "fill-current" : "text-amber-500"
+              activeTab === "rated" ? "fill-current" : "text-primary"
             }`}
           />
           <span className="font-semibold">Rated</span>

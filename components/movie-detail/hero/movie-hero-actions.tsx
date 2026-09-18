@@ -361,7 +361,7 @@ export function MovieHeroActions({
                 className="cursor-pointer gap-2 font-medium"
               >
                 <Star
-                  className={`size-4 text-amber-500 ${
+                  className={`size-4 text-primary ${
                     userRating ? "fill-current" : ""
                   }`}
                 />

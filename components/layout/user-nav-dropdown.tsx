@@ -93,7 +93,7 @@ export function UserNavDropdown() {
             href="/library?tab=watchlist"
             className="flex cursor-pointer items-center gap-2"
           >
-            <Bookmark className="size-4 text-amber-500" />
+            <Bookmark className="size-4 text-blue-500" />
             <span>Watchlist</span>
           </Link>
         </DropdownMenuItem>
@@ -102,7 +102,7 @@ export function UserNavDropdown() {
             href="/library?tab=rated"
             className="flex cursor-pointer items-center gap-2"
           >
-            <Star className="size-4 text-yellow-500" />
+            <Star className="size-4 text-primary" />
             <span>Rated Movies</span>
           </Link>
         </DropdownMenuItem>

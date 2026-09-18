@@ -68,14 +68,14 @@ export function MovieHeroHeader({
               onClick={onRateClick}
               className={`h-9 gap-1.5 rounded-none border-border/80 bg-background/60 px-3.5 backdrop-blur-sm transition-colors ${
                 userRating
-                  ? "border-amber-500/50 text-amber-500 hover:text-amber-400"
+                  ? "border-primary/50 text-primary hover:text-primary/80"
                   : "hover:border-primary/50 hover:text-primary"
               }`}
             >
               <Star
                 className={`size-4 ${
                   userRating
-                    ? "fill-amber-400 text-amber-400"
+                    ? "fill-primary text-primary"
                     : "text-muted-foreground"
                 }`}
               />
@@ -90,8 +90,8 @@ export function MovieHeroHeader({
         </Tooltip>
 
         {/* IMDb / TMDB Score Badge: ★ 8.9/10 (200K) */}
-        <div className="flex h-9 items-center gap-2 rounded-none border border-amber-500/30 bg-amber-500/10 px-3.5 text-amber-500 backdrop-blur-sm">
-          <Star className="size-4 fill-amber-400 text-amber-400" />
+        <div className="flex h-9 items-center gap-2 rounded-none border border-primary/30 bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
+          <Star className="size-4 fill-primary text-primary" />
           <div className="flex items-baseline gap-1">
             <span className="font-bold text-foreground">
               {movie.vote_average.toFixed(1)}

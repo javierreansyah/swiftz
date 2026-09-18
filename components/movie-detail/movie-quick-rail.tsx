@@ -313,7 +313,7 @@ export function MovieQuickRail({
             <Star
               className={cn(
                 "size-3.5",
-                userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
+                userRating ? "fill-primary text-primary" : "text-primary"
               )}
             />
             <span>
@@ -459,7 +459,7 @@ export function MovieQuickRail({
             <Star
               className={cn(
                 "size-3.5",
-                userRating ? "fill-amber-400 text-amber-400" : "text-amber-500"
+                userRating ? "fill-primary text-primary" : "text-primary"
               )}
             />
             <span className="truncate">

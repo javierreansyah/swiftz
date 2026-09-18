@@ -11,7 +11,15 @@ import {
   MovieImagesData,
   DiscoverMoviesData,
   DiscoverMovieFilters,
+  PopularTVData,
+  TVShowDetailsData,
+  DiscoverTVFilters,
+  PopularPeopleData,
+  PersonDetailsData,
+  PersonCombinedCredits,
+  PersonExternalIds,
 } from "@/types";
+import { TMDBReviewsResponse } from "@/types/auth";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -139,4 +147,118 @@ export async function discoverMovies(
   }
   return fetchTMDB<DiscoverMoviesData>("/discover/movie", params, 86400);
 }
+
+// -------------------------------------------------------------
+// TV Shows Server Fetchers
+// -------------------------------------------------------------
+
+export async function getPopularTVShows(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDB<PopularTVData>("/tv/popular", { page }, 86400);
+}
+
+export async function getTrendingTVShows(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDB<PopularTVData>("/trending/tv/day", { page }, 86400);
+}
+
+export async function getTopRatedTVShows(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDB<PopularTVData>("/tv/top_rated", { page }, 86400);
+}
+
+export async function getOnTheAirTVShows(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDB<PopularTVData>("/tv/on_the_air", { page }, 86400);
+}
+
+export async function getTVDetails(id: string): Promise<TVShowDetailsData> {
+  return fetchTMDB<TVShowDetailsData>(`/tv/${id}`, {}, 604800);
+}
+
+export async function getTVCredits(id: string): Promise<CastData> {
+  return fetchTMDB<CastData>(`/tv/${id}/credits`, {}, 604800);
+}
+
+export async function getTVVideos(id: string): Promise<VideoData> {
+  return fetchTMDB<VideoData>(`/tv/${id}/videos`, {}, 604800);
+}
+
+export async function getTVRecommendations(
+  id: string,
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDB<PopularTVData>(`/tv/${id}/recommendations`, { page }, 86400);
+}
+
+export async function getTVImages(id: string): Promise<MovieImagesData> {
+  return fetchTMDB<MovieImagesData>(`/tv/${id}/images`, {}, 604800);
+}
+
+export async function getTVReviews(
+  id: string,
+  page: number = 1
+): Promise<TMDBReviewsResponse> {
+  return fetchTMDB<TMDBReviewsResponse>(`/tv/${id}/reviews`, { page }, 86400);
+}
+
+export async function getTVContentRatings(id: string): Promise<{
+  id: number;
+  results: Array<{ iso_3166_1: string; rating: string }>;
+}> {
+  return fetchTMDB(`/tv/${id}/content_ratings`, {}, 604800);
+}
+
+export async function discoverTVShows(
+  filters: DiscoverTVFilters = {}
+): Promise<PopularTVData> {
+  const params: Record<string, string | number> = {};
+  for (const [key, val] of Object.entries(filters)) {
+    if (val !== undefined && val !== "") {
+      params[key] = val;
+    }
+  }
+  return fetchTMDB<PopularTVData>("/discover/tv", params, 86400);
+}
+
+// -------------------------------------------------------------
+// People Server Fetchers
+// -------------------------------------------------------------
+
+export async function getPopularPeople(
+  page: number = 1
+): Promise<PopularPeopleData> {
+  return fetchTMDB<PopularPeopleData>("/person/popular", { page }, 86400);
+}
+
+export async function getPersonDetails(
+  id: string
+): Promise<PersonDetailsData> {
+  return fetchTMDB<PersonDetailsData>(`/person/${id}`, {}, 604800);
+}
+
+export async function getPersonCombinedCredits(
+  id: string
+): Promise<PersonCombinedCredits> {
+  return fetchTMDB<PersonCombinedCredits>(
+    `/person/${id}/combined_credits`,
+    {},
+    604800
+  );
+}
+
+export async function getPersonExternalIds(
+  id: string
+): Promise<PersonExternalIds> {
+  return fetchTMDB<PersonExternalIds>(
+    `/person/${id}/external_ids`,
+    {},
+    604800
+  );
+}
+
 

@@ -425,7 +425,7 @@ export function DiscoverSidebar({
       <div className="space-y-3 border-b border-border/40 pb-4">
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Star className="size-3.5 fill-amber-500 text-amber-500" />
+            <Star className="size-3.5 fill-primary text-primary" />
             <span>User Score</span>
           </label>
           <span className="text-[11px] font-medium text-foreground">

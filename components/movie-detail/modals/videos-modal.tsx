@@ -197,8 +197,8 @@ export function VideosModal({
                   className={cn(
                     "gap-1.5 rounded-none text-xs font-bold transition-colors",
                     isWatchlist
-                      ? "bg-amber-600 text-white hover:bg-amber-700"
-                      : "bg-amber-400 text-neutral-950 hover:bg-amber-300 dark:bg-amber-400 dark:text-neutral-950"
+                      ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
                   )}
                 >
                   <Bookmark className="size-3.5 fill-current" />

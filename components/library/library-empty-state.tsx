@@ -103,7 +103,7 @@ export function LibraryUnauthenticated({
           </div>
 
           <div className="space-y-3 rounded-none border bg-card/40 p-6">
-            <div className="flex size-10 items-center justify-center rounded-none bg-amber-500/10 text-amber-500">
+            <div className="flex size-10 items-center justify-center rounded-none bg-primary/10 text-primary">
               <Star className="size-5" />
             </div>
             <h3 className="text-base font-bold">1-10 Ratings</h3>
@@ -125,7 +125,7 @@ export function LibraryEmptyState({ activeTab }: { activeTab: LibraryTab }) {
         {activeTab === "watchlist" && (
           <Bookmark className="size-8 text-blue-400" />
         )}
-        {activeTab === "rated" && <Star className="size-8 text-amber-400" />}
+        {activeTab === "rated" && <Star className="size-8 text-primary" />}
       </div>
 
       <div className="mx-auto max-w-md space-y-2">

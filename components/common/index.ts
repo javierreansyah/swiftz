@@ -5,3 +5,4 @@ export * from "./pagination-system";
 export * from "./search-bar";
 export * from "./star-rating";
 export * from "./responsive-helper";
+export * from "./trailer-modal";

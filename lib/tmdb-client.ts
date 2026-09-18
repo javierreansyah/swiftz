@@ -12,6 +12,18 @@ import {
   DiscoverMovieFilters,
   TMDBKeywordSearchResponse,
   WatchProvidersResponse,
+  PopularTVData,
+  TVShowDetailsData,
+  DiscoverTVFilters,
+  PopularPeopleData,
+  PersonDetailsData,
+  PersonCombinedCredits,
+  PersonExternalIds,
+  MultiSearchResponse,
+  SearchGenericResponse,
+  SearchCollectionItem,
+  SearchCompanyItem,
+  SearchTypeCounts,
 } from "@/types";
 import {
   TMDBAccount,
@@ -311,6 +323,90 @@ export async function deleteMovieRating(
   );
 }
 
+export async function getTVAccountStates(
+  tvId: string | number,
+  sessionId: string
+): Promise<AccountStates> {
+  return fetchTMDBClient<AccountStates>(`/tv/${tvId}/account_states`, {
+    session_id: sessionId,
+  });
+}
+
+export async function setTVFavorite(
+  accountId: number,
+  sessionId: string,
+  tvId: number,
+  favorite: boolean
+): Promise<{ success: boolean; status_message: string }> {
+  return fetchTMDBClient(
+    `/account/${accountId}/favorite`,
+    { session_id: sessionId },
+    {
+      method: "POST",
+      body: JSON.stringify({
+        media_type: "tv",
+        media_id: tvId,
+        favorite,
+      }),
+    }
+  );
+}
+
+export async function setTVWatchlist(
+  accountId: number,
+  sessionId: string,
+  tvId: number,
+  watchlist: boolean
+): Promise<{ success: boolean; status_message: string }> {
+  return fetchTMDBClient(
+    `/account/${accountId}/watchlist`,
+    { session_id: sessionId },
+    {
+      method: "POST",
+      body: JSON.stringify({
+        media_type: "tv",
+        media_id: tvId,
+        watchlist,
+      }),
+    }
+  );
+}
+
+export async function setTVRating(
+  tvId: number,
+  sessionId: string,
+  rating: number
+): Promise<{ success: boolean; status_message: string }> {
+  return fetchTMDBClient(
+    `/tv/${tvId}/rating`,
+    { session_id: sessionId },
+    {
+      method: "POST",
+      body: JSON.stringify({ value: rating }),
+    }
+  );
+}
+
+export async function deleteTVRating(
+  tvId: number,
+  sessionId: string
+): Promise<{ success: boolean; status_message: string }> {
+  return fetchTMDBClient(
+    `/tv/${tvId}/rating`,
+    { session_id: sessionId },
+    {
+      method: "DELETE",
+    }
+  );
+}
+
+export async function getTVReviewsClient(
+  tvId: string | number,
+  page: number = 1
+): Promise<TMDBReviewsResponse> {
+  return fetchTMDBClient<TMDBReviewsResponse>(`/tv/${tvId}/reviews`, { page });
+}
+
 export async function getAccountFavoriteMovies(
   accountId: number,
   sessionId: string,
@@ -343,3 +439,239 @@ export async function getAccountRatedMovies(
     { session_id: sessionId, page, sort_by: "created_at.desc" }
   );
 }
+
+// -------------------------------------------------------------
+// TV Shows Client Fetchers
+// -------------------------------------------------------------
+
+export async function getPopularTVShowsClient(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>("/tv/popular", { page });
+}
+
+export async function getTrendingTVShowsClient(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>("/trending/tv/day", { page });
+}
+
+export async function getTopRatedTVShowsClient(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>("/tv/top_rated", { page });
+}
+
+export async function getOnTheAirTVShowsClient(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>("/tv/on_the_air", { page });
+}
+
+export async function getAiringTodayTVShowsClient(
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>("/tv/airing_today", { page });
+}
+
+export async function getTVDetailsClient(
+  id: string | number
+): Promise<TVShowDetailsData> {
+  return fetchTMDBClient<TVShowDetailsData>(`/tv/${id}`);
+}
+
+export async function getTVCreditsClient(
+  id: string | number
+): Promise<CastData> {
+  return fetchTMDBClient<CastData>(`/tv/${id}/credits`);
+}
+
+export async function getTVVideosClient(
+  id: string | number
+): Promise<VideoData> {
+  return fetchTMDBClient<VideoData>(`/tv/${id}/videos`);
+}
+
+export async function getTVRecommendationsClient(
+  id: string | number,
+  page: number = 1
+): Promise<PopularTVData> {
+  return fetchTMDBClient<PopularTVData>(`/tv/${id}/recommendations`, { page });
+}
+
+export async function discoverTVShowsClient(
+  filters: DiscoverTVFilters = {}
+): Promise<PopularTVData> {
+  const params: Record<string, string | number> = {};
+  for (const [key, val] of Object.entries(filters)) {
+    if (val !== undefined && val !== "") {
+      params[key] = val;
+    }
+  }
+  return fetchTMDBClient<PopularTVData>("/discover/tv", params);
+}
+
+// -------------------------------------------------------------
+// People Client Fetchers
+// -------------------------------------------------------------
+
+export async function getPopularPeopleClient(
+  page: number = 1
+): Promise<PopularPeopleData> {
+  return fetchTMDBClient<PopularPeopleData>("/person/popular", { page });
+}
+
+export async function getPersonDetailsClient(
+  id: string | number
+): Promise<PersonDetailsData> {
+  return fetchTMDBClient<PersonDetailsData>(`/person/${id}`);
+}
+
+export async function getPersonCombinedCreditsClient(
+  id: string | number
+): Promise<PersonCombinedCredits> {
+  return fetchTMDBClient<PersonCombinedCredits>(
+    `/person/${id}/combined_credits`
+  );
+}
+
+export async function getPersonExternalIdsClient(
+  id: string | number
+): Promise<PersonExternalIds> {
+  return fetchTMDBClient<PersonExternalIds>(`/person/${id}/external_ids`);
+}
+
+// -------------------------------------------------------------
+// Categorized & Multi-Search Client Fetchers
+// -------------------------------------------------------------
+
+export async function searchMultiClient(
+  query: string,
+  page: number = 1
+): Promise<MultiSearchResponse> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<MultiSearchResponse>("/search/multi", {
+    query,
+    page,
+  });
+}
+
+export async function searchTVClient(
+  query: string,
+  page: number = 1
+): Promise<PopularTVData> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<PopularTVData>("/search/tv", { query, page });
+}
+
+export async function searchPeopleClient(
+  query: string,
+  page: number = 1
+): Promise<PopularPeopleData> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<PopularPeopleData>("/search/person", { query, page });
+}
+
+export async function searchCollectionsClient(
+  query: string,
+  page: number = 1
+): Promise<SearchGenericResponse<SearchCollectionItem>> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<SearchGenericResponse<SearchCollectionItem>>(
+    "/search/collection",
+    { query, page }
+  );
+}
+
+export async function searchCompaniesClient(
+  query: string,
+  page: number = 1
+): Promise<SearchGenericResponse<SearchCompanyItem>> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<SearchGenericResponse<SearchCompanyItem>>(
+    "/search/company",
+    { query, page }
+  );
+}
+
+export async function getSearchTypeCountsClient(
+  query: string
+): Promise<SearchTypeCounts> {
+  const trimmed = query.trim();
+  if (!trimmed) {
+    return {
+      movies: 0,
+      tv: 0,
+      people: 0,
+      collections: 0,
+      keywords: 0,
+      companies: 0,
+      networks: 0,
+      awards: 0,
+    };
+  }
+
+  // Fetch count headers concurrently from TMDB search endpoints
+  try {
+    const [movies, tv, people, collections, keywords, companies] =
+      await Promise.all([
+        fetchTMDBClient<{ total_results: number }>("/search/movie", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+        fetchTMDBClient<{ total_results: number }>("/search/tv", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+        fetchTMDBClient<{ total_results: number }>("/search/person", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+        fetchTMDBClient<{ total_results: number }>("/search/collection", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+        fetchTMDBClient<{ total_results: number }>("/search/keyword", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+        fetchTMDBClient<{ total_results: number }>("/search/company", {
+          query: trimmed,
+          page: 1,
+        }).catch(() => ({ total_results: 0 })),
+      ]);
+
+    return {
+      movies: movies.total_results || 0,
+      tv: tv.total_results || 0,
+      people: people.total_results || 0,
+      collections: collections.total_results || 0,
+      keywords: keywords.total_results || 0,
+      companies: companies.total_results || 0,
+      networks: 0,
+      awards: 0,
+    };
+  } catch {
+    return {
+      movies: 0,
+      tv: 0,
+      people: 0,
+      collections: 0,
+      keywords: 0,
+      companies: 0,
+      networks: 0,
+      awards: 0,
+    };
+  }
+}
+
