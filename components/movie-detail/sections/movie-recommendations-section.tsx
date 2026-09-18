@@ -68,7 +68,7 @@ export function MovieRecommendationsSection({
               variant="outline"
               size="icon"
               onClick={scrollPrev}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll recommendations left"
             >
               <ChevronLeft className="size-4" />
@@ -77,7 +77,7 @@ export function MovieRecommendationsSection({
               variant="outline"
               size="icon"
               onClick={scrollNext}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll recommendations right"
             >
               <ChevronRight className="size-4" />

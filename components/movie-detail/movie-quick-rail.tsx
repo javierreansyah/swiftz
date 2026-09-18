@@ -193,7 +193,7 @@ export function MovieQuickRail({
       {/* Navigation Links with continuous vertical bar and active primary indicator */}
       <nav className="relative space-y-1 pl-3">
         {/* Continuous vertical track */}
-        <div className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-border/40" />
+        <div className="absolute inset-y-1.5 left-0 w-0.5 rounded-none bg-border/40" />
 
         {sections.map((item) => {
           const isActive = activeSection === item.id;
@@ -206,7 +206,7 @@ export function MovieQuickRail({
             >
               {/* Primary colored bar on the activated section */}
               {isActive && (
-                <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-full bg-primary transition-all duration-300" />
+                <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-none bg-primary transition-all duration-300" />
               )}
 
               <div className="flex items-center gap-2.5">
@@ -237,7 +237,7 @@ export function MovieQuickRail({
                     e.stopPropagation();
                     onOpenModal(item.modal);
                   }}
-                  className="flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/60 transition-colors hover:text-primary"
+                  className="flex items-center gap-0.5 rounded-none px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/60 transition-colors hover:text-primary"
                   title={`Open ${item.label} sheet`}
                 >
                   <span>Open</span>
@@ -263,7 +263,7 @@ export function MovieQuickRail({
             onClick={handleWatchlist}
             disabled={toggleWatchlist.isPending}
             className={cn(
-              "h-9 w-full justify-start gap-2.5 rounded-xl text-xs font-semibold",
+              "h-9 w-full justify-start gap-2.5 rounded-none text-xs font-semibold",
               isWatchlist
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "border-border/70 hover:bg-muted"
@@ -284,7 +284,7 @@ export function MovieQuickRail({
             onClick={handleFavorite}
             disabled={toggleFavorite.isPending}
             className={cn(
-              "h-9 w-full justify-start gap-2.5 rounded-xl text-xs font-semibold",
+              "h-9 w-full justify-start gap-2.5 rounded-none text-xs font-semibold",
               isFavorite
                 ? "bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                 : "border-border/70 hover:bg-muted"
@@ -308,7 +308,7 @@ export function MovieQuickRail({
             size="sm"
             variant="outline"
             onClick={handleRateClick}
-            className="h-9 w-full justify-start gap-2.5 rounded-xl border-border/70 text-xs font-semibold hover:bg-muted"
+            className="h-9 w-full justify-start gap-2.5 rounded-none border-border/70 text-xs font-semibold hover:bg-muted"
           >
             <Star
               className={cn(
@@ -326,7 +326,7 @@ export function MovieQuickRail({
             size="sm"
             variant="outline"
             onClick={handleShare}
-            className="h-9 w-full justify-start gap-2.5 rounded-xl border-border/70 text-xs font-semibold hover:bg-muted"
+            className="h-9 w-full justify-start gap-2.5 rounded-none border-border/70 text-xs font-semibold hover:bg-muted"
           >
             {copied ? (
               <Check className="size-3.5 text-emerald-500" />
@@ -359,7 +359,7 @@ export function MovieQuickRail({
                 type="button"
                 onClick={() => scrollToSection(item.id)}
                 className={cn(
-                  "active:scale-0.98 flex items-center gap-2.5 rounded-xl border p-2.5 text-left text-xs transition-colors select-none",
+                  "active:scale-0.98 flex items-center gap-2.5 rounded-none border p-2.5 text-left text-xs transition-colors select-none",
                   isActive
                     ? "border-primary/50 bg-primary/10 font-bold text-foreground shadow-xs"
                     : "border-border/50 bg-card/40 font-medium text-muted-foreground hover:border-border/80 hover:text-foreground"
@@ -367,7 +367,7 @@ export function MovieQuickRail({
               >
                 <div
                   className={cn(
-                    "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
+                    "flex size-7 shrink-0 items-center justify-center rounded-none transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "bg-muted/70 text-muted-foreground/80"
@@ -399,7 +399,7 @@ export function MovieQuickRail({
             }}
             disabled={toggleWatchlist.isPending}
             className={cn(
-              "h-9 w-full justify-start gap-2 rounded-xl text-xs font-semibold",
+              "h-9 w-full justify-start gap-2 rounded-none text-xs font-semibold",
               isWatchlist
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "border-border/70 bg-card/40 hover:bg-muted"
@@ -425,7 +425,7 @@ export function MovieQuickRail({
             }}
             disabled={toggleFavorite.isPending}
             className={cn(
-              "h-9 w-full justify-start gap-2 rounded-xl text-xs font-semibold",
+              "h-9 w-full justify-start gap-2 rounded-none text-xs font-semibold",
               isFavorite
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "border-border/70 bg-card/40 hover:bg-muted"
@@ -454,7 +454,7 @@ export function MovieQuickRail({
               closeMobileNav();
               handleRateClick();
             }}
-            className="h-9 w-full justify-start gap-2 rounded-xl border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+            className="h-9 w-full justify-start gap-2 rounded-none border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
           >
             <Star
               className={cn(
@@ -472,7 +472,7 @@ export function MovieQuickRail({
             size="sm"
             variant="outline"
             onClick={handleShare}
-            className="h-9 w-full justify-start gap-2 rounded-xl border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+            className="h-9 w-full justify-start gap-2 rounded-none border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
           >
             {copied ? (
               <Check className="size-3.5 text-emerald-500" />

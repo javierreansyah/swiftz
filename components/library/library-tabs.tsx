@@ -31,7 +31,7 @@ export function LibraryTabs({
           variant={activeTab === "favorites" ? "default" : "ghost"}
           size="sm"
           onClick={() => onTabChange("favorites")}
-          className="gap-2 rounded-xl transition-all"
+          className="gap-2 rounded-none transition-all"
         >
           <Heart
             className={`size-4 ${
@@ -41,7 +41,7 @@ export function LibraryTabs({
           <span className="font-semibold">Favorites</span>
           {favoritesCount !== undefined && (
             <span
-              className={`rounded-full px-2 py-0.5 text-xs ${
+              className={`rounded-none px-2 py-0.5 text-xs ${
                 activeTab === "favorites"
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-secondary text-muted-foreground"
@@ -57,7 +57,7 @@ export function LibraryTabs({
           variant={activeTab === "watchlist" ? "default" : "ghost"}
           size="sm"
           onClick={() => onTabChange("watchlist")}
-          className="gap-2 rounded-xl transition-all"
+          className="gap-2 rounded-none transition-all"
         >
           <Bookmark
             className={`size-4 ${
@@ -67,7 +67,7 @@ export function LibraryTabs({
           <span className="font-semibold">Watchlist</span>
           {watchlistCount !== undefined && (
             <span
-              className={`rounded-full px-2 py-0.5 text-xs ${
+              className={`rounded-none px-2 py-0.5 text-xs ${
                 activeTab === "watchlist"
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-secondary text-muted-foreground"
@@ -83,7 +83,7 @@ export function LibraryTabs({
           variant={activeTab === "rated" ? "default" : "ghost"}
           size="sm"
           onClick={() => onTabChange("rated")}
-          className="gap-2 rounded-xl transition-all"
+          className="gap-2 rounded-none transition-all"
         >
           <Star
             className={`size-4 ${
@@ -93,7 +93,7 @@ export function LibraryTabs({
           <span className="font-semibold">Rated</span>
           {ratedCount !== undefined && (
             <span
-              className={`rounded-full px-2 py-0.5 text-xs ${
+              className={`rounded-none px-2 py-0.5 text-xs ${
                 activeTab === "rated"
                   ? "bg-primary-foreground/20 text-primary-foreground"
                   : "bg-secondary text-muted-foreground"

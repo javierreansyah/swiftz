@@ -99,7 +99,7 @@ export function CastModal({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header bar */}
@@ -109,7 +109,7 @@ export function CastModal({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-full hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -153,7 +153,7 @@ export function CastModal({
                   setCastTab("all");
                   setSelectedDept("all");
                 }}
-                className="h-7 rounded-full text-xs"
+                className="h-7 rounded-none text-xs"
               >
                 All ({cast.length + crew.length})
               </Button>
@@ -161,7 +161,7 @@ export function CastModal({
                 variant={castTab === "cast" ? "default" : "secondary"}
                 size="sm"
                 onClick={() => setCastTab("cast")}
-                className="h-7 rounded-full text-xs"
+                className="h-7 rounded-none text-xs"
               >
                 Cast ({cast.length})
               </Button>
@@ -169,7 +169,7 @@ export function CastModal({
                 variant={castTab === "crew" ? "default" : "secondary"}
                 size="sm"
                 onClick={() => setCastTab("crew")}
-                className="h-7 rounded-full text-xs"
+                className="h-7 rounded-none text-xs"
               >
                 Crew ({crew.length})
               </Button>
@@ -214,7 +214,7 @@ export function CastModal({
                       setSelectedDept("all");
                     }}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       castTab === "all" && selectedDept === "all"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-foreground/80 hover:bg-muted"
@@ -236,7 +236,7 @@ export function CastModal({
                       setSelectedDept("all");
                     }}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       castTab === "cast"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-foreground/80 hover:bg-muted"
@@ -255,7 +255,7 @@ export function CastModal({
                       setCastTab("crew");
                     }}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       castTab === "crew" && selectedDept === "all"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-foreground/80 hover:bg-muted"
@@ -283,7 +283,7 @@ export function CastModal({
                       setSelectedDept("all");
                     }}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                       castTab === "crew" && selectedDept === "all"
                         ? "bg-accent font-semibold text-accent-foreground"
                         : "text-muted-foreground hover:bg-muted"
@@ -301,7 +301,7 @@ export function CastModal({
                         setSelectedDept(dept);
                       }}
                       className={cn(
-                        "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                        "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                         castTab === "crew" && selectedDept === dept
                           ? "bg-primary font-semibold text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -333,7 +333,7 @@ export function CastModal({
                       return (
                         <div
                           key={c.id + (c.character || "")}
-                          className="group overflow-hidden rounded-xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
+                          className="group overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
                         >
                           <div className="relative aspect-4/5 w-full overflow-hidden bg-muted">
                             {profileUrl ? (
@@ -376,7 +376,7 @@ export function CastModal({
                   {Object.entries(crewByDepartment).map(([dept, members]) => (
                     <div
                       key={dept}
-                      className="space-y-3 rounded-2xl border border-border/60 bg-muted/20 p-5"
+                      className="space-y-3 rounded-none border border-border/60 bg-muted/20 p-5"
                     >
                       <h4 className="text-sm font-bold text-primary sm:text-base">
                         {dept} ({members.length})
@@ -385,7 +385,7 @@ export function CastModal({
                         {members.map((m, idx) => (
                           <div
                             key={m.credit_id || idx}
-                            className="flex items-center justify-between gap-2 rounded-lg border border-border/40 bg-card p-2.5 text-xs"
+                            className="flex items-center justify-between gap-2 rounded-none border border-border/40 bg-card p-2.5 text-xs"
                           >
                             <span className="truncate font-semibold text-foreground">
                               {m.name}

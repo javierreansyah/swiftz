@@ -64,7 +64,7 @@ export function MovieVideosSection({
               variant="outline"
               size="icon"
               onClick={scrollPrev}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll videos left"
             >
               <ChevronLeft className="size-4" />
@@ -73,7 +73,7 @@ export function MovieVideosSection({
               variant="outline"
               size="icon"
               onClick={scrollNext}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll videos right"
             >
               <ChevronRight className="size-4" />
@@ -93,7 +93,7 @@ export function MovieVideosSection({
             <div
               key={vid.id}
               onClick={() => onOpenVideosModal(idx)}
-              className="group w-72 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg sm:w-80"
+              className="group w-72 shrink-0 cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg sm:w-80"
             >
               {/* Flush Video Thumbnail without inner padding */}
               <div className="relative aspect-video w-full overflow-hidden bg-black">
@@ -105,10 +105,10 @@ export function MovieVideosSection({
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/30 transition-opacity group-hover:bg-black/10" />
-                <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform group-hover:scale-110">
+                <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-none bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-sm transition-transform group-hover:scale-110">
                   <Play className="ml-0.5 size-5 fill-current" />
                 </div>
-                <div className="absolute bottom-2.5 left-2.5 rounded-full border border-white/20 bg-black/70 px-2.5 py-0.5 text-[11px] font-semibold text-white">
+                <div className="absolute bottom-2.5 left-2.5 rounded-none border border-white/20 bg-black/70 px-2.5 py-0.5 text-[11px] font-semibold text-white">
                   {vid.type || "Video"}
                 </div>
               </div>

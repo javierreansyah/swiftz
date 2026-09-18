@@ -57,13 +57,13 @@ export function MovieReviewsSection({
             <div
               key={rev.id}
               onClick={onOpenReviewsModal}
-              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-2xl border border-border/80 bg-card/70 p-5 transition-all hover:border-primary/40 hover:shadow-xl"
+              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-none border border-border/80 bg-card/70 p-5 transition-all hover:border-primary/40 hover:shadow-xl"
             >
               <div className="space-y-2.5">
                 {/* Author & Rating Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
-                    <div className="flex size-7 items-center justify-center rounded-full bg-secondary font-bold text-foreground">
+                    <div className="flex size-7 items-center justify-center rounded-none bg-secondary font-bold text-foreground">
                       {rev.author.charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -99,7 +99,7 @@ export function MovieReviewsSection({
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border/80 p-8 text-center">
+        <div className="rounded-none border border-dashed border-border/80 p-8 text-center">
           <p className="text-sm text-muted-foreground">
             No reviews yet. Click below to view or submit the first review!
           </p>
@@ -107,7 +107,7 @@ export function MovieReviewsSection({
             variant="outline"
             size="sm"
             onClick={onOpenReviewsModal}
-            className="mt-3 rounded-full"
+            className="mt-3 rounded-none"
           >
             Open Reviews Modal
           </Button>

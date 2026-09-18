@@ -176,7 +176,7 @@ export function PhotosModal({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
@@ -186,7 +186,7 @@ export function PhotosModal({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-full hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -205,7 +205,7 @@ export function PhotosModal({
                     Photo Gallery ({allPhotos.length})
                   </p>
                   {viewMode === "showcase" && (
-                    <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="rounded-none bg-primary/20 px-2 py-0.5 text-[10px] font-semibold text-primary">
                       {activePhotoIdx + 1} of {filteredPhotos.length}
                     </span>
                   )}
@@ -220,7 +220,7 @@ export function PhotosModal({
                     variant="outline"
                     size="sm"
                     onClick={() => setViewMode("gallery")}
-                    className="gap-1.5 rounded-full text-xs"
+                    className="gap-1.5 rounded-none text-xs"
                   >
                     <LayoutGrid className="size-3.5" />
                     <span>Back to Gallery</span>
@@ -229,7 +229,7 @@ export function PhotosModal({
                     variant="outline"
                     size="icon-sm"
                     onClick={handlePrevPhoto}
-                    className="rounded-full"
+                    className="rounded-none"
                     aria-label="Previous photo"
                   >
                     <ChevronLeft className="size-4" />
@@ -238,7 +238,7 @@ export function PhotosModal({
                     variant="outline"
                     size="icon-sm"
                     onClick={handleNextPhoto}
-                    className="rounded-full"
+                    className="rounded-none"
                     aria-label="Next photo"
                   >
                     <ChevronRight className="size-4" />
@@ -250,7 +250,7 @@ export function PhotosModal({
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="gap-1.5 rounded-full text-xs"
+                className="gap-1.5 rounded-none text-xs"
               >
                 {copiedShare ? (
                   <Check className="size-3.5 text-emerald-500" />
@@ -322,7 +322,7 @@ export function PhotosModal({
                     type="button"
                     onClick={() => setPhotoTypeFilter("all")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       photoTypeFilter === "all"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-foreground/80 hover:bg-muted"
@@ -341,7 +341,7 @@ export function PhotosModal({
                     type="button"
                     onClick={() => setPhotoTypeFilter("backdrops")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                       photoTypeFilter === "backdrops"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -357,7 +357,7 @@ export function PhotosModal({
                     type="button"
                     onClick={() => setPhotoTypeFilter("posters")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                       photoTypeFilter === "posters"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -381,7 +381,7 @@ export function PhotosModal({
                     type="button"
                     onClick={() => setSelectedLanguage("all")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       selectedLanguage === "all"
                         ? "bg-accent font-semibold text-accent-foreground"
                         : "text-muted-foreground hover:bg-muted"
@@ -402,7 +402,7 @@ export function PhotosModal({
                       type="button"
                       onClick={() => setSelectedLanguage(lang.code)}
                       className={cn(
-                        "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                        "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                         selectedLanguage === lang.code
                           ? "bg-primary font-semibold text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -436,7 +436,7 @@ export function PhotosModal({
                       />
 
                       {/* Photo meta overlay */}
-                      <div className="absolute top-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
+                      <div className="absolute top-3 right-3 rounded-none border border-white/20 bg-black/60 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
                         <p className="font-semibold">{movie.title}</p>
                         <p className="text-[10px] text-white/60">
                           {activePhoto.width} &times; {activePhoto.height} &bull;{" "}
@@ -449,13 +449,13 @@ export function PhotosModal({
                       {/* Large Prev/Next buttons */}
                       <button
                         onClick={handlePrevPhoto}
-                        className="absolute top-1/2 left-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
+                        className="absolute top-1/2 left-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-none bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
                       >
                         <ChevronLeft className="size-6" />
                       </button>
                       <button
                         onClick={handleNextPhoto}
-                        className="absolute top-1/2 right-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
+                        className="absolute top-1/2 right-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-none bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
                       >
                         <ChevronRight className="size-6" />
                       </button>
@@ -472,7 +472,7 @@ export function PhotosModal({
                             key={photo.file_path + i}
                             onClick={() => setActivePhotoIdx(i)}
                             className={cn(
-                              "relative h-14 w-22 flex-none overflow-hidden rounded-lg border-2 transition-all",
+                              "relative h-14 w-22 flex-none overflow-hidden rounded-none border-2 transition-all",
                               isActive
                                 ? "scale-105 border-primary ring-2 ring-primary/40"
                                 : "border-transparent opacity-60 hover:opacity-100"
@@ -507,7 +507,7 @@ export function PhotosModal({
                             key={photo.file_path + idx}
                             onClick={() => handleSelectPhoto(idx)}
                             className={cn(
-                              "group relative cursor-pointer overflow-hidden rounded-xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg",
+                              "group relative cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg",
                               isBackdrop
                                 ? "col-span-2 aspect-video"
                                 : "col-span-1 aspect-2/3"
@@ -521,7 +521,7 @@ export function PhotosModal({
                               className="object-cover transition-transform duration-300 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 flex items-end bg-black/20 p-2.5 opacity-0 transition-opacity group-hover:opacity-100">
-                              <span className="rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                              <span className="rounded-none bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
                                 {photo.width} &times; {photo.height}
                               </span>
                             </div>

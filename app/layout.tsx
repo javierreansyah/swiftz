@@ -10,15 +10,9 @@ import Footer from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
-const lora = Lora({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
+const loraHeading = Lora({subsets:['latin'],variable:'--font-heading'});
 
 export const metadata: Metadata = {
   title: "Swiftz",
@@ -34,7 +28,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(inter.variable, lora.variable)}
+      className={cn("font-sans", inter.variable, loraHeading.variable)}
     >
       <head />
       <body className="font-sans antialiased">

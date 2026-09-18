@@ -185,3 +185,55 @@ export interface MovieImagesData {
   posters: MovieImageItem[];
   logos: MovieImageItem[];
 }
+
+export interface DiscoverMoviesData {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
+}
+
+export interface TMDBKeyword {
+  id: number;
+  name: string;
+}
+
+export interface TMDBKeywordSearchResponse {
+  page: number;
+  results: TMDBKeyword[];
+  total_pages: number;
+  total_results: number;
+}
+
+export interface WatchProviderItem {
+  provider_id: number;
+  provider_name: string;
+  logo_path: string;
+  display_priority?: number;
+}
+
+export interface WatchProvidersResponse {
+  results: WatchProviderItem[];
+}
+
+export interface DiscoverMovieFilters {
+  page?: number;
+  sort_by?: string;
+  with_genres?: string;
+  without_genres?: string;
+  with_keywords?: string;
+  with_original_language?: string;
+  "primary_release_date.gte"?: string;
+  "primary_release_date.lte"?: string;
+  "vote_average.gte"?: number;
+  "vote_average.lte"?: number;
+  "vote_count.gte"?: number;
+  "with_runtime.gte"?: number;
+  "with_runtime.lte"?: number;
+  certification_country?: string;
+  certification?: string;
+  watch_region?: string;
+  with_watch_providers?: string;
+  with_watch_monetization_types?: string;
+}
+

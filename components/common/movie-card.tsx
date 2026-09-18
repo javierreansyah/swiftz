@@ -17,7 +17,7 @@ export function MovieCard({ id, title, poster, rating }: MovieCardProps) {
 
   return (
     <Link href={`/movie/${id}`} prefetch={false} className="group block">
-      <div className="overflow-clip rounded-lg border bg-card transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg">
+      <div className="overflow-clip rounded-none border bg-card transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg">
         {poster ? (
           <div className="relative aspect-2/3 w-full bg-muted">
             <Image

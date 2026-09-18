@@ -8,6 +8,8 @@ import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 function AuthCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -72,7 +74,7 @@ function AuthCallbackContent() {
 
   return (
     <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
-      <div className="w-full max-w-md space-y-4 rounded-xl border bg-card p-8 text-center shadow-xl">
+      <div className="w-full max-w-md space-y-4 rounded-none border bg-card p-8 text-center shadow-xl">
         {status === "loading" && (
           <div className="space-y-4">
             <Loader2 className="mx-auto size-12 animate-spin text-primary" />
@@ -115,7 +117,7 @@ export default function AuthCallbackPage() {
     <Suspense
       fallback={
         <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
-          <div className="w-full max-w-md space-y-4 rounded-xl border bg-card p-8 text-center">
+          <div className="w-full max-w-md space-y-4 rounded-none border bg-card p-8 text-center">
             <Loader2 className="mx-auto size-12 animate-spin text-primary" />
             <h1 className="text-2xl font-bold">Connecting to TMDB...</h1>
           </div>

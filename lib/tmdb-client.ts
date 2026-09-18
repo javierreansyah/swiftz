@@ -8,6 +8,10 @@ import {
   MovieGenresSearchData,
   VideoData,
   MovieImagesData,
+  DiscoverMoviesData,
+  DiscoverMovieFilters,
+  TMDBKeywordSearchResponse,
+  WatchProvidersResponse,
 } from "@/types";
 import {
   TMDBAccount,
@@ -92,6 +96,56 @@ export async function getTrendingMoviesClient(
 ): Promise<TrendingMoviesData> {
   return fetchTMDBClient<TrendingMoviesData>("/trending/movie/day", { page });
 }
+
+export async function getNowPlayingMoviesClient(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/now_playing", { page });
+}
+
+export async function getTopRatedMoviesClient(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/top_rated", { page });
+}
+
+export async function getUpcomingMoviesClient(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/upcoming", { page });
+}
+
+export async function discoverMoviesClient(
+  filters: DiscoverMovieFilters = {}
+): Promise<DiscoverMoviesData> {
+  const params: Record<string, string | number> = {};
+  for (const [key, val] of Object.entries(filters)) {
+    if (val !== undefined && val !== "") {
+      params[key] = val;
+    }
+  }
+  return fetchTMDBClient<DiscoverMoviesData>("/discover/movie", params);
+}
+
+export async function searchKeywordsClient(
+  query: string
+): Promise<TMDBKeywordSearchResponse> {
+  if (!query.trim()) {
+    return { page: 1, results: [], total_pages: 0, total_results: 0 };
+  }
+  return fetchTMDBClient<TMDBKeywordSearchResponse>("/search/keyword", {
+    query,
+  });
+}
+
+export async function getWatchProvidersClient(
+  region: string = "US"
+): Promise<WatchProvidersResponse> {
+  return fetchTMDBClient<WatchProvidersResponse>("/watch/providers/movie", {
+    watch_region: region,
+  });
+}
+
 
 export async function getMovieCastClient(id: string): Promise<CastData> {
   return fetchTMDBClient<CastData>(`/movie/${id}/credits`);

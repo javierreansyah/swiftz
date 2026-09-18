@@ -108,7 +108,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
       {isLoading ? (
         <CastSkeletonGrid />
       ) : isError || (!castList.length && !crewList.length) ? (
-        <div className="flex h-62.5 w-full items-center justify-center rounded-lg border bg-card p-8">
+        <div className="flex h-62.5 w-full items-center justify-center rounded-none border bg-card p-8">
           <h2 className="text-xl font-medium">No cast or crew information found.</h2>
         </div>
       ) : (
@@ -154,7 +154,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
           {searchFilter &&
             filteredCast.length === 0 &&
             filteredCrew.length === 0 && (
-              <div className="flex h-50 w-full items-center justify-center rounded-lg border bg-card p-8">
+              <div className="flex h-50 w-full items-center justify-center rounded-none border bg-card p-8">
                 <p className="text-muted-foreground">
                   No cast or crew matching &quot;{searchFilter}&quot;
                 </p>

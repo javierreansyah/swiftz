@@ -70,7 +70,7 @@ export function RecommendationsModal({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header bar */}
@@ -80,7 +80,7 @@ export function RecommendationsModal({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-full hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -98,7 +98,7 @@ export function RecommendationsModal({
                   Recommended Titles
                 </p>
               </div>
-              <Badge variant="secondary" className="rounded-full px-3 py-0.5">
+              <Badge variant="secondary" className="rounded-none px-3 py-0.5">
                 {allMovies.length}
                 {recData?.total_result ? ` of ${recData.total_result}` : ""}{" "}
                 Titles
@@ -126,7 +126,7 @@ export function RecommendationsModal({
                 {Array.from({ length: 12 }, (_, i) => (
                   <div
                     key={i}
-                    className="aspect-2/3 animate-pulse rounded-xl bg-muted"
+                    className="aspect-2/3 animate-pulse rounded-none bg-muted"
                   />
                 ))}
               </div>
@@ -159,7 +159,7 @@ export function RecommendationsModal({
                       size="lg"
                       onClick={() => setPage((p) => p + 1)}
                       disabled={isFetching}
-                      className="gap-2 rounded-full px-8 text-sm font-semibold hover:border-primary/50"
+                      className="gap-2 rounded-none px-8 text-sm font-semibold hover:border-primary/50"
                     >
                       {isFetching ? (
                         <>

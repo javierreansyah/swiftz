@@ -66,7 +66,7 @@ export function MoviePhotosSection({
               variant="outline"
               size="icon"
               onClick={scrollPrev}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll photos left"
             >
               <ChevronLeft className="size-4" />
@@ -75,7 +75,7 @@ export function MoviePhotosSection({
               variant="outline"
               size="icon"
               onClick={scrollNext}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll photos right"
             >
               <ChevronRight className="size-4" />
@@ -93,7 +93,7 @@ export function MoviePhotosSection({
           <div
             key={photo.file_path + i}
             onClick={() => onOpenPhotosModal(i)}
-            className="group relative aspect-video w-72 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-xl sm:w-96"
+            className="group relative aspect-video w-72 shrink-0 cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-xl sm:w-96"
           >
             <Image
               src={`https://image.tmdb.org/t/p/w780${photo.file_path}`}

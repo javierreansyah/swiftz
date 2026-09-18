@@ -19,7 +19,7 @@ export function UserNavDropdown() {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="size-8 animate-pulse rounded-full bg-muted" />;
+    return <div className="size-8 animate-pulse rounded-none bg-muted" />;
   }
 
   if (!isAuthenticated || !user) {
@@ -45,9 +45,9 @@ export function UserNavDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full border border-border p-1 transition-colors hover:border-primary/50 focus:outline-none">
+        <button className="flex items-center gap-2 rounded-none border border-border p-1 transition-colors hover:border-primary/50 focus:outline-none">
           {avatarUrl ? (
-            <div className="relative size-8 overflow-clip rounded-full">
+            <div className="relative size-8 overflow-clip rounded-none">
               <Image
                 src={avatarUrl}
                 alt={user.username || "User"}
@@ -57,7 +57,7 @@ export function UserNavDropdown() {
               />
             </div>
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+            <div className="flex size-8 items-center justify-center rounded-none bg-primary/20 text-xs font-bold text-primary">
               {(user.username || "U").charAt(0).toUpperCase()}
             </div>
           )}

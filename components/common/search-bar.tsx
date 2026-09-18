@@ -44,7 +44,7 @@ export function SearchBar({
         <Button type="submit" className="hidden sm:inline-flex">
           Search
         </Button>
-        <Button type="submit" className="w-full sm:hidden" size="full">
+        <Button type="submit" className="w-full sm:hidden">
           Search
         </Button>
       </div>

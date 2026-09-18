@@ -38,10 +38,10 @@ export function GenresCard() {
           const Icon = genre.icon;
           return (
             <article key={genre.id}>
-              <Link href={`/genres?with=${genre.id}`} prefetch={false}>
-                <div className="group w-full rounded-xl border bg-card p-4 transition-all hover:bg-primary">
+              <Link href={`/discover?with_genres=${genre.id}`} prefetch={false}>
+                <div className="group w-full rounded-none border bg-card p-4 transition-all hover:bg-primary">
                   <div className="flex items-center gap-4">
-                    <figure className="flex aspect-square w-16 items-center justify-center overflow-clip rounded-lg bg-secondary transition-all group-hover:bg-white">
+                    <figure className="flex aspect-square w-16 items-center justify-center overflow-clip rounded-none bg-secondary transition-all group-hover:bg-white">
                       <Icon
                         size={36}
                         className={`transition-all group-hover:scale-125 group-hover:text-primary ${

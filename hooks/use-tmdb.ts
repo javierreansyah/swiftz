@@ -11,6 +11,12 @@ import {
   getMoviesByGenresClient,
   getPopularMoviesClient,
   getTrendingMoviesClient,
+  getNowPlayingMoviesClient,
+  getTopRatedMoviesClient,
+  getUpcomingMoviesClient,
+  discoverMoviesClient,
+  searchKeywordsClient,
+  getWatchProvidersClient,
   getMovieCastClient,
   getMovieRecommendationsClient,
   getMovieReviewsClient,
@@ -25,6 +31,7 @@ import {
   getAccountWatchlistMovies,
   getAccountRatedMovies,
 } from "@/lib/tmdb-client";
+import { DiscoverMovieFilters } from "@/types";
 import { AccountStates } from "@/types/auth";
 
 export function useSearchMoviesQuery(query: string, page: number = 1) {
@@ -60,6 +67,56 @@ export function useTrendingMoviesQuery(page: number = 1) {
     placeholderData: keepPreviousData,
   });
 }
+
+export function useNowPlayingMoviesQuery(page: number = 1) {
+  return useQuery({
+    queryKey: ["now-playing-movies", page],
+    queryFn: () => getNowPlayingMoviesClient(page),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useTopRatedMoviesQuery(page: number = 1) {
+  return useQuery({
+    queryKey: ["top-rated-movies", page],
+    queryFn: () => getTopRatedMoviesClient(page),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useUpcomingMoviesQuery(page: number = 1) {
+  return useQuery({
+    queryKey: ["upcoming-movies", page],
+    queryFn: () => getUpcomingMoviesClient(page),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useDiscoverMoviesQuery(filters: DiscoverMovieFilters = {}) {
+  return useQuery({
+    queryKey: ["discover-movies", filters],
+    queryFn: () => discoverMoviesClient(filters),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useKeywordSearchQuery(query: string) {
+  return useQuery({
+    queryKey: ["search-keywords", query],
+    queryFn: () => searchKeywordsClient(query),
+    enabled: Boolean(query && query.trim().length >= 2),
+    staleTime: 1000 * 60 * 5, // 5 mins cache
+  });
+}
+
+export function useWatchProvidersQuery(region: string = "US") {
+  return useQuery({
+    queryKey: ["watch-providers", region],
+    queryFn: () => getWatchProvidersClient(region),
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+  });
+}
+
 
 export function useMovieCastQuery(id: string) {
   return useQuery({

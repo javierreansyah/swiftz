@@ -19,7 +19,7 @@ export async function MovieRecommendations({ id }: MovieRecommendationsProps) {
     <section className="container space-y-8 pb-8">
       <h2 className="text-2xl font-bold md:text-5xl">Recommendations</h2>
       <MovieGrid movies={movieRecommendation.results} count={10} />
-      <Button className="font-bold" size="full" asChild>
+      <Button className="w-full font-bold" asChild>
         <Link href={`/movie/${id}/recommendation`} prefetch={false}>
           More Recommendations
         </Link>

@@ -31,7 +31,7 @@ function SearchContent() {
       <SearchBar currentQuery={query} />
 
       {!query ? (
-        <div className="flex h-62.5 w-full flex-col items-center justify-center space-y-2 rounded-lg border bg-card p-8 text-center">
+        <div className="flex h-62.5 w-full flex-col items-center justify-center space-y-2 rounded-none border bg-card p-8 text-center">
           <h2 className="text-xl font-bold">Search for Movies</h2>
           <p className="text-sm text-muted-foreground">
             Enter a title, actor, or keyword in the box above to discover films.
@@ -44,7 +44,7 @@ function SearchContent() {
           ))}
         </div>
       ) : isError || movies.length === 0 ? (
-        <div className="flex h-75 w-full items-center justify-center rounded-lg border bg-card p-8">
+        <div className="flex h-75 w-full items-center justify-center rounded-none border bg-card p-8">
           <h1 className="text-center text-lg font-medium">
             No movies found for &quot;{query}&quot;
           </h1>
@@ -78,7 +78,7 @@ export default function SearchPage() {
     <Suspense
       fallback={
         <main className="container space-y-8 pt-20 pb-10">
-          <div className="h-10 w-full animate-pulse rounded-md bg-secondary" />
+          <div className="h-10 w-full animate-pulse rounded-none bg-secondary" />
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 10 }, (_, i) => (
               <MovieCardSkeleton key={i} />

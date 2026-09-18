@@ -136,7 +136,7 @@ export function MovieHeroActions({
                   <Badge
                     key={genre.id}
                     variant="secondary"
-                    className="rounded-full border border-border/60 bg-secondary/70 px-3.5 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary sm:text-sm"
+                    className="border border-border/60 bg-secondary/70 px-3.5 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary sm:text-sm"
                   >
                     {genre.name}
                   </Badge>
@@ -274,7 +274,7 @@ export function MovieHeroActions({
 
               <div className="flex items-center gap-1.5">
                 <span
-                  className={`flex size-6 items-center justify-center rounded text-xs font-bold text-white ${
+                  className={`flex size-6 items-center justify-center rounded-none text-xs font-bold text-white ${
                     metascore >= 70
                       ? "bg-emerald-600"
                       : metascore >= 50
@@ -295,12 +295,12 @@ export function MovieHeroActions({
         {/* Watchlist Button with Dropdown (Right side on desktop, top right on mobile) */}
         <div className="order-1 flex shrink-0 items-center justify-end self-start lg:order-2">
           <DropdownMenu>
-            <div className="inline-flex rounded-lg shadow-sm">
+            <div className="inline-flex rounded-none shadow-sm">
               <Button
                 onClick={handleWatchlistClick}
                 disabled={toggleWatchlist.isPending}
                 className={cn(
-                  "h-10 gap-2 rounded-r-none border-r-0 font-bold transition-all",
+                  "h-10 gap-2 rounded-none border-r-0 font-bold transition-all",
                   isWatchlist
                     ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -321,7 +321,7 @@ export function MovieHeroActions({
               <DropdownMenuTrigger asChild>
                 <Button
                   className={cn(
-                    "h-10 rounded-l-none border-l border-primary-foreground/20 px-2.5 transition-all",
+                    "h-10 rounded-none border-l border-primary-foreground/20 px-2.5 transition-all",
                     isWatchlist
                       ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
                       : "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -387,14 +387,14 @@ export function MovieHeroActions({
       {/* AUTH PROMPT MODAL */}
       {showAuthModal && (
         <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200 fade-in">
-          <div className="relative w-full max-w-md space-y-4 rounded-2xl border bg-card p-6 shadow-2xl">
+          <div className="relative w-full max-w-md space-y-4 rounded-none border bg-card p-6 shadow-2xl">
             <button
               onClick={() => setShowAuthModal(false)}
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
               <X className="size-5" />
             </button>
-            <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-primary/20 text-primary">
+            <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-primary/20 text-primary">
               <LogIn className="size-6" />
             </div>
             <div className="space-y-1 text-center">

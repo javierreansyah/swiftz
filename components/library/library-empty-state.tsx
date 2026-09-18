@@ -24,13 +24,13 @@ export function LibraryUnauthenticated({
     <div className="container min-h-screen pt-28 pb-16">
       <div className="mx-auto max-w-3xl space-y-10">
         {/* Welcome Card */}
-        <div className="relative space-y-6 overflow-hidden rounded-3xl border bg-linear-to-b from-card/90 to-card/50 p-8 text-center shadow-xl sm:p-12">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-inner sm:size-20">
+        <div className="relative space-y-6 overflow-hidden rounded-none border bg-linear-to-b from-card/90 to-card/50 p-8 text-center shadow-xl sm:p-12">
+          <div className="mx-auto flex size-16 items-center justify-center rounded-none border border-primary/20 bg-primary/10 text-primary shadow-inner sm:size-20">
             <Film className="size-8 sm:size-10" />
           </div>
 
           <div className="space-y-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-none border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="size-3.5" />
               TMDB Cloud Sync
             </span>
@@ -82,8 +82,8 @@ export function LibraryUnauthenticated({
 
         {/* Feature highlights grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-red-500/10 text-red-500">
+          <div className="space-y-3 rounded-none border bg-card/40 p-6">
+            <div className="flex size-10 items-center justify-center rounded-none bg-red-500/10 text-red-500">
               <Heart className="size-5" />
             </div>
             <h3 className="text-base font-bold">Favorites</h3>
@@ -92,8 +92,8 @@ export function LibraryUnauthenticated({
             </p>
           </div>
 
-          <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+          <div className="space-y-3 rounded-none border bg-card/40 p-6">
+            <div className="flex size-10 items-center justify-center rounded-none bg-blue-500/10 text-blue-500">
               <Bookmark className="size-5" />
             </div>
             <h3 className="text-base font-bold">Watchlist</h3>
@@ -102,8 +102,8 @@ export function LibraryUnauthenticated({
             </p>
           </div>
 
-          <div className="space-y-3 rounded-2xl border bg-card/40 p-6">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
+          <div className="space-y-3 rounded-none border bg-card/40 p-6">
+            <div className="flex size-10 items-center justify-center rounded-none bg-amber-500/10 text-amber-500">
               <Star className="size-5" />
             </div>
             <h3 className="text-base font-bold">1-10 Ratings</h3>
@@ -119,8 +119,8 @@ export function LibraryUnauthenticated({
 
 export function LibraryEmptyState({ activeTab }: { activeTab: LibraryTab }) {
   return (
-    <div className="space-y-5 rounded-3xl border border-dashed bg-card/20 p-12 text-center sm:p-16">
-      <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
+    <div className="space-y-5 rounded-none border border-dashed bg-card/20 p-12 text-center sm:p-16">
+      <div className="mx-auto flex size-16 items-center justify-center rounded-none bg-secondary text-muted-foreground">
         {activeTab === "favorites" && <Heart className="size-8 text-red-400" />}
         {activeTab === "watchlist" && (
           <Bookmark className="size-8 text-blue-400" />

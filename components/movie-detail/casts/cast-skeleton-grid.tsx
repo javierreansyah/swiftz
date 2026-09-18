@@ -6,12 +6,12 @@ export function CastSkeletonGrid() {
       {Array.from({ length: 8 }, (_, i) => (
         <div
           key={i}
-          className="flex h-37.5 animate-pulse rounded-md border bg-card"
+          className="flex h-37.5 animate-pulse rounded-none border bg-card"
         >
           <div className="h-full w-25 bg-secondary" />
           <div className="flex-1 space-y-2 p-4">
-            <div className="h-4 w-3/4 rounded bg-secondary" />
-            <div className="h-3 w-1/2 rounded bg-secondary" />
+            <div className="h-4 w-3/4 rounded-none bg-secondary" />
+            <div className="h-3 w-1/2 rounded-none bg-secondary" />
           </div>
         </div>
       ))}

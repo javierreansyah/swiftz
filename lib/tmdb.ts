@@ -9,6 +9,8 @@ import {
   SearchData,
   MovieGenresSearchData,
   MovieImagesData,
+  DiscoverMoviesData,
+  DiscoverMovieFilters,
 } from "@/types";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
@@ -107,3 +109,34 @@ export async function getMoviesByGenres(
     86400
   );
 }
+
+export async function getNowPlayingMovies(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDB<DiscoverMoviesData>("/movie/now_playing", { page }, 86400);
+}
+
+export async function getTopRatedMovies(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDB<DiscoverMoviesData>("/movie/top_rated", { page }, 86400);
+}
+
+export async function getUpcomingMovies(
+  page: number = 1
+): Promise<DiscoverMoviesData> {
+  return fetchTMDB<DiscoverMoviesData>("/movie/upcoming", { page }, 86400);
+}
+
+export async function discoverMovies(
+  filters: DiscoverMovieFilters = {}
+): Promise<DiscoverMoviesData> {
+  const params: Record<string, string | number> = {};
+  for (const [key, val] of Object.entries(filters)) {
+    if (val !== undefined && val !== "") {
+      params[key] = val;
+    }
+  }
+  return fetchTMDB<DiscoverMoviesData>("/discover/movie", params, 86400);
+}
+

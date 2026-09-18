@@ -66,7 +66,7 @@ export function MovieCastSection({
               variant="outline"
               size="icon"
               onClick={scrollPrev}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll cast left"
             >
               <ChevronLeft className="size-4" />
@@ -75,7 +75,7 @@ export function MovieCastSection({
               variant="outline"
               size="icon"
               onClick={scrollNext}
-              className="size-8 rounded-full"
+              className="size-8 rounded-none"
               aria-label="Scroll cast right"
             >
               <ChevronRight className="size-4" />
@@ -97,7 +97,7 @@ export function MovieCastSection({
             <div
               key={c.id + (c.character || "")}
               onClick={onOpenCastModal}
-              className="group w-36 shrink-0 cursor-pointer overflow-hidden rounded-xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg sm:w-44"
+              className="group w-36 shrink-0 cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg sm:w-44"
             >
               {/* 4:5 Aspect Ratio Portrait */}
               <div className="relative aspect-4/5 w-full overflow-hidden bg-muted">

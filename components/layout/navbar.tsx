@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Compass } from "lucide-react";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { MobileDrawer } from "./mobile-drawer";
 import { UserNavDropdown } from "./user-nav-dropdown";
+import { HeaderSearch } from "./header-search";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,6 @@ export function Navbar() {
   const navigationList: NavigationRoute[] = [
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
-    { route: "/genres", name: "Genres" },
     ...(isAuthenticated ? [{ route: "/library", name: "Library" }] : []),
   ];
 
@@ -101,6 +101,14 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Header Search (Inline on Desktop, Icon + Top Sheet on Mobile) */}
+          <Suspense fallback={<div className="size-9" />}>
+            <HeaderSearch
+              isScrolled={isScrolled}
+              isMovieDetailPage={isMovieDetailPage}
+            />
+          </Suspense>
+
           <div className="hidden lg:block">
             <ThemeSwitcher variant="outline" />
           </div>

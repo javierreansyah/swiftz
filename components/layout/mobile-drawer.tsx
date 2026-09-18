@@ -24,7 +24,6 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
   const navigationList: NavigationRoute[] = [
     { route: "/", name: "Home" },
     { route: "/discover", name: "Discover" },
-    { route: "/genres", name: "Genres" },
     ...(isAuthenticated ? [{ route: "/library", name: "My Library" }] : []),
   ];
 
@@ -77,9 +76,9 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
 
             {/* User Profile Card */}
             {isAuthenticated && user ? (
-              <div className="flex items-center gap-3 rounded-lg border bg-secondary/50 p-3">
+              <div className="flex items-center gap-3 rounded-none border bg-secondary/50 p-3">
                 {avatarUrl ? (
-                  <div className="relative size-10 flex-none overflow-clip rounded-full">
+                  <div className="relative size-10 flex-none overflow-clip rounded-none">
                     <Image
                       src={avatarUrl}
                       alt={user.username || "User"}
@@ -89,7 +88,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                     />
                   </div>
                 ) : (
-                  <div className="flex size-10 flex-none items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
+                  <div className="flex size-10 flex-none items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
                     {(user.username || "U").charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -110,8 +109,8 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                   <li key={index}>
                     <Button
                       asChild
-                      size="full"
-                      variant="itemleft"
+                      variant="secondary"
+                      className="w-full justify-start px-4"
                       onClick={() => setIsOpen(false)}
                     >
                       <Link href={route.route}>{route.name}</Link>
@@ -126,24 +125,22 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
             {isAuthenticated ? (
               <Button
                 variant="outline"
-                size="full"
                 onClick={() => {
                   logout();
                   setIsOpen(false);
                 }}
-                className="gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+                className="w-full gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
               >
                 <LogOut className="size-4" />
                 <span>Sign Out</span>
               </Button>
             ) : (
               <Button
-                size="full"
                 onClick={() => {
                   login();
                   setIsOpen(false);
                 }}
-                className="gap-2 font-medium"
+                className="w-full gap-2 font-medium"
               >
                 <LogIn className="size-4" />
                 <span>Sign In with TMDB</span>

@@ -11,7 +11,7 @@ export async function TrendingMoviesSection() {
     <section className="space-y-6">
       <h2 className="text-4xl font-extrabold">Trending</h2>
       <MovieGrid movies={trendingMovies.results} count={10} />
-      <Button size="full" asChild>
+      <Button className="w-full" asChild>
         <Link href="/trending" prefetch={false}>
           More Trending Movies
         </Link>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function HomeInfoCards() {
   const cardStyle =
-    "flex h-107.5 w-full flex-col justify-between space-y-3 rounded-xl border bg-card p-6 sm:h-75 sm:p-8 lg:h-112.5";
+    "flex h-107.5 w-full flex-col justify-between space-y-3 rounded-none border bg-card p-6 sm:h-75 sm:p-8 lg:h-112.5";
 
   return (
     <section className="container grid grid-cols-1 gap-4 lg:grid-cols-2 xl:gap-12">
@@ -19,7 +19,7 @@ export function HomeInfoCards() {
           </p>
         </div>
 
-        <Button asChild size="full">
+        <Button asChild className="w-full">
           <Link href="/discover">Discover Now</Link>
         </Button>
       </div>
@@ -35,7 +35,7 @@ export function HomeInfoCards() {
           </p>
         </div>
 
-        <Button asChild size="full">
+        <Button asChild className="w-full">
           <Link href="/movie/1022796">Try It Now</Link>
         </Button>
       </div>

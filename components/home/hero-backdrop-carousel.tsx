@@ -25,7 +25,7 @@ export function HeroBackdropCarousel({ topMovie }: HeroBackdropCarouselProps) {
   if (movies.length === 0) {
     return (
       <section className="mx-auto lg:container">
-        <div className="relative aspect-4/5 w-full overflow-hidden border bg-secondary sm:aspect-7/4 lg:aspect-video lg:rounded-xl">
+        <div className="relative aspect-4/5 w-full overflow-hidden border bg-secondary sm:aspect-7/4 lg:aspect-video lg:rounded-none">
           <div className="absolute flex aspect-4/5 w-full items-end sm:aspect-7/4 lg:aspect-video">
             <div className="p-8">
               <h1
@@ -49,7 +49,7 @@ export function HeroBackdropCarousel({ topMovie }: HeroBackdropCarouselProps) {
 
   return (
     <section className="mx-auto lg:container">
-      <div className="group relative aspect-4/5 w-full overflow-hidden sm:aspect-7/4 lg:aspect-video lg:rounded-xl">
+      <div className="group relative aspect-4/5 w-full overflow-hidden sm:aspect-7/4 lg:aspect-video lg:rounded-none">
         {/* Render all backdrop images absolutely positioned for seamless crossfade */}
         {movies.map((movie, index) => {
           const backdropUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;

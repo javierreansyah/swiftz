@@ -41,7 +41,7 @@ function TrendingContent() {
           ))}
         </div>
       ) : isError || movies.length === 0 ? (
-        <div className="flex h-75 w-full items-center justify-center rounded-lg border bg-card p-8">
+        <div className="flex h-75 w-full items-center justify-center rounded-none border bg-card p-8">
           <h2 className="text-center text-lg">Unable to load trending movies right now.</h2>
         </div>
       ) : (

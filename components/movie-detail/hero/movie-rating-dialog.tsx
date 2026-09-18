@@ -67,16 +67,16 @@ export function MovieRatingDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/75 p-4 backdrop-blur-sm duration-200 fade-in">
-      <div className="relative w-full max-w-sm space-y-4 rounded-2xl border border-border bg-card p-6 text-center shadow-2xl">
+      <div className="relative w-full max-w-sm space-y-4 rounded-none border border-border bg-card p-6 text-center shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 rounded-full p-1 text-muted-foreground hover:bg-muted"
+          className="absolute top-4 right-4 rounded-none p-1 text-muted-foreground hover:bg-muted"
         >
           <X className="size-4" />
           <span className="sr-only">Close</span>
         </button>
 
-        <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-amber-500/10 text-amber-500">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-amber-500/10 text-amber-500">
           <Star className="size-6 fill-current" />
         </div>
 

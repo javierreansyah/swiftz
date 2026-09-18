@@ -126,7 +126,7 @@ export function VideosModal({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
@@ -136,7 +136,7 @@ export function VideosModal({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-full hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -155,7 +155,7 @@ export function VideosModal({
                     Videos ({videos.length})
                   </p>
                   {viewMode === "showcase" && (
-                    <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="rounded-none bg-primary/20 px-2 py-0.5 text-[10px] font-semibold text-primary">
                       Showcase Mode
                     </span>
                   )}
@@ -169,7 +169,7 @@ export function VideosModal({
                   variant="outline"
                   size="sm"
                   onClick={() => setViewMode("gallery")}
-                  className="gap-1.5 rounded-full text-xs"
+                  className="gap-1.5 rounded-none text-xs"
                 >
                   <LayoutGrid className="size-3.5" />
                   <span>Back to Gallery</span>
@@ -180,7 +180,7 @@ export function VideosModal({
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="gap-1.5 rounded-full text-xs"
+                className="gap-1.5 rounded-none text-xs"
               >
                 {copiedShare ? (
                   <Check className="size-3.5 text-emerald-500" />
@@ -195,7 +195,7 @@ export function VideosModal({
                   size="sm"
                   onClick={onToggleWatchlist}
                   className={cn(
-                    "gap-1.5 rounded-full text-xs font-bold transition-colors",
+                    "gap-1.5 rounded-none text-xs font-bold transition-colors",
                     isWatchlist
                       ? "bg-amber-600 text-white hover:bg-amber-700"
                       : "bg-amber-400 text-neutral-950 hover:bg-amber-300 dark:bg-amber-400 dark:text-neutral-950"
@@ -263,7 +263,7 @@ export function VideosModal({
                     type="button"
                     onClick={() => setVideoFilterType("all")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       videoFilterType === "all"
                         ? "bg-primary font-semibold text-primary-foreground"
                         : "text-foreground/80 hover:bg-muted"
@@ -282,7 +282,7 @@ export function VideosModal({
                       type="button"
                       onClick={() => setVideoFilterType(type)}
                       className={cn(
-                        "flex items-center justify-between rounded-lg px-3 py-1.5 text-left text-xs transition-colors",
+                        "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs transition-colors",
                         videoFilterType === type
                           ? "bg-primary font-semibold text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -307,7 +307,7 @@ export function VideosModal({
                     type="button"
                     onClick={() => setVideoSort("date_desc")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       videoSort === "date_desc"
                         ? "bg-accent font-semibold text-accent-foreground"
                         : "text-muted-foreground hover:bg-muted"
@@ -322,7 +322,7 @@ export function VideosModal({
                     type="button"
                     onClick={() => setVideoSort("date_asc")}
                     className={cn(
-                      "flex items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors",
+                      "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
                       videoSort === "date_asc"
                         ? "bg-accent font-semibold text-accent-foreground"
                         : "text-muted-foreground hover:bg-muted"
@@ -344,7 +344,7 @@ export function VideosModal({
                 <div className="flex h-full min-h-0 flex-1 flex-col overflow-y-auto">
                   {/* Embedded Player */}
                   <div className="shrink-0 bg-black/90 p-4 sm:p-6">
-                    <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                    <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-none border border-white/10 shadow-2xl">
                       <iframe
                         src={`https://www.youtube.com/embed/${selectedVideoModal.key}?autoplay=1&rel=0`}
                         title={selectedVideoModal.name}
@@ -371,7 +371,7 @@ export function VideosModal({
                         variant="secondary"
                         size="sm"
                         onClick={() => setViewMode("gallery")}
-                        className="gap-1.5 rounded-full text-xs"
+                        className="gap-1.5 rounded-none text-xs"
                       >
                         <LayoutGrid className="size-3.5" />
                         <span>All Videos</span>
@@ -393,13 +393,13 @@ export function VideosModal({
                             key={video.id}
                             onClick={() => setSelectedVideoModal(video)}
                             className={cn(
-                              "w-48 shrink-0 cursor-pointer overflow-hidden rounded-xl border p-1.5 transition-all sm:w-56",
+                              "w-48 shrink-0 cursor-pointer overflow-hidden rounded-none border p-1.5 transition-all sm:w-56",
                               isCurrent
                                 ? "border-primary bg-primary/10 ring-2 ring-primary/40"
                                 : "border-border/60 bg-card/60 hover:border-primary/40"
                             )}
                           >
-                            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+                            <div className="relative aspect-video w-full overflow-hidden rounded-none bg-black">
                               <Image
                                 src={ytThumb}
                                 alt={video.name}
@@ -436,7 +436,7 @@ export function VideosModal({
                           <div
                             key={video.id}
                             onClick={() => handleSelectVideo(video)}
-                            className="group cursor-pointer overflow-hidden rounded-2xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:bg-card hover:shadow-lg"
+                            className="group cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:bg-card hover:shadow-lg"
                           >
                             {/* Video Thumbnail */}
                             <div className="relative aspect-video w-full overflow-hidden bg-black">
@@ -450,12 +450,12 @@ export function VideosModal({
                               <div className="absolute inset-0 bg-black/30 transition-opacity group-hover:bg-black/10" />
 
                               {/* Center play button on hover */}
-                              <div className="absolute top-1/2 left-1/2 flex size-12 -translate-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                              <div className="absolute top-1/2 left-1/2 flex size-12 -translate-1/2 items-center justify-center rounded-none bg-primary text-primary-foreground shadow-xl backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
                                 <Play className="ml-0.5 size-6 fill-current" />
                               </div>
 
                               {/* Floating Pill */}
-                              <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+                              <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-none border border-white/20 bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
                                 <Play className="size-3 fill-white text-white" />
                                 <span>{video.type || "Video"}</span>
                               </div>

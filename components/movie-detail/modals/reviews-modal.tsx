@@ -139,7 +139,7 @@ export function ReviewsModal({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-t-3xl border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
       >
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Header */}
@@ -149,7 +149,7 @@ export function ReviewsModal({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-full hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
               >
                 <X className="size-5" />
                 <span className="sr-only">Close</span>
@@ -162,7 +162,7 @@ export function ReviewsModal({
                   {movie.title} {releaseYear ? `(${releaseYear})` : ""}
                 </p>
               </div>
-              <Badge variant="secondary" className="rounded-full px-3 py-0.5">
+              <Badge variant="secondary" className="rounded-none px-3 py-0.5">
                 {rawReviews.length} Total
               </Badge>
             </div>
@@ -172,7 +172,7 @@ export function ReviewsModal({
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="gap-1.5 rounded-full text-xs"
+                className="gap-1.5 rounded-none text-xs"
               >
                 {copiedShare ? (
                   <Check className="size-4 text-emerald-500" />
@@ -189,7 +189,7 @@ export function ReviewsModal({
                     onClose();
                     onOpenRating();
                   }}
-                  className="gap-1.5 rounded-full bg-amber-400 font-bold text-neutral-950 hover:bg-amber-300 dark:bg-amber-400 dark:text-neutral-950"
+                  className="gap-1.5 rounded-none bg-amber-400 font-bold text-neutral-950 hover:bg-amber-300 dark:bg-amber-400 dark:text-neutral-950"
                 >
                   <Plus className="size-4" />
                   <span>Review this title</span>
@@ -207,7 +207,7 @@ export function ReviewsModal({
                 <select
                   value={reviewSort}
                   onChange={(e) => setReviewSort(e.target.value as any)}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
+                  className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
                 >
                   <option value="featured">Featured</option>
                   <option value="rating_desc">Highest Rating</option>
@@ -222,7 +222,7 @@ export function ReviewsModal({
                 <select
                   value={ratingFilter}
                   onChange={(e) => setRatingFilter(e.target.value)}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
+                  className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
                 >
                   <option value="all">All Stars</option>
                   <option value="9">9+ Stars</option>
@@ -238,7 +238,7 @@ export function ReviewsModal({
                   type="checkbox"
                   checked={hideSpoilers}
                   onChange={(e) => setHideSpoilers(e.target.checked)}
-                  className="rounded border-border accent-primary"
+                  className="rounded-none border-border accent-primary"
                 />
                 <span>Hide Spoilers</span>
               </label>
@@ -254,11 +254,11 @@ export function ReviewsModal({
           {/* Reviews List */}
           <ScrollArea className="min-h-0 flex-1 p-6 sm:p-10">
             {isLoadingReviews ? (
-              <div className="space-y-4 py-8">
-                {Array.from({ length: 3 }, (_, i) => (
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="h-44 animate-pulse rounded-2xl border border-border bg-card/50"
+                    className="h-44 animate-pulse rounded-none border border-border bg-card/50"
                   />
                 ))}
               </div>
@@ -327,12 +327,12 @@ export function ReviewsModal({
                   return (
                     <article
                       key={rev.id}
-                      className="space-y-3 rounded-2xl border border-border/70 bg-card/60 p-5 shadow-sm transition-all hover:border-border"
+                      className="space-y-3 rounded-none border border-border/70 bg-card/60 p-5 shadow-sm transition-all hover:border-border"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-center gap-3">
                           {avatarUrl ? (
-                            <div className="relative size-10 overflow-hidden rounded-full border border-border">
+                            <div className="relative size-10 overflow-hidden rounded-none border border-border">
                               <Image
                                 src={avatarUrl}
                                 alt={rev.author}
@@ -342,7 +342,7 @@ export function ReviewsModal({
                               />
                             </div>
                           ) : (
-                            <div className="flex size-10 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary">
+                            <div className="flex size-10 items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
                               {rev.author.charAt(0).toUpperCase()}
                             </div>
                           )}
@@ -357,7 +357,7 @@ export function ReviewsModal({
                         </div>
 
                         {rating !== undefined && rating !== null && (
-                          <div className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-500">
+                          <div className="flex items-center gap-1 rounded-none bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-500">
                             <Star className="size-3.5 fill-amber-400 text-amber-400" />
                             <span>{rating}/10</span>
                           </div>
@@ -377,7 +377,7 @@ export function ReviewsModal({
                         <span className="text-xs">Was this review helpful?</span>
                         <button
                           onClick={() => handleHelpfulVote(rev.id, "up")}
-                          className={`flex items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-muted ${
+                          className={`flex items-center gap-1 rounded-none px-2 py-1 transition-colors hover:bg-muted ${
                             votes.voted === "up"
                               ? "bg-emerald-500/10 font-bold text-emerald-500"
                               : ""
@@ -388,7 +388,7 @@ export function ReviewsModal({
                         </button>
                         <button
                           onClick={() => handleHelpfulVote(rev.id, "down")}
-                          className={`flex items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-muted ${
+                          className={`flex items-center gap-1 rounded-none px-2 py-1 transition-colors hover:bg-muted ${
                             votes.voted === "down"
                               ? "bg-red-500/10 font-bold text-red-500"
                               : ""
