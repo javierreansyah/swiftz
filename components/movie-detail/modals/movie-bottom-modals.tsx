@@ -13,6 +13,7 @@ import { VideosModal } from "./videos-modal";
 import { PhotosModal } from "./photos-modal";
 import { CastModal } from "./cast-modal";
 import { RecommendationsModal } from "./recommendations-modal";
+import { CollectionModal } from "./collection-modal";
 
 export type ModalType =
   | "reviews"
@@ -20,6 +21,7 @@ export type ModalType =
   | "photos"
   | "cast"
   | "recommendations"
+  | "collection"
   | null;
 
 export interface MovieBottomModalsProps {
@@ -93,6 +95,16 @@ export function MovieBottomModals({
         onClose={onClose}
         movie={movie}
       />
+
+      {movie.belongs_to_collection && (
+        <CollectionModal
+          isOpen={activeModal === "collection"}
+          onClose={onClose}
+          collectionId={movie.belongs_to_collection.id}
+          collectionName={movie.belongs_to_collection.name}
+          currentMovieId={movie.id}
+        />
+      )}
     </>
   );
 }

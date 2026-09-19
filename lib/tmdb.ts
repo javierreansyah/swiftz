@@ -18,6 +18,8 @@ import {
   PersonDetailsData,
   PersonCombinedCredits,
   PersonExternalIds,
+  TVSeasonDetails,
+  MovieCollectionData,
 } from "@/types";
 import { TMDBReviewsResponse } from "@/types/auth";
 
@@ -211,6 +213,23 @@ export async function getTVContentRatings(id: string): Promise<{
   results: Array<{ iso_3166_1: string; rating: string }>;
 }> {
   return fetchTMDB(`/tv/${id}/content_ratings`, {}, 604800);
+}
+
+export async function getTVSeasonDetails(
+  seriesId: string | number,
+  seasonNumber: number
+): Promise<TVSeasonDetails> {
+  return fetchTMDB<TVSeasonDetails>(
+    `/tv/${seriesId}/season/${seasonNumber}`,
+    {},
+    604800
+  );
+}
+
+export async function getMovieCollection(
+  collectionId: string | number
+): Promise<MovieCollectionData> {
+  return fetchTMDB<MovieCollectionData>(`/collection/${collectionId}`, {}, 604800);
 }
 
 export async function discoverTVShows(

@@ -15,6 +15,7 @@ import {
   Share2,
   Check,
   Loader2,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,9 +31,10 @@ export interface MovieQuickRailProps {
   movieId: number;
   movieTitle: string;
   onOpenModal: (
-    modal: "reviews" | "videos" | "photos" | "cast" | "recommendations"
+    modal: "reviews" | "videos" | "photos" | "cast" | "recommendations" | "collection"
   ) => void;
   onOpenRating?: () => void;
+  hasCollection?: boolean;
   mode?: "all" | "desktop" | "mobile";
   className?: string;
 }
@@ -42,6 +44,7 @@ export function MovieQuickRail({
   movieTitle,
   onOpenModal,
   onOpenRating,
+  hasCollection = false,
   mode = "all",
   className,
 }: MovieQuickRailProps) {
@@ -71,6 +74,7 @@ export function MovieQuickRail({
       "section-videos",
       "section-photos",
       "section-reviews",
+      ...(hasCollection ? ["section-collection"] : []),
       "section-recommendations",
     ];
 
@@ -93,7 +97,7 @@ export function MovieQuickRail({
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [hasCollection]);
 
   const { data: accountStates } = useMovieAccountStatesQuery(
     movieId,
@@ -184,6 +188,9 @@ export function MovieQuickRail({
     { id: "section-videos", label: "Videos", icon: Video, modal: "videos" as const },
     { id: "section-photos", label: "Photos", icon: ImageIcon, modal: "photos" as const },
     { id: "section-reviews", label: "Reviews", icon: MessageSquare, modal: "reviews" as const },
+    ...(hasCollection
+      ? [{ id: "section-collection", label: "Franchise", icon: Layers, modal: "collection" as const }]
+      : []),
     { id: "section-recommendations", label: "Related", icon: Sparkles, modal: "recommendations" as const },
   ];
 

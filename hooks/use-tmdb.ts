@@ -56,6 +56,8 @@ import {
   setTVRating,
   deleteTVRating,
   getTVReviewsClient,
+  getTVSeasonDetailsClient,
+  getMovieCollectionClient,
 } from "@/lib/tmdb-client";
 import { DiscoverMovieFilters, DiscoverTVFilters } from "@/types";
 import { AccountStates } from "@/types/auth";
@@ -751,6 +753,29 @@ export function useTVReviewsQuery(
     queryFn: () => getTVReviewsClient(tvId, page),
     enabled: Boolean(tvId),
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useTVSeasonQuery(
+  seriesId: string | number | undefined,
+  seasonNumber: number | undefined
+) {
+  return useQuery({
+    queryKey: ["tv-season-details", String(seriesId), seasonNumber],
+    queryFn: () => getTVSeasonDetailsClient(seriesId!, seasonNumber!),
+    enabled: Boolean(seriesId !== undefined && seasonNumber !== undefined),
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
+}
+
+export function useMovieCollectionQuery(
+  collectionId: string | number | null | undefined
+) {
+  return useQuery({
+    queryKey: ["movie-collection", String(collectionId)],
+    queryFn: () => getMovieCollectionClient(collectionId!),
+    enabled: Boolean(collectionId),
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 }
 

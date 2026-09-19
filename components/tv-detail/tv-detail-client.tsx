@@ -42,7 +42,8 @@ export function TVDetailClient({
 }: TVDetailClientProps) {
   const [activeModal, setActiveModal] = useState<TVModalType>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const [initialVideoIndex, setInitialVideoIndex] = useState(0);
+  const [initialVideoIndex, setInitialVideoIndex] = useState<number | undefined>(undefined);
+  const [selectedSeasonNumber, setSelectedSeasonNumber] = useState<number | undefined>(undefined);
 
   const { sessionId } = useAuth();
   const { data: accountStates, refetch: refetchStates } = useTVAccountStatesQuery(
@@ -61,9 +62,24 @@ export function TVDetailClient({
   const reviews = reviewsData?.results || [];
   const totalReviews = reviewsData?.total_results || reviews.length;
 
-  const handleOpenVideo = (index: number = 0) => {
+  const handleOpenVideo = (index?: number) => {
     setInitialVideoIndex(index);
     setActiveModal("videos");
+  };
+
+  const handleOpenSeason = (seasonNumber?: number) => {
+    setSelectedSeasonNumber(
+      seasonNumber ?? show.seasons?.[0]?.season_number ?? 1
+    );
+    setActiveModal("seasons");
+  };
+
+  const handleModalOpen = (modal: TVModalType) => {
+    if (modal === "seasons") {
+      handleOpenSeason();
+    } else {
+      setActiveModal(modal);
+    }
   };
 
   const posterUrl = show.poster_path
@@ -93,7 +109,7 @@ export function TVDetailClient({
                 cast={cast}
                 crew={crew}
                 reviewCount={totalReviews}
-                onOpenModal={(m) => setActiveModal(m)}
+                onOpenModal={handleModalOpen}
                 onOpenRating={() => setShowRatingModal(true)}
               />
             </div>
@@ -104,14 +120,17 @@ export function TVDetailClient({
                 mode="mobile"
                 tvId={show.id}
                 showTitle={show.name}
-                onOpenModal={(m) => setActiveModal(m)}
+                onOpenModal={handleModalOpen}
                 onOpenRating={() => setShowRatingModal(true)}
               />
             </div>
 
             {/* 2. Seasons Excerpt */}
             {show.seasons && show.seasons.length > 0 && (
-              <TVSeasonsSection seasons={show.seasons} />
+              <TVSeasonsSection
+                seasons={show.seasons}
+                onOpenSeason={handleOpenSeason}
+              />
             )}
 
             {/* 3. Cast Excerpt */}
@@ -128,7 +147,10 @@ export function TVDetailClient({
 
             {/* 5. Recommendations / Related */}
             {recommendations.length > 0 && (
-              <TVRecommendationsSection shows={recommendations} />
+              <TVRecommendationsSection
+                shows={recommendations}
+                onOpenRecommendationsModal={() => setActiveModal("recommendations")}
+              />
             )}
           </main>
 
@@ -138,7 +160,7 @@ export function TVDetailClient({
               mode="desktop"
               tvId={show.id}
               showTitle={show.name}
-              onOpenModal={(m) => setActiveModal(m)}
+              onOpenModal={handleModalOpen}
               onOpenRating={() => setShowRatingModal(true)}
             />
           </aside>
@@ -154,6 +176,7 @@ export function TVDetailClient({
         crew={crew}
         videos={videos}
         initialVideoIndex={initialVideoIndex}
+        selectedSeasonNumber={selectedSeasonNumber}
       />
 
       {/* Unified Rating Dialog */}

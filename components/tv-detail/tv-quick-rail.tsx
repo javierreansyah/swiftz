@@ -29,7 +29,7 @@ export interface TVQuickRailProps {
   tvId: number;
   showTitle: string;
   onOpenModal: (
-    modal: "reviews" | "videos" | "photos" | "cast" | "recommendations"
+    modal: "reviews" | "videos" | "photos" | "cast" | "recommendations" | "seasons"
   ) => void;
   onOpenRating?: () => void;
   mode?: "all" | "desktop" | "mobile";
@@ -176,7 +176,7 @@ export function TVQuickRail({
 
   const sections = [
     { id: "section-overview", label: "Overview", icon: Tv },
-    { id: "section-seasons", label: "Seasons", icon: Layers },
+    { id: "section-seasons", label: "Seasons", icon: Layers, modal: "seasons" as const },
     { id: "section-cast", label: "Cast", icon: Users, modal: "cast" as const },
     { id: "section-videos", label: "Videos", icon: Video, modal: "videos" as const },
     { id: "section-recommendations", label: "Related", icon: Sparkles },

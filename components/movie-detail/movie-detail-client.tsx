@@ -23,6 +23,7 @@ import { MovieCastSection } from "./sections/movie-cast-section";
 import { MovieVideosSection } from "./sections/movie-videos-section";
 import { MoviePhotosSection } from "./sections/movie-photos-section";
 import { MovieReviewsSection } from "./sections/movie-reviews-section";
+import { MovieCollectionSection } from "./sections/movie-collection-section";
 import { MovieRecommendationsSection } from "./sections/movie-recommendations-section";
 
 export interface MovieDetailClientProps {
@@ -48,8 +49,8 @@ export function MovieDetailClient({
 }: MovieDetailClientProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const [initialPhotoIndex, setInitialPhotoIndex] = useState(0);
-  const [initialVideoIndex, setInitialVideoIndex] = useState(0);
+  const [initialPhotoIndex, setInitialPhotoIndex] = useState<number | undefined>(undefined);
+  const [initialVideoIndex, setInitialVideoIndex] = useState<number | undefined>(undefined);
 
   const { sessionId } = useAuth();
   const { data: accountStates, refetch: refetchStates } =
@@ -67,12 +68,12 @@ export function MovieDetailClient({
   const reviews = reviewsData?.results || [];
   const totalReviews = reviewsData?.total_results || reviews.length;
 
-  const handleOpenPhoto = (index: number = 0) => {
+  const handleOpenPhoto = (index?: number) => {
     setInitialPhotoIndex(index);
     setActiveModal("photos");
   };
 
-  const handleOpenVideo = (index: number = 0) => {
+  const handleOpenVideo = (index?: number) => {
     setInitialVideoIndex(index);
     setActiveModal("videos");
   };
@@ -115,6 +116,7 @@ export function MovieDetailClient({
                 mode="mobile"
                 movieId={movie.id}
                 movieTitle={movie.title}
+                hasCollection={Boolean(movie.belongs_to_collection)}
                 onOpenModal={(m) => setActiveModal(m)}
                 onOpenRating={() => setShowRatingModal(true)}
               />
@@ -146,7 +148,15 @@ export function MovieDetailClient({
               onOpenReviewsModal={() => setActiveModal("reviews")}
             />
 
-            {/* 6. Recommendations / Related */}
+            {/* 6. Franchise / Collection Excerpt */}
+            {movie.belongs_to_collection && (
+              <MovieCollectionSection
+                collection={movie.belongs_to_collection}
+                onOpenCollectionModal={() => setActiveModal("collection")}
+              />
+            )}
+
+            {/* 7. Recommendations / Related */}
             {recommendations.length > 0 ? (
               <MovieRecommendationsSection
                 movies={recommendations}
@@ -163,6 +173,7 @@ export function MovieDetailClient({
               mode="desktop"
               movieId={movie.id}
               movieTitle={movie.title}
+              hasCollection={Boolean(movie.belongs_to_collection)}
               onOpenModal={(m) => setActiveModal(m)}
               onOpenRating={() => setShowRatingModal(true)}
             />

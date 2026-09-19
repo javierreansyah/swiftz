@@ -9,7 +9,7 @@ import {
 } from "@/hooks/use-tmdb";
 import { TVCard } from "./tv-card";
 import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
-import { Button } from "@/components/ui/button";
+import { SectionHeader } from "@/components/common/section-header";
 
 export interface TVSectionsProps {
   onSelectGenre?: (genreId: string) => void;
@@ -35,24 +35,13 @@ export function TVSections({ onSelectSort }: TVSectionsProps) {
     <div className="space-y-10">
       {/* 1. Trending TV Section */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-l-2 border-primary pl-3">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Trending TV Shows
-            </h2>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              The hottest series captivating audiences today
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onSelectSort?.("popularity.desc")}
-            className="text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            View all
-          </Button>
-        </div>
+        <SectionHeader
+          title="Trending TV Shows"
+          action={{
+            label: "View all",
+            onClick: () => onSelectSort?.("popularity.desc"),
+          }}
+        />
 
         {isTrendingLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
@@ -71,24 +60,13 @@ export function TVSections({ onSelectSort }: TVSectionsProps) {
 
       {/* 2. Popular TV Shows Section */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-l-2 border-primary pl-3">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Most Popular Shows
-            </h2>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Global fan favorites and television sensations
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onSelectSort?.("popularity.desc")}
-            className="text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            View all
-          </Button>
-        </div>
+        <SectionHeader
+          title="Most Popular Shows"
+          action={{
+            label: "View all",
+            onClick: () => onSelectSort?.("popularity.desc"),
+          }}
+        />
 
         {isPopularLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
@@ -107,24 +85,13 @@ export function TVSections({ onSelectSort }: TVSectionsProps) {
 
       {/* 3. Top Rated TV Shows */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-l-2 border-primary pl-3">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Top Rated Television
-            </h2>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Critically acclaimed series with outstanding ratings
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onSelectSort?.("vote_average.desc")}
-            className="text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            View all
-          </Button>
-        </div>
+        <SectionHeader
+          title="Top Rated Television"
+          action={{
+            label: "View all",
+            onClick: () => onSelectSort?.("vote_average.desc"),
+          }}
+        />
 
         {isTopRatedLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
@@ -143,24 +110,13 @@ export function TVSections({ onSelectSort }: TVSectionsProps) {
 
       {/* 4. On The Air */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-l-2 border-primary pl-3">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Currently Airing &amp; New Episodes
-            </h2>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Shows airing new episodes in the next 7 days
-            </p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onSelectSort?.("first_air_date.desc")}
-            className="text-xs font-semibold text-muted-foreground hover:text-foreground"
-          >
-            View all
-          </Button>
-        </div>
+        <SectionHeader
+          title="Currently Airing & New Episodes"
+          action={{
+            label: "View all",
+            onClick: () => onSelectSort?.("first_air_date.desc"),
+          }}
+        />
 
         {isOnTheAirLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">

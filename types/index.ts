@@ -302,6 +302,52 @@ export interface TVEpisode {
   season_number: number;
   still_path: string | null;
   runtime: number | null;
+  crew?: {
+    id: number;
+    credit_id: string;
+    name: string;
+    department: string;
+    job: string;
+    profile_path: string | null;
+  }[];
+  guest_stars?: {
+    id: number;
+    name: string;
+    credit_id: string;
+    character: string;
+    order: number;
+    profile_path: string | null;
+  }[];
+}
+
+export interface TVSeasonDetails extends TVSeason {
+  _id?: string;
+  episodes: TVEpisode[];
+}
+
+export interface MovieCollectionPart {
+  id: number;
+  title: string;
+  original_title: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  media_type?: string;
+  genre_ids?: number[];
+  popularity: number;
+  release_date: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
+export interface MovieCollectionData {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  parts: MovieCollectionPart[];
 }
 
 export interface TVNetwork {

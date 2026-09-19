@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import {
-  X,
   Share2,
   Star,
   ThumbsUp,
@@ -12,17 +11,25 @@ import {
   Check,
   Plus,
 } from "lucide-react";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { MovieDetailsData } from "@/types";
-import { useMovieReviewsQuery } from "@/hooks/use-tmdb";
+import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
+import { useMovieReviewsQuery, useTVReviewsQuery } from "@/hooks/use-tmdb";
 
 export interface ReviewsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  movie: MovieDetailsData;
+  movie?: {
+    id?: number;
+    title?: string;
+    name?: string;
+    release_date?: string;
+    first_air_date?: string;
+    overview?: string;
+  };
+  mediaId?: number;
+  mediaType?: "movie" | "tv";
+  title?: string;
+  releaseYear?: string;
   onOpenRating?: () => void;
 }
 
@@ -30,19 +37,26 @@ export function ReviewsModal({
   isOpen,
   onClose,
   movie,
+  mediaId: customMediaId,
+  mediaType = "movie",
+  title: customTitle,
+  releaseYear: customReleaseYear,
   onOpenRating,
 }: ReviewsModalProps) {
-  const releaseYear = movie.release_date
-    ? movie.release_date.substring(0, 4)
-    : "";
+  const targetId = customMediaId || movie?.id || 0;
+  const displayTitle =
+    customTitle || movie?.title || movie?.name || "Reviews";
+  const rawDate = movie?.release_date || movie?.first_air_date;
+  const displayYear =
+    customReleaseYear || (rawDate ? rawDate.substring(0, 4) : "");
 
   const [copiedShare, setCopiedShare] = useState(false);
   const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${movie.title} (${releaseYear}) Reviews`,
-          text: movie.overview,
+          title: `${displayTitle} (${displayYear}) Reviews`,
+          text: movie?.overview || "",
           url: window.location.href,
         });
         return;
@@ -57,8 +71,20 @@ export function ReviewsModal({
     }
   };
 
-  const { data: reviewsData, isLoading: isLoadingReviews } =
-    useMovieReviewsQuery(movie.id, 1);
+  // Movie or TV Reviews Query
+  const movieReviews = useMovieReviewsQuery(
+    mediaType === "movie" ? targetId : 0,
+    1
+  );
+  const tvReviews = useTVReviewsQuery(
+    mediaType === "tv" ? targetId : 0,
+    1
+  );
+
+  const reviewsData =
+    mediaType === "tv" ? tvReviews.data : movieReviews.data;
+  const isLoadingReviews =
+    mediaType === "tv" ? tvReviews.isLoading : movieReviews.isLoading;
   const rawReviews = reviewsData?.results || [];
 
   const [reviewSort, setReviewSort] = useState<
@@ -74,9 +100,12 @@ export function ReviewsModal({
     let list = [...rawReviews];
 
     if (ratingFilter !== "all") {
-      const minScore = parseInt(ratingFilter, 10);
+      const minRating = Number(ratingFilter);
       list = list.filter(
-        (r) => r.author_details?.rating && r.author_details.rating >= minScore
+        (r) =>
+          r.author_details?.rating !== null &&
+          r.author_details?.rating !== undefined &&
+          r.author_details.rating >= minRating
       );
     }
 
@@ -134,279 +163,224 @@ export function ReviewsModal({
     });
   };
 
-  return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent
-        side="bottom"
-        showCloseButton={false}
-        className="inset-x-0 bottom-0 mx-auto h-[90vh] max-h-[92vh] w-full max-w-(--max-container) overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl"
+  const headerActions = (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleShare}
+        className="gap-1.5 rounded-none text-xs"
       >
-        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-          {/* Header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-6 py-4 sm:px-10 sm:py-5">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="shrink-0 rounded-none hover:bg-muted"
-              >
-                <X className="size-5" />
-                <span className="sr-only">Close</span>
-              </Button>
-              <div>
-                <SheetTitle className="text-xl font-extrabold sm:text-2xl">
-                  User Reviews
-                </SheetTitle>
-                <p className="text-xs text-muted-foreground">
-                  {movie.title} {releaseYear ? `(${releaseYear})` : ""}
-                </p>
-              </div>
-              <Badge variant="secondary" className="rounded-none px-3 py-0.5">
-                {rawReviews.length} Total
-              </Badge>
-            </div>
+        {copiedShare ? (
+          <Check className="size-4 text-emerald-500" />
+        ) : (
+          <Share2 className="size-4" />
+        )}
+        <span>Share</span>
+      </Button>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShare}
-                className="gap-1.5 rounded-none text-xs"
-              >
-                {copiedShare ? (
-                  <Check className="size-4 text-emerald-500" />
-                ) : (
-                  <Share2 className="size-4" />
-                )}
-                <span>Share</span>
-              </Button>
+      {onOpenRating && (
+        <Button
+          size="sm"
+          onClick={() => {
+            onClose();
+            onOpenRating();
+          }}
+          className="gap-1.5 rounded-none bg-primary font-bold text-primary-foreground hover:bg-primary/90"
+        >
+          <Plus className="size-4" />
+          <span>Review this title</span>
+        </Button>
+      )}
+    </div>
+  );
 
-              {onOpenRating && (
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    onClose();
-                    onOpenRating();
-                  }}
-                  className="gap-1.5 rounded-none bg-primary font-bold text-primary-foreground hover:bg-primary/90"
-                >
-                  <Plus className="size-4" />
-                  <span>Review this title</span>
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Filter Bar */}
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Sort Selector */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-muted-foreground">Sort by:</span>
-                <select
-                  value={reviewSort}
-                  onChange={(e) => setReviewSort(e.target.value as any)}
-                  className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="rating_desc">Highest Rating</option>
-                  <option value="rating_asc">Lowest Rating</option>
-                  <option value="date_desc">Most Recent</option>
-                </select>
-              </div>
-
-              {/* Rating Filter */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-muted-foreground">Rating:</span>
-                <select
-                  value={ratingFilter}
-                  onChange={(e) => setRatingFilter(e.target.value)}
-                  className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
-                >
-                  <option value="all">All Stars</option>
-                  <option value="9">9+ Stars</option>
-                  <option value="8">8+ Stars</option>
-                  <option value="7">7+ Stars</option>
-                  <option value="5">5+ Stars</option>
-                </select>
-              </div>
-
-              {/* Hide Spoilers Toggle */}
-              <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">
-                <input
-                  type="checkbox"
-                  checked={hideSpoilers}
-                  onChange={(e) => setHideSpoilers(e.target.checked)}
-                  className="rounded-none border-border accent-primary"
-                />
-                <span>Hide Spoilers</span>
-              </label>
-            </div>
-
-            <div className="text-xs text-muted-foreground">
-              {filteredReviews.length > 0
-                ? `1-${filteredReviews.length} of ${rawReviews.length}`
-                : "0 reviews"}
-            </div>
-          </div>
-
-          {/* Reviews List */}
-          <ScrollArea className="min-h-0 flex-1 p-6 sm:p-10">
-            {isLoadingReviews ? (
-              <div className="space-y-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-44 animate-pulse rounded-none border border-border bg-card/50"
-                  />
-                ))}
-              </div>
-            ) : filteredReviews.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <Star className="size-12 text-muted-foreground/40" />
-                <h3 className="mt-4 text-lg font-bold text-foreground">
-                  No reviews found
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Be the first to share your thoughts on {movie.title}!
-                </p>
-                {onOpenRating && (
-                  <Button
-                    onClick={() => {
-                      onClose();
-                      onOpenRating();
-                    }}
-                    className="mt-4 gap-2 bg-primary font-bold text-primary-foreground hover:bg-primary/90"
-                  >
-                    <Plus className="size-4" />
-                    <span>Review this title</span>
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredReviews.map((rev) => {
-                  const rating = rev.author_details?.rating;
-                  const dateFormatted = rev.created_at
-                    ? new Date(rev.created_at).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
-                    : "";
-
-                  let avatarUrl: string | null = null;
-                  const rawAvatar = rev.author_details?.avatar_path;
-                  if (rawAvatar) {
-                    if (
-                      rawAvatar.startsWith("/https://") ||
-                      rawAvatar.startsWith("https://")
-                    ) {
-                      avatarUrl = rawAvatar.replace(/^\//, "");
-                    } else {
-                      avatarUrl = `https://image.tmdb.org/t/p/w185${rawAvatar}`;
-                    }
-                  }
-
-                  const lines = rev.content.split("\n").filter(Boolean);
-                  const reviewHeadline =
-                    lines.length > 0 && lines[0].length < 120
-                      ? lines[0]
-                      : `Review by ${rev.author}`;
-                  const reviewBody =
-                    lines.length > 1 && lines[0] === reviewHeadline
-                      ? lines.slice(1).join("\n\n")
-                      : rev.content;
-
-                  const votes = helpfulVotes[rev.id] || {
-                    up: 210 + (rev.author.charCodeAt(0) % 80),
-                    down: 14 + (rev.author.charCodeAt(0) % 10),
-                  };
-
-                  return (
-                    <article
-                      key={rev.id}
-                      className="space-y-3 rounded-none border border-border/70 bg-card/60 p-5 shadow-sm transition-all hover:border-border"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          {avatarUrl ? (
-                            <div className="relative size-10 overflow-hidden rounded-none border border-border">
-                              <Image
-                                src={avatarUrl}
-                                alt={rev.author}
-                                fill
-                                sizes="40px"
-                                className="object-cover"
-                              />
-                            </div>
-                          ) : (
-                            <div className="flex size-10 items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
-                              {rev.author.charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                          <div>
-                            <p className="text-sm font-bold text-foreground">
-                              {rev.author}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {dateFormatted}
-                            </p>
-                          </div>
-                        </div>
-
-                        {rating !== undefined && rating !== null && (
-                          <div className="flex items-center gap-1 rounded-none bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
-                            <Star className="size-3.5 fill-primary text-primary" />
-                            <span>{rating}/10</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <h4 className="text-sm font-bold text-foreground sm:text-base">
-                          {reviewHeadline}
-                        </h4>
-                        <p className="mt-1.5 text-xs leading-relaxed whitespace-pre-line text-muted-foreground sm:text-sm">
-                          {reviewBody}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground">
-                        <span className="text-xs">Was this review helpful?</span>
-                        <button
-                          onClick={() => handleHelpfulVote(rev.id, "up")}
-                          className={`flex items-center gap-1 rounded-none px-2 py-1 transition-colors hover:bg-muted ${
-                            votes.voted === "up"
-                              ? "bg-emerald-500/10 font-bold text-emerald-500"
-                              : ""
-                          }`}
-                        >
-                          <ThumbsUp className="size-3.5" />
-                          <span>{votes.up}</span>
-                        </button>
-                        <button
-                          onClick={() => handleHelpfulVote(rev.id, "down")}
-                          className={`flex items-center gap-1 rounded-none px-2 py-1 transition-colors hover:bg-muted ${
-                            votes.voted === "down"
-                              ? "bg-red-500/10 font-bold text-red-500"
-                              : ""
-                          }`}
-                        >
-                          <ThumbsDown className="size-3.5" />
-                          <span>{votes.down}</span>
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            )}
-          </ScrollArea>
+  const subHeader = (
+    <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground">Sort by:</span>
+          <select
+            value={reviewSort}
+            onChange={(e) => setReviewSort(e.target.value as any)}
+            className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-hidden"
+          >
+            <option value="featured">Featured</option>
+            <option value="rating_desc">Highest Rating</option>
+            <option value="rating_asc">Lowest Rating</option>
+            <option value="date_desc">Most Recent</option>
+          </select>
         </div>
-      </SheetContent>
-    </Sheet>
+
+        <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground">Rating:</span>
+          <select
+            value={ratingFilter}
+            onChange={(e) => setRatingFilter(e.target.value)}
+            className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-hidden"
+          >
+            <option value="all">All Stars</option>
+            <option value="9">9+ Stars</option>
+            <option value="8">8+ Stars</option>
+            <option value="7">7+ Stars</option>
+            <option value="5">5+ Stars</option>
+          </select>
+        </div>
+
+        <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">
+          <input
+            type="checkbox"
+            checked={hideSpoilers}
+            onChange={(e) => setHideSpoilers(e.target.checked)}
+            className="rounded-none border-border accent-primary"
+          >
+          </input>
+          <span>Hide Spoilers</span>
+        </label>
+      </div>
+
+      <div className="text-xs text-muted-foreground">
+        {filteredReviews.length > 0
+          ? `1-${filteredReviews.length} of ${rawReviews.length}`
+          : "0 reviews"}
+      </div>
+    </div>
+  );
+
+  return (
+    <DetailBottomSheet
+      isOpen={isOpen}
+      onClose={onClose}
+      title="User Reviews"
+      subtitle={`${displayTitle} ${displayYear ? `(${displayYear})` : ""}`}
+      badge={`${rawReviews.length} Total`}
+      headerActions={headerActions}
+      subHeader={subHeader}
+    >
+      {isLoadingReviews ? (
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="animate-pulse space-y-3 border border-border/50 bg-card/40 p-5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-full bg-muted" />
+                <div className="space-y-1.5">
+                  <div className="h-4 w-32 bg-muted" />
+                  <div className="h-3 w-20 bg-muted" />
+                </div>
+              </div>
+              <div className="h-16 w-full bg-muted" />
+            </div>
+          ))}
+        </div>
+      ) : filteredReviews.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <Star className="size-10 text-muted-foreground/40" />
+          <p className="mt-3 text-sm font-medium text-muted-foreground">
+            No reviews match your filters.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {filteredReviews.map((review) => {
+            const author = review.author_details;
+            const authorRating = author?.rating;
+            const dateFormatted = new Date(
+              review.created_at
+            ).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+
+            const avatarUrl = author?.avatar_path
+              ? author.avatar_path.startsWith("/http")
+                ? author.avatar_path.slice(1)
+                : `https://image.tmdb.org/t/p/w185${author.avatar_path}`
+              : null;
+
+            const votes = helpfulVotes[review.id] || {
+              up: 180 + (review.id.charCodeAt(0) % 50),
+              down: 12,
+            };
+
+            return (
+              <article
+                key={review.id}
+                className="rounded-none border border-border/70 bg-card/60 p-5 transition-colors hover:border-primary/40 sm:p-6"
+              >
+                {/* Author row */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
+                      {avatarUrl ? (
+                        <Image
+                          src={avatarUrl}
+                          alt={review.author}
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <User className="size-5 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">
+                        {review.author}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {dateFormatted}
+                      </p>
+                    </div>
+                  </div>
+
+                  {authorRating !== null && authorRating !== undefined && (
+                    <div className="flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                      <Star className="size-3.5 fill-primary text-primary" />
+                      <span>{authorRating}/10</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="pt-4 text-xs leading-relaxed whitespace-pre-line text-foreground/90 sm:text-sm">
+                  {review.content}
+                </div>
+
+                {/* Helpful voting row */}
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+                  <span className="font-medium">
+                    {votes.up} out of {votes.up + votes.down} found this helpful
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={votes.voted === "up" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleHelpfulVote(review.id, "up")}
+                      className="h-7 gap-1 rounded-none px-2.5 text-xs font-semibold"
+                    >
+                      <ThumbsUp className="size-3" />
+                      <span>Helpful ({votes.up})</span>
+                    </Button>
+                    <Button
+                      variant={votes.voted === "down" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleHelpfulVote(review.id, "down")}
+                      className="h-7 gap-1 rounded-none px-2 text-xs"
+                    >
+                      <ThumbsDown className="size-3" />
+                    </Button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </DetailBottomSheet>
   );
 }
 

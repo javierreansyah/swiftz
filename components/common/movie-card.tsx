@@ -1,52 +1,37 @@
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ImageOff } from "lucide-react";
-import { StarRatingMovieCard } from "./star-rating";
+import { MediaCard } from "./media-card";
 
 export interface MovieCardProps {
   id: number;
   title: string;
   poster: string;
   rating: number;
+  year?: string;
+  variant?: "shelf" | "grid";
+  className?: string;
 }
 
-export function MovieCard({ id, title, poster, rating }: MovieCardProps) {
-  const posterUrl = `https://image.tmdb.org/t/p/w500${poster}`;
-  const truncatedTitle = title.length > 35 ? title.slice(0, 35) + "..." : title;
-
+export function MovieCard({
+  id,
+  title,
+  poster,
+  rating,
+  year,
+  variant = "grid",
+  className,
+}: MovieCardProps) {
   return (
-    <Link href={`/movie/${id}`} prefetch={false} className="group block">
-      <div className="overflow-clip rounded-none border bg-card transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg">
-        {poster ? (
-          <div className="relative aspect-2/3 w-full bg-muted">
-            <Image
-              src={posterUrl}
-              alt={title}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              className="object-cover transition-opacity duration-300"
-            />
-          </div>
-        ) : (
-          <div className="relative flex aspect-2/3 w-full items-center justify-center bg-secondary">
-            <ImageOff className="size-10 text-muted-foreground" />
-          </div>
-        )}
-
-        <div className="flex h-27.5 flex-col justify-between space-y-1 p-4">
-          <h2 className="line-clamp-2 text-sm leading-tight font-bold sm:text-base">
-            {truncatedTitle}
-          </h2>
-          <div className="flex items-center gap-2">
-            <StarRatingMovieCard rating={rating} />
-            <p className="text-xs font-medium text-muted-foreground sm:text-sm">
-              {rating.toFixed(1)}
-            </p>
-          </div>
-        </div>
-      </div>
-    </Link>
+    <MediaCard
+      type="movie"
+      id={id}
+      title={title}
+      image={poster}
+      rating={rating}
+      year={year}
+      href={`/movie/${id}`}
+      variant={variant}
+      className={className}
+    />
   );
 }
 

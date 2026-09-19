@@ -15,6 +15,8 @@ import {
 import { Movie } from "@/types";
 import { DiscoverFilterState } from "./types";
 
+import { SectionHeader } from "@/components/common/section-header";
+
 interface SectionProps {
   title: string;
   movies?: Movie[];
@@ -27,21 +29,10 @@ function SectionRow({ title, movies, isLoading, onViewAll }: SectionProps) {
 
   return (
     <section className="space-y-4">
-      {/* Header: Title in Lora font + "View all" right beside the title */}
-      <div className="flex items-center gap-3 border-b border-border/50 pb-2.5">
-        <h2 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-          {title}
-        </h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onViewAll}
-          className="gap-1 px-2 text-xs font-semibold text-primary hover:text-primary"
-        >
-          <span>View all</span>
-          <ChevronRight className="size-3.5" />
-        </Button>
-      </div>
+      <SectionHeader
+        title={title}
+        action={{ label: "View all", onClick: onViewAll }}
+      />
 
       {/* Cards Row */}
       {isLoading ? (

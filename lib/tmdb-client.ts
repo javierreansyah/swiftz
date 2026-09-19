@@ -24,6 +24,8 @@ import {
   SearchCollectionItem,
   SearchCompanyItem,
   SearchTypeCounts,
+  TVSeasonDetails,
+  MovieCollectionData,
 } from "@/types";
 import {
   TMDBAccount,
@@ -509,6 +511,21 @@ export async function discoverTVShowsClient(
     }
   }
   return fetchTMDBClient<PopularTVData>("/discover/tv", params);
+}
+
+export async function getTVSeasonDetailsClient(
+  seriesId: string | number,
+  seasonNumber: number
+): Promise<TVSeasonDetails> {
+  return fetchTMDBClient<TVSeasonDetails>(
+    `/tv/${seriesId}/season/${seasonNumber}`
+  );
+}
+
+export async function getMovieCollectionClient(
+  collectionId: string | number
+): Promise<MovieCollectionData> {
+  return fetchTMDBClient<MovieCollectionData>(`/collection/${collectionId}`);
 }
 
 // -------------------------------------------------------------

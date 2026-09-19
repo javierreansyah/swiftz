@@ -33,7 +33,6 @@ export function TrendingSection({ movies, tvShows }: TrendingSectionProps) {
   return (
     <HomeMediaCarousel
       title="Trending Today"
-      subtitle="The most popular stories across cinema & television right now"
       items={activeTab === "movies" ? movieItems : tvItems}
       tabs={[
         { id: "movies", label: "Movies" },

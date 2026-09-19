@@ -7,6 +7,8 @@ import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
 import { usePopularMoviesQuery } from "@/hooks/use-tmdb";
 
+import { SectionHeader } from "@/components/common/section-header";
+
 function PopularContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -25,14 +27,11 @@ function PopularContent() {
 
   return (
     <main className="container space-y-8 pt-20 pb-10">
-      <div className="flex items-baseline justify-between pt-4">
-        <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
-          Popular Movies
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Page {currentPage} of {totalPages}
-        </p>
-      </div>
+      <SectionHeader
+        title="Popular Movies"
+        badge={`Page ${currentPage} of ${totalPages}`}
+        className="pt-4"
+      />
 
       {isLoading ? (
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

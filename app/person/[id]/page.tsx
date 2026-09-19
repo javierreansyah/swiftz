@@ -15,6 +15,8 @@ import {
 import { PersonBio } from "./person-bio";
 import { PersonCreditsTimeline } from "./person-credits-timeline";
 import { PersonCombinedCredits, PersonExternalIds } from "@/types";
+import { ContentCarousel } from "@/components/common/content-carousel";
+import { MediaCard } from "@/components/common/media-card";
 
 function XIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -312,60 +314,28 @@ export default async function PersonDetailPage({
 
           {/* Known For Shelf */}
           {knownForList.length > 0 && (
-            <section className="space-y-4">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">
-                Known For
-              </h2>
+            <ContentCarousel title="Known For">
+              {knownForList.map((item) => {
+                const href =
+                  item.media_type === "tv"
+                    ? `/tv/${item.id}`
+                    : `/movie/${item.id}`;
 
-              <div className="flex scrollbar-none gap-4 overflow-x-auto scroll-smooth pb-4">
-                {knownForList.map((item) => {
-                  const posterUrl = item.poster_path
-                    ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
-                    : null;
-                  const href =
-                    item.media_type === "tv"
-                      ? `/tv/${item.id}`
-                      : `/movie/${item.id}`;
-
-                  return (
-                    <Link
-                      key={`${item.media_type}-${item.id}`}
-                      href={href}
-                      className="group flex w-36 shrink-0 flex-col overflow-hidden rounded-none border border-border bg-card shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:w-40"
-                    >
-                      <div className="relative aspect-2/3 w-full bg-muted">
-                        {posterUrl ? (
-                          <Image
-                            src={posterUrl}
-                            alt={item.title || item.name || ""}
-                            fill
-                            sizes="160px"
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
-                            No image
-                          </div>
-                        )}
-                        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-none bg-black/80 px-1.5 py-0.5 text-[11px] font-bold text-primary">
-                          <Star className="size-2.5 fill-current" />
-                          <span>{item.vote_average?.toFixed(1) || "N/A"}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-0.5 p-2.5">
-                        <h3 className="line-clamp-1 text-xs font-bold text-foreground transition-colors group-hover:text-primary">
-                          {item.title || item.name}
-                        </h3>
-                        <p className="line-clamp-1 text-[11px] text-muted-foreground">
-                          {item.character ? `as ${item.character}` : "Cast"}
-                        </p>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
+                return (
+                  <MediaCard
+                    key={`${item.media_type}-${item.id}`}
+                    type={item.media_type === "tv" ? "tv" : "movie"}
+                    id={item.id}
+                    title={item.title || item.name || ""}
+                    subtitle={item.character ? `as ${item.character}` : "Cast"}
+                    image={item.poster_path}
+                    rating={item.vote_average}
+                    href={href}
+                    variant="shelf"
+                  />
+                );
+              })}
+            </ContentCarousel>
           )}
 
           {/* Searchable Career Credits Timeline */}

@@ -81,7 +81,6 @@ export default async function Home() {
       {/* 4. Top Rated Across Cinema */}
       <HomeMediaCarousel
         title="Top Rated Across Cinema"
-        subtitle="Masterpieces celebrated by critics and fans alike"
         items={topRatedItems}
         viewAllHref="/movie"
       />
@@ -89,7 +88,6 @@ export default async function Home() {
       {/* 5. Popular Television Series */}
       <HomeMediaCarousel
         title="Popular Television Series"
-        subtitle="Binge-worthy shows streaming across global networks"
         items={popularTVItems}
         viewAllHref="/tv"
       />
