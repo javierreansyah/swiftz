@@ -123,8 +123,6 @@ export function LibraryContent() {
         favoritesCount={favoritesQuery.data?.total_results}
         watchlistCount={watchlistQuery.data?.total_results}
         ratedCount={ratedQuery.data?.total_results}
-        onRefresh={() => currentQuery.refetch()}
-        isFetching={currentQuery.isFetching}
       />
 
       {/* Tab Content Section */}

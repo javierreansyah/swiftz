@@ -18,11 +18,12 @@ export function LibrarySkeleton() {
         </div>
       </div>
 
-      {/* Tabs Skeleton */}
-      <div className="flex gap-2 border-b pb-4">
-        <Skeleton className="h-10 w-32 rounded-none" />
-        <Skeleton className="h-10 w-32 rounded-none" />
-        <Skeleton className="h-10 w-32 rounded-none" />
+      {/* Section Header Skeleton */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-8 w-44 rounded-none" />
+          <Skeleton className="h-8 w-72 rounded-none" />
+        </div>
       </div>
 
       {/* Movie Grid Skeleton */}

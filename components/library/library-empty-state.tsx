@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import {
   Film,
   Sparkles,
@@ -8,7 +7,6 @@ import {
   Heart,
   Bookmark,
   Star,
-  SlidersHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LibraryTab } from "./library-tabs";
@@ -119,39 +117,20 @@ export function LibraryUnauthenticated({
 
 export function LibraryEmptyState({ activeTab }: { activeTab: LibraryTab }) {
   return (
-    <div className="space-y-5 rounded-none border border-dashed bg-card/20 p-12 text-center sm:p-16">
-      <div className="mx-auto flex size-16 items-center justify-center rounded-none bg-secondary text-muted-foreground">
-        {activeTab === "favorites" && <Heart className="size-8 text-red-400" />}
-        {activeTab === "watchlist" && (
-          <Bookmark className="size-8 text-blue-400" />
-        )}
-        {activeTab === "rated" && <Star className="size-8 text-primary" />}
-      </div>
-
-      <div className="mx-auto max-w-md space-y-2">
-        <h3 className="text-xl font-bold sm:text-2xl">
-          {activeTab === "favorites" && "No favorite movies yet"}
-          {activeTab === "watchlist" && "Your watchlist is empty"}
-          {activeTab === "rated" && "No rated movies yet"}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {activeTab === "favorites" &&
-            "Browse movies on Swiftz and click the heart icon to save films you love to your personal library."}
-          {activeTab === "watchlist" &&
-            "Add movies you want to watch soon by clicking the watchlist button on any movie details page."}
-          {activeTab === "rated" &&
-            "Score films from 1 to 10 stars to keep a record of everything you have watched."}
-        </p>
-      </div>
-
-      <div className="pt-2">
-        <Button asChild size="sm" className="gap-2">
-          <Link href="/movie">
-            <SlidersHorizontal className="size-4" />
-            <span>Discover Movies</span>
-          </Link>
-        </Button>
-      </div>
+    <div className="space-y-2 py-16 text-center">
+      <h3 className="text-xl font-bold text-foreground sm:text-2xl">
+        {activeTab === "favorites" && "No favorite movies yet"}
+        {activeTab === "watchlist" && "Your watchlist is empty"}
+        {activeTab === "rated" && "No rated movies yet"}
+      </h3>
+      <p className="mx-auto max-w-md text-sm text-muted-foreground">
+        {activeTab === "favorites" &&
+          "Browse movies on Swiftz and click the heart icon to save films you love to your personal library."}
+        {activeTab === "watchlist" &&
+          "Add movies you want to watch soon by clicking the watchlist button on any movie details page."}
+        {activeTab === "rated" &&
+          "Score films from 1 to 10 stars to keep a record of everything you have watched."}
+      </p>
     </div>
   );
 }

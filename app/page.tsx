@@ -63,7 +63,7 @@ export default async function Home() {
   );
 
   return (
-    <main className="space-y-12 py-16">
+    <main className="space-y-12 pb-16">
       {/* 1. IMDb-style Featured Spotlight Banner with Trailer Dialog */}
       <FeaturedHero movies={heroMovies} />
 

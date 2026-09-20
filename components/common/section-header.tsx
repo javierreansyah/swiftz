@@ -5,11 +5,14 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 export interface SectionHeaderTab {
   id: string;
   label: string;
+  count?: number;
+  icon?: React.ReactNode;
 }
 
 export interface SectionHeaderAction {
@@ -72,28 +75,31 @@ export function SectionHeader({
           </Badge>
         )}
 
-        {/* Optional Segmented Switcher / Tabs */}
+        {/* Shadcn Default Tabs Switcher */}
         {tabs && tabs.length > 0 && (
-          <div className="inline-flex items-center gap-0.5 rounded-none border border-border/80 bg-muted/40 p-0.5">
-            {tabs.map((tab) => {
-              const isActive = tab.id === activeTab;
-              return (
-                <button
+          <Tabs
+            value={activeTab}
+            onValueChange={onTabChange}
+            className="w-auto"
+          >
+            <TabsList className="h-8 rounded-none bg-muted p-0.5">
+              {tabs.map((tab) => (
+                <TabsTrigger
                   key={tab.id}
-                  type="button"
-                  onClick={() => onTabChange?.(tab.id)}
-                  className={cn(
-                    "cursor-pointer rounded-none px-3 py-1 font-sans text-xs font-semibold transition-all select-none",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
+                  value={tab.id}
+                  className="cursor-pointer rounded-none px-3 py-1 font-sans text-xs font-medium"
                 >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+                  {tab.icon && <span className="mr-1.5">{tab.icon}</span>}
+                  <span>{tab.label}</span>
+                  {tab.count !== undefined && (
+                    <span className="py-0.2 ml-1.5 rounded-none bg-muted-foreground/15 px-1.5 text-[10px] font-semibold text-muted-foreground">
+                      {tab.count}
+                    </span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         )}
 
         {/* Action Button for Desktop alongside Title */}

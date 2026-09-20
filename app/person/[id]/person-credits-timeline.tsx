@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export interface PersonCreditsTimelineProps {
   credits: PersonCombinedCredits;
@@ -197,44 +198,35 @@ export function PersonCreditsTimeline({
             </Select>
           )}
 
-          {/* Media Type Filter Pills */}
-          <div className="flex items-center gap-1 rounded-none border border-border bg-background p-0.5">
-            <button
-              type="button"
-              onClick={() => setSelectedMediaType("all")}
-              className={`rounded-none px-2 py-1 text-xs font-semibold transition-all ${
-                selectedMediaType === "all"
-                  ? "bg-primary text-primary-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              All
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedMediaType("movie")}
-              className={`flex items-center gap-1 rounded-none px-2 py-1 text-xs font-semibold transition-all ${
-                selectedMediaType === "movie"
-                  ? "bg-primary text-primary-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Film className="size-3" />
-              <span>Movies</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedMediaType("tv")}
-              className={`flex items-center gap-1 rounded-none px-2 py-1 text-xs font-semibold transition-all ${
-                selectedMediaType === "tv"
-                  ? "bg-primary text-primary-foreground shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Tv className="size-3" />
-              <span>TV</span>
-            </button>
-          </div>
+          {/* Media Type Filter Tabs (Shadcn Default) */}
+          <Tabs
+            value={selectedMediaType}
+            onValueChange={(val) => setSelectedMediaType(val as "all" | "movie" | "tv")}
+            className="w-auto"
+          >
+            <TabsList className="h-8 rounded-none bg-muted p-0.5">
+              <TabsTrigger
+                value="all"
+                className="cursor-pointer rounded-none px-2.5 py-1 text-xs font-medium"
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value="movie"
+                className="cursor-pointer gap-1.5 rounded-none px-2.5 py-1 text-xs font-medium"
+              >
+                <Film className="size-3" />
+                <span>Movies</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="tv"
+                className="cursor-pointer gap-1.5 rounded-none px-2.5 py-1 text-xs font-medium"
+              >
+                <Tv className="size-3" />
+                <span>TV</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Live Search Input */}

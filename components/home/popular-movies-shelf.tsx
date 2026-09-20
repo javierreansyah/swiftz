@@ -25,7 +25,7 @@ export function PopularMoviesShelf({ movies }: PopularMoviesShelfProps) {
   if (!movies || movies.length === 0) return null;
 
   return (
-    <div className="container">
+    <div className="relative z-10 container">
       <ContentCarousel
         title="Popular Movies"
         action={{ label: "Explore all", href: "/popular" }}
