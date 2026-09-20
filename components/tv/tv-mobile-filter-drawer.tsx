@@ -29,64 +29,84 @@ export function TVMobileFilterDrawer({
   const activeCount =
     activeFilters.with_genres.length +
     (activeFilters.first_air_date_year ? 1 : 0) +
-    (activeFilters.vote_average_gte > 0 ? 1 : 0);
+    (activeFilters.vote_average_gte > 0 ? 1 : 0) +
+    (activeFilters.sort_by !== "popularity.desc" ? 1 : 0);
+
+  const handleApply = (filters: TVFilterState) => {
+    onApplyFilters(filters);
+    setOpen(false);
+  };
+
+  const handleReset = () => {
+    onResetFilters();
+    setOpen(false);
+  };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full justify-between rounded-none border-border bg-card py-5 font-semibold lg:hidden"
+    <div className="lg:hidden">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full justify-between rounded-none border-border/80 bg-secondary/40 py-5 text-xs font-medium"
+          >
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="size-3.5 text-primary" />
+              <span>Filter &amp; Sort TV Shows</span>
+            </div>
+            {activeCount > 0 ? (
+              <span className="rounded-none bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
+                {activeCount} active
+              </span>
+            ) : (
+              <span className="text-muted-foreground">None active</span>
+            )}
+          </Button>
+        </SheetTrigger>
+
+        {/* Full-width mobile filter screen */}
+        <SheetContent
+          side="bottom"
+          showCloseButton={false}
+          className="inset-0 flex size-full max-h-screen max-w-full flex-col rounded-none border-none bg-background p-0 sm:max-w-full"
         >
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-4 text-primary" />
-            <span>TV Filters &amp; Sort</span>
+          {/* Top Header */}
+          <div className="flex shrink-0 items-center justify-between border-b border-border/70 px-6 py-4">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="size-4 text-primary" />
+              <SheetTitle className="font-heading text-lg font-bold">
+                Filter &amp; Sort TV Shows
+              </SheetTitle>
+              {activeCount > 0 && (
+                <span className="rounded-none bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                  {activeCount} active
+                </span>
+              )}
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpen(false)}
+              className="rounded-none hover:bg-muted"
+            >
+              <X className="size-4" />
+              <span className="sr-only">Close</span>
+            </Button>
           </div>
-          {activeCount > 0 && (
-            <span className="flex size-5 items-center justify-center rounded-none bg-primary text-[11px] font-bold text-primary-foreground">
-              {activeCount}
-            </span>
-          )}
-        </Button>
-      </SheetTrigger>
 
-      <SheetContent
-        side="bottom"
-        className="max-h-[85vh] overflow-y-auto rounded-none border-t border-border bg-background p-6"
-      >
-        <SheetHeader className="mb-4 flex flex-row items-center justify-between border-b pb-3">
-          <SheetTitle className="text-base font-bold">Filter TV Shows</SheetTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setOpen(false)}
-            className="size-8"
-          >
-            <X className="size-4" />
-          </Button>
-        </SheetHeader>
-
-        <TVSidebar
-          activeFilters={activeFilters}
-          onApplyFilters={(filters) => {
-            onApplyFilters(filters);
-          }}
-          onResetFilters={() => {
-            onResetFilters();
-            setOpen(false);
-          }}
-        />
-
-        <div className="sticky bottom-0 mt-6 border-t border-border bg-background pt-3">
-          <Button
-            onClick={() => setOpen(false)}
-            className="w-full rounded-none font-bold"
-          >
-            Done
-          </Button>
-        </div>
-      </SheetContent>
-    </Sheet>
+          {/* Scrollable Filter Options Body */}
+          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+            <TVSidebar
+              activeFilters={activeFilters}
+              onApplyFilters={handleApply}
+              onResetFilters={handleReset}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 

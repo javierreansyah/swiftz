@@ -124,10 +124,17 @@ export default async function PersonDetailPage({
 
   const totalCredits = (credits.cast?.length || 0) + (credits.crew?.length || 0);
 
-  // Determine top "Known For" items based on popularity
+  // Determine top unique "Known For" items based on popularity
+  const seenMedia = new Set<string>();
   const knownForList = [...(credits.cast || [])]
-    .filter((c) => c.poster_path)
+    .filter((c) => Boolean(c.poster_path))
     .sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0))
+    .filter((c) => {
+      const key = `${c.media_type || "movie"}-${c.id}`;
+      if (seenMedia.has(key)) return false;
+      seenMedia.add(key);
+      return true;
+    })
     .slice(0, 8);
 
   return (
@@ -315,7 +322,7 @@ export default async function PersonDetailPage({
           {/* Known For Shelf */}
           {knownForList.length > 0 && (
             <ContentCarousel title="Known For">
-              {knownForList.map((item) => {
+              {knownForList.map((item, idx) => {
                 const href =
                   item.media_type === "tv"
                     ? `/tv/${item.id}`
@@ -323,7 +330,7 @@ export default async function PersonDetailPage({
 
                 return (
                   <MediaCard
-                    key={`${item.media_type}-${item.id}`}
+                    key={`${item.media_type || "media"}-${item.id}-${idx}`}
                     type={item.media_type === "tv" ? "tv" : "movie"}
                     id={item.id}
                     title={item.title || item.name || ""}

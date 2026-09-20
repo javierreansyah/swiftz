@@ -235,6 +235,7 @@ export interface DiscoverMovieFilters {
   watch_region?: string;
   with_watch_providers?: string;
   with_watch_monetization_types?: string;
+  with_release_type?: string;
 }
 
 // -------------------------------------------------------------
@@ -278,6 +279,8 @@ export interface DiscoverTVFilters {
   with_networks?: string;
   with_watch_providers?: string;
   watch_region?: string;
+  "air_date.gte"?: string;
+  "air_date.lte"?: string;
 }
 
 export interface TVSeason {

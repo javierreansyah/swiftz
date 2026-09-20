@@ -1,16 +1,13 @@
 "use client";
 
-import React from "react";
-import { RotateCcw, SlidersHorizontal, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+  Search,
+  Star,
+  ArrowDownUp,
+  Calendar,
+  Sparkles,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   TVFilterState,
@@ -18,148 +15,180 @@ import {
   TV_GENRES,
   TV_SORT_OPTIONS,
 } from "./types";
+import {
+  FilterSectionHeader,
+  MultiSelectBadges,
+  FilterSelect,
+  FilterSlider,
+  FilterStickyActionBar,
+} from "@/components/common/filter-sidebar-primitives";
+import { cn } from "@/lib/utils";
 
 export interface TVSidebarProps {
   activeFilters: TVFilterState;
   onApplyFilters: (filters: TVFilterState) => void;
   onResetFilters: () => void;
+  className?: string;
 }
+
+const TV_GENRE_ITEMS = TV_GENRES.map((g) => ({
+  id: g.id,
+  label: g.name,
+}));
+
+const TV_YEAR_PRESET_ITEMS = [
+  { id: "", label: "All Years" },
+  { id: "2026", label: "2026" },
+  { id: "2025", label: "2025" },
+  { id: "2024", label: "2024" },
+  { id: "2023", label: "2023" },
+  { id: "2020", label: "2020" },
+];
 
 export function TVSidebar({
   activeFilters,
   onApplyFilters,
   onResetFilters,
+  className,
 }: TVSidebarProps) {
+  const [pendingFilters, setPendingFilters] = useState<TVFilterState>(activeFilters);
+
+  useEffect(() => {
+    setPendingFilters(activeFilters);
+  }, [activeFilters]);
+
+  const countActiveFilters = (filters: TVFilterState) => {
+    let count = 0;
+    if (filters.sort_by !== DEFAULT_TV_FILTERS.sort_by) count++;
+    if (filters.with_genres.length > 0) count += filters.with_genres.length;
+    if (filters.first_air_date_year) count++;
+    if (filters.vote_average_gte > 0) count++;
+    return count;
+  };
+
+  const pendingActiveCount = countActiveFilters(pendingFilters);
+
+  const handleApply = () => {
+    onApplyFilters(pendingFilters);
+  };
+
+  const handleReset = () => {
+    setPendingFilters(DEFAULT_TV_FILTERS);
+    onResetFilters();
+  };
+
   const handleSortChange = (newSort: string) => {
-    onApplyFilters({ ...activeFilters, sort_by: newSort });
+    setPendingFilters((prev) => ({ ...prev, sort_by: newSort }));
   };
 
   const handleToggleGenre = (genreId: string) => {
-    const current = activeFilters.with_genres;
-    const exists = current.includes(genreId);
-    const updated = exists
-      ? current.filter((id) => id !== genreId)
-      : [...current, genreId];
-    onApplyFilters({ ...activeFilters, with_genres: updated });
-  };
-
-  const handleRatingChange = (vals: number[]) => {
-    onApplyFilters({ ...activeFilters, vote_average_gte: vals[0] });
+    setPendingFilters((prev) => {
+      const current = prev.with_genres;
+      const exists = current.includes(genreId);
+      const updated = exists
+        ? current.filter((id) => id !== genreId)
+        : [...current, genreId];
+      return { ...prev, with_genres: updated };
+    });
   };
 
   const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 4);
-    onApplyFilters({ ...activeFilters, first_air_date_year: val });
+    setPendingFilters((prev) => ({ ...prev, first_air_date_year: val }));
   };
 
   return (
-    <aside className="space-y-6 pb-8">
-      {/* Sidebar Header */}
-      <div className="flex items-center justify-between border-b border-border/80 pb-3">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="size-4 text-primary" />
-          <h2 className="text-base font-bold text-foreground">TV Filters</h2>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onResetFilters}
-          className="h-8 gap-1 rounded-none px-2 text-xs text-muted-foreground hover:text-foreground"
-        >
-          <RotateCcw className="size-3" />
-          <span>Reset</span>
-        </Button>
-      </div>
-
-      {/* Sort Section */}
-      <div className="space-y-2">
-        <label className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          Sort Results By
-        </label>
-        <Select
-          value={activeFilters.sort_by}
-          onValueChange={handleSortChange}
-        >
-          <SelectTrigger className="w-full rounded-none bg-card text-xs">
-            <SelectValue placeholder="Sort By" />
-          </SelectTrigger>
-          <SelectContent>
-            {TV_SORT_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Year Section */}
-      <div className="space-y-2">
-        <label className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          First Air Year
-        </label>
-        <Input
-          type="text"
-          placeholder="e.g. 2024"
-          value={activeFilters.first_air_date_year || ""}
-          onChange={handleYearChange}
-          className="h-9 rounded-none bg-card text-xs"
+    <aside className={cn("space-y-6 pb-4 text-sm", className)}>
+      {/* 1. Sort Section */}
+      <div className="space-y-2.5 border-b border-border/40 pb-4">
+        <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
+        <FilterSelect
+          value={pendingFilters.sort_by}
+          onChange={handleSortChange}
+          options={TV_SORT_OPTIONS}
+          placeholder="Sort TV shows..."
         />
       </div>
 
-      {/* Minimum Rating Slider */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-bold tracking-wider text-muted-foreground uppercase">
-            Minimum Rating
-          </span>
-          <span className="flex items-center gap-1 font-bold text-primary">
-            <Star className="size-3 fill-current" />
-            {activeFilters.vote_average_gte}
-          </span>
-        </div>
-        <Slider
-          value={[activeFilters.vote_average_gte]}
-          onValueChange={handleRatingChange}
+      {/* 2. TV Genres (Multi-Select using Shadcn Badge pattern) */}
+      <div className="space-y-2.5 border-b border-border/40 pb-4">
+        <FilterSectionHeader
+          icon={Sparkles}
+          title="Genres"
+          selectedCount={pendingFilters.with_genres.length}
+        />
+        <MultiSelectBadges
+          items={TV_GENRE_ITEMS}
+          selectedIds={pendingFilters.with_genres}
+          onToggle={handleToggleGenre}
+        />
+      </div>
+
+      {/* 3. First Air Year */}
+      <div className="space-y-2.5 border-b border-border/40 pb-4">
+        <FilterSectionHeader
+          icon={Calendar}
+          title="First Air Year"
+          badge={pendingFilters.first_air_date_year || undefined}
+        />
+        <MultiSelectBadges
+          items={TV_YEAR_PRESET_ITEMS}
+          selectedIds={[pendingFilters.first_air_date_year || ""]}
+          onToggle={(id) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              first_air_date_year: id,
+            }))
+          }
+        />
+        <Input
+          type="text"
+          placeholder="Or enter custom year (e.g. 2018)..."
+          value={pendingFilters.first_air_date_year || ""}
+          onChange={handleYearChange}
+          className="rounded-none border-border/70 bg-card text-xs"
+        />
+      </div>
+
+      {/* 4. Minimum User Rating */}
+      <div className="space-y-3 pb-2">
+        <FilterSectionHeader
+          icon={Star}
+          title="Minimum Rating"
+          badge={
+            pendingFilters.vote_average_gte === 0 ? (
+              "Any Rating"
+            ) : (
+              <span className="flex items-center gap-1 font-bold text-primary">
+                <Star className="size-3 fill-current" />
+                {pendingFilters.vote_average_gte}+
+              </span>
+            )
+          }
+        />
+        <FilterSlider
+          value={[pendingFilters.vote_average_gte]}
+          onChange={([val]) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              vote_average_gte: val,
+            }))
+          }
           min={0}
           max={10}
           step={1}
-          className="w-full"
+          ticks={[0, 5, 10]}
         />
       </div>
 
-      {/* TV Genres Section */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-            Genres
-          </label>
-          {activeFilters.with_genres.length > 0 && (
-            <span className="text-[11px] font-semibold text-primary">
-              {activeFilters.with_genres.length} selected
-            </span>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {TV_GENRES.map((genre) => {
-            const isSelected = activeFilters.with_genres.includes(genre.id);
-            return (
-              <button
-                key={genre.id}
-                type="button"
-                onClick={() => handleToggleGenre(genre.id)}
-                className={`rounded-none border px-2.5 py-1 text-xs font-medium transition-colors ${
-                  isSelected
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border/80 bg-card text-muted-foreground hover:border-foreground/40 hover:text-foreground"
-                }`}
-              >
-                {genre.name}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* Sticky Bottom Search & Reset Action Bar */}
+      <FilterStickyActionBar
+        onApply={handleApply}
+        onReset={handleReset}
+        activeCount={pendingActiveCount}
+        applyLabel="Search TV Shows"
+        searchIcon={Search}
+      />
     </aside>
   );
 }

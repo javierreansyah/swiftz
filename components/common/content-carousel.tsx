@@ -33,7 +33,7 @@ export function ContentCarousel({
   activeTab,
   onTabChange,
   action,
-  scrollAmount = 420,
+  scrollAmount = 520,
   id,
   children,
   className,

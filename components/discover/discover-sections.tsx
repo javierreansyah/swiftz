@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { MovieCard } from "@/components/common/movie-card";
+import { ContentCarousel } from "@/components/common/content-carousel";
+import { MediaCard } from "@/components/common/media-card";
+import { SectionHeader } from "@/components/common/section-header";
 import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
 import {
   usePopularMoviesQuery,
@@ -13,62 +13,66 @@ import {
   useUpcomingMoviesQuery,
 } from "@/hooks/use-tmdb";
 import { Movie } from "@/types";
-import { DiscoverFilterState } from "./types";
 
-import { SectionHeader } from "@/components/common/section-header";
-
-interface SectionProps {
+interface CarouselRowProps {
   title: string;
   movies?: Movie[];
   isLoading: boolean;
-  onViewAll: () => void;
+  viewAllHref: string;
 }
 
-function SectionRow({ title, movies, isLoading, onViewAll }: SectionProps) {
-  const displayMovies = (movies || []).slice(0, 5);
+function CarouselRow({ title, movies, isLoading, viewAllHref }: CarouselRowProps) {
+  const displayMovies = movies || [];
+
+  if (isLoading) {
+    return (
+      <section className="space-y-4">
+        <SectionHeader
+          title={title}
+          action={{ label: "View all", href: viewAllHref }}
+        />
+        <div className="flex gap-4 overflow-hidden">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="w-52 shrink-0 sm:w-60">
+              <MovieCardSkeleton />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (displayMovies.length === 0) return null;
 
   return (
-    <section className="space-y-4">
-      <SectionHeader
-        title={title}
-        action={{ label: "View all", onClick: onViewAll }}
-      />
-
-      {/* Cards Row */}
-      {isLoading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {Array.from({ length: 5 }, (_, i) => (
-            <MovieCardSkeleton key={i} />
-          ))}
-        </div>
-      ) : displayMovies.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {displayMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              id={movie.id}
-              title={movie.title}
-              poster={movie.poster_path}
-              rating={movie.vote_average}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="py-4 text-xs text-muted-foreground">
-          No movies available right now.
-        </p>
-      )}
-    </section>
+    <ContentCarousel
+      title={title}
+      action={{ label: "View all", href: viewAllHref }}
+    >
+      {displayMovies.map((movie) => (
+        <MediaCard
+          key={movie.id}
+          type="movie"
+          id={movie.id}
+          title={movie.title}
+          image={movie.poster_path}
+          rating={movie.vote_average}
+          year={movie.release_date?.substring(0, 4)}
+          href={`/movie/${movie.id}`}
+          variant="shelf"
+        />
+      ))}
+    </ContentCarousel>
   );
 }
 
 export interface DiscoverSectionsProps {
-  onSelectView: (
+  onSelectView?: (
     view: "popular" | "trending" | "now_playing" | "top_rated" | "upcoming"
   ) => void;
 }
 
-export function DiscoverSections({ onSelectView }: DiscoverSectionsProps) {
+export function DiscoverSections() {
   const { data: popularData, isLoading: isPopularLoading } =
     usePopularMoviesQuery(1);
   const { data: trendingData, isLoading: isTrendingLoading } =
@@ -82,48 +86,47 @@ export function DiscoverSections({ onSelectView }: DiscoverSectionsProps) {
 
   return (
     <div className="space-y-12">
-      {/* 1. Popular Movies */}
-      <SectionRow
-        title="Popular"
+      {/* 1. Popular Movies Carousel */}
+      <CarouselRow
+        title="Popular Movies"
         movies={popularData?.results}
         isLoading={isPopularLoading}
-        onViewAll={() => onSelectView("popular")}
+        viewAllHref="/movie/popular"
       />
 
-      {/* 2. Trending Today */}
-      <SectionRow
+      {/* 2. Trending Today Carousel */}
+      <CarouselRow
         title="Trending Today"
         movies={trendingData?.results}
         isLoading={isTrendingLoading}
-        onViewAll={() => onSelectView("trending")}
+        viewAllHref="/movie/trending-today"
       />
 
-      {/* 3. Now Playing in Theatres */}
-      <SectionRow
-        title="Now Playing"
+      {/* 3. Now Playing in Theatres Carousel */}
+      <CarouselRow
+        title="Now Playing in Theatres"
         movies={nowPlayingData?.results}
         isLoading={isNowPlayingLoading}
-        onViewAll={() => onSelectView("now_playing")}
+        viewAllHref="/movie/now-playing"
       />
 
-      {/* 4. Top Rated Movies */}
-      <SectionRow
-        title="Top Rated"
+      {/* 4. Top Rated Movies Carousel */}
+      <CarouselRow
+        title="Top Rated Movies"
         movies={topRatedData?.results}
         isLoading={isTopRatedLoading}
-        onViewAll={() => onSelectView("top_rated")}
+        viewAllHref="/movie/top-rated"
       />
 
-      {/* 5. Upcoming Releases */}
-      <SectionRow
-        title="Upcoming"
+      {/* 5. Upcoming Releases Carousel */}
+      <CarouselRow
+        title="Upcoming Releases"
         movies={upcomingData?.results}
         isLoading={isUpcomingLoading}
-        onViewAll={() => onSelectView("upcoming")}
+        viewAllHref="/movie/upcoming"
       />
     </div>
   );
 }
 
 export default DiscoverSections;
-

@@ -4,3 +4,4 @@ export * from "./tv-sidebar";
 export * from "./tv-mobile-filter-drawer";
 export * from "./tv-filtered-results";
 export * from "./tv-sections";
+export * from "./tv-category-listing";

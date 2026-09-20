@@ -19,14 +19,14 @@ export function UserNavDropdown() {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="size-8 animate-pulse rounded-none bg-muted" />;
+    return <div className="size-9 animate-pulse rounded-none bg-muted" />;
   }
 
   if (!isAuthenticated || !user) {
     return (
       <Button
         variant="outline"
-        size="sm"
+        size="default"
         onClick={() => login()}
         className="gap-2 font-medium"
       >
@@ -45,23 +45,28 @@ export function UserNavDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-none border border-border p-1 transition-colors hover:border-primary/50 focus:outline-none">
+        <Button
+          variant="outline"
+          size="icon"
+          className="overflow-hidden p-0"
+          aria-label="User menu"
+        >
           {avatarUrl ? (
-            <div className="relative size-8 overflow-clip rounded-none">
+            <div className="relative size-full">
               <Image
                 src={avatarUrl}
                 alt={user.username || "User"}
                 fill
-                sizes="32px"
+                sizes="36px"
                 className="object-cover"
               />
             </div>
           ) : (
-            <div className="flex size-8 items-center justify-center rounded-none bg-primary/20 text-xs font-bold text-primary">
+            <div className="flex size-full items-center justify-center bg-primary/20 text-xs font-bold text-primary">
               {(user.username || "U").charAt(0).toUpperCase()}
             </div>
           )}
-        </button>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>

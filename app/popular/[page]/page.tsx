@@ -10,5 +10,5 @@ export default async function PopularMoviesPage({
   params,
 }: PopularMoviesPageProps) {
   const { page } = await params;
-  redirect(`/popular?page=${page || 1}`);
+  redirect(`/movie/popular?page=${page || 1}`);
 }

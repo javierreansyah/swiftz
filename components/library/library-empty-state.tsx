@@ -146,7 +146,7 @@ export function LibraryEmptyState({ activeTab }: { activeTab: LibraryTab }) {
 
       <div className="pt-2">
         <Button asChild size="sm" className="gap-2">
-          <Link href="/discover">
+          <Link href="/movie">
             <SlidersHorizontal className="size-4" />
             <span>Discover Movies</span>
           </Link>

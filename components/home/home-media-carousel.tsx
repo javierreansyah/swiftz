@@ -60,13 +60,13 @@ export function HomeMediaCarousel({
           viewAllHref ? { label: "View all", href: viewAllHref } : undefined
         }
       >
-        {items.map((item) => {
+        {items.map((item, idx) => {
           const detailHref =
             item.media_type === "tv" ? `/tv/${item.id}` : `/movie/${item.id}`;
 
           return (
             <MediaCard
-              key={`${item.media_type}-${item.id}`}
+              key={`${item.media_type}-${item.id}-${idx}`}
               type={item.media_type}
               id={item.id}
               title={item.title}

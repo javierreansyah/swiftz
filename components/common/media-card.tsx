@@ -138,7 +138,7 @@ export function MediaCard({
             return "h-[280px] w-40 shrink-0 sm:w-44";
           case "poster":
           default:
-            return "h-[280px] w-36 shrink-0 sm:w-40";
+            return "h-[420px] w-52 shrink-0 sm:w-60";
         }
     }
   };
@@ -208,7 +208,7 @@ export function MediaCard({
               e.stopPropagation();
               onActionClick?.(e);
             }}
-            className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-none bg-black/60 text-white backdrop-blur-xs transition-all hover:bg-primary hover:text-primary-foreground"
+            className="absolute top-2.5 right-2.5 flex size-8 items-center justify-center rounded-none bg-black/60 text-white backdrop-blur-xs transition-all hover:bg-primary hover:text-primary-foreground"
           >
             {actionIcon}
           </button>
@@ -216,7 +216,7 @@ export function MediaCard({
 
         {/* Overlay Badge */}
         {badge && (
-          <div className="absolute bottom-2 left-2 rounded-none border border-white/15 bg-black/75 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur-xs">
+          <div className="absolute bottom-2.5 left-2.5 rounded-none border border-white/15 bg-black/75 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
             {badge}
           </div>
         )}

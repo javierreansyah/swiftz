@@ -107,11 +107,7 @@ function TVContent() {
         {/* Right: Content Area */}
         <div className="min-w-0 flex-1">
           {isInitial ? (
-            <TVSections
-              onSelectSort={(sort) =>
-                handleApplyFilters({ ...currentFilters, sort_by: sort })
-              }
-            />
+            <TVSections />
           ) : (
             <TVFilteredResults
               filters={currentFilters}

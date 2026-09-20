@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Search,
-  RotateCcw,
   SlidersHorizontal,
   X,
   Loader2,
@@ -12,23 +11,13 @@ import {
   Calendar,
   Sparkles,
   Tag,
-  Clock,
   Globe,
   ShieldCheck,
   Star,
   Users,
   ArrowDownUp,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import movieGenres from "@/public/data/genres";
 import { useKeywordSearchQuery } from "@/hooks/use-tmdb";
 import {
@@ -41,6 +30,13 @@ import {
   TOP_WATCH_PROVIDERS,
 } from "./types";
 import { countActiveFilters } from "./filter-utils";
+import {
+  FilterSectionHeader,
+  MultiSelectBadges,
+  FilterSelect,
+  FilterSlider,
+  FilterStickyActionBar,
+} from "@/components/common/filter-sidebar-primitives";
 import { cn } from "@/lib/utils";
 
 export interface DiscoverSidebarProps {
@@ -50,28 +46,43 @@ export interface DiscoverSidebarProps {
   className?: string;
 }
 
+const MOVIE_GENRE_ITEMS = movieGenres.map((g) => ({
+  id: String(g.id),
+  label: g.name,
+}));
+
+const RELEASE_PRESET_ITEMS = [
+  { id: "all", label: "All Time" },
+  { id: "2026", label: "2026" },
+  { id: "2025", label: "2025" },
+  { id: "2020-2024", label: "2020s" },
+  { id: "2010s", label: "2010s" },
+  { id: "classic", label: "Classic" },
+];
+
+const CERT_ITEMS = CERTIFICATION_OPTIONS.map((c) => ({
+  id: c,
+  label: c === "all" ? "All Ratings" : c,
+}));
+
 export function DiscoverSidebar({
   activeFilters,
   onApplyFilters,
   onResetFilters,
   className,
 }: DiscoverSidebarProps) {
-  // Pending local state: changed by user, only applied when clicking "Search" button!
   const [pendingFilters, setPendingFilters] =
     useState<DiscoverFilterState>(activeFilters);
 
-  // Keyword search input state
   const [keywordInput, setKeywordInput] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [isKeywordDropdownOpen, setIsKeywordDropdownOpen] = useState(false);
   const keywordContainerRef = useRef<HTMLDivElement>(null);
 
-  // Sync pendingFilters whenever activeFilters in URL change externally
   useEffect(() => {
     setPendingFilters(activeFilters);
   }, [activeFilters]);
 
-  // Debounce keyword query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedKeyword(keywordInput.trim());
@@ -79,11 +90,9 @@ export function DiscoverSidebar({
     return () => clearTimeout(timer);
   }, [keywordInput]);
 
-  // Query TMDB keywords
   const { data: keywordResults, isLoading: isSearchingKeywords } =
     useKeywordSearchQuery(debouncedKeyword);
 
-  // Close keyword dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -109,7 +118,6 @@ export function DiscoverSidebar({
     onResetFilters();
   };
 
-  // Genre toggle
   const toggleGenre = (genreIdStr: string) => {
     setPendingFilters((prev) => {
       const exists = prev.with_genres.includes(genreIdStr);
@@ -120,7 +128,6 @@ export function DiscoverSidebar({
     });
   };
 
-  // Keyword add/remove
   const addKeyword = (kw: { id: number; name: string }) => {
     if (!pendingFilters.keywords.some((k) => k.id === kw.id)) {
       setPendingFilters((prev) => ({
@@ -139,7 +146,6 @@ export function DiscoverSidebar({
     }));
   };
 
-  // Watch provider toggle
   const toggleProvider = (providerId: number) => {
     setPendingFilters((prev) => {
       const exists = prev.watch_providers.includes(providerId);
@@ -150,79 +156,33 @@ export function DiscoverSidebar({
     });
   };
 
+  const activeProviders = TOP_WATCH_PROVIDERS;
+
   return (
-    <aside
-      className={cn(
-        "space-y-6 text-sm", // Clean minimalist design, directly on the background
-        className
-      )}
-    >
-      {/* Top Search & Reset Action Bar (Submit button on top, zero layout shift) */}
-      <div className="flex items-center gap-2 border-b border-border/50 pb-4">
-        <Button
-          onClick={handleApply}
-          size="default"
-          className="flex-1 gap-2 rounded-xl font-medium shadow-sm transition-all"
-        >
-          <Search className="size-4" />
-          <span>
-            {pendingActiveCount > 0
-              ? `Search (${pendingActiveCount} active)`
-              : "Search Movies"}
-          </span>
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handleReset}
-          disabled={pendingActiveCount === 0}
-          title="Reset all filters"
-          aria-label="Reset all filters"
-          className="size-9 shrink-0 rounded-xl transition-opacity disabled:opacity-40"
-        >
-          <RotateCcw className="size-4" />
-        </Button>
-      </div>
-
-      {/* 1. SORT SECTION (With Icon) */}
+    <aside className={cn("space-y-6 pb-4 text-sm", className)}>
+      {/* 1. Sort Section */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-          <ArrowDownUp className="size-3.5 text-primary/80" />
-          <span>Sort Results By</span>
-        </label>
-        <Select
+        <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
+        <FilterSelect
           value={pendingFilters.sort_by}
-          onValueChange={(val) =>
+          onChange={(val) =>
             setPendingFilters((prev) => ({ ...prev, sort_by: val }))
           }
-        >
-          <SelectTrigger className="w-full rounded-none border-border/60 bg-secondary/40">
-            <SelectValue placeholder="Sort movies..." />
-          </SelectTrigger>
-          <SelectContent>
-            {SORT_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          options={SORT_OPTIONS}
+          placeholder="Sort movies..."
+        />
       </div>
 
-      {/* 2. KEYWORDS SEARCH */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4" ref={keywordContainerRef}>
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Tag className="size-3.5 text-primary/80" />
-            <span>Keywords</span>
-          </label>
-          {pendingFilters.keywords.length > 0 && (
-            <span className="text-[11px] font-medium text-muted-foreground">
-              {pendingFilters.keywords.length} selected
-            </span>
-          )}
-        </div>
+      {/* 2. Keywords Search */}
+      <div
+        className="space-y-2.5 border-b border-border/40 pb-4"
+        ref={keywordContainerRef}
+      >
+        <FilterSectionHeader
+          icon={Tag}
+          title="Keywords"
+          selectedCount={pendingFilters.keywords.length}
+        />
 
         <div className="relative">
           <Input
@@ -234,13 +194,12 @@ export function DiscoverSidebar({
               setIsKeywordDropdownOpen(true);
             }}
             onFocus={() => setIsKeywordDropdownOpen(true)}
-            className="h-9 rounded-none border-border/60 bg-secondary/40 text-xs placeholder:text-muted-foreground"
+            className="h-9 rounded-none border-border/70 bg-card text-xs placeholder:text-muted-foreground"
           />
           {isSearchingKeywords && (
             <Loader2 className="absolute top-2.5 right-3 size-4 animate-spin text-muted-foreground" />
           )}
 
-          {/* Autocomplete Dropdown */}
           {isKeywordDropdownOpen &&
             keywordInput.trim().length >= 2 &&
             keywordResults &&
@@ -262,7 +221,6 @@ export function DiscoverSidebar({
             )}
         </div>
 
-        {/* Selected Keyword Tags */}
         {pendingFilters.keywords.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-1">
             {pendingFilters.keywords.map((kw) => (
@@ -284,293 +242,139 @@ export function DiscoverSidebar({
         )}
       </div>
 
-      {/* 3. FILTERING SYSTEM */}
-
-      {/* Genres */}
+      {/* 3. Genres (Multi-Select using Shadcn Badge pattern) */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Sparkles className="size-3.5 text-primary/80" />
-            <span>Genres</span>
-          </label>
-          {pendingFilters.with_genres.length > 0 && (
-            <span className="text-[11px] font-medium text-primary">
-              {pendingFilters.with_genres.length} selected
-            </span>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {movieGenres.map((g) => {
-            const isSelected = pendingFilters.with_genres.includes(String(g.id));
-            return (
-              <button
-                key={g.id}
-                type="button"
-                onClick={() => toggleGenre(String(g.id))}
-                className={cn(
-                  "rounded-none px-2.5 py-1 text-xs font-medium transition-all",
-                  isSelected
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "bg-secondary/60 text-secondary-foreground hover:bg-secondary hover:text-foreground"
-                )}
-              >
-                {g.name}
-              </button>
-            );
-          })}
-        </div>
+        <FilterSectionHeader
+          icon={Sparkles}
+          title="Genres"
+          selectedCount={pendingFilters.with_genres.length}
+        />
+        <MultiSelectBadges
+          items={MOVIE_GENRE_ITEMS}
+          selectedIds={pendingFilters.with_genres}
+          onToggle={toggleGenre}
+        />
       </div>
 
-      {/* Release Dates */}
+      {/* 4. Release Year Presets */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-          <Calendar className="size-3.5 text-primary/80" />
-          <span>Release Year</span>
-        </label>
-        <div className="grid grid-cols-3 gap-1.5">
-          {[
-            { id: "all", label: "All Time" },
-            { id: "2026", label: "2026" },
-            { id: "2025", label: "2025" },
-            { id: "2020-2024", label: "2020s" },
-            { id: "2010s", label: "2010s" },
-            { id: "classic", label: "Classic" },
-          ].map((preset) => {
-            const isSelected =
-              (pendingFilters.release_date_preset || "all") === preset.id;
-            return (
-              <button
-                key={preset.id}
-                type="button"
-                onClick={() =>
-                  setPendingFilters((prev) => ({
-                    ...prev,
-                    release_date_preset: preset.id,
-                  }))
-                }
-                className={cn(
-                  "rounded-none px-2 py-1 text-center text-xs font-medium transition-all",
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary/60 text-secondary-foreground hover:bg-secondary"
-                )}
-              >
-                {preset.label}
-              </button>
-            );
-          })}
-        </div>
+        <FilterSectionHeader icon={Calendar} title="Release Year" />
+        <MultiSelectBadges
+          items={RELEASE_PRESET_ITEMS}
+          selectedIds={[pendingFilters.release_date_preset || "all"]}
+          onToggle={(id) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              release_date_preset: id,
+            }))
+          }
+        />
       </div>
 
-      {/* Certification (Content Rating) */}
+      {/* 5. Certification (US Content Rating) */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-          <ShieldCheck className="size-3.5 text-primary/80" />
-          <span>Certification (US)</span>
-        </label>
-        <div className="flex flex-wrap gap-1.5">
-          {CERTIFICATION_OPTIONS.map((cert) => {
-            const isSelected =
-              (pendingFilters.certification || "all") === cert;
-            return (
-              <button
-                key={cert}
-                type="button"
-                onClick={() =>
-                  setPendingFilters((prev) => ({
-                    ...prev,
-                    certification: cert,
-                  }))
-                }
-                className={cn(
-                  "rounded-none px-2.5 py-1 text-xs font-medium uppercase transition-all",
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary/60 text-secondary-foreground hover:bg-secondary"
-                )}
-              >
-                {cert}
-              </button>
-            );
-          })}
-        </div>
+        <FilterSectionHeader icon={ShieldCheck} title="Certification (US)" />
+        <MultiSelectBadges
+          items={CERT_ITEMS}
+          selectedIds={[pendingFilters.certification || "all"]}
+          onToggle={(id) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              certification: id,
+            }))
+          }
+        />
       </div>
 
-      {/* Language */}
+      {/* 6. Original Language */}
       <div className="space-y-2.5 border-b border-border/40 pb-4">
-        <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-          <Globe className="size-3.5 text-primary/80" />
-          <span>Original Language</span>
-        </label>
-        <Select
+        <FilterSectionHeader icon={Globe} title="Original Language" />
+        <FilterSelect
           value={pendingFilters.original_language || "all"}
-          onValueChange={(val) =>
+          onChange={(val) =>
             setPendingFilters((prev) => ({ ...prev, original_language: val }))
           }
-        >
-          <SelectTrigger className="w-full rounded-none border-border/60 bg-secondary/40">
-            <SelectValue placeholder="All Languages" />
-          </SelectTrigger>
-          <SelectContent>
-            {LANGUAGE_OPTIONS.map((lang) => (
-              <SelectItem key={lang.value} value={lang.value}>
-                {lang.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          options={LANGUAGE_OPTIONS}
+          placeholder="All Languages"
+        />
       </div>
 
-      {/* User Score (2-way Slider: 0 - 10) */}
+      {/* 7. User Score Slider (0 - 10) */}
       <div className="space-y-3 border-b border-border/40 pb-4">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Star className="size-3.5 fill-primary text-primary" />
-            <span>User Score</span>
-          </label>
-          <span className="text-[11px] font-medium text-foreground">
-            {pendingFilters.vote_average_gte === 0 &&
+        <FilterSectionHeader
+          icon={Star}
+          title="User Score"
+          badge={
+            pendingFilters.vote_average_gte === 0 &&
             pendingFilters.vote_average_lte === 10
               ? "Any (0 - 10)"
-              : `${pendingFilters.vote_average_gte} - ${pendingFilters.vote_average_lte} ★`}
-          </span>
-        </div>
-        <div className="px-1 pt-1">
-          <Slider
-            min={0}
-            max={10}
-            step={0.5}
-            value={[
-              pendingFilters.vote_average_gte,
-              pendingFilters.vote_average_lte,
-            ]}
-            onValueChange={([min, max]) =>
-              setPendingFilters((prev) => ({
-                ...prev,
-                vote_average_gte: min,
-                vote_average_lte: max,
-              }))
-            }
-          />
-          <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
-            <span>0</span>
-            <span>5</span>
-            <span>10</span>
-          </div>
-        </div>
+              : `${pendingFilters.vote_average_gte} - ${pendingFilters.vote_average_lte} ★`
+          }
+        />
+        <FilterSlider
+          min={0}
+          max={10}
+          step={0.5}
+          value={[
+            pendingFilters.vote_average_gte,
+            pendingFilters.vote_average_lte,
+          ]}
+          onChange={([min, max]) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              vote_average_gte: min,
+              vote_average_lte: max,
+            }))
+          }
+          ticks={[0, 5, 10]}
+        />
       </div>
 
-      {/* Minimum User Votes (1-way Slider: 0 - 500) */}
+      {/* 8. Minimum Votes */}
       <div className="space-y-3 border-b border-border/40 pb-4">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Users className="size-3.5 text-primary/80" />
-            <span>Minimum Votes</span>
-          </label>
-          <span className="text-[11px] font-medium text-foreground">
-            {pendingFilters.vote_count_gte === 0
+        <FilterSectionHeader
+          icon={Users}
+          title="Minimum Votes"
+          badge={
+            pendingFilters.vote_count_gte === 0
               ? "Any (0)"
-              : `${pendingFilters.vote_count_gte}+ votes`}
-          </span>
-        </div>
-        <div className="px-1 pt-1">
-          <Slider
-            min={0}
-            max={500}
-            step={25}
-            value={[pendingFilters.vote_count_gte]}
-            onValueChange={([val]) =>
-              setPendingFilters((prev) => ({
-                ...prev,
-                vote_count_gte: val,
-              }))
-            }
-          />
-          <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
-            <span>0</span>
-            <span>100</span>
-            <span>250</span>
-            <span>500+</span>
-          </div>
-        </div>
+              : `${pendingFilters.vote_count_gte}+ votes`
+          }
+        />
+        <FilterSlider
+          min={0}
+          max={500}
+          step={25}
+          value={[pendingFilters.vote_count_gte]}
+          onChange={([val]) =>
+            setPendingFilters((prev) => ({
+              ...prev,
+              vote_count_gte: val,
+            }))
+          }
+          ticks={[0, 250, "500+"]}
+        />
       </div>
 
-      {/* Runtime (2-way Slider: 0 - 360 min) */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Clock className="size-3.5 text-primary/80" />
-            <span>Runtime</span>
-          </label>
-          <span className="text-[11px] font-medium text-foreground">
-            {pendingFilters.with_runtime_gte === 0 &&
-            pendingFilters.with_runtime_lte === 360
-              ? "Any (0 - 360m)"
-              : `${pendingFilters.with_runtime_gte}m - ${pendingFilters.with_runtime_lte}m`}
-          </span>
-        </div>
-        <div className="px-1 pt-1">
-          <Slider
-            min={0}
-            max={360}
-            step={15}
-            value={[
-              pendingFilters.with_runtime_gte,
-              pendingFilters.with_runtime_lte,
-            ]}
-            onValueChange={([min, max]) =>
-              setPendingFilters((prev) => ({
-                ...prev,
-                with_runtime_gte: min,
-                with_runtime_lte: max,
-              }))
-            }
-          />
-          <div className="mt-1.5 flex justify-between text-[10px] text-muted-foreground">
-            <span>0m</span>
-            <span>90m</span>
-            <span>180m</span>
-            <span>360m</span>
-          </div>
-        </div>
-      </div>
+      {/* 9. Watch Providers */}
+      <div className="space-y-3 pb-2">
+        <FilterSectionHeader
+          icon={Tv}
+          title="Watch Providers"
+          selectedCount={pendingFilters.watch_providers.length}
+        />
 
-      {/* 4. WHERE TO WATCH SECTION */}
-      <div className="space-y-3 pb-6">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            <Tv className="size-3.5 text-primary/80" />
-            <span>Where to Watch</span>
-          </label>
-          {pendingFilters.watch_providers.length > 0 && (
-            <span className="text-[11px] font-medium text-primary">
-              {pendingFilters.watch_providers.length} services
-            </span>
-          )}
-        </div>
-
-        {/* Region */}
-        <Select
+        <FilterSelect
           value={pendingFilters.watch_region || "US"}
-          onValueChange={(val) =>
+          onChange={(val) =>
             setPendingFilters((prev) => ({ ...prev, watch_region: val }))
           }
-        >
-          <SelectTrigger className="w-full rounded-none border-border/60 bg-secondary/40 text-xs">
-            <SelectValue placeholder="Region" />
-          </SelectTrigger>
-          <SelectContent>
-            {WATCH_REGION_OPTIONS.map((reg) => (
-              <SelectItem key={reg.value} value={reg.value}>
-                {reg.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          options={WATCH_REGION_OPTIONS}
+          placeholder="Select Region"
+        />
 
-        {/* Streaming Providers Grid */}
         <div className="grid grid-cols-4 gap-2 pt-1">
-          {TOP_WATCH_PROVIDERS.map((provider) => {
+          {activeProviders.map((provider) => {
             const isSelected = pendingFilters.watch_providers.includes(
               provider.id
             );
@@ -584,7 +388,7 @@ export function DiscoverSidebar({
                   "group relative flex aspect-square flex-col items-center justify-center rounded-none border p-1 transition-all",
                   isSelected
                     ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary"
-                    : "border-border/60 bg-secondary/30 hover:border-border hover:bg-secondary/60"
+                    : "border-border/60 bg-card hover:border-border hover:bg-muted/50"
                 )}
               >
                 <div className="relative size-8 overflow-clip rounded-none">
@@ -605,21 +409,14 @@ export function DiscoverSidebar({
         </div>
       </div>
 
-      {/* Sticky / Bottom Search Button */}
-      <div className="pt-2">
-        <Button
-          onClick={handleApply}
-          size="default"
-          className="w-full gap-2 rounded-none font-medium shadow-md"
-        >
-          <Search className="size-4" />
-          <span>
-            {pendingActiveCount > 0
-              ? `Apply & Search (${pendingActiveCount})`
-              : "Search Movies"}
-          </span>
-        </Button>
-      </div>
+      {/* Standardized Sticky Bottom Search & Reset Action Bar */}
+      <FilterStickyActionBar
+        onApply={handleApply}
+        onReset={handleReset}
+        activeCount={pendingActiveCount}
+        applyLabel="Search Movies"
+        searchIcon={Search}
+      />
     </aside>
   );
 }

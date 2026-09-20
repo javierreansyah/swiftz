@@ -108,7 +108,7 @@ export function DetailBottomSheet({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="size-8 shrink-0 rounded-none hover:bg-muted"
+                className="shrink-0 rounded-none hover:bg-muted"
                 aria-label="Close sheet"
               >
                 <X className="size-5" />
