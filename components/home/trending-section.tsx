@@ -40,7 +40,11 @@ export function TrendingSection({ movies, tvShows }: TrendingSectionProps) {
       ]}
       activeTab={activeTab}
       onTabChange={setActiveTab}
-      viewAllHref={activeTab === "movies" ? "/movie" : "/tv"}
+      viewAllHref={
+        activeTab === "movies"
+          ? "/movie/trending-today"
+          : "/tv/trending-today"
+      }
     />
   );
 }

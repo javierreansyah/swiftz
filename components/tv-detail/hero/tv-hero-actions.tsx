@@ -1,27 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Bookmark,
-  Heart,
-  Star,
-  Share2,
-  Check,
-  ChevronDown,
-  Loader2,
-  LogIn,
-  Sparkles,
-  X,
-} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { TVShowDetailsData, Cast } from "@/types";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -29,6 +9,8 @@ import {
   useToggleTVFavoriteMutation,
   useToggleTVWatchlistMutation,
 } from "@/hooks/use-tmdb";
+import { WatchlistDropdown } from "@/components/common/watchlist-dropdown";
+import { AuthPromptModal } from "@/components/common/auth-prompt-modal";
 
 function formatNumberShort(num: number): string {
   if (!num) return "0";
@@ -280,142 +262,29 @@ export function TVHeroActions({
 
         {/* Watchlist Button with Dropdown (Right side on desktop, top right on mobile) */}
         <div className="order-1 flex shrink-0 items-center justify-end self-start lg:order-2">
-          <DropdownMenu>
-            <div className="inline-flex rounded-none shadow-sm">
-              <Button
-                onClick={handleWatchlistClick}
-                disabled={toggleWatchlist.isPending}
-                className={cn(
-                  "h-10 gap-2 rounded-none border-r-0 font-bold transition-all",
-                  isWatchlist
-                    ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                )}
-              >
-                {toggleWatchlist.isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : isWatchlist ? (
-                  <Check className="size-4" />
-                ) : (
-                  <Bookmark className="size-4 fill-current" />
-                )}
-                <span>
-                  {formatNumberShort(show.vote_count * 2)} ·{" "}
-                  {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
-                </span>
-              </Button>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  className={cn(
-                    "h-10 rounded-none border-l border-primary-foreground/20 px-2.5 transition-all",
-                    isWatchlist
-                      ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
-                      : "bg-primary text-primary-foreground hover:bg-primary/90"
-                  )}
-                >
-                  <ChevronDown className="size-4" />
-                  <span className="sr-only">More options</span>
-                </Button>
-              </DropdownMenuTrigger>
-            </div>
-
-            <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuItem
-                onClick={handleWatchlistClick}
-                className="cursor-pointer gap-2 font-medium"
-              >
-                <Bookmark className="size-4 text-blue-500" />
-                <span>
-                  {isWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleFavoriteClick}
-                className="cursor-pointer gap-2 font-medium"
-              >
-                <Heart
-                  className={`size-4 text-red-500 ${
-                    isFavorite ? "fill-current" : ""
-                  }`}
-                />
-                <span>
-                  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleRateClick}
-                className="cursor-pointer gap-2 font-medium"
-              >
-                <Star
-                  className={`size-4 text-primary ${
-                    userRating ? "fill-current" : ""
-                  }`}
-                />
-                <span>
-                  {userRating
-                    ? `Your Rating: ${userRating}/10`
-                    : "Rate This Series"}
-                </span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={onShareClick}
-                className="cursor-pointer gap-2 font-medium"
-              >
-                <Share2 className="size-4" />
-                <span>Share Series</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <WatchlistDropdown
+            isWatchlist={isWatchlist}
+            isFavorite={isFavorite}
+            userRating={userRating}
+            isPendingWatchlist={toggleWatchlist.isPending}
+            voteCountFormatted={formatNumberShort(show.vote_count * 2)}
+            mediaTypeLabel="Series"
+            onWatchlistClick={handleWatchlistClick}
+            onFavoriteClick={handleFavoriteClick}
+            onRateClick={handleRateClick}
+            onShareClick={onShareClick}
+          />
         </div>
       </div>
 
       {/* AUTH PROMPT MODAL */}
-      {showAuthModal && (
-        <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/60 p-4 backdrop-blur-sm duration-200 fade-in">
-          <div className="relative w-full max-w-md space-y-4 rounded-none border bg-card p-6 shadow-2xl">
-            <button
-              onClick={() => setShowAuthModal(false)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-            >
-              <X className="size-5" />
-            </button>
-            <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-primary/20 text-primary">
-              <LogIn className="size-6" />
-            </div>
-            <div className="space-y-1 text-center">
-              <h3 className="text-xl font-bold">Sign in with TMDB</h3>
-              <p className="text-sm text-muted-foreground">
-                Connect your TMDB account to save {show.name} to your watchlist,
-                favorites, and rate it.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 pt-2">
-              <Button
-                onClick={() => {
-                  setShowAuthModal(false);
-                  login();
-                }}
-                className="w-full gap-2 font-bold"
-              >
-                <LogIn className="size-4" />
-                <span>Connect TMDB Account</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowAuthModal(false);
-                  loginDemo();
-                }}
-                className="w-full gap-2 text-xs"
-              >
-                <Sparkles className="size-3.5 text-primary" />
-                <span>Try Demo Account (Instant Preview)</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AuthPromptModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title={show.name}
+        onLogin={login}
+        onLoginDemo={loginDemo}
+      />
     </>
   );
 }

@@ -38,7 +38,7 @@ export function GenresCard() {
           const Icon = genre.icon;
           return (
             <article key={genre.id}>
-              <Link href={`/discover?with_genres=${genre.id}`} prefetch={false}>
+              <Link href={`/movie?with_genres=${genre.id}`} prefetch={false}>
                 <div className="group w-full rounded-none border bg-card p-4 transition-all hover:bg-primary">
                   <div className="flex items-center gap-4">
                     <figure className="flex aspect-square w-16 items-center justify-center overflow-clip rounded-none bg-secondary transition-all group-hover:bg-white">

@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRightToLine, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { ThemeSwitcher } from "./theme-switcher";
 import { useAuth } from "@/components/providers/auth-provider";
 
@@ -29,14 +35,6 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
     ...(isAuthenticated ? [{ route: "/library", name: "My Library" }] : []),
   ];
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-  }, [isOpen]);
-
   const avatarUrl = user?.avatar?.tmdb?.avatar_path
     ? `https://image.tmdb.org/t/p/w185${user.avatar.tmdb.avatar_path}`
     : user?.avatar?.gravatar?.hash
@@ -44,20 +42,14 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
     : null;
 
   return (
-    <>
-      <div
-        className={`pointer-events-none fixed inset-0 z-40 bg-black/50 opacity-0 transition-opacity duration-300 ease-in-out ${
-          isOpen ? "pointer-events-auto opacity-100 backdrop-blur-sm" : ""
-        }`}
-        onClick={() => setIsOpen(false)}
-      />
-      <aside
-        className={`fixed top-0 right-0 z-50 h-screen w-65 transform border-l bg-card transition-all duration-300 ease-in-out sm:w-80 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        className="flex w-65 flex-col justify-between p-4 sm:w-80"
       >
-        <div className="flex h-full flex-col justify-between p-4">
-          <div className="space-y-6">
+        <div className="space-y-6">
+          <SheetHeader className="p-0">
             <div className="flex h-12 items-center justify-between">
               <Button
                 variant="ghost"
@@ -67,91 +59,91 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                 <ArrowRightToLine className="size-[1.2rem]" />
                 <span className="sr-only">Close menu</span>
               </Button>
-              <h1
+              <SheetTitle
                 className="text-2xl font-black text-primary"
                 style={{ fontStyle: "italic" }}
               >
                 Swiftz
-              </h1>
+              </SheetTitle>
               <ThemeSwitcher variant="ghost" />
             </div>
+          </SheetHeader>
 
-            {/* User Profile Card */}
-            {isAuthenticated && user ? (
-              <div className="flex items-center gap-3 rounded-none border bg-secondary/50 p-3">
-                {avatarUrl ? (
-                  <div className="relative size-10 flex-none overflow-clip rounded-none">
-                    <Image
-                      src={avatarUrl}
-                      alt={user.username || "User"}
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex size-10 flex-none items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
-                    {(user.username || "U").charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div className="overflow-hidden">
-                  <p className="truncate text-sm font-semibold">
-                    {user.name || user.username}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    @{user.username}
-                  </p>
+          {/* User Profile Card */}
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-3 rounded-none border bg-secondary/50 p-3">
+              {avatarUrl ? (
+                <div className="relative size-10 flex-none overflow-clip rounded-none">
+                  <Image
+                    src={avatarUrl}
+                    alt={user.username || "User"}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
                 </div>
+              ) : (
+                <div className="flex size-10 flex-none items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
+                  {(user.username || "U").charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="overflow-hidden">
+                <p className="truncate text-sm font-semibold">
+                  {user.name || user.username}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  @{user.username}
+                </p>
               </div>
-            ) : null}
+            </div>
+          ) : null}
 
-            <nav>
-              <ul className="space-y-2">
-                {navigationList.map((route, index) => (
-                  <li key={index}>
-                    <Button
-                      asChild
-                      variant="secondary"
-                      className="w-full justify-start px-4"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Link href={route.route}>{route.name}</Link>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          <div className="border-t pt-4">
-            {isAuthenticated ? (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  logout();
-                  setIsOpen(false);
-                }}
-                className="w-full gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
-              >
-                <LogOut className="size-4" />
-                <span>Sign Out</span>
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  login();
-                  setIsOpen(false);
-                }}
-                className="w-full gap-2 font-medium"
-              >
-                <LogIn className="size-4" />
-                <span>Sign In with TMDB</span>
-              </Button>
-            )}
-          </div>
+          <nav>
+            <ul className="space-y-2">
+              {navigationList.map((route, index) => (
+                <li key={index}>
+                  <Button
+                    asChild
+                    variant="secondary"
+                    className="w-full justify-start px-4"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Link href={route.route}>{route.name}</Link>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </aside>
-    </>
+
+        <div className="border-t pt-4">
+          {isAuthenticated ? (
+            <Button
+              variant="outline"
+              onClick={() => {
+                logout();
+                setIsOpen(false);
+              }}
+              className="w-full gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+            >
+              <LogOut className="size-4" />
+              <span>Sign Out</span>
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                login();
+                setIsOpen(false);
+              }}
+              className="w-full gap-2 font-medium"
+            >
+              <LogIn className="size-4" />
+              <span>Sign In with TMDB</span>
+            </Button>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 

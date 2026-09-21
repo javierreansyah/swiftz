@@ -25,7 +25,9 @@ export function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
 
-  const isMovieDetailPage = pathname?.startsWith("/movie/");
+  const isDetailPage = Boolean(
+    pathname?.startsWith("/movie/") || pathname?.startsWith("/tv/")
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,7 +90,7 @@ export function Navbar() {
                   <Link href={item.route}>
                     <p
                       className={`font-medium transition-colors duration-300 ${
-                        !isScrolled && isMovieDetailPage
+                        !isScrolled && isDetailPage
                           ? "text-white drop-shadow hover:text-primary"
                           : "text-foreground hover:text-primary"
                       }`}
@@ -107,7 +109,7 @@ export function Navbar() {
           <Suspense fallback={<div className="size-9" />}>
             <HeaderSearch
               isScrolled={isScrolled}
-              isMovieDetailPage={isMovieDetailPage}
+              isMovieDetailPage={isDetailPage}
             />
           </Suspense>
 

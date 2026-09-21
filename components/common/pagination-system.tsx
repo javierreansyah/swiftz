@@ -25,7 +25,10 @@ export function PaginationSystem({
   onPageChange,
 }: PaginationProps) {
   const getPageUrl = (pageNumber: number): string => {
-    if (url) return `${url}/${pageNumber}`;
+    if (url) {
+      const separator = url.includes("?") ? "&" : "?";
+      return `${url}${separator}page=${pageNumber}`;
+    }
     return "#";
   };
 

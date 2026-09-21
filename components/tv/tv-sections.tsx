@@ -1,10 +1,7 @@
 "use client";
 
 import React from "react";
-import { ContentCarousel } from "@/components/common/content-carousel";
-import { MediaCard } from "@/components/common/media-card";
-import { SectionHeader } from "@/components/common/section-header";
-import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
+import { MediaCarouselRow } from "@/components/common/media-carousel-row";
 import {
   usePopularTVShowsQuery,
   useTopRatedTVShowsQuery,
@@ -12,65 +9,6 @@ import {
   useTrendingTVShowsQuery,
   useAiringTodayTVShowsQuery,
 } from "@/hooks/use-tmdb";
-import { TVShow } from "@/types";
-
-interface TVCarouselRowProps {
-  title: string;
-  shows?: TVShow[];
-  isLoading: boolean;
-  viewAllHref: string;
-}
-
-function TVCarouselRow({ title, shows, isLoading, viewAllHref }: TVCarouselRowProps) {
-  const displayShows = shows || [];
-
-  if (isLoading) {
-    return (
-      <section className="space-y-4">
-        <SectionHeader
-          title={title}
-          action={{ label: "View all", href: viewAllHref }}
-        />
-        <div className="flex gap-4 overflow-hidden">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="w-52 shrink-0 sm:w-60">
-              <MovieCardSkeleton />
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (displayShows.length === 0) return null;
-
-  return (
-    <ContentCarousel
-      title={title}
-      action={{ label: "View all", href: viewAllHref }}
-    >
-      {displayShows.map((show) => {
-        const year = show.first_air_date
-          ? show.first_air_date.substring(0, 4)
-          : undefined;
-
-        return (
-          <MediaCard
-            key={show.id}
-            type="tv"
-            id={show.id}
-            title={show.name}
-            image={show.poster_path}
-            rating={show.vote_average}
-            year={year}
-            href={`/tv/${show.id}`}
-            variant="shelf"
-          />
-        );
-      })}
-    </ContentCarousel>
-  );
-}
 
 export interface TVSectionsProps {
   onSelectGenre?: (genreId: string) => void;
@@ -91,44 +29,40 @@ export function TVSections() {
 
   return (
     <div className="space-y-12">
-      {/* 1. Trending TV Section Carousel */}
-      <TVCarouselRow
+      <MediaCarouselRow
         title="Trending TV Shows"
-        shows={trendingData?.results}
+        items={trendingData?.results}
         isLoading={isTrendingLoading}
         viewAllHref="/tv/trending-today"
+        type="tv"
       />
-
-      {/* 2. Popular TV Shows Section Carousel */}
-      <TVCarouselRow
+      <MediaCarouselRow
         title="Most Popular Shows"
-        shows={popularData?.results}
+        items={popularData?.results}
         isLoading={isPopularLoading}
         viewAllHref="/tv/popular"
+        type="tv"
       />
-
-      {/* 3. Top Rated TV Shows Carousel */}
-      <TVCarouselRow
+      <MediaCarouselRow
         title="Top Rated Television"
-        shows={topRatedData?.results}
+        items={topRatedData?.results}
         isLoading={isTopRatedLoading}
         viewAllHref="/tv/top-rated"
+        type="tv"
       />
-
-      {/* 4. Currently Airing TV Shows Carousel */}
-      <TVCarouselRow
+      <MediaCarouselRow
         title="Currently Airing"
-        shows={onTheAirData?.results}
+        items={onTheAirData?.results}
         isLoading={isOnTheAirLoading}
         viewAllHref="/tv/on-the-air"
+        type="tv"
       />
-
-      {/* 5. Airing Today Carousel */}
-      <TVCarouselRow
+      <MediaCarouselRow
         title="Airing Today"
-        shows={airingTodayData?.results}
+        items={airingTodayData?.results}
         isLoading={isAiringTodayLoading}
         viewAllHref="/tv/airing-today"
+        type="tv"
       />
     </div>
   );

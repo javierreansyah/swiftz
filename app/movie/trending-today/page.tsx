@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { MovieGrid } from "@/components/common/movie-grid";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
+import { MediaListingSkeleton } from "@/components/common/media-listing-skeleton";
 import { useTrendingMoviesQuery } from "@/hooks/use-tmdb";
 import { SectionHeader } from "@/components/common/section-header";
 
@@ -62,18 +63,7 @@ function TrendingMoviesContent() {
 
 export default function TrendingMoviesPage() {
   return (
-    <Suspense
-      fallback={
-        <main className="container space-y-8 pt-20 pb-16">
-          <div className="h-10 w-64 animate-pulse bg-muted" />
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-            {Array.from({ length: 10 }, (_, i) => (
-              <MovieCardSkeleton key={i} />
-            ))}
-          </div>
-        </main>
-      }
-    >
+    <Suspense fallback={<MediaListingSkeleton hasSidebar={false} />}>
       <TrendingMoviesContent />
     </Suspense>
   );

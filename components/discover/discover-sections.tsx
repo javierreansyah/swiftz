@@ -1,10 +1,7 @@
 "use client";
 
 import React from "react";
-import { ContentCarousel } from "@/components/common/content-carousel";
-import { MediaCard } from "@/components/common/media-card";
-import { SectionHeader } from "@/components/common/section-header";
-import { MovieCardSkeleton } from "@/components/common/movie-card-skeleton";
+import { MediaCarouselRow } from "@/components/common/media-carousel-row";
 import {
   usePopularMoviesQuery,
   useTrendingMoviesQuery,
@@ -12,59 +9,6 @@ import {
   useTopRatedMoviesQuery,
   useUpcomingMoviesQuery,
 } from "@/hooks/use-tmdb";
-import { Movie } from "@/types";
-
-interface CarouselRowProps {
-  title: string;
-  movies?: Movie[];
-  isLoading: boolean;
-  viewAllHref: string;
-}
-
-function CarouselRow({ title, movies, isLoading, viewAllHref }: CarouselRowProps) {
-  const displayMovies = movies || [];
-
-  if (isLoading) {
-    return (
-      <section className="space-y-4">
-        <SectionHeader
-          title={title}
-          action={{ label: "View all", href: viewAllHref }}
-        />
-        <div className="flex gap-4 overflow-hidden">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="w-52 shrink-0 sm:w-60">
-              <MovieCardSkeleton />
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (displayMovies.length === 0) return null;
-
-  return (
-    <ContentCarousel
-      title={title}
-      action={{ label: "View all", href: viewAllHref }}
-    >
-      {displayMovies.map((movie) => (
-        <MediaCard
-          key={movie.id}
-          type="movie"
-          id={movie.id}
-          title={movie.title}
-          image={movie.poster_path}
-          rating={movie.vote_average}
-          year={movie.release_date?.substring(0, 4)}
-          href={`/movie/${movie.id}`}
-          variant="shelf"
-        />
-      ))}
-    </ContentCarousel>
-  );
-}
 
 export interface DiscoverSectionsProps {
   onSelectView?: (
@@ -86,44 +30,40 @@ export function DiscoverSections() {
 
   return (
     <div className="space-y-12">
-      {/* 1. Popular Movies Carousel */}
-      <CarouselRow
+      <MediaCarouselRow
         title="Popular Movies"
-        movies={popularData?.results}
+        items={popularData?.results}
         isLoading={isPopularLoading}
         viewAllHref="/movie/popular"
+        type="movie"
       />
-
-      {/* 2. Trending Today Carousel */}
-      <CarouselRow
+      <MediaCarouselRow
         title="Trending Today"
-        movies={trendingData?.results}
+        items={trendingData?.results}
         isLoading={isTrendingLoading}
         viewAllHref="/movie/trending-today"
+        type="movie"
       />
-
-      {/* 3. Now Playing in Theatres Carousel */}
-      <CarouselRow
+      <MediaCarouselRow
         title="Now Playing in Theatres"
-        movies={nowPlayingData?.results}
+        items={nowPlayingData?.results}
         isLoading={isNowPlayingLoading}
         viewAllHref="/movie/now-playing"
+        type="movie"
       />
-
-      {/* 4. Top Rated Movies Carousel */}
-      <CarouselRow
+      <MediaCarouselRow
         title="Top Rated Movies"
-        movies={topRatedData?.results}
+        items={topRatedData?.results}
         isLoading={isTopRatedLoading}
         viewAllHref="/movie/top-rated"
+        type="movie"
       />
-
-      {/* 5. Upcoming Releases Carousel */}
-      <CarouselRow
+      <MediaCarouselRow
         title="Upcoming Releases"
-        movies={upcomingData?.results}
+        items={upcomingData?.results}
         isLoading={isUpcomingLoading}
         viewAllHref="/movie/upcoming"
+        type="movie"
       />
     </div>
   );

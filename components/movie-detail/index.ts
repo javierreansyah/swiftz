@@ -1,6 +1,5 @@
 export * from "./movie-detail-client";
 export * from "./movie-quick-rail";
-export * from "./movie-recommendations";
 export * from "./hero/movie-hero";
 export * from "./hero/movie-hero-header";
 export * from "./hero/movie-hero-media";
