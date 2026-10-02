@@ -96,7 +96,7 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
   }
 
   return (
-    <section className="relative w-full text-white">
+    <section className="relative w-full text-media-foreground">
       {/* 1. Full-Bleed Blurred Crossfade Backdrop */}
       <FeaturedHeroBackdrop
         movies={movies}

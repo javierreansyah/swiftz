@@ -43,25 +43,23 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent
+      <SheetContent surface="default"
         side="right"
         showCloseButton={false}
-        className="flex w-65 flex-col justify-between p-4 sm:w-80"
+        className="flex w-65 flex-col justify-between sm:w-80"
       >
         <div className="space-y-6">
-          <SheetHeader className="p-0">
+          <SheetHeader>
             <div className="flex h-12 items-center justify-between">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
               >
-                <ArrowRightToLine className="size-[1.2rem]" />
+                <ArrowRightToLine className="size-5" />
                 <span className="sr-only">Close menu</span>
               </Button>
               <SheetTitle
-                className="text-2xl font-black text-primary"
-                style={{ fontStyle: "italic" }}
               >
                 Swiftz
               </SheetTitle>
@@ -71,9 +69,9 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
 
           {/* User Profile Card */}
           {isAuthenticated && user ? (
-            <div className="flex items-center gap-3 rounded-none border bg-secondary/50 p-3">
+            <div className="flex items-center gap-3 rounded-xl border bg-secondary/50 p-3">
               {avatarUrl ? (
-                <div className="relative size-10 flex-none overflow-clip rounded-none">
+                <div className="relative size-10 flex-none overflow-clip rounded-xl">
                   <Image
                     src={avatarUrl}
                     alt={user.username || "User"}
@@ -83,7 +81,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                   />
                 </div>
               ) : (
-                <div className="flex size-10 flex-none items-center justify-center rounded-none bg-primary/20 text-sm font-bold text-primary">
+                <div className="flex size-10 flex-none items-center justify-center rounded-xl bg-primary/20 text-sm font-bold text-primary">
                   {(user.username || "U").charAt(0).toUpperCase()}
                 </div>
               )}
@@ -105,7 +103,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                   <Button
                     asChild
                     variant="secondary"
-                    className="w-full justify-start px-4"
+                    className="w-full justify-start"
                     onClick={() => setIsOpen(false)}
                   >
                     <Link href={route.route}>{route.name}</Link>
@@ -124,7 +122,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                 logout();
                 setIsOpen(false);
               }}
-              className="w-full gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+              className="w-full"
             >
               <LogOut className="size-4" />
               <span>Sign Out</span>
@@ -135,7 +133,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                 login();
                 setIsOpen(false);
               }}
-              className="w-full gap-2 font-medium"
+              className="w-full"
             >
               <LogIn className="size-4" />
               <span>Sign In with TMDB</span>

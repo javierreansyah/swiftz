@@ -12,7 +12,6 @@ import { UserNavDropdown } from "./user-nav-dropdown";
 import { HeaderSearch } from "./header-search";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
-import { cn } from "@/lib/utils";
 
 interface NavigationRoute {
   route: string;
@@ -91,7 +90,7 @@ export function Navbar() {
                     <p
                       className={`font-medium transition-colors duration-300 ${
                         !isScrolled && isDetailPage
-                          ? "text-white drop-shadow hover:text-primary"
+                          ? "text-media-foreground drop-shadow hover:text-primary"
                           : "text-foreground hover:text-primary"
                       }`}
                     >
@@ -125,19 +124,15 @@ export function Navbar() {
           {/* Mobile Movie Section Navigator Trigger (Compass) */}
           {isMovieNavAvailable && (
             <Button
-              variant="outline"
+              variant={isMovieNavOpen ? "default" : "outline"}
               size="icon"
-              className={cn(
-                "transition-all lg:hidden",
-                isMovieNavOpen &&
-                  "border-primary bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-              )}
+              className="lg:hidden"
               onClick={handleToggleMovieNav}
               aria-expanded={isMovieNavOpen}
               aria-label="Toggle movie section navigation"
               title="Jump to section"
             >
-              <Compass className="size-[1.2rem]" />
+              <Compass className="size-5" />
             </Button>
           )}
 
@@ -149,7 +144,7 @@ export function Navbar() {
             onClick={handleToggleMenu}
             aria-label="Toggle navigation"
           >
-            <Menu className="size-[1.2rem]" />
+            <Menu className="size-5" />
             <span className="sr-only">Toggle navigation</span>
           </Button>
         </div>

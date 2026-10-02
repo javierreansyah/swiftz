@@ -21,7 +21,7 @@ export function FeaturedHeroUpNext({
       <div>
         {/* Sans-serif Up Next Title */}
         <div className="mb-3 shrink-0">
-          <h2 className="font-sans text-base font-bold tracking-wider text-primary uppercase">
+          <h2 className="label-section text-primary uppercase">
             Up next
           </h2>
         </div>
@@ -36,10 +36,10 @@ export function FeaturedHeroUpNext({
               <div
                 key={movie.id}
                 onClick={() => onSelectMovie(idx + 1)}
-                className="group/item flex h-47 shrink-0 cursor-pointer items-start gap-4 overflow-hidden rounded-none p-2.5 transition-colors duration-200 hover:bg-white/10 xl:h-53"
+                className="group/item flex h-47 shrink-0 cursor-pointer items-start gap-4 overflow-hidden rounded-xl p-2.5 transition-colors duration-200 hover:bg-media-foreground/10 xl:h-53"
               >
                 {/* 2x Enlarged Thumbnail with play overlay */}
-                <div className="relative aspect-2/3 h-full shrink-0 overflow-hidden rounded-none border border-white/15 bg-neutral-900/80 shadow-lg">
+                <div className="relative aspect-2/3 h-full shrink-0 overflow-hidden rounded-xl border border-media-foreground/15 bg-media/80 shadow-lg">
                   {itemPoster && (
                     <Image
                       src={itemPoster}
@@ -49,8 +49,8 @@ export function FeaturedHeroUpNext({
                       className="object-cover transition-transform duration-500 group-hover/item:scale-105"
                     />
                   )}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover/item:opacity-100">
-                    <Play className="size-7 fill-white text-white drop-shadow-md" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-scrim/40 opacity-0 transition-opacity duration-300 group-hover/item:opacity-100">
+                    <Play className="size-7 fill-white text-media-foreground drop-shadow-md" />
                   </div>
                 </div>
 
@@ -60,10 +60,10 @@ export function FeaturedHeroUpNext({
                     <Play className="size-3 fill-current" />
                     <span className="font-semibold">Watch Trailer</span>
                   </div>
-                  <h3 className="line-clamp-2 text-base font-bold text-white transition-colors group-hover/item:text-primary">
+                  <h3 className="line-clamp-2 heading-card text-media-foreground transition-colors group-hover/item:text-primary">
                     {movie.title}
                   </h3>
-                  <p className="line-clamp-3 text-xs text-neutral-300/80">
+                  <p className="line-clamp-3 text-xs text-media-foreground/80">
                     {movie.overview || "Watch the latest trailer & info"}
                   </p>
                 </div>

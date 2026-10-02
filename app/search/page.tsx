@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -203,7 +204,7 @@ function SearchContent() {
             <Link
               key={movie.id}
               href={`/movie/${movie.id}`}
-              className="group flex gap-4 overflow-hidden rounded-none border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
+              className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
             >
               <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
                 {posterUrl ? (
@@ -222,7 +223,7 @@ function SearchContent() {
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-                <h3 className="line-clamp-1 text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
                   {movie.title}
                 </h3>
                 {releaseFormatted && (
@@ -262,7 +263,7 @@ function SearchContent() {
             <Link
               key={show.id}
               href={`/tv/${show.id}`}
-              className="group flex gap-4 overflow-hidden rounded-none border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
+              className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
             >
               <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
                 {posterUrl ? (
@@ -281,7 +282,7 @@ function SearchContent() {
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-                <h3 className="line-clamp-1 text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
                   {show.name}
                 </h3>
                 {airFormatted && (
@@ -317,7 +318,7 @@ function SearchContent() {
             <Link
               key={person.id}
               href={`/person/${person.id}`}
-              className="group flex gap-4 overflow-hidden rounded-none border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
+              className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
             >
               <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
                 {profileUrl ? (
@@ -336,7 +337,7 @@ function SearchContent() {
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-                <h3 className="line-clamp-1 text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
                   {person.name}
                 </h3>
                 <p className="text-xs font-semibold text-primary">
@@ -368,7 +369,7 @@ function SearchContent() {
           return (
             <div
               key={col.id}
-              className="flex gap-4 overflow-hidden rounded-none border border-border bg-card p-3 shadow-xs sm:p-4"
+              className="flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs sm:p-4"
             >
               <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
                 {posterUrl ? (
@@ -387,7 +388,7 @@ function SearchContent() {
               </div>
 
               <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-                <h3 className="line-clamp-1 text-base font-bold text-foreground sm:text-lg">
+                <h3 className="line-clamp-1 heading-card text-foreground">
                   {col.name}
                 </h3>
                 <p className="line-clamp-3 text-xs text-muted-foreground/90 sm:text-sm">
@@ -409,7 +410,7 @@ function SearchContent() {
           <Link
             key={kw.id}
             href={`/movie?keywords=${kw.id}`}
-            className="group flex items-center justify-between rounded-none border border-border bg-card p-3 text-xs font-semibold text-foreground transition-all hover:border-primary hover:text-primary"
+            className="group flex items-center justify-between rounded-3xl border border-border bg-card p-3 text-xs font-semibold text-foreground transition-all hover:border-primary hover:text-primary"
           >
             <span className="line-clamp-1">{kw.name}</span>
             <Tag className="size-3 text-muted-foreground group-hover:text-primary" />
@@ -432,7 +433,7 @@ function SearchContent() {
           return (
             <div
               key={comp.id}
-              className="flex items-center gap-4 rounded-none border border-border bg-card p-4 shadow-xs"
+              className="flex items-center gap-4 rounded-3xl border border-border bg-card p-4 shadow-xs"
             >
               <div className="relative flex size-12 shrink-0 items-center justify-center bg-muted p-1">
                 {logoUrl ? (
@@ -464,8 +465,8 @@ function SearchContent() {
     );
   } else {
     activeList = (
-      <div className="flex h-48 flex-col items-center justify-center space-y-2 rounded-none border border-dashed border-border bg-card p-8 text-center">
-        <h3 className="text-sm font-bold text-foreground">
+      <div className="flex h-48 flex-col items-center justify-center space-y-2 rounded-3xl border border-dashed border-border bg-card p-8 text-center">
+        <h3 className="heading-card text-foreground">
           No records found for this category
         </h3>
         <p className="text-xs text-muted-foreground">
@@ -483,24 +484,23 @@ function SearchContent() {
         className="relative flex w-full items-center border-b border-border pb-4"
       >
         <Search className="pointer-events-none absolute left-3 size-5 text-muted-foreground" />
-        <Input
+        <Input leadingIcon trailingIcon
           type="search"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
           placeholder="Search movies, TV shows, people, collections..."
-          className="h-12 rounded-none border-border bg-card pr-10 pl-11 text-base focus-visible:ring-1 focus-visible:ring-primary"
         />
         {inputVal && (
-          <button
+          <Button variant="ghost" size="icon-xs"
             type="button"
             onClick={() => {
               setInputVal("");
               router.push("/search");
             }}
-            className="absolute right-3 p-1 text-muted-foreground hover:text-foreground"
+            className="absolute right-3"
           >
             <X className="size-4" />
-          </button>
+          </Button>
         )}
       </form>
 
@@ -509,7 +509,7 @@ function SearchContent() {
         {/* Left Sidebar (Desktop 4 cols) / Top Pills (Mobile) */}
         <aside className="space-y-4 lg:col-span-4 xl:col-span-3">
           {/* Card Header & Category List */}
-          <div className="overflow-hidden rounded-none border border-border bg-card shadow-xs">
+          <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xs">
             <div className="bg-primary px-4 py-3 text-sm font-bold text-primary-foreground">
               Search Results
             </div>
@@ -519,15 +519,10 @@ function SearchContent() {
                 const isActive = typeParam === cat.id;
 
                 return (
-                  <button
+                  <Button variant={isActive ? "secondary" : "ghost"} size="sm"
                     key={cat.id}
                     type="button"
                     onClick={() => handleCategoryChange(cat.id)}
-                    className={`flex w-full items-center justify-between px-4 py-3 text-xs font-semibold transition-colors ${
-                      isActive
-                        ? "bg-secondary font-bold text-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <cat.icon
@@ -539,7 +534,7 @@ function SearchContent() {
                     </div>
 
                     <span
-                      className={`rounded-none px-2 py-0.5 text-[11px] font-bold ${
+                      className={`rounded-xl px-2 py-0.5 text-xs font-bold ${
                         isActive
                           ? "bg-muted text-foreground"
                           : "bg-secondary text-muted-foreground"
@@ -547,17 +542,17 @@ function SearchContent() {
                     >
                       {cat.count.toLocaleString()}
                     </span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
           </div>
 
           {/* Search Tip Notice */}
-          <div className="flex items-start gap-2.5 rounded-none border border-border/80 bg-muted/40 p-3.5 text-xs text-muted-foreground">
+          <div className="flex items-start gap-2.5 rounded-xl border border-border/80 bg-muted/40 p-3.5 text-xs text-muted-foreground">
             <Info className="mt-0.5 size-4 shrink-0 text-primary" />
             <p className="leading-relaxed">
-              <strong>Tip:</strong> You can use the <code className="rounded-none bg-background px-1 py-0.5 font-mono text-[11px] text-foreground">y:</code> filter to narrow your results by year. Example: <span className="text-foreground italic">&apos;star wars y:1977&apos;</span>.
+              <strong>Tip:</strong> You can use the <code className="rounded-xl bg-background px-1 py-0.5 font-mono text-xs text-foreground">y:</code> filter to narrow your results by year. Example: <span className="text-foreground italic">&apos;star wars y:1977&apos;</span>.
             </p>
           </div>
         </aside>
@@ -565,9 +560,9 @@ function SearchContent() {
         {/* Right Content Column */}
         <section className="min-w-0 flex-1 space-y-6 lg:col-span-8 xl:col-span-9">
           {!rawQuery ? (
-            <div className="flex h-64 flex-col items-center justify-center space-y-2 rounded-none border border-dashed border-border bg-card p-8 text-center">
+            <div className="flex h-64 flex-col items-center justify-center space-y-2 rounded-3xl border border-dashed border-border bg-card p-8 text-center">
               <Search className="size-10 text-muted-foreground" />
-              <h2 className="text-base font-bold">Search Swiftz</h2>
+              <h2 className="heading-section">Search Swiftz</h2>
               <p className="text-xs text-muted-foreground">
                 Enter a title, actor, or keyword in the box above to explore movies, TV shows, and celebrities.
               </p>
@@ -577,7 +572,7 @@ function SearchContent() {
               {Array.from({ length: 6 }, (_, i) => (
                 <div
                   key={i}
-                  className="flex h-32 animate-pulse rounded-none bg-secondary/40"
+                  className="flex h-32 animate-pulse rounded-xl bg-secondary/40"
                 />
               ))}
             </div>
@@ -607,10 +602,10 @@ export default function SearchPage() {
     <Suspense
       fallback={
         <main className="container min-h-screen space-y-8 py-20">
-          <div className="h-12 w-full animate-pulse rounded-none bg-secondary" />
+          <div className="h-12 w-full animate-pulse rounded-xl bg-secondary" />
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div className="h-72 w-full animate-pulse rounded-none bg-secondary lg:col-span-4" />
-            <div className="h-72 w-full animate-pulse rounded-none bg-secondary lg:col-span-8" />
+            <div className="h-72 w-full animate-pulse rounded-xl bg-secondary lg:col-span-4" />
+            <div className="h-72 w-full animate-pulse rounded-xl bg-secondary lg:col-span-8" />
           </div>
         </main>
       }

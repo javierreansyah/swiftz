@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
 import { useMovieReviewsQuery, useTVReviewsQuery } from "@/hooks/use-tmdb";
 
@@ -169,10 +170,9 @@ export function ReviewsModal({
         variant="outline"
         size="sm"
         onClick={handleShare}
-        className="gap-1.5 rounded-none text-xs"
       >
         {copiedShare ? (
-          <Check className="size-4 text-emerald-500" />
+          <Check className="size-4 text-success" />
         ) : (
           <Share2 className="size-4" />
         )}
@@ -186,7 +186,6 @@ export function ReviewsModal({
             onClose();
             onOpenRating();
           }}
-          className="gap-1.5 rounded-none bg-primary font-bold text-primary-foreground hover:bg-primary/90"
         >
           <Plus className="size-4" />
           <span>Review this title</span>
@@ -200,31 +199,35 @@ export function ReviewsModal({
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Sort by:</span>
-          <select
+          <Select
             value={reviewSort}
-            onChange={(e) => setReviewSort(e.target.value as any)}
-            className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-hidden"
+            onValueChange={(value) => setReviewSort(value as typeof reviewSort)}
           >
-            <option value="featured">Featured</option>
-            <option value="rating_desc">Highest Rating</option>
-            <option value="rating_asc">Lowest Rating</option>
-            <option value="date_desc">Most Recent</option>
-          </select>
+            <SelectTrigger aria-label="Sort reviews"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="featured">Featured</SelectItem>
+              <SelectItem value="rating_desc">Highest Rating</SelectItem>
+              <SelectItem value="rating_asc">Lowest Rating</SelectItem>
+              <SelectItem value="date_desc">Most Recent</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Rating:</span>
-          <select
+          <Select
             value={ratingFilter}
-            onChange={(e) => setRatingFilter(e.target.value)}
-            className="rounded-none border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground focus:ring-1 focus:ring-primary focus:outline-hidden"
+            onValueChange={setRatingFilter}
           >
-            <option value="all">All Stars</option>
-            <option value="9">9+ Stars</option>
-            <option value="8">8+ Stars</option>
-            <option value="7">7+ Stars</option>
-            <option value="5">5+ Stars</option>
-          </select>
+            <SelectTrigger aria-label="Filter reviews by rating"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Stars</SelectItem>
+              <SelectItem value="9">9+ Stars</SelectItem>
+              <SelectItem value="8">8+ Stars</SelectItem>
+              <SelectItem value="7">7+ Stars</SelectItem>
+              <SelectItem value="5">5+ Stars</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">
@@ -232,7 +235,7 @@ export function ReviewsModal({
             type="checkbox"
             checked={hideSpoilers}
             onChange={(e) => setHideSpoilers(e.target.checked)}
-            className="rounded-none border-border accent-primary"
+            className="rounded-xl border-border accent-primary"
           >
           </input>
           <span>Hide Spoilers</span>
@@ -309,7 +312,7 @@ export function ReviewsModal({
             return (
               <article
                 key={review.id}
-                className="rounded-none border border-border/70 bg-card/60 p-5 transition-colors hover:border-primary/40 sm:p-6"
+                className="rounded-3xl border border-border/70 bg-card/60 p-5 transition-colors hover:border-primary/40 sm:p-6"
               >
                 {/* Author row */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-3">
@@ -328,7 +331,7 @@ export function ReviewsModal({
                       )}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-foreground">
+                      <h3 className="heading-card text-foreground">
                         {review.author}
                       </h3>
                       <p className="text-xs text-muted-foreground">
@@ -338,7 +341,7 @@ export function ReviewsModal({
                   </div>
 
                   {authorRating !== null && authorRating !== undefined && (
-                    <div className="flex items-center gap-1.5 rounded-none border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                    <div className="flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
                       <Star className="size-3.5 fill-primary text-primary" />
                       <span>{authorRating}/10</span>
                     </div>
@@ -360,7 +363,6 @@ export function ReviewsModal({
                       variant={votes.voted === "up" ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleHelpfulVote(review.id, "up")}
-                      className="h-7 gap-1 rounded-none px-2.5 text-xs font-semibold"
                     >
                       <ThumbsUp className="size-3" />
                       <span>Helpful ({votes.up})</span>
@@ -369,7 +371,6 @@ export function ReviewsModal({
                       variant={votes.voted === "down" ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleHelpfulVote(review.id, "down")}
-                      className="h-7 gap-1 rounded-none px-2 text-xs"
                     >
                       <ThumbsDown className="size-3" />
                     </Button>

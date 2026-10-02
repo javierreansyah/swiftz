@@ -43,7 +43,7 @@ export function TVHeroHeader({
   return (
     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
       <div className="space-y-1.5">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h1 className="heading-hero text-foreground">
           {show.name}
         </h1>
         <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-muted-foreground sm:text-base">
@@ -74,12 +74,12 @@ export function TVHeroHeader({
           <TooltipTrigger asChild>
             <Button
               variant="outline"
-              size="sm"
+              size="default"
               onClick={onRateClick}
-              className={`h-9 gap-1.5 rounded-none border-border/80 bg-background/60 px-3.5 backdrop-blur-sm transition-colors ${
+              className={`${
                 userRating
-                  ? "border-primary/50 text-primary hover:text-primary/80"
-                  : "hover:border-primary/50 hover:text-primary"
+                  ? ""
+                  : ""
               }`}
             >
               <Star
@@ -100,7 +100,7 @@ export function TVHeroHeader({
         </Tooltip>
 
         {/* TMDB Score Badge: ★ 8.9/10 (200K) */}
-        <div className="flex h-9 items-center gap-2 rounded-none border border-primary/30 bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
           <Star className="size-4 fill-primary text-primary" />
           <div className="flex items-baseline gap-1">
             <span className="font-bold text-foreground">
@@ -114,7 +114,7 @@ export function TVHeroHeader({
         </div>
 
         {/* Popularity / Trending Badge */}
-        <div className="flex h-9 items-center gap-1.5 rounded-none border border-border/80 bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
           <TrendingUp className="size-4 text-primary" />
           <span>{Math.round(show.popularity)}</span>
         </div>
@@ -122,13 +122,12 @@ export function TVHeroHeader({
         {/* Share button */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
+            <Button size="icon"
               variant="outline"
               onClick={onShareClick}
-              className="size-9 rounded-none border-border/80 bg-background/60 p-0 backdrop-blur-sm"
             >
               {copiedShare ? (
-                <Check className="size-3.5 text-emerald-500" />
+                <Check className="size-3.5 text-success" />
               ) : (
                 <Share2 className="size-3.5 text-muted-foreground" />
               )}

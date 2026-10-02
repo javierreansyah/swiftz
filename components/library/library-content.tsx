@@ -138,8 +138,8 @@ export function LibraryContent() {
 
         {/* Error State */}
         {currentQuery.isError && (
-          <div className="space-y-4 rounded-none border bg-card/40 p-10 text-center">
-            <p className="font-semibold text-red-500">
+          <div className="space-y-4 rounded-3xl border bg-card/40 p-10 text-center">
+            <p className="font-semibold text-destructive">
               Failed to load your {activeTab}.
             </p>
             <p className="mx-auto max-w-sm text-xs text-muted-foreground">
@@ -150,7 +150,6 @@ export function LibraryContent() {
               size="sm"
               variant="outline"
               onClick={() => currentQuery.refetch()}
-              className="gap-2"
             >
               <RefreshCw className="size-3.5" />
               <span>Try Again</span>
@@ -188,7 +187,7 @@ export function LibraryContent() {
                     {/* Personal Rating Tag */}
                     {activeTab === "rated" &&
                       typeof personalRating === "number" && (
-                        <div className="pointer-events-none absolute top-2 right-2 z-10 flex items-center gap-1 rounded-none bg-primary px-2 py-0.5 text-xs font-extrabold text-primary-foreground shadow-md">
+                        <div className="pointer-events-none absolute top-2 right-2 z-10 flex items-center gap-1 rounded-xl bg-primary px-2 py-0.5 text-xs font-extrabold text-primary-foreground shadow-md">
                           <Star className="size-3 fill-primary-foreground text-primary-foreground" />
                           <span>{personalRating}/10</span>
                         </div>

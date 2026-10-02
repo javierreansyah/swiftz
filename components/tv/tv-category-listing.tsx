@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import React, { useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { X, Tv, RotateCcw } from "lucide-react";
@@ -216,7 +217,7 @@ export function TVCategoryListing({
       <div className="flex gap-8 xl:gap-12">
         {/* Left: Desktop Sticky Sidebar */}
         <div className="hidden w-64 shrink-0 lg:block lg:w-72 xl:w-80">
-          <div className="sticky top-20 max-h-[calc(100vh-6rem)] scrollbar-thin overflow-y-auto pr-3">
+          <div className="sticky top-20 max-h-sidebar scrollbar-thin overflow-y-auto pr-3">
             <TVSidebar
               activeFilters={activeFilters}
               onApplyFilters={handleApplyFilters}
@@ -230,7 +231,7 @@ export function TVCategoryListing({
           {/* Header */}
           <div className="flex flex-col gap-3 border-b border-border/50 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h1 className="heading-page text-foreground">
                 {title}
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
@@ -262,7 +263,7 @@ export function TVCategoryListing({
                 variant="outline"
                 size="sm"
                 onClick={handleResetFilters}
-                className="w-fit gap-1.5 text-xs"
+                className="w-fit"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Reset to Default</span>
@@ -279,9 +280,9 @@ export function TVCategoryListing({
 
               {/* Sort Pill */}
               {activeFilters.sort_by !== categoryDefaultSort && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span className="text-muted-foreground">Sort:</span> {sortLabel}
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() =>
                       handleApplyFilters({
@@ -289,40 +290,39 @@ export function TVCategoryListing({
                         sort_by: categoryDefaultSort,
                       })
                     }
-                    className="hover:text-foreground"
+
                     aria-label="Reset sort"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
 
               {/* Genres */}
               {activeFilters.with_genres.map((gId) => {
                 const genreObj = TV_GENRES.find((g) => g.id === gId);
                 return (
-                  <span
+                  <Badge variant="soft" size="filter"
                     key={gId}
-                    className="inline-flex items-center gap-1 rounded-none border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
                   >
                     <span>{genreObj?.name || gId}</span>
-                    <button
+                    <Button variant="ghost" size="icon-xs"
                       type="button"
                       onClick={() => handleRemoveGenre(gId)}
-                      className="hover:text-primary/70"
+
                       aria-label={`Remove ${genreObj?.name || gId} filter`}
                     >
                       <X className="size-3" />
-                    </button>
-                  </span>
+                    </Button>
+                  </Badge>
                 );
               })}
 
               {/* Year */}
               {activeFilters.first_air_date_year && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span>Year: {activeFilters.first_air_date_year}</span>
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() =>
                       handleApplyFilters({
@@ -330,19 +330,19 @@ export function TVCategoryListing({
                         first_air_date_year: "",
                       })
                     }
-                    className="hover:text-foreground"
+
                     aria-label="Remove year filter"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
 
               {/* Minimum Rating */}
               {activeFilters.vote_average_gte > 0 && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span>Rating &ge; {activeFilters.vote_average_gte} ★</span>
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() =>
                       handleApplyFilters({
@@ -350,12 +350,12 @@ export function TVCategoryListing({
                         vote_average_gte: 0,
                       })
                     }
-                    className="hover:text-foreground"
+
                     aria-label="Remove rating filter"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
             </div>
           )}
@@ -368,11 +368,11 @@ export function TVCategoryListing({
               ))}
             </div>
           ) : isError || shows.length === 0 ? (
-            <div className="flex min-h-80 flex-col items-center justify-center space-y-3 rounded-none border border-dashed border-border bg-card/50 p-8 text-center">
-              <div className="flex size-14 items-center justify-center rounded-none bg-secondary text-muted-foreground">
+            <div className="flex min-h-80 flex-col items-center justify-center space-y-3 rounded-3xl border border-dashed border-border bg-card/50 p-8 text-center">
+              <div className="flex size-14 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
                 <Tv className="size-7" />
               </div>
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="heading-section text-foreground">
                 No TV shows match your filters
               </h2>
               <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
@@ -382,7 +382,6 @@ export function TVCategoryListing({
                 variant="outline"
                 size="sm"
                 onClick={handleResetFilters}
-                className="gap-2"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Reset to Default</span>

@@ -143,7 +143,7 @@ export default async function PersonDetailPage({
         {/* Left Column (Desktop 4 cols): Portrait, Socials, Personal Info */}
         <div className="space-y-6 lg:col-span-4 xl:col-span-3">
           {/* Portrait Photo */}
-          <div className="relative aspect-2/3 w-full max-w-xs overflow-hidden rounded-none border border-border bg-muted shadow-md sm:max-w-sm lg:max-w-none">
+          <div className="relative aspect-2/3 w-full max-w-xs overflow-hidden rounded-xl border border-border bg-muted shadow-md sm:max-w-sm lg:max-w-none">
             {profileUrl ? (
               <Image
                 src={profileUrl}
@@ -167,7 +167,7 @@ export default async function PersonDetailPage({
                 href={`https://x.com/${externalIds.twitter_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-none border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 aria-label="X / Twitter"
               >
                 <XIcon className="size-4" />
@@ -179,7 +179,7 @@ export default async function PersonDetailPage({
                 href={`https://instagram.com/${externalIds.instagram_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-none border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 aria-label="Instagram"
               >
                 <InstagramIcon className="size-4" />
@@ -191,7 +191,7 @@ export default async function PersonDetailPage({
                 href={`https://facebook.com/${externalIds.facebook_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-none border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 aria-label="Facebook"
               >
                 <FacebookIcon className="size-4" />
@@ -203,7 +203,7 @@ export default async function PersonDetailPage({
                 href={`https://www.imdb.com/name/${person.imdb_id || externalIds.imdb_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 items-center justify-center rounded-none border border-border bg-card px-2.5 text-xs font-black text-primary transition-colors hover:border-primary"
+                className="flex h-9 items-center justify-center rounded-3xl border border-border bg-card px-2.5 text-xs font-black text-primary transition-colors hover:border-primary"
                 aria-label="IMDb"
               >
                 IMDb
@@ -215,7 +215,7 @@ export default async function PersonDetailPage({
                 href={person.homepage}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-none border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 aria-label="Website"
               >
                 <ExternalLink className="size-4" />
@@ -224,8 +224,8 @@ export default async function PersonDetailPage({
           </div>
 
           {/* Personal Info Card */}
-          <div className="space-y-4 rounded-none border border-border bg-card p-5">
-            <h2 className="text-base font-bold text-foreground">Personal Info</h2>
+          <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+            <h2 className="heading-section text-foreground">Personal Info</h2>
 
             <div className="space-y-3 text-xs sm:text-sm">
               <div>
@@ -308,7 +308,7 @@ export default async function PersonDetailPage({
         <div className="space-y-8 lg:col-span-8 xl:col-span-9">
           {/* Header Name */}
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+            <h1 className="heading-hero text-foreground">
               {person.name}
             </h1>
             <p className="mt-1 text-sm font-semibold text-primary">

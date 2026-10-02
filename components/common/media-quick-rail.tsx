@@ -138,7 +138,7 @@ export function MediaQuickRail({
       {/* Navigation Links with continuous vertical bar and active primary indicator */}
       <nav className="relative space-y-1 pl-3">
         {/* Continuous vertical track */}
-        <div className="absolute inset-y-1.5 left-0 w-0.5 rounded-none bg-border/40" />
+        <div className="absolute inset-y-1.5 left-0 w-0.5 rounded-xl bg-border/40" />
 
         {sections.map((item) => {
           const isActive = activeSection === item.id;
@@ -151,7 +151,7 @@ export function MediaQuickRail({
             >
               {/* Primary colored bar on the activated section */}
               {isActive && (
-                <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-none bg-primary transition-all duration-300" />
+                <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-xl bg-primary transition-all duration-300" />
               )}
 
               <div className="flex items-center gap-2.5">
@@ -176,18 +176,18 @@ export function MediaQuickRail({
               </div>
 
               {item.modal && (
-                <button
+                <Button variant="ghost" size="sm"
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     onOpenModal(item.modal!);
                   }}
-                  className="flex items-center gap-0.5 rounded-none px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/60 transition-colors hover:text-primary"
+
                   title={`Open ${item.label} sheet`}
                 >
                   <span>Open</span>
                   <ChevronRight className="size-3" />
-                </button>
+                </Button>
               )}
             </div>
           );
@@ -196,23 +196,18 @@ export function MediaQuickRail({
 
       {/* Quick Actions */}
       <div className="space-y-2 border-t border-border/60 pt-3">
-        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
           Actions
         </p>
 
         <div className="grid grid-cols-1 gap-1.5">
           {/* Watchlist button */}
           <Button
-            size="sm"
+            size="default"
             variant={isWatchlist ? "default" : "outline"}
             onClick={onToggleWatchlist}
             disabled={isWatchlistPending}
-            className={cn(
-              "h-9 w-full justify-start gap-2.5 rounded-none text-xs font-semibold",
-              isWatchlist
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "border-border/70 hover:bg-muted"
-            )}
+            className="w-full justify-start"
           >
             {isWatchlistPending ? (
               <Loader2 className="size-3.5 animate-spin" />
@@ -224,16 +219,11 @@ export function MediaQuickRail({
 
           {/* Favorite button */}
           <Button
-            size="sm"
+            size="default"
             variant={isFavorite ? "default" : "outline"}
             onClick={onToggleFavorite}
             disabled={isFavoritePending}
-            className={cn(
-              "h-9 w-full justify-start gap-2.5 rounded-none text-xs font-semibold",
-              isFavorite
-                ? "bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
-                : "border-border/70 hover:bg-muted"
-            )}
+            className="w-full justify-start"
           >
             {isFavoritePending ? (
               <Loader2 className="size-3.5 animate-spin" />
@@ -241,7 +231,7 @@ export function MediaQuickRail({
               <Heart
                 className={cn(
                   "size-3.5",
-                  isFavorite && "fill-current text-red-500"
+                  isFavorite && "fill-current text-destructive"
                 )}
               />
             )}
@@ -250,10 +240,10 @@ export function MediaQuickRail({
 
           {/* Rate button */}
           <Button
-            size="sm"
+            size="default"
             variant="outline"
             onClick={onOpenRating}
-            className="h-9 w-full justify-start gap-2.5 rounded-none border-border/70 text-xs font-semibold hover:bg-muted"
+            className="w-full justify-start"
           >
             <Star
               className={cn(
@@ -270,13 +260,13 @@ export function MediaQuickRail({
 
           {/* Share button */}
           <Button
-            size="sm"
+            size="default"
             variant="outline"
             onClick={handleShare}
-            className="h-9 w-full justify-start gap-2.5 rounded-none border-border/70 text-xs font-semibold hover:bg-muted"
+            className="w-full justify-start"
           >
             {copied ? (
-              <Check className="size-3.5 text-emerald-500" />
+              <Check className="size-3.5 text-success" />
             ) : (
               <Share2 className="size-3.5" />
             )}
@@ -292,7 +282,7 @@ export function MediaQuickRail({
     <div className="flex flex-col space-y-4">
       {/* 2-Column Section Jumpers with Icon Highlighting */}
       <div className="space-y-2">
-        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
           Sections
         </p>
 
@@ -301,20 +291,14 @@ export function MediaQuickRail({
             const isActive = activeSection === item.id;
             const Icon = item.icon;
             return (
-              <button
+              <Button variant={isActive ? "default" : "ghost"} size="sm"
                 key={item.id}
                 type="button"
                 onClick={() => scrollToSection(item.id)}
-                className={cn(
-                  "active:scale-0.98 flex items-center gap-2.5 rounded-none border p-2.5 text-left text-xs transition-colors select-none",
-                  isActive
-                    ? "border-primary/50 bg-primary/10 font-bold text-foreground shadow-xs"
-                    : "border-border/50 bg-card/40 font-medium text-muted-foreground hover:border-border/80 hover:text-foreground"
-                )}
               >
                 <div
                   className={cn(
-                    "flex size-7 shrink-0 items-center justify-center rounded-none transition-colors",
+                    "flex size-7 shrink-0 items-center justify-center rounded-xl transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "bg-muted/70 text-muted-foreground/80"
@@ -323,7 +307,7 @@ export function MediaQuickRail({
                   <Icon className="size-3.5" />
                 </div>
                 <span className="truncate">{item.label}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -331,26 +315,21 @@ export function MediaQuickRail({
 
       {/* 2-Column Quick Actions */}
       <div className="space-y-2 border-t border-border/60 pt-3">
-        <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
           Actions
         </p>
 
         <div className="grid grid-cols-2 gap-2">
           {/* Watchlist */}
           <Button
-            size="sm"
+            size="default"
             variant={isWatchlist ? "default" : "outline"}
             onClick={() => {
               onToggleWatchlist();
               closeMobileNav();
             }}
             disabled={isWatchlistPending}
-            className={cn(
-              "h-9 w-full justify-start gap-2 rounded-none text-xs font-semibold",
-              isWatchlist
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "border-border/70 bg-card/40 hover:bg-muted"
-            )}
+            className="w-full justify-start"
           >
             {isWatchlistPending ? (
               <Loader2 className="size-3.5 animate-spin" />
@@ -364,19 +343,14 @@ export function MediaQuickRail({
 
           {/* Favorite */}
           <Button
-            size="sm"
+            size="default"
             variant={isFavorite ? "default" : "outline"}
             onClick={() => {
               onToggleFavorite();
               closeMobileNav();
             }}
             disabled={isFavoritePending}
-            className={cn(
-              "h-9 w-full justify-start gap-2 rounded-none text-xs font-semibold",
-              isFavorite
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "border-border/70 bg-card/40 hover:bg-muted"
-            )}
+            className="w-full justify-start"
           >
             {isFavoritePending ? (
               <Loader2 className="size-3.5 animate-spin" />
@@ -384,7 +358,7 @@ export function MediaQuickRail({
               <Heart
                 className={cn(
                   "size-3.5",
-                  isFavorite && "fill-current text-red-500"
+                  isFavorite && "fill-current text-destructive"
                 )}
               />
             )}
@@ -395,13 +369,13 @@ export function MediaQuickRail({
 
           {/* Rate */}
           <Button
-            size="sm"
+            size="default"
             variant="outline"
             onClick={() => {
               closeMobileNav();
               onOpenRating();
             }}
-            className="h-9 w-full justify-start gap-2 rounded-none border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+            className="w-full justify-start"
           >
             <Star
               className={cn(
@@ -416,13 +390,13 @@ export function MediaQuickRail({
 
           {/* Share */}
           <Button
-            size="sm"
+            size="default"
             variant="outline"
             onClick={handleShare}
-            className="h-9 w-full justify-start gap-2 rounded-none border-border/70 bg-card/40 text-xs font-semibold hover:bg-muted"
+            className="w-full justify-start"
           >
             {copied ? (
-              <Check className="size-3.5 text-emerald-500" />
+              <Check className="size-3.5 text-success" />
             ) : (
               <Share2 className="size-3.5" />
             )}
@@ -453,7 +427,7 @@ export function MediaQuickRail({
           />
 
           {/* Frosted Translucent Collapsible below Header */}
-          <div className="fixed inset-x-0 top-16 z-50 max-h-[85vh] animate-in overflow-y-auto border-b border-border/80 bg-background/85 p-4 shadow-xl backdrop-blur-md duration-200 slide-in-from-top-2 lg:hidden">
+          <div className="fixed inset-x-0 top-16 z-50 max-h-dialog animate-in overflow-y-auto border-b border-border/80 bg-background/85 p-4 shadow-xl backdrop-blur-md duration-200 slide-in-from-top-2 lg:hidden">
             <div className="container max-w-md space-y-4">
               {renderMobileContent()}
             </div>

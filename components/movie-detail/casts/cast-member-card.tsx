@@ -20,7 +20,7 @@ export function CastMemberCard({
     : null;
 
   return (
-    <div className="flex overflow-clip rounded-none border bg-card transition-colors hover:border-primary/50">
+    <div className="flex overflow-clip rounded-3xl border bg-card transition-colors hover:border-primary/50">
       {profileUrl ? (
         <div className="relative aspect-2/3 h-35 flex-none sm:h-40">
           <Image
@@ -39,7 +39,7 @@ export function CastMemberCard({
 
       <div className="flex min-w-0 flex-1 flex-col justify-between p-4">
         <div>
-          <h3 className="truncate text-base font-bold">{name}</h3>
+          <h3 className="truncate heading-card">{name}</h3>
           <p className="truncate text-sm font-light text-muted-foreground">
             {role}
           </p>

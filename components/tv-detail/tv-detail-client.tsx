@@ -97,7 +97,7 @@ export function TVDetailClient({
 
       {/* Main Content & Dedicated Desktop Sticky Sidebar Layout */}
       <div className="relative z-10 container py-20">
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_220px] xl:grid-cols-[1fr_240px] xl:gap-10">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-detail xl:grid-cols-detail-wide xl:gap-10">
           {/* Main Column */}
           <main className="min-w-0 space-y-12">
             {/* 1. Hero Showcase (Overview) */}

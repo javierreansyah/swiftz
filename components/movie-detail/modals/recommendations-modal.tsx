@@ -102,7 +102,7 @@ export function RecommendationsModal({
           {Array.from({ length: 12 }, (_, i) => (
             <div
               key={i}
-              className="aspect-2/3 animate-pulse rounded-none bg-muted"
+              className="aspect-2/3 animate-pulse rounded-xl bg-muted"
             />
           ))}
         </div>

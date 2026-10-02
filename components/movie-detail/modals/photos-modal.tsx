@@ -199,7 +199,6 @@ export function PhotosModal({
           variant="outline"
           size="sm"
           onClick={() => setViewMode("gallery")}
-          className="gap-1.5 rounded-none text-xs"
         >
           <LayoutGrid className="size-3.5" />
           <span>Back to Gallery</span>
@@ -210,10 +209,9 @@ export function PhotosModal({
         variant="outline"
         size="sm"
         onClick={handleShare}
-        className="gap-1.5 rounded-none text-xs"
       >
         {copiedShare ? (
-          <Check className="size-3.5 text-emerald-500" />
+          <Check className="size-3.5 text-success" />
         ) : (
           <Share2 className="size-3.5" />
         )}
@@ -224,7 +222,6 @@ export function PhotosModal({
         <Button
           size="sm"
           asChild
-          className="gap-1.5 rounded-none bg-primary text-xs font-bold text-primary-foreground hover:bg-primary/90"
         >
           <a
             href={`https://image.tmdb.org/t/p/original${activePhoto.file_path}`}
@@ -247,49 +244,34 @@ export function PhotosModal({
           Category
         </h4>
         <div className="flex flex-col gap-1">
-          <button
+          <Button variant={photoTypeFilter === "all" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setPhotoTypeFilter("all")}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              photoTypeFilter === "all"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>All Photos</span>
-            <span className="text-[11px] opacity-80">{allPhotos.length}</span>
-          </button>
-          <button
+            <span className="text-xs opacity-80">{allPhotos.length}</span>
+          </Button>
+          <Button variant={photoTypeFilter === "backdrops" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setPhotoTypeFilter("backdrops")}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              photoTypeFilter === "backdrops"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>Backdrops (16:9)</span>
-            <span className="text-[11px] opacity-80">
+            <span className="text-xs opacity-80">
               {images?.backdrops?.length || 0}
             </span>
-          </button>
-          <button
+          </Button>
+          <Button variant={photoTypeFilter === "posters" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setPhotoTypeFilter("posters")}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              photoTypeFilter === "posters"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>Posters (2:3)</span>
-            <span className="text-[11px] opacity-80">
+            <span className="text-xs opacity-80">
               {images?.posters?.length || 0}
             </span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -299,33 +281,23 @@ export function PhotosModal({
             Language
           </h4>
           <div className="flex max-h-48 flex-col gap-1 overflow-y-auto">
-            <button
+            <Button variant={selectedLanguage === "all" ? "default" : "ghost"} size="sm"
               type="button"
               onClick={() => setSelectedLanguage("all")}
-              className={cn(
-                "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs font-medium transition-colors",
-                selectedLanguage === "all"
-                  ? "bg-primary font-semibold text-primary-foreground"
-                  : "text-foreground/80 hover:bg-muted"
-              )}
+              className="justify-between"
             >
               <span>All Languages</span>
-            </button>
+            </Button>
             {languagesAvailable.map((lang) => (
-              <button
+              <Button variant={selectedLanguage === lang.code ? "default" : "ghost"} size="sm"
                 key={lang.code}
                 type="button"
                 onClick={() => setSelectedLanguage(lang.code)}
-                className={cn(
-                  "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs font-medium transition-colors",
-                  selectedLanguage === lang.code
-                    ? "bg-primary font-semibold text-primary-foreground"
-                    : "text-foreground/80 hover:bg-muted"
-                )}
+                className="justify-between"
               >
                 <span className="truncate">{lang.name}</span>
-                <span className="text-[11px] opacity-80">{lang.count}</span>
-              </button>
+                <span className="text-xs opacity-80">{lang.count}</span>
+              </Button>
             ))}
           </div>
         </div>
@@ -341,7 +313,7 @@ export function PhotosModal({
           setPhotoTypeFilter(val)
         }
       >
-        <SelectTrigger className="h-8 rounded-none bg-card text-xs">
+        <SelectTrigger>
           <SelectValue placeholder="Photo Type" />
         </SelectTrigger>
         <SelectContent>
@@ -359,7 +331,7 @@ export function PhotosModal({
         value={selectedLanguage}
         onValueChange={(val) => setSelectedLanguage(val)}
       >
-        <SelectTrigger className="h-8 rounded-none bg-card text-xs">
+        <SelectTrigger>
           <SelectValue placeholder="Language" />
         </SelectTrigger>
         <SelectContent>
@@ -390,7 +362,7 @@ export function PhotosModal({
         /* Showcase View: Stage + Identical Height Bottom Filmstrip */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Photo Stage */}
-          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black/95 p-2 sm:p-4">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-scrim/95 p-2 sm:p-4">
             <div className="relative size-full">
               <Image
                 src={`https://image.tmdb.org/t/p/original${activePhoto.file_path}`}
@@ -402,31 +374,31 @@ export function PhotosModal({
               />
 
               {/* Photo meta overlay */}
-              <div className="absolute top-3 right-3 rounded-none border border-white/20 bg-black/60 px-3 py-1.5 text-xs text-white/80 backdrop-blur-md">
+              <div className="absolute top-3 right-3 rounded-xl border border-media-foreground/20 bg-scrim/60 px-3 py-1.5 text-xs text-media-foreground/80 backdrop-blur-md">
                 <p className="font-semibold">{displayTitle}</p>
-                <p className="text-[10px] text-white/60">
+                <p className="text-xs text-media-foreground/60">
                   {activePhoto.width} &times; {activePhoto.height} &bull;{" "}
                   {activePhoto.type === "backdrop" ? "Backdrop" : "Poster"}
                 </p>
               </div>
 
               {/* Prev/Next Buttons */}
-              <button
+              <Button variant="media" size="icon-lg"
                 type="button"
                 onClick={handlePrevPhoto}
                 aria-label="Previous photo"
-                className="absolute top-1/2 left-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-none bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
+                className="absolute top-1/2 left-2 -translate-y-1/2"
               >
                 <ChevronLeft className="size-6" />
-              </button>
-              <button
+              </Button>
+              <Button variant="media" size="icon-lg"
                 type="button"
                 onClick={handleNextPhoto}
                 aria-label="Next photo"
-                className="absolute top-1/2 right-2 flex size-11 -translate-y-1/2 items-center justify-center rounded-none bg-black/50 text-white/80 backdrop-blur-md transition-colors hover:bg-black/80 hover:text-white"
+                className="absolute top-1/2 right-2 -translate-y-1/2"
               >
                 <ChevronRight className="size-6" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -441,7 +413,7 @@ export function PhotosModal({
                     type="button"
                     onClick={() => setActivePhotoIdx(i)}
                     className={cn(
-                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-none border-2 transition-all",
+                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
                       isActive
                         ? "scale-105 border-primary ring-2 ring-primary/40"
                         : "border-transparent opacity-60 hover:opacity-100"
@@ -476,7 +448,7 @@ export function PhotosModal({
                     key={photo.file_path + idx}
                     onClick={() => handleSelectPhoto(idx)}
                     className={cn(
-                      "group relative cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg",
+                      "group relative cursor-pointer overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg",
                       isBackdrop
                         ? "col-span-2 aspect-video"
                         : "col-span-1 aspect-2/3"
@@ -489,7 +461,7 @@ export function PhotosModal({
                       sizes="(max-width: 640px) 50vw, 300px"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-scrim/20 opacity-0 transition-opacity group-hover:opacity-100" />
                   </div>
                 );
               })}

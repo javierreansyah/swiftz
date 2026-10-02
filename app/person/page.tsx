@@ -42,9 +42,9 @@ function PeopleContent() {
           ))}
         </div>
       ) : isError || people.length === 0 ? (
-        <div className="flex h-64 flex-col items-center justify-center space-y-3 rounded-none border border-dashed border-border bg-card p-8 text-center">
+        <div className="flex h-64 flex-col items-center justify-center space-y-3 rounded-3xl border border-dashed border-border bg-card p-8 text-center">
           <User className="size-10 text-muted-foreground" />
-          <h3 className="text-base font-bold">No People Found</h3>
+          <h3 className="heading-card">No People Found</h3>
           <p className="max-w-md text-xs text-muted-foreground">
             Unable to load popular people right now. Please try again later.
           </p>
@@ -77,7 +77,7 @@ export default function PeoplePage() {
     <Suspense
       fallback={
         <main className="container min-h-screen space-y-8 pt-20 pb-16">
-          <div className="h-12 w-64 animate-pulse rounded-none bg-secondary" />
+          <div className="h-12 w-64 animate-pulse rounded-xl bg-secondary" />
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {Array.from({ length: 12 }, (_, i) => (
               <MovieCardSkeleton key={i} />

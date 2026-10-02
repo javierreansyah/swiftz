@@ -59,18 +59,16 @@ export function ContentCarousel({
     <div className="hidden items-center gap-1 sm:flex">
       <Button
         variant="outline"
-        size="icon"
+        size="icon-sm"
         onClick={scrollPrev}
-        className="size-8 rounded-none"
         aria-label={`Scroll ${title} left`}
       >
         <ChevronLeft className="size-4" />
       </Button>
       <Button
         variant="outline"
-        size="icon"
+        size="icon-sm"
         onClick={scrollNext}
-        className="size-8 rounded-none"
         aria-label={`Scroll ${title} right`}
       >
         <ChevronRight className="size-4" />

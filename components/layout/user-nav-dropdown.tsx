@@ -19,7 +19,7 @@ export function UserNavDropdown() {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="size-9 animate-pulse rounded-none bg-muted" />;
+    return <div className="size-9 animate-pulse rounded-xl bg-muted" />;
   }
 
   if (!isAuthenticated || !user) {
@@ -28,7 +28,6 @@ export function UserNavDropdown() {
         variant="outline"
         size="default"
         onClick={() => login()}
-        className="gap-2 font-medium"
       >
         <LogIn className="size-4" />
         <span>Sign In</span>
@@ -48,7 +47,7 @@ export function UserNavDropdown() {
         <Button
           variant="outline"
           size="icon"
-          className="overflow-hidden p-0"
+          className="overflow-hidden"
           aria-label="User menu"
         >
           {avatarUrl ? (
@@ -89,7 +88,7 @@ export function UserNavDropdown() {
             href="/library?tab=favorites"
             className="flex cursor-pointer items-center gap-2"
           >
-            <Heart className="size-4 text-red-500" />
+            <Heart className="size-4 text-destructive" />
             <span>Favorites</span>
           </Link>
         </DropdownMenuItem>
@@ -98,7 +97,7 @@ export function UserNavDropdown() {
             href="/library?tab=watchlist"
             className="flex cursor-pointer items-center gap-2"
           >
-            <Bookmark className="size-4 text-blue-500" />
+            <Bookmark className="size-4 text-info" />
             <span>Watchlist</span>
           </Link>
         </DropdownMenuItem>
@@ -114,7 +113,7 @@ export function UserNavDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => logout()}
-          className="flex cursor-pointer items-center gap-2 text-destructive focus:text-destructive"
+          className="flex cursor-pointer items-center"
         >
           <LogOut className="size-4" />
           <span>Sign Out</span>

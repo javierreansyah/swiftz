@@ -53,11 +53,11 @@ export function DetailBottomSheet({
 }: DetailBottomSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent
+      <SheetContent surface="detail"
         side="bottom"
         showCloseButton={false}
         className={cn(
-          "inset-x-0 bottom-0 mx-auto flex h-[92vh] max-h-[92vh] min-h-[92vh] w-full max-w-(--max-container) flex-col overflow-hidden rounded-none border-x border-t border-b-0 border-border/80 bg-background/95 p-0 shadow-2xl backdrop-blur-2xl data-[side=bottom]:h-[92vh] data-[side=bottom]:max-h-[92vh] data-[side=bottom]:min-h-[92vh]",
+          "inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden ",
           className
         )}
       >
@@ -67,7 +67,7 @@ export function DetailBottomSheet({
             {/* Left: Title, Subtitle, and Badge */}
             <div className="flex items-center gap-3">
               <div>
-                <SheetTitle className="text-lg font-bold text-foreground sm:text-xl">
+                <SheetTitle>
                   {title}
                 </SheetTitle>
                 {subtitle && (
@@ -79,7 +79,6 @@ export function DetailBottomSheet({
               {badge !== undefined && (
                 <Badge
                   variant={badgeVariant}
-                  className="rounded-none px-2.5 py-0.5 text-xs font-semibold"
                 >
                   {badge}
                 </Badge>
@@ -91,12 +90,11 @@ export function DetailBottomSheet({
               {search && (
                 <div className="relative w-44 sm:w-60">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
+                  <Input leadingIcon
                     type="text"
                     placeholder={search.placeholder || "Search..."}
                     value={search.value}
                     onChange={(e) => search.onChange(e.target.value)}
-                    className="h-8 pl-9 text-xs"
                   />
                 </div>
               )}
@@ -108,7 +106,7 @@ export function DetailBottomSheet({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="shrink-0 rounded-none hover:bg-muted"
+                className="shrink-0"
                 aria-label="Close sheet"
               >
                 <X className="size-5" />

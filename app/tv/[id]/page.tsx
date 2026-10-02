@@ -28,7 +28,7 @@ export async function generateMetadata({
     if (!show) return { title: "TV Show | Swiftz" };
 
     const year = show.first_air_date
-      ? ` (${show.first_air_date.substring(0, 4)})`
+      ? `(${show.first_air_date.substring(0, 4)})`
       : "";
     const title = `${show.name}${year} | Swiftz`;
     const description =

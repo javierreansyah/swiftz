@@ -50,16 +50,11 @@ export function WatchlistDropdown({
   return (
     <div className={cn("order-1 flex shrink-0 items-center justify-end self-start lg:order-2", className)}>
       <DropdownMenu>
-        <div className="inline-flex rounded-none shadow-sm">
-          <Button
+        <div className="inline-flex items-center gap-1">
+          <Button size="default"
+            variant={isWatchlist ? "secondary" : "default"}
             onClick={onWatchlistClick}
             disabled={isPendingWatchlist}
-            className={cn(
-              "h-10 gap-2 rounded-none border-r-0 font-bold transition-all",
-              isWatchlist
-                ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
-            )}
           >
             {isPendingWatchlist ? (
               <Loader2 className="size-4 animate-spin" />
@@ -73,13 +68,7 @@ export function WatchlistDropdown({
             </span>
           </Button>
           <DropdownMenuTrigger asChild>
-            <Button
-              className={cn(
-                "h-10 rounded-none border-l border-primary-foreground/20 px-2.5 transition-all",
-                isWatchlist
-                  ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
-                  : "bg-primary text-primary-foreground hover:bg-primary/90"
-              )}
+            <Button size="icon" variant={isWatchlist ? "secondary" : "default"}
             >
               <ChevronDown className="size-4" />
               <span className="sr-only">More options</span>
@@ -90,20 +79,20 @@ export function WatchlistDropdown({
         <DropdownMenuContent align="end" className="w-52">
           <DropdownMenuItem
             onClick={onWatchlistClick}
-            className="cursor-pointer gap-2 font-medium"
+            className="cursor-pointer"
           >
-            <Bookmark className="size-4 text-blue-500" />
+            <Bookmark className="size-4 text-info" />
             <span>
               {isWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
             </span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={onFavoriteClick}
-            className="cursor-pointer gap-2 font-medium"
+            className="cursor-pointer"
           >
             <Heart
               className={cn(
-                "size-4 text-red-500",
+                "size-4 text-destructive",
                 isFavorite && "fill-current"
               )}
             />
@@ -113,7 +102,7 @@ export function WatchlistDropdown({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={onRateClick}
-            className="cursor-pointer gap-2 font-medium"
+            className="cursor-pointer"
           >
             <Star
               className={cn(
@@ -130,7 +119,7 @@ export function WatchlistDropdown({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={onShareClick}
-            className="cursor-pointer gap-2 font-medium"
+            className="cursor-pointer"
           >
             <Share2 className="size-4" />
             <span>Share {mediaTypeLabel}</span>

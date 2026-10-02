@@ -40,12 +40,11 @@ export function FilterSectionHeader({
       {selectedCount !== undefined && selectedCount > 0 ? (
         <Badge
           variant="secondary"
-          className="rounded-none bg-primary/10 px-1.5 py-0 text-[10px] font-bold text-primary"
         >
           {selectedCount} selected
         </Badge>
       ) : badge !== undefined ? (
-        <span className="text-[11px] font-medium text-foreground">{badge}</span>
+        <span className="text-xs font-medium text-foreground">{badge}</span>
       ) : null}
     </div>
   );
@@ -75,20 +74,17 @@ export function MultiSelectBadges({
       {items.map((item) => {
         const isSelected = selectedIds.includes(item.id);
         return (
-          <Badge
+          <Button
             key={item.id}
             variant={isSelected ? "default" : "outline"}
+            size="sm"
+            aria-pressed={isSelected}
             onClick={() => onToggle(item.id)}
-            className={cn(
-              "h-7 cursor-pointer px-2.5 py-1 text-xs font-medium transition-all select-none",
-              isSelected
-                ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
-                : "border-border/70 bg-card text-muted-foreground hover:border-primary/50 hover:bg-muted/40 hover:text-foreground"
-            )}
+            className="cursor-pointer select-none"
           >
-            {isSelected && <Check className="stroke-2.5 mr-1 size-3" />}
+            {isSelected && <Check className="mr-1 size-3 stroke-2" />}
             <span>{item.label}</span>
-          </Badge>
+          </Button>
         );
       })}
     </div>
@@ -120,7 +116,7 @@ export function FilterSelect({
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger
         className={cn(
-          "w-full rounded-none border-border/70 bg-card text-xs transition-colors hover:border-border",
+          "w-full",
           className
         )}
       >
@@ -168,7 +164,7 @@ export function FilterSlider({
         className="w-full"
       />
       {ticks.length > 0 && (
-        <div className="flex justify-between text-[10px] text-muted-foreground">
+        <div className="flex justify-between text-xs text-muted-foreground">
           {ticks.map((t, i) => (
             <span key={i}>{t}</span>
           ))}
@@ -206,7 +202,7 @@ export function FilterStickyActionBar({
       <Button
         onClick={onApply}
         size="default"
-        className="flex-1 gap-2 rounded-none font-semibold shadow-sm"
+        className="flex-1"
       >
         {SearchIcon && <SearchIcon className="size-4" />}
         <span>
@@ -223,7 +219,7 @@ export function FilterStickyActionBar({
         disabled={activeCount === 0}
         title="Reset all filters"
         aria-label="Reset all filters"
-        className="shrink-0 rounded-none border-border/70 transition-opacity disabled:opacity-40"
+        className="shrink-0"
       >
         <RotateCcw className="size-4" />
       </Button>

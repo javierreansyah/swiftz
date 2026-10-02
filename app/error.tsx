@@ -16,8 +16,8 @@ export default function Error({
 
   return (
     <div className="container flex min-h-100 flex-col items-center justify-center space-y-4 py-12">
-      <div className="w-full max-w-md space-y-4 rounded-none border bg-card p-8 text-center">
-        <h2 className="text-2xl font-bold text-destructive">Something went wrong!</h2>
+      <div className="w-full max-w-md space-y-4 rounded-3xl border bg-card p-8 text-center">
+        <h2 className="heading-section text-destructive">Something went wrong!</h2>
         <p className="text-sm text-muted-foreground">
           Failed to load content. Please try again or check your internet connection.
         </p>

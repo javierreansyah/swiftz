@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Sword,
   TentTree,
@@ -39,9 +40,9 @@ export function GenresCard() {
           return (
             <article key={genre.id}>
               <Link href={`/movie?with_genres=${genre.id}`} prefetch={false}>
-                <div className="group w-full rounded-none border bg-card p-4 transition-all hover:bg-primary">
-                  <div className="flex items-center gap-4">
-                    <figure className="flex aspect-square w-16 items-center justify-center overflow-clip rounded-none bg-secondary transition-all group-hover:bg-white">
+                <Card size="sm" interactive className="group w-full">
+                  <CardContent className="flex items-center">
+                    <figure className="mr-4 flex aspect-square w-16 shrink-0 items-center justify-center overflow-clip rounded-2xl bg-secondary">
                       <Icon
                         size={36}
                         className={`transition-all group-hover:scale-125 group-hover:text-primary ${
@@ -50,15 +51,15 @@ export function GenresCard() {
                       />
                     </figure>
                     <div>
-                      <h2 className="text-lg font-extrabold transition-all group-hover:text-white">
+                      <h2 className="heading-card">
                         {genre.name}
                       </h2>
-                      <p className="text-sm text-muted-foreground transition-all group-hover:text-white">
+                      <p className="text-sm text-muted-foreground">
                         View
                       </p>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               </Link>
             </article>
           );

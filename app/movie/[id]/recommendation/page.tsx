@@ -45,7 +45,7 @@ function RecommendationContent({ id }: { id: string }) {
           </Link>
         </Button>
         <div className="flex flex-1 items-baseline justify-between">
-          <h1 className="text-2xl font-bold sm:text-4xl md:text-5xl">
+          <h1 className="heading-hero">
             Recommendations
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -61,8 +61,8 @@ function RecommendationContent({ id }: { id: string }) {
           ))}
         </div>
       ) : isError || movies.length === 0 ? (
-        <div className="flex h-75 w-full items-center justify-center rounded-none border bg-card p-8">
-          <h2 className="text-center text-lg">No recommendations found for this movie.</h2>
+        <div className="flex h-75 w-full items-center justify-center rounded-3xl border bg-card p-8">
+          <h2 className="text-center heading-section">No recommendations found for this movie.</h2>
         </div>
       ) : (
         <>
@@ -87,7 +87,7 @@ export default function MovieRecommendationPage({
     <Suspense
       fallback={
         <main className="container space-y-8 pt-20 pb-10">
-          <h1 className="pt-4 text-2xl font-bold sm:text-4xl md:text-5xl">
+          <h1 className="pt-4 heading-hero">
             Recommendations
           </h1>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

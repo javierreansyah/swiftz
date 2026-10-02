@@ -1,5 +1,7 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import React from "react";
 import { X, Tv } from "lucide-react";
 import { useDiscoverTVShowsQuery } from "@/hooks/use-tmdb";
@@ -53,41 +55,38 @@ export function TVFilteredResults({
           {filters.with_genres.map((gId) => {
             const genreObj = TV_GENRES.find((g) => g.id === gId);
             return (
-              <span
+              <Badge variant="soft" size="filter"
                 key={gId}
-                className="inline-flex items-center gap-1 rounded-none border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
               >
                 <span>{genreObj?.name || gId}</span>
-                <button
+                <Button variant="ghost" size="icon-xs"
                   type="button"
                   onClick={() => onRemoveGenre(gId)}
-                  className="hover:text-primary-foreground"
                 >
                   <X className="size-3" />
-                </button>
-              </span>
+                </Button>
+              </Badge>
             );
           })}
 
           {filters.first_air_date_year && (
-            <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary px-2 py-0.5 text-xs font-medium text-foreground">
+            <Badge variant="secondary" size="filter" >
               <span>Year: {filters.first_air_date_year}</span>
-            </span>
+            </Badge>
           )}
 
           {filters.vote_average_gte > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-none border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+            <Badge variant="soft" size="filter" >
               <span>Rating &ge; {filters.vote_average_gte}</span>
-            </span>
+            </Badge>
           )}
 
-          <button
+          <Button variant="link" size="inline"
             type="button"
             onClick={onResetFilters}
-            className="text-xs font-semibold text-muted-foreground underline hover:text-foreground"
           >
             Clear all
-          </button>
+          </Button>
         </div>
 
         <p className="text-xs text-muted-foreground">
@@ -103,19 +102,18 @@ export function TVFilteredResults({
           ))}
         </div>
       ) : isError || shows.length === 0 ? (
-        <div className="flex h-64 flex-col items-center justify-center space-y-3 rounded-none border border-dashed border-border bg-card p-8 text-center">
+        <div className="flex h-64 flex-col items-center justify-center space-y-3 rounded-3xl border border-dashed border-border bg-card p-8 text-center">
           <Tv className="size-10 text-muted-foreground" />
-          <h3 className="text-base font-bold">No TV Shows Found</h3>
+          <h3 className="heading-card">No TV Shows Found</h3>
           <p className="max-w-md text-xs text-muted-foreground">
             No series matched your active filter criteria. Try adjusting your genres, rating, or year filters.
           </p>
-          <button
+          <Button variant="link" size="inline"
             type="button"
             onClick={onResetFilters}
-            className="text-xs font-semibold text-primary underline"
           >
             Reset all filters
-          </button>
+          </Button>
         </div>
       ) : (
         <>

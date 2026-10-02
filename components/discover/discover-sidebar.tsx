@@ -1,5 +1,7 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
@@ -161,7 +163,7 @@ export function DiscoverSidebar({
   return (
     <aside className={cn("space-y-6 pb-4 text-sm", className)}>
       {/* 1. Sort Section */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
         <FilterSelect
           value={pendingFilters.sort_by}
@@ -175,7 +177,7 @@ export function DiscoverSidebar({
 
       {/* 2. Keywords Search */}
       <div
-        className="space-y-2.5 border-b border-border/40 pb-4"
+        className="space-y-3 border-b border-border/40 pb-4"
         ref={keywordContainerRef}
       >
         <FilterSectionHeader
@@ -194,7 +196,6 @@ export function DiscoverSidebar({
               setIsKeywordDropdownOpen(true);
             }}
             onFocus={() => setIsKeywordDropdownOpen(true)}
-            className="h-9 rounded-none border-border/70 bg-card text-xs placeholder:text-muted-foreground"
           />
           {isSearchingKeywords && (
             <Loader2 className="absolute top-2.5 right-3 size-4 animate-spin text-muted-foreground" />
@@ -204,17 +205,17 @@ export function DiscoverSidebar({
             keywordInput.trim().length >= 2 &&
             keywordResults &&
             keywordResults.results.length > 0 && (
-              <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-none border border-border bg-popover p-1 shadow-lg backdrop-blur-md">
+              <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-border bg-popover p-1 shadow-lg backdrop-blur-md">
                 {keywordResults.results.slice(0, 8).map((kw) => (
                   <li key={kw.id}>
-                    <button
+                    <Button variant="ghost" size="sm"
                       type="button"
                       onClick={() => addKeyword(kw)}
-                      className="flex w-full items-center justify-between rounded-none px-2.5 py-1.5 text-left text-xs hover:bg-accent hover:text-accent-foreground"
+                      className="w-full justify-between"
                     >
                       <span className="capitalize">{kw.name}</span>
-                      <span className="text-[10px] text-muted-foreground">Add</span>
-                    </button>
+                      <span className="text-xs text-muted-foreground">Add</span>
+                    </Button>
                   </li>
                 ))}
               </ul>
@@ -224,26 +225,24 @@ export function DiscoverSidebar({
         {pendingFilters.keywords.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-1">
             {pendingFilters.keywords.map((kw) => (
-              <span
+              <Badge variant="soft" size="filter"
                 key={kw.id}
-                className="inline-flex items-center gap-1 rounded-none border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs text-primary"
               >
                 <span className="capitalize">{kw.name}</span>
-                <button
+                <Button variant="default" size="icon-xs"
                   type="button"
                   onClick={() => removeKeyword(kw.id)}
-                  className="rounded-none p-0.5 hover:bg-primary/20"
                 >
                   <X className="size-3" />
-                </button>
-              </span>
+                </Button>
+              </Badge>
             ))}
           </div>
         )}
       </div>
 
       {/* 3. Genres (Multi-Select using Shadcn Badge pattern) */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader
           icon={Sparkles}
           title="Genres"
@@ -257,7 +256,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 4. Release Year Presets */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={Calendar} title="Release Year" />
         <MultiSelectBadges
           items={RELEASE_PRESET_ITEMS}
@@ -272,7 +271,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 5. Certification (US Content Rating) */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={ShieldCheck} title="Certification (US)" />
         <MultiSelectBadges
           items={CERT_ITEMS}
@@ -287,7 +286,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 6. Original Language */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={Globe} title="Original Language" />
         <FilterSelect
           value={pendingFilters.original_language || "all"}
@@ -385,13 +384,13 @@ export function DiscoverSidebar({
                 onClick={() => toggleProvider(provider.id)}
                 title={provider.name}
                 className={cn(
-                  "group relative flex aspect-square flex-col items-center justify-center rounded-none border p-1 transition-all",
+                  "group relative flex aspect-square flex-col items-center justify-center rounded-xl border p-1 transition-all",
                   isSelected
                     ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary"
                     : "border-border/60 bg-card hover:border-border hover:bg-muted/50"
                 )}
               >
-                <div className="relative size-8 overflow-clip rounded-none">
+                <div className="relative size-8 overflow-clip rounded-xl">
                   <Image
                     src={`https://image.tmdb.org/t/p/w92${provider.logo}`}
                     alt={provider.name}
@@ -400,7 +399,7 @@ export function DiscoverSidebar({
                     className="object-cover"
                   />
                 </div>
-                <span className="mt-1 line-clamp-1 text-[9px] font-medium text-muted-foreground group-hover:text-foreground">
+                <span className="mt-1 line-clamp-1 text-xs font-medium text-muted-foreground group-hover:text-foreground">
                   {provider.name}
                 </span>
               </button>

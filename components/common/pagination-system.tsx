@@ -142,7 +142,7 @@ export function PaginationSystem({
             })}
           </PaginationContent>
         </Pagination>
-        <Pagination className="pt-2">
+        <Pagination>
           <PaginationContent>
             {currentPage > 1 && (
               <PaginationItem>

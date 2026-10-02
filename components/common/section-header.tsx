@@ -53,7 +53,7 @@ export function SectionHeader({
     >
       {/* Left side: Serif Title, Count Badge, Switcher/Tabs */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        <h2 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
+        <h2 className="heading-section text-foreground">
           {title}
         </h2>
 
@@ -61,7 +61,6 @@ export function SectionHeader({
         {count !== undefined && (
           <Badge
             variant="secondary"
-            className="rounded-none px-2 py-0.5 font-sans text-xs font-semibold"
           >
             {count}
           </Badge>
@@ -69,7 +68,6 @@ export function SectionHeader({
         {badge && (
           <Badge
             variant="outline"
-            className="rounded-none border-primary/30 px-2 py-0.5 font-sans text-xs font-semibold text-primary"
           >
             {badge}
           </Badge>
@@ -82,17 +80,17 @@ export function SectionHeader({
             onValueChange={onTabChange}
             className="w-auto"
           >
-            <TabsList className="h-8 rounded-none bg-muted p-0.5">
+            <TabsList>
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
-                  className="cursor-pointer rounded-none px-3 py-1 font-sans text-xs font-medium"
+                  className="cursor-pointer"
                 >
                   {tab.icon && <span className="mr-1.5">{tab.icon}</span>}
                   <span>{tab.label}</span>
                   {tab.count !== undefined && (
-                    <span className="py-0.2 ml-1.5 rounded-none bg-muted-foreground/15 px-1.5 text-[10px] font-semibold text-muted-foreground">
+                    <span className="ml-1.5 rounded-xl bg-muted-foreground/15 px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">
                       {tab.count}
                     </span>
                   )}
@@ -117,7 +115,7 @@ export function SectionHeader({
               variant="ghost"
               size="sm"
               onClick={action.onClick}
-              className="hidden gap-1 font-sans text-xs font-semibold text-primary hover:text-primary sm:inline-flex"
+              className="hidden sm:inline-flex"
             >
               <span>{action.label}</span>
               <ChevronRight className="size-3.5" />
@@ -143,7 +141,7 @@ export function SectionHeader({
               variant="ghost"
               size="sm"
               onClick={action.onClick}
-              className="gap-1 font-sans text-xs font-semibold text-primary hover:text-primary sm:hidden"
+              className="sm:hidden"
             >
               <span>{action.label}</span>
               <ChevronRight className="size-3.5" />

@@ -170,11 +170,11 @@ export function PersonCreditsTimeline({
   }, [filteredCredits]);
 
   return (
-    <div className="overflow-hidden rounded-none border border-border bg-card">
+    <div className="overflow-hidden rounded-3xl border border-border bg-card">
       {/* Controls Bar / Header: Title, Department Selector, Media Filter, and Search */}
       <div className="flex flex-col gap-3 border-b border-border bg-card/60 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl">
+          <h2 className="heading-section text-foreground">
             {selectedDepartment} Credits ({filteredCredits.length})
           </h2>
 
@@ -184,7 +184,7 @@ export function PersonCreditsTimeline({
               value={selectedDepartment}
               onValueChange={setSelectedDepartment}
             >
-              <SelectTrigger className="h-8 w-36 rounded-none bg-background text-xs">
+              <SelectTrigger className="w-36">
                 <SelectValue placeholder="Department" />
               </SelectTrigger>
               <SelectContent>
@@ -204,23 +204,23 @@ export function PersonCreditsTimeline({
             onValueChange={(val) => setSelectedMediaType(val as "all" | "movie" | "tv")}
             className="w-auto"
           >
-            <TabsList className="h-8 rounded-none bg-muted p-0.5">
+            <TabsList>
               <TabsTrigger
                 value="all"
-                className="cursor-pointer rounded-none px-2.5 py-1 text-xs font-medium"
+                className="cursor-pointer"
               >
                 All
               </TabsTrigger>
               <TabsTrigger
                 value="movie"
-                className="cursor-pointer gap-1.5 rounded-none px-2.5 py-1 text-xs font-medium"
+                className="cursor-pointer"
               >
                 <Film className="size-3" />
                 <span>Movies</span>
               </TabsTrigger>
               <TabsTrigger
                 value="tv"
-                className="cursor-pointer gap-1.5 rounded-none px-2.5 py-1 text-xs font-medium"
+                className="cursor-pointer"
               >
                 <Tv className="size-3" />
                 <span>TV</span>
@@ -232,12 +232,11 @@ export function PersonCreditsTimeline({
         {/* Live Search Input */}
         <div className="relative w-full sm:w-56">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
+          <Input leadingIcon
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search credits..."
-            className="h-8 rounded-none bg-background pr-3 pl-8 text-xs"
           />
         </div>
       </div>
@@ -287,7 +286,7 @@ export function PersonCreditsTimeline({
                           </span>
 
                           {credit.mediaType === "tv" && (
-                            <span className="rounded-none bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                            <span className="rounded-xl bg-secondary px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">
                               TV
                             </span>
                           )}

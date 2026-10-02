@@ -85,7 +85,7 @@ function MovieContent() {
       <div className="flex gap-8 xl:gap-12">
         {/* Left: Minimalist Background-Integrated Sidebar (Desktop) */}
         <div className="hidden w-64 shrink-0 lg:block lg:w-72 xl:w-80">
-          <div className="sticky top-20 max-h-[calc(100vh-6rem)] scrollbar-thin overflow-y-auto pr-3">
+          <div className="sticky top-20 max-h-sidebar scrollbar-thin overflow-y-auto pr-3">
             <DiscoverSidebar
               activeFilters={currentFilters}
               onApplyFilters={handleApplyFilters}

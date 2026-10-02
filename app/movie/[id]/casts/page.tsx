@@ -58,7 +58,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold sm:text-4xl md:text-5xl">
+            <h1 className="heading-hero">
               Cast &amp; Crew
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -70,12 +70,11 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
         {/* Search filter input */}
         <div className="relative w-full sm:w-72">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+          <Input leadingIcon
             type="text"
             placeholder="Search cast or crew..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            className="pl-9"
           />
         </div>
       </div>
@@ -108,15 +107,15 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
       {isLoading ? (
         <CastSkeletonGrid />
       ) : isError || (!castList.length && !crewList.length) ? (
-        <div className="flex h-62.5 w-full items-center justify-center rounded-none border bg-card p-8">
-          <h2 className="text-xl font-medium">No cast or crew information found.</h2>
+        <div className="flex h-62.5 w-full items-center justify-center rounded-3xl border bg-card p-8">
+          <h2 className="heading-section">No cast or crew information found.</h2>
         </div>
       ) : (
         <div className="space-y-8">
           {(activeTab === "all" || activeTab === "cast") &&
             filteredCast.length > 0 && (
               <section className="space-y-4">
-                <h2 className="text-2xl font-bold">Cast ({filteredCast.length})</h2>
+                <h2 className="heading-section">Cast ({filteredCast.length})</h2>
                 <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {filteredCast.map((cast, index) => (
                     <li key={cast.id ? `cast-${cast.id}-${index}` : index}>
@@ -135,7 +134,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
           {(activeTab === "all" || activeTab === "crew") &&
             filteredCrew.length > 0 && (
               <section className="space-y-4">
-                <h2 className="text-2xl font-bold">Crew ({filteredCrew.length})</h2>
+                <h2 className="heading-section">Crew ({filteredCrew.length})</h2>
                 <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {filteredCrew.map((crew, index) => (
                     <li key={crew.id ? `crew-${crew.id}-${index}` : index}>
@@ -154,7 +153,7 @@ export default function MovieCastPage({ params }: MovieCastPageProps) {
           {searchFilter &&
             filteredCast.length === 0 &&
             filteredCrew.length === 0 && (
-              <div className="flex h-50 w-full items-center justify-center rounded-none border bg-card p-8">
+              <div className="flex h-50 w-full items-center justify-center rounded-3xl border bg-card p-8">
                 <p className="text-muted-foreground">
                   No cast or crew matching &quot;{searchFilter}&quot;
                 </p>

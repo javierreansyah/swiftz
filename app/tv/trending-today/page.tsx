@@ -42,8 +42,8 @@ function TrendingTVContent() {
           ))}
         </div>
       ) : isError || shows.length === 0 ? (
-        <div className="flex h-72 w-full items-center justify-center rounded-none border border-dashed border-border bg-card p-8">
-          <h2 className="text-center text-sm text-muted-foreground">
+        <div className="flex h-72 w-full items-center justify-center rounded-3xl border border-dashed border-border bg-card p-8">
+          <h2 className="text-center heading-section text-muted-foreground">
             Unable to load trending TV shows right now.
           </h2>
         </div>

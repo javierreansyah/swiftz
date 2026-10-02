@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -110,35 +111,35 @@ export function MediaCard({
         // Overall height: ~230px
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-[230px] w-64 shrink-0";
+            return "h-hero-sm w-64 shrink-0";
           case "portrait":
-            return "h-[230px] w-36 shrink-0";
+            return "h-hero-sm w-36 shrink-0";
           case "poster":
           default:
-            return "h-[230px] w-32 shrink-0";
+            return "h-hero-sm w-32 shrink-0";
         }
       case "lg":
         // Overall height: ~340px
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-[340px] w-[460px] shrink-0";
+            return "h-hero-lg w-featured shrink-0";
           case "portrait":
-            return "h-[340px] w-56 shrink-0";
+            return "h-hero-lg w-56 shrink-0";
           case "poster":
           default:
-            return "h-[340px] w-48 shrink-0";
+            return "h-hero-lg w-48 shrink-0";
         }
       case "md":
       default:
         // Overall height: ~280px (Standard baseline across all shelves)
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-[280px] w-80 shrink-0 sm:w-96";
+            return "h-hero-md w-80 shrink-0 sm:w-96";
           case "portrait":
-            return "h-[280px] w-40 shrink-0 sm:w-44";
+            return "h-hero-md w-40 shrink-0 sm:w-44";
           case "poster":
           default:
-            return "h-[420px] w-52 shrink-0 sm:w-60";
+            return "h-hero-xl w-52 shrink-0 sm:w-60";
         }
     }
   };
@@ -160,7 +161,7 @@ export function MediaCard({
   const cardContent = (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all duration-300 select-none hover:border-primary/40 hover:shadow-lg",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all duration-300 select-none hover:border-primary/40 hover:shadow-lg",
         variant === "shelf" ? getShelfDimensions() : "w-full",
         (onClick || href) && "cursor-pointer",
         className
@@ -191,8 +192,8 @@ export function MediaCard({
         {/* Video Overlay Play Button */}
         {type === "video" && (
           <>
-            <div className="absolute inset-0 bg-black/25 transition-opacity group-hover:bg-black/10" />
-            <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-none bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-xs transition-transform group-hover:scale-110">
+            <div className="absolute inset-0 bg-scrim/25 transition-opacity group-hover:bg-scrim/10" />
+            <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-xl bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-xs transition-transform group-hover:scale-110">
               <Play className="ml-0.5 size-5 fill-current" />
             </div>
           </>
@@ -200,7 +201,7 @@ export function MediaCard({
 
         {/* Custom Quick Action Button (e.g. trailer or watchlist) */}
         {actionIcon && (
-          <button
+          <Button variant="media" size="sm"
             type="button"
             title={actionTitle}
             onClick={(e) => {
@@ -208,23 +209,23 @@ export function MediaCard({
               e.stopPropagation();
               onActionClick?.(e);
             }}
-            className="absolute top-2.5 right-2.5 flex size-8 items-center justify-center rounded-none bg-black/60 text-white backdrop-blur-xs transition-all hover:bg-primary hover:text-primary-foreground"
+            className="absolute top-2.5 right-2.5"
           >
             {actionIcon}
-          </button>
+          </Button>
         )}
 
         {/* Overlay Badge */}
         {badge && (
-          <div className="absolute bottom-2.5 left-2.5 rounded-none border border-white/15 bg-black/75 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
+          <div className="absolute bottom-2.5 left-2.5 rounded-xl border border-media-foreground/15 bg-scrim/75 px-2 py-0.5 text-xs font-semibold text-media-foreground backdrop-blur-xs">
             {badge}
           </div>
         )}
       </div>
 
       {/* Standardized Info Section */}
-      <div className="flex h-16 shrink-0 flex-col justify-between p-3">
-        <h3 className="line-clamp-1 text-sm font-bold text-foreground transition-colors group-hover:text-primary">
+      <div className="flex h-20 shrink-0 flex-col justify-between p-4">
+        <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
           {title}
         </h3>
 
@@ -242,7 +243,7 @@ export function MediaCard({
 
           {year && <span>{year}</span>}
           {!year && subtitle && rating !== undefined && rating > 0 && (
-            <span className="truncate text-[11px]">{subtitle}</span>
+            <span className="truncate text-xs">{subtitle}</span>
           )}
         </div>
       </div>
@@ -264,7 +265,7 @@ export function MediaCard({
         tabIndex={0}
         onClick={onClick}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === "Enter" || e.key === "") {
             e.preventDefault();
             onClick();
           }

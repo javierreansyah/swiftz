@@ -90,7 +90,7 @@ export function CollectionModal({
       <div className="space-y-6">
         {/* Franchise Spotlight Banner */}
         {backdropUrl && (
-          <div className="relative overflow-hidden rounded-none border border-border/60 bg-muted/40 p-6 sm:p-8">
+          <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/40 p-6 sm:p-8">
             <div className="absolute inset-0 -z-10">
               <Image
                 src={backdropUrl}
@@ -107,7 +107,7 @@ export function CollectionModal({
                 <Layers className="size-3.5" />
                 <span>The Complete Saga</span>
               </div>
-              <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h2 className="heading-section text-foreground">
                 {displayName}
               </h2>
               {collection?.overview && (
@@ -127,7 +127,7 @@ export function CollectionModal({
                 key={i}
                 className="flex gap-4 border border-border/50 bg-card/40 p-4"
               >
-                <Skeleton className="h-36 w-24 shrink-0 rounded-none" />
+                <Skeleton className="h-36 w-24 shrink-0" />
                 <div className="flex-1 space-y-2 py-1">
                   <Skeleton className="h-5 w-3/4" />
                   <Skeleton className="h-4 w-1/3" />
@@ -174,7 +174,7 @@ export function CollectionModal({
                 <div
                   key={part.id}
                   className={cn(
-                    "group relative flex flex-col justify-between overflow-hidden rounded-none border bg-card/60 transition-all hover:shadow-lg",
+                    "group relative flex flex-col justify-between overflow-hidden rounded-3xl border bg-card/60 transition-all hover:shadow-lg",
                     isCurrent
                       ? "border-primary/60 bg-primary/5 ring-1 ring-primary/40"
                       : "border-border/70 hover:border-primary/40"
@@ -197,7 +197,7 @@ export function CollectionModal({
                         </div>
                       )}
 
-                      <span className="absolute top-1 left-1 flex size-5 items-center justify-center rounded-none bg-black/80 text-[10px] font-bold text-white backdrop-blur-xs">
+                      <span className="absolute top-1 left-1 flex size-5 items-center justify-center rounded-xl bg-scrim/80 text-xs font-bold text-media-foreground backdrop-blur-xs">
                         {index + 1}
                       </span>
                     </div>
@@ -205,7 +205,7 @@ export function CollectionModal({
                     {/* Info */}
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
                       <div className="space-y-1">
-                        <h3 className="line-clamp-2 text-sm font-bold text-foreground group-hover:text-primary sm:text-base">
+                        <h3 className="line-clamp-2 heading-card text-foreground group-hover:text-primary">
                           {part.title}
                         </h3>
 
@@ -236,7 +236,6 @@ export function CollectionModal({
                         {isCurrent ? (
                           <Badge
                             variant="outline"
-                            className="gap-1 rounded-none border-primary/50 bg-primary/10 text-[11px] font-bold text-primary"
                           >
                             <CheckCircle2 className="size-3 text-primary" />
                             <span>Currently Viewing</span>

@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import { Cast, Crew } from "@/types";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
-import { cn } from "@/lib/utils";
 
 export interface CastModalProps {
   isOpen: boolean;
@@ -108,51 +107,36 @@ export function CastModal({
           Category
         </h4>
         <div className="flex flex-col gap-1">
-          <button
+          <Button variant={castTab === "all" && selectedDept === "all" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => {
               setCastTab("all");
               setSelectedDept("all");
             }}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              castTab === "all" && selectedDept === "all"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>All Personnel</span>
-            <span className="text-[11px] opacity-80">{totalPersonnel}</span>
-          </button>
-          <button
+            <span className="text-xs opacity-80">{totalPersonnel}</span>
+          </Button>
+          <Button variant={castTab === "cast" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => {
               setCastTab("cast");
               setSelectedDept("all");
             }}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              castTab === "cast"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>Cast Members</span>
-            <span className="text-[11px] opacity-80">{cast.length}</span>
-          </button>
-          <button
+            <span className="text-xs opacity-80">{cast.length}</span>
+          </Button>
+          <Button variant={castTab === "crew" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setCastTab("crew")}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              castTab === "crew"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>Crew Members</span>
-            <span className="text-[11px] opacity-80">{crew.length}</span>
-          </button>
+            <span className="text-xs opacity-80">{crew.length}</span>
+          </Button>
         </div>
       </div>
 
@@ -162,36 +146,26 @@ export function CastModal({
             Departments
           </h4>
           <div className="flex max-h-60 flex-col gap-1 overflow-y-auto pr-1">
-            <button
+            <Button variant={selectedDept === "all" ? "default" : "ghost"} size="sm"
               type="button"
               onClick={() => setSelectedDept("all")}
-              className={cn(
-                "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs font-medium transition-colors",
-                selectedDept === "all"
-                  ? "bg-primary font-semibold text-primary-foreground"
-                  : "text-foreground/80 hover:bg-muted"
-              )}
+              className="justify-between"
             >
               <span>All Departments</span>
-              <span className="text-[11px] opacity-80">{crew.length}</span>
-            </button>
+              <span className="text-xs opacity-80">{crew.length}</span>
+            </Button>
             {allDepartments.map((dept) => (
-              <button
+              <Button variant={selectedDept === dept ? "default" : "ghost"} size="sm"
                 key={dept}
                 type="button"
                 onClick={() => setSelectedDept(dept)}
-                className={cn(
-                  "flex items-center justify-between rounded-none px-3 py-1.5 text-left text-xs font-medium transition-colors",
-                  selectedDept === dept
-                    ? "bg-primary font-semibold text-primary-foreground"
-                    : "text-foreground/80 hover:bg-muted"
-                )}
+                className="justify-between"
               >
                 <span className="truncate">{dept}</span>
-                <span className="text-[11px] opacity-80">
+                <span className="text-xs opacity-80">
                   {deptCounts[dept]}
                 </span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -209,7 +183,6 @@ export function CastModal({
             setCastTab("all");
             setSelectedDept("all");
           }}
-          className="h-7 rounded-none text-xs"
         >
           All ({totalPersonnel})
         </Button>
@@ -220,7 +193,6 @@ export function CastModal({
             setCastTab("cast");
             setSelectedDept("all");
           }}
-          className="h-7 rounded-none text-xs"
         >
           Cast ({cast.length})
         </Button>
@@ -228,7 +200,6 @@ export function CastModal({
           variant={castTab === "crew" ? "default" : "secondary"}
           size="sm"
           onClick={() => setCastTab("crew")}
-          className="h-7 rounded-none text-xs"
         >
           Crew ({crew.length})
         </Button>
@@ -239,7 +210,7 @@ export function CastModal({
           value={selectedDept}
           onValueChange={(val) => setSelectedDept(val)}
         >
-          <SelectTrigger className="h-8 w-full rounded-none bg-card text-xs">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="All Departments" />
           </SelectTrigger>
           <SelectContent>
@@ -276,7 +247,7 @@ export function CastModal({
         {/* Cast Section */}
         {filteredCast.length > 0 && (
           <div className="space-y-4">
-            <h3 className="border-b border-border/50 pb-2 text-sm font-bold tracking-wider text-muted-foreground uppercase">
+            <h3 className="border-b border-border/50 pb-2 label-section text-muted-foreground uppercase">
               Cast ({filteredCast.length})
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -290,7 +261,7 @@ export function CastModal({
                     key={c.id + (c.character || "")}
                     href={`/person/${c.id}`}
                     onClick={onClose}
-                    className="group flex flex-col overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
+                    className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
                   >
                     <div className="relative aspect-4/5 w-full bg-muted">
                       {profileUrl ? (
@@ -325,7 +296,7 @@ export function CastModal({
         {/* Crew Section */}
         {filteredCrew.length > 0 && (
           <div className="space-y-4">
-            <h3 className="border-b border-border/50 pb-2 text-sm font-bold tracking-wider text-muted-foreground uppercase">
+            <h3 className="border-b border-border/50 pb-2 label-section text-muted-foreground uppercase">
               Crew ({filteredCrew.length})
             </h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -339,7 +310,7 @@ export function CastModal({
                     key={`${c.id}-${c.job}-${i}`}
                     href={`/person/${c.id}`}
                     onClick={onClose}
-                    className="group flex flex-col overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
+                    className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
                   >
                     <div className="relative aspect-4/5 w-full bg-muted">
                       {profileUrl ? (

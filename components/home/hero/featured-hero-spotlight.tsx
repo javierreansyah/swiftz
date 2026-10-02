@@ -30,7 +30,7 @@ export function FeaturedHeroSpotlight({
   onToggleWatchlist,
 }: FeaturedHeroSpotlightProps) {
   return (
-    <div className="relative aspect-16/10 w-full overflow-hidden rounded-none border border-white/10 bg-neutral-950/80 shadow-2xl backdrop-blur-xs sm:aspect-video lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
+    <div className="relative aspect-16/10 w-full overflow-hidden rounded-xl border border-media-foreground/10 bg-media/80 shadow-2xl backdrop-blur-xs sm:aspect-video lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
@@ -59,8 +59,8 @@ export function FeaturedHeroSpotlight({
       })}
 
       {/* Gradient Overlays inside Spotlight */}
-      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-t from-black via-black/40 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-r from-black/70 via-transparent to-black/30" />
+      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-t from-scrim via-scrim/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-r from-scrim/70 via-transparent to-black/30" />
 
       {/* Banner Full-Coverage Clickable Link to Active Movie Detail */}
       <Link
@@ -91,7 +91,7 @@ export function FeaturedHeroSpotlight({
               <Link
                 href={`/movie/${movie.id}`}
                 aria-label={`View details for ${movie.title}`}
-                className="group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-none border border-white/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48"
+                className="group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48"
               >
                 <Image
                   src={pUrl}
@@ -106,16 +106,16 @@ export function FeaturedHeroSpotlight({
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1 space-y-2">
                 <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex items-center gap-1 rounded-none bg-primary/20 px-2 py-0.5 text-primary">
+                  <span className="flex items-center gap-1 rounded-xl bg-primary/20 px-2 py-0.5 text-primary">
                     <Star className="size-3 fill-current" />
                     {movie.vote_average.toFixed(1)}
                   </span>
                   {movie.release_date && (
-                    <span className="text-white/80">
+                    <span className="text-media-foreground/80">
                       {movie.release_date.substring(0, 4)}
                     </span>
                   )}
-                  <span className="text-white/60">&bull;</span>
+                  <span className="text-media-foreground/60">&bull;</span>
                   <span className="tracking-wider text-primary uppercase">
                     Featured Today
                   </span>
@@ -125,12 +125,12 @@ export function FeaturedHeroSpotlight({
                   href={`/movie/${movie.id}`}
                   className="group/title block transition-colors"
                 >
-                  <h1 className="line-clamp-2 text-2xl font-black text-white drop-shadow-md transition-colors group-hover/title:text-primary sm:text-3xl lg:text-4xl">
+                  <h1 className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/title:text-primary">
                     {movie.title}
                   </h1>
                 </Link>
 
-                <p className="line-clamp-2 max-w-2xl text-xs text-white/80 sm:text-sm">
+                <p className="line-clamp-2 max-w-2xl text-xs text-media-foreground/80 sm:text-sm">
                   {movie.overview}
                 </p>
 
@@ -139,7 +139,6 @@ export function FeaturedHeroSpotlight({
                   <Button
                     size="sm"
                     onClick={() => onWatchTrailer(movie.id, movie.title)}
-                    className="gap-2 rounded-none bg-primary font-bold text-primary-foreground hover:bg-primary/90"
                   >
                     <Play className="size-4 fill-current" />
                     <span>Watch Trailer</span>
@@ -151,11 +150,10 @@ export function FeaturedHeroSpotlight({
                       variant="ghost"
                       onClick={onToggleWatchlist}
                       disabled={isWatchlistPending}
-                      className="gap-1.5 rounded-none text-white/90 hover:bg-white/10 hover:text-white"
                     >
                       {isWatchlist ? (
                         <>
-                          <Check className="size-4 text-emerald-400" />
+                          <Check className="size-4 text-success" />
                           <span>In Watchlist</span>
                         </>
                       ) : (

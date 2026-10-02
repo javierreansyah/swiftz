@@ -76,17 +76,17 @@ export function TrailerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl overflow-hidden border-border/80 bg-neutral-950 p-0 text-white shadow-2xl sm:max-w-4xl">
-        <DialogHeader className="border-b border-white/10 p-4">
-          <DialogTitle className="flex items-center gap-2 text-base font-bold text-white">
+      <DialogContent surface="cinema" className="max-w-4xl overflow-hidden sm:max-w-4xl">
+        <DialogHeader inset>
+          <DialogTitle className="flex items-center">
             <Film className="size-4 text-primary" />
             <span className="line-clamp-1">{title} &mdash; Official Trailer</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="relative aspect-video w-full bg-black">
+        <div className="relative aspect-video w-full bg-scrim">
           {isLoading ? (
-            <div className="flex size-full flex-col items-center justify-center gap-3 text-neutral-400">
+            <div className="flex size-full flex-col items-center justify-center gap-3 text-media-muted">
               <Loader2 className="size-8 animate-spin text-primary" />
               <p className="text-sm">Loading trailer...</p>
             </div>
@@ -99,12 +99,12 @@ export function TrailerModal({
               allowFullScreen
             />
           ) : (
-            <div className="flex size-full flex-col items-center justify-center gap-2 p-8 text-center text-neutral-400">
-              <Film className="stroke-1.5 size-12 text-neutral-600" />
-              <h3 className="text-base font-semibold text-neutral-300">
+            <div className="flex size-full flex-col items-center justify-center gap-2 p-8 text-center text-media-muted">
+              <Film className="size-12 stroke-1 text-media-muted" />
+              <h3 className="heading-card text-media-foreground">
                 Trailer Not Available
               </h3>
-              <p className="max-w-sm text-xs text-neutral-500">
+              <p className="max-w-sm text-xs text-media-muted">
                 TMDB currently has no video trailer registered for &quot;{title}&quot;.
               </p>
             </div>

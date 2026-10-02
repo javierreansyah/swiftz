@@ -23,10 +23,10 @@ export function FeaturedHeroBackdrop({
     >
       {/* Parallax Image Wrapper with generous bleed for continuous motion */}
       <div
-        className="absolute -inset-x-12 -top-40 h-362.5 will-change-transform"
+        className="absolute -inset-x-12 -top-40 h-362.5 parallax-backdrop will-change-transform"
         style={{
-          transform: `translate3d(0, ${offsetY}px, 0)`,
-        }}
+          "--parallax-offset": `${offsetY}px`,
+        } as React.CSSProperties}
       >
         {movies.slice(0, 8).map((movie, index) => {
           const isSelected = index === selectedIndex;
@@ -55,7 +55,7 @@ export function FeaturedHeroBackdrop({
         })}
 
         {/* Mode-specific lighting/darkening */}
-        <div className="absolute inset-0 bg-black/25 transition-colors duration-300 dark:bg-black/40" />
+        <div className="absolute inset-0 bg-scrim/25 transition-colors duration-300 dark:bg-scrim/40" />
       </div>
 
       {/* Top subtle fade for navbar readability */}

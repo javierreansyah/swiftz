@@ -100,7 +100,7 @@ export function TVSidebar({
   return (
     <aside className={cn("space-y-6 pb-4 text-sm", className)}>
       {/* 1. Sort Section */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
         <FilterSelect
           value={pendingFilters.sort_by}
@@ -111,7 +111,7 @@ export function TVSidebar({
       </div>
 
       {/* 2. TV Genres (Multi-Select using Shadcn Badge pattern) */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader
           icon={Sparkles}
           title="Genres"
@@ -125,7 +125,7 @@ export function TVSidebar({
       </div>
 
       {/* 3. First Air Year */}
-      <div className="space-y-2.5 border-b border-border/40 pb-4">
+      <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader
           icon={Calendar}
           title="First Air Year"
@@ -146,7 +146,6 @@ export function TVSidebar({
           placeholder="Or enter custom year (e.g. 2018)..."
           value={pendingFilters.first_air_date_year || ""}
           onChange={handleYearChange}
-          className="rounded-none border-border/70 bg-card text-xs"
         />
       </div>
 

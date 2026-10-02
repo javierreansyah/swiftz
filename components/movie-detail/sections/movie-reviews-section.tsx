@@ -24,14 +24,14 @@ export function MovieReviewsSection({
       <div className="flex items-center justify-between border-b border-border/70 pb-3">
         {/* Left: Title + Desktop See all */}
         <div className="flex items-center gap-3">
-          <h2 className="font-heading text-xl font-bold text-foreground sm:text-2xl">
+          <h2 className="heading-section text-foreground">
             User Reviews
           </h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={onOpenReviewsModal}
-            className="hidden gap-1 text-xs font-semibold text-primary hover:text-primary sm:inline-flex"
+            className="hidden sm:inline-flex"
           >
             <span>See all {totalReviews}</span>
             <ChevronRight className="size-3.5" />
@@ -43,7 +43,7 @@ export function MovieReviewsSection({
           variant="ghost"
           size="sm"
           onClick={onOpenReviewsModal}
-          className="gap-1 text-xs font-semibold text-primary hover:text-primary sm:hidden"
+          className="sm:hidden"
         >
           <span>See all {totalReviews}</span>
           <ChevronRight className="size-3.5" />
@@ -57,20 +57,20 @@ export function MovieReviewsSection({
             <div
               key={rev.id}
               onClick={onOpenReviewsModal}
-              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-none border border-border/80 bg-card/70 p-5 transition-all hover:border-primary/40 hover:shadow-xl"
+              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-3xl border border-border/80 bg-card/70 p-5 transition-all hover:border-primary/40 hover:shadow-xl"
             >
               <div className="space-y-2.5">
                 {/* Author & Rating Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
-                    <div className="flex size-7 items-center justify-center rounded-none bg-secondary font-bold text-foreground">
+                    <div className="flex size-7 items-center justify-center rounded-xl bg-secondary font-bold text-foreground">
                       {rev.author.charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <span className="font-semibold text-foreground">
                         {rev.author}
                       </span>
-                      <span className="ml-2 text-[11px]">
+                      <span className="ml-2 text-xs">
                         {new Date(rev.created_at).toLocaleDateString()}
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export function MovieReviewsSection({
           ))}
         </div>
       ) : (
-        <div className="rounded-none border border-dashed border-border/80 p-8 text-center">
+        <div className="rounded-xl border border-dashed border-border/80 p-8 text-center">
           <p className="text-sm text-muted-foreground">
             No reviews yet. Click below to view or submit the first review!
           </p>
@@ -107,7 +107,7 @@ export function MovieReviewsSection({
             variant="outline"
             size="sm"
             onClick={onOpenReviewsModal}
-            className="mt-3 rounded-none"
+            className="mt-3"
           >
             Open Reviews Modal
           </Button>

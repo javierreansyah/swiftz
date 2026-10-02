@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Play, ChevronLeft, ChevronRight } from "lucide-react";
@@ -53,13 +54,13 @@ export function MediaHeroMedia({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[3fr_8fr]",
+        "grid grid-cols-1 items-stretch gap-6 lg:grid-cols-hero",
         className
       )}
     >
       {/* Left Column: Vertical Poster (Static, matches height of 16:9 trailer) */}
       <div className="hidden h-full lg:block">
-        <div className="relative aspect-2/3 size-full overflow-hidden rounded-none border border-border bg-card shadow-2xl">
+        <div className="relative aspect-2/3 size-full overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           <Image
             src={posterUrl}
             alt={title}
@@ -73,7 +74,7 @@ export function MediaHeroMedia({
 
       {/* Right Column: Interactive Trailer / Video Hero */}
       <div className="h-full">
-        <div className="relative aspect-video size-full overflow-hidden rounded-none border border-border bg-black shadow-2xl">
+        <div className="relative aspect-video size-full overflow-hidden rounded-xl border border-border bg-scrim shadow-2xl">
           {isPlayingTrailer && currentVideo ? (
             <iframe
               src={`https://www.youtube.com/embed/${currentVideo.key}?autoplay=1&rel=0`}
@@ -99,11 +100,11 @@ export function MediaHeroMedia({
                     : "object-cover object-center brightness-80"
                 )}
               />
-              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-scrim/80 via-scrim/20 to-transparent" />
 
               {/* Mobile Poster Thumbnail (visible on small screens) */}
               <div className="absolute bottom-4 left-4 flex items-end gap-3 lg:hidden">
-                <div className="relative h-28 w-20 flex-none overflow-hidden rounded-none border border-white/20 shadow-xl">
+                <div className="relative h-28 w-20 flex-none overflow-hidden rounded-xl border border-media-foreground/20 shadow-xl">
                   <Image
                     src={posterUrl}
                     alt={title}
@@ -116,40 +117,40 @@ export function MediaHeroMedia({
 
               {/* Floating Trailer Play Button Container (Bottom-Left) */}
               {currentVideo && (
-                <button
+                <Button variant="media" size="sm" type="button"
                   onClick={() => setIsPlayingTrailer(true)}
-                  className="group absolute bottom-4 left-26 flex cursor-pointer items-center gap-2.5 rounded-none border border-white/20 bg-black/70 px-4 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:border-white/40 hover:bg-black/90 sm:left-6 sm:text-sm"
+                  className="group absolute bottom-4 left-26 sm:left-6"
                   aria-label="Play Trailer"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-none bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
+                  <div className="flex size-6 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
                     <Play className="ml-0.5 size-3.5 fill-current" />
                   </div>
                   <span className="max-w-50 truncate sm:max-w-xs">
                     {currentVideo.type || "Trailer"} · {currentVideo.name}
                   </span>
-                </button>
+                </Button>
               )}
 
               {/* Carousel Chevron Controls on Bottom Right */}
               {playableVideos.length > 1 && (
-                <div className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-none border border-white/20 bg-black/60 p-1 backdrop-blur-md">
-                  <button
+                <div className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/60 p-1 backdrop-blur-md">
+                  <Button variant="media-ghost" size="icon-xs" type="button"
                     onClick={handlePrevVideo}
-                    className="flex size-7 items-center justify-center rounded-none text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+
                     aria-label="Previous Video"
                   >
                     <ChevronLeft className="size-4" />
-                  </button>
-                  <span className="px-1 text-xs font-semibold text-white/90">
+                  </Button>
+                  <span className="px-1 text-xs font-semibold text-media-foreground/90">
                     {activeVideoIndex + 1}/{playableVideos.length}
                   </span>
-                  <button
+                  <Button variant="media-ghost" size="icon-xs" type="button"
                     onClick={handleNextVideo}
-                    className="flex size-7 items-center justify-center rounded-none text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+
                     aria-label="Next Video"
                   >
                     <ChevronRight className="size-4" />
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

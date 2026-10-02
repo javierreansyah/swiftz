@@ -40,7 +40,7 @@ export async function generateMetadata({
     if (!movie) return { title: "Movie | Swiftz" };
 
     const year = movie.release_date
-      ? ` (${movie.release_date.substring(0, 4)})`
+      ? `(${movie.release_date.substring(0, 4)})`
       : "";
     const title = `${movie.title}${year} | Swiftz`;
     const description =

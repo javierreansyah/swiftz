@@ -73,12 +73,12 @@ function AuthCallbackContent() {
   }, [searchParams, router, setSessionAndUser]);
 
   return (
-    <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
-      <div className="w-full max-w-md space-y-4 rounded-none border bg-card p-8 text-center shadow-xl">
+    <main className="flex min-h-empty-page items-center justify-center p-4 pt-20">
+      <div className="w-full max-w-md space-y-4 rounded-3xl border bg-card p-8 text-center shadow-xl">
         {status === "loading" && (
           <div className="space-y-4">
             <Loader2 className="mx-auto size-12 animate-spin text-primary" />
-            <h1 className="text-2xl font-bold">Authorizing with TMDB...</h1>
+            <h1 className="heading-page">Authorizing with TMDB...</h1>
             <p className="text-sm text-muted-foreground">
               Establishing your session and fetching account details.
             </p>
@@ -87,8 +87,8 @@ function AuthCallbackContent() {
 
         {status === "success" && (
           <div className="space-y-4">
-            <CheckCircle2 className="mx-auto size-12 text-green-500" />
-            <h1 className="text-2xl font-bold">Welcome Back!</h1>
+            <CheckCircle2 className="mx-auto size-12 text-success" />
+            <h1 className="heading-page">Welcome Back!</h1>
             <p className="text-sm text-muted-foreground">
               Successfully authenticated. Redirecting you to your destination...
             </p>
@@ -98,7 +98,7 @@ function AuthCallbackContent() {
         {status === "error" && (
           <div className="space-y-4">
             <XCircle className="mx-auto size-12 text-destructive" />
-            <h1 className="text-2xl font-bold">Authentication Failed</h1>
+            <h1 className="heading-page">Authentication Failed</h1>
             <p className="text-sm text-muted-foreground">{errorMessage}</p>
             <div className="pt-2">
               <Button asChild className="w-full">
@@ -116,10 +116,10 @@ export default function AuthCallbackPage() {
   return (
     <Suspense
       fallback={
-        <main className="flex min-h-[80vh] items-center justify-center p-4 pt-20">
-          <div className="w-full max-w-md space-y-4 rounded-none border bg-card p-8 text-center">
+        <main className="flex min-h-empty-page items-center justify-center p-4 pt-20">
+          <div className="w-full max-w-md space-y-4 rounded-3xl border bg-card p-8 text-center">
             <Loader2 className="mx-auto size-12 animate-spin text-primary" />
-            <h1 className="text-2xl font-bold">Connecting to TMDB...</h1>
+            <h1 className="heading-page">Connecting to TMDB...</h1>
           </div>
         </main>
       }

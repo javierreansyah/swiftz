@@ -22,7 +22,7 @@ export function PersonBio({ biography }: PersonBioProps) {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-xl font-bold tracking-tight text-foreground">
+      <h2 className="heading-section text-foreground">
         Biography
       </h2>
       <div
@@ -36,9 +36,8 @@ export function PersonBio({ biography }: PersonBioProps) {
       {isLong && (
         <Button
           variant="link"
-          size="sm"
+          size="inline"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="h-auto p-0 text-xs font-semibold text-primary hover:text-primary/80"
         >
           {isExpanded ? "Read less" : "Read more"}
         </Button>

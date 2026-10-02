@@ -1,9 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TVShowDetailsData, Cast } from "@/types";
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
   useToggleTVFavoriteMutation,
@@ -104,7 +104,6 @@ export function TVHeroActions({
                   <Badge
                     key={genre.id}
                     variant="secondary"
-                    className="border border-border/60 bg-secondary/70 px-3.5 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary sm:text-sm"
                   >
                     {genre.name}
                   </Badge>
@@ -182,13 +181,13 @@ export function TVHeroActions({
                     )}
                   </span>
                 ))}
-                <button
+                <Button variant="link" size="inline"
                   type="button"
                   onClick={() => onOpenModal("cast")}
-                  className="ml-2 text-xs font-semibold text-muted-foreground hover:text-foreground hover:underline"
+                  className="ml-2"
                 >
                   View full cast
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -226,28 +225,28 @@ export function TVHeroActions({
               Reviews
             </span>
             <div className="flex flex-wrap items-center gap-3 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-              <button
+              <Button variant="link" size="inline"
                 type="button"
                 onClick={() => onOpenModal("reviews")}
-                className="group flex items-center gap-1.5 font-semibold text-primary hover:underline"
+                className="group"
               >
                 <span>
                   {reviewCount > 0
                     ? `${reviewCount} User Reviews`
                     : "User Reviews"}
                 </span>
-              </button>
+              </Button>
 
               <span className="text-muted-foreground">·</span>
 
               <div className="flex items-center gap-1.5">
                 <span
-                  className={`flex size-6 items-center justify-center rounded-none text-xs font-bold text-white ${
+                  className={`flex size-6 items-center justify-center rounded-xl text-xs font-bold text-media-foreground ${
                     metascore >= 70
-                      ? "bg-emerald-600"
+                      ? "bg-success"
                       : metascore >= 50
                       ? "bg-primary"
-                      : "bg-red-600"
+                      : "bg-destructive"
                   }`}
                 >
                   {metascore}

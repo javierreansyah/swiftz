@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
@@ -81,7 +82,7 @@ export function TVSeasonsModal({
         value={String(activeSeasonNumber)}
         onValueChange={(val) => setActiveSeasonNumber(Number(val))}
       >
-        <SelectTrigger className="h-9 w-full rounded-none text-xs font-semibold">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select Season" />
         </SelectTrigger>
         <SelectContent>
@@ -104,21 +105,16 @@ export function TVSeasonsModal({
         {seasons.map((s) => {
           const isActive = s.season_number === activeSeasonNumber;
           return (
-            <button
+            <Button variant={isActive ? "default" : "ghost"} size="sm"
               key={s.id}
               type="button"
               onClick={() => setActiveSeasonNumber(s.season_number)}
-              className={cn(
-                "flex w-full items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-                isActive
-                  ? "bg-primary font-bold text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
+              className="w-full justify-between"
             >
               <span className="truncate">{s.name}</span>
               <span
                 className={cn(
-                  "text-[11px]",
+                  "text-xs",
                   isActive
                     ? "font-bold text-primary-foreground/90"
                     : "text-muted-foreground/70"
@@ -126,7 +122,7 @@ export function TVSeasonsModal({
               >
                 {s.episode_count} eps
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -143,12 +139,12 @@ export function TVSeasonsModal({
       sidebar={desktopSidebar}
       sidebarWidth="w-64"
       mobileControls={mobileSeasonSelector}
-      contentClassName="p-4 sm:p-6 lg:p-8"
+      contentClassName=""
     >
       <div className="mx-auto max-w-4xl space-y-8">
         {/* Season Banner Card */}
         {currentSeasonSummary && (
-          <div className="flex flex-col gap-4 rounded-none border border-border/70 bg-card/60 p-4 sm:flex-row sm:items-start sm:p-5">
+          <div className="flex flex-col gap-4 rounded-3xl border border-border/70 bg-card/60 p-4 sm:flex-row sm:items-start sm:p-5">
             {/* Season Poster */}
             <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden bg-muted sm:w-32">
               {currentSeasonSummary.poster_path ? (
@@ -169,7 +165,7 @@ export function TVSeasonsModal({
             {/* Season Details */}
             <div className="min-w-0 flex-1 space-y-2">
               <div className="flex flex-wrap items-baseline gap-2">
-                <h2 className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
+                <h2 className="heading-section text-foreground">
                   {currentSeasonSummary.name}
                 </h2>
                 {currentSeasonSummary.air_date && (
@@ -193,7 +189,7 @@ export function TVSeasonsModal({
 
         {/* Episodes List */}
         <div className="space-y-4">
-          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">
+          <h3 className="heading-card text-foreground">
             Episodes ({isLoading ? "Loading..." : episodes.length})
           </h3>
 
@@ -202,19 +198,19 @@ export function TVSeasonsModal({
               {Array.from({ length: 5 }, (_, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-4 rounded-none border border-border/60 bg-card/40 p-4 sm:flex-row"
+                  className="flex flex-col gap-4 rounded-3xl border border-border/60 bg-card/40 p-4 sm:flex-row"
                 >
-                  <Skeleton className="aspect-video w-full rounded-none sm:w-48" />
+                  <Skeleton className="aspect-video w-full sm:w-48" />
                   <div className="flex-1 space-y-2">
-                    <Skeleton className="h-5 w-48 rounded-none" />
-                    <Skeleton className="h-4 w-32 rounded-none" />
-                    <Skeleton className="h-12 w-full rounded-none" />
+                    <Skeleton className="h-5 w-48" />
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-12 w-full" />
                   </div>
                 </div>
               ))}
             </div>
           ) : episodes.length === 0 ? (
-            <div className="flex h-40 items-center justify-center rounded-none border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground">
+            <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground">
               No episode data available for this season.
             </div>
           ) : (
@@ -236,7 +232,7 @@ export function TVSeasonsModal({
                 return (
                   <div
                     key={ep.id}
-                    className="overflow-hidden rounded-none border border-border/70 bg-card/60 transition-colors hover:border-primary/40"
+                    className="overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-colors hover:border-primary/40"
                   >
                     <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
                       {/* 16:9 Episode Still Image */}
@@ -254,7 +250,7 @@ export function TVSeasonsModal({
                             <Tv className="size-8" />
                           </div>
                         )}
-                        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-none bg-black/80 px-2 py-0.5 text-[11px] font-bold text-white">
+                        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-xl bg-scrim/80 px-2 py-0.5 text-xs font-bold text-media-foreground">
                           <span>
                             EP {String(ep.episode_number).padStart(2, "0")}
                           </span>
@@ -269,7 +265,7 @@ export function TVSeasonsModal({
                           </h4>
 
                           {ep.vote_average > 0 && (
-                            <div className="flex items-center gap-1 rounded-none bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                            <div className="flex items-center gap-1 rounded-xl bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
                               <Star className="size-3 fill-primary text-primary" />
                               <span>{ep.vote_average.toFixed(1)}</span>
                             </div>
@@ -299,10 +295,10 @@ export function TVSeasonsModal({
                         {(guestStars.length > 0 ||
                           directors.length > 0 ||
                           writers.length > 0) && (
-                          <button
+                          <Button variant="link" size="inline"
                             type="button"
                             onClick={() => toggleEpisodeExpand(ep.id)}
-                            className="inline-flex items-center gap-1 pt-1 text-xs font-semibold text-primary hover:underline"
+                            className="inline-flex"
                           >
                             <span>
                               {isExpanded
@@ -314,7 +310,7 @@ export function TVSeasonsModal({
                             ) : (
                               <ChevronDown className="size-3" />
                             )}
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -353,7 +349,7 @@ export function TVSeasonsModal({
                               {guestStars.map((guest) => (
                                 <div
                                   key={guest.id}
-                                  className="flex items-center gap-1.5 rounded-none border border-border/70 bg-card/60 px-2.5 py-1 text-xs"
+                                  className="flex items-center gap-1.5 rounded-3xl border border-border/70 bg-card/60 px-2.5 py-1 text-xs"
                                 >
                                   {guest.profile_path ? (
                                     <div className="relative size-5 overflow-hidden rounded-full bg-muted">

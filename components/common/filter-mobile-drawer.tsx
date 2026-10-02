@@ -31,14 +31,14 @@ export function FilterMobileDrawer({
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-between rounded-none border-border/80 bg-secondary/40 py-5 text-xs font-medium"
+            className="w-full justify-between"
           >
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="size-3.5 text-primary" />
               <span>{title}</span>
             </div>
             {activeCount > 0 ? (
-              <span className="rounded-none bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
+              <span className="rounded-xl bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
                 {activeCount} active
               </span>
             ) : (
@@ -48,20 +48,20 @@ export function FilterMobileDrawer({
         </SheetTrigger>
 
         {/* Full-width mobile filter screen */}
-        <SheetContent
+        <SheetContent surface="fullscreen"
           side="bottom"
           showCloseButton={false}
-          className="inset-0 flex size-full max-h-screen max-w-full flex-col rounded-none border-none bg-background p-0 sm:max-w-full"
+          className="inset-0 flex size-full max-h-screen max-w-full flex-col sm:max-w-full"
         >
           {/* Top Header */}
           <div className="flex shrink-0 items-center justify-between border-b border-border/70 px-6 py-4">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="size-4 text-primary" />
-              <SheetTitle className="font-heading text-lg font-bold">
+              <SheetTitle>
                 {title}
               </SheetTitle>
               {activeCount > 0 && (
-                <span className="rounded-none bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                <span className="rounded-xl bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
                   {activeCount} active
                 </span>
               )}
@@ -71,7 +71,6 @@ export function FilterMobileDrawer({
               variant="ghost"
               size="icon"
               onClick={close}
-              className="rounded-none hover:bg-muted"
             >
               <X className="size-4" />
               <span className="sr-only">Close</span>

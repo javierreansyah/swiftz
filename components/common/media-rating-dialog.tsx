@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, X, Trash2, Loader2, Sparkles } from "lucide-react";
+import { Star, Trash2, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   useRateMovieMutation,
   useDeleteRatingMutation,
@@ -99,32 +100,25 @@ export function MediaRatingDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/75 p-4 backdrop-blur-sm duration-200 fade-in">
-      <div className="relative w-full max-w-sm space-y-4 rounded-none border border-border bg-card p-6 text-center shadow-2xl">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 rounded-none p-1 text-muted-foreground hover:bg-muted"
-        >
-          <X className="size-4" />
-          <span className="sr-only">Close</span>
-        </button>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
 
-        <div className="mx-auto flex size-12 items-center justify-center rounded-none bg-primary/10 text-primary">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Star className="size-6 fill-current" />
         </div>
 
-        <div>
-          <h3 className="text-lg font-bold">
+        <div className="text-center">
+          <DialogTitle>
             {mediaType === "tv" ? "Rate this Series" : "Rate this Movie"}
-          </h3>
-          <p className="mx-auto max-w-xs truncate text-xs text-muted-foreground">
+          </DialogTitle>
+          <DialogDescription className="mx-auto max-w-xs">
             {title}
-          </p>
+          </DialogDescription>
         </div>
 
         {/* 10 Star Rating Selector */}
         <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex w-full items-center justify-center">
             {Array.from({ length: 10 }, (_, i) => {
               const val = i + 1;
               const isFilled = val <= displayRating;
@@ -135,7 +129,8 @@ export function MediaRatingDialog({
                   onMouseEnter={() => setHoverRating(val)}
                   onMouseLeave={() => setHoverRating(null)}
                   onClick={() => setSelectedRating(val)}
-                  className="p-1 transition-transform hover:scale-125 focus:outline-none"
+                  className="flex min-w-0 flex-1 items-center justify-center rounded-full py-2 transition-transform hover:scale-110 focus-visible:outline-2 focus-visible:outline-ring"
+                  aria-pressed={selectedRating === val}
                   aria-label={`Rate ${val} stars`}
                 >
                   <Star
@@ -160,11 +155,10 @@ export function MediaRatingDialog({
         <div className="flex items-center gap-2 pt-2">
           {currentRating && (
             <Button
-              variant="outline"
+              variant="destructive"
               size="sm"
               onClick={handleDelete}
               disabled={isPendingDelete}
-              className="gap-1.5 border-destructive/30 text-xs text-destructive hover:bg-destructive/10"
             >
               {isPendingDelete ? (
                 <Loader2 className="size-3.5 animate-spin" />
@@ -178,7 +172,7 @@ export function MediaRatingDialog({
           <Button
             onClick={() => handleRate(selectedRating)}
             disabled={isPendingRate}
-            className="flex-1 gap-2 bg-primary font-bold text-primary-foreground hover:bg-primary/90"
+            className="flex-1"
           >
             {isPendingRate ? (
               <Loader2 className="size-4 animate-spin" />
@@ -188,8 +182,8 @@ export function MediaRatingDialog({
             <span>Rate {selectedRating}★</span>
           </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

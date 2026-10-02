@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import React, { useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { X, Film, RotateCcw } from "lucide-react";
@@ -235,7 +236,7 @@ export function MovieCategoryListing({
       <div className="flex gap-8 xl:gap-12">
         {/* Left: Desktop Sticky Sidebar */}
         <div className="hidden w-64 shrink-0 lg:block lg:w-72 xl:w-80">
-          <div className="sticky top-20 max-h-[calc(100vh-6rem)] scrollbar-thin overflow-y-auto pr-3">
+          <div className="sticky top-20 max-h-sidebar scrollbar-thin overflow-y-auto pr-3">
             <DiscoverSidebar
               activeFilters={activeFilters}
               onApplyFilters={handleApplyFilters}
@@ -249,7 +250,7 @@ export function MovieCategoryListing({
           {/* Header */}
           <div className="flex flex-col gap-3 border-b border-border/50 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h1 className="heading-page text-foreground">
                 {title}
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
@@ -281,7 +282,7 @@ export function MovieCategoryListing({
                 variant="outline"
                 size="sm"
                 onClick={handleResetFilters}
-                className="w-fit gap-1.5 text-xs"
+                className="w-fit"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Reset to Default</span>
@@ -298,9 +299,9 @@ export function MovieCategoryListing({
 
               {/* Sort Pill */}
               {activeFilters.sort_by !== categoryDefaultSort && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span className="text-muted-foreground">Sort:</span> {sortLabel}
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() =>
                       handleApplyFilters({
@@ -308,78 +309,76 @@ export function MovieCategoryListing({
                         sort_by: categoryDefaultSort,
                       })
                     }
-                    className="hover:text-foreground"
+
                     aria-label="Reset sort"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
 
               {/* Genres */}
               {activeFilters.with_genres.map((gId) => {
                 const genre = movieGenres.find((g) => String(g.id) === gId);
                 return (
-                  <span
+                  <Badge variant="soft" size="filter"
                     key={gId}
-                    className="inline-flex items-center gap-1 rounded-none border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
                   >
                     <span>{genre ? genre.name : gId}</span>
-                    <button
+                    <Button variant="ghost" size="icon-xs"
                       type="button"
                       onClick={() => handleRemoveGenre(gId)}
-                      className="hover:text-primary/70"
+
                       aria-label={`Remove ${genre?.name || gId} filter`}
                     >
                       <X className="size-3" />
-                    </button>
-                  </span>
+                    </Button>
+                  </Badge>
                 );
               })}
 
               {/* Keywords */}
               {activeFilters.keywords.map((kw) => (
-                <span
+                <Badge variant="secondary" size="filter"
                   key={kw.id}
-                  className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs capitalize"
                 >
                   <span>{kw.name}</span>
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() => handleRemoveKeyword(kw.id)}
-                    className="hover:text-foreground"
+
                     aria-label={`Remove keyword ${kw.name}`}
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               ))}
 
               {/* Release Date Preset */}
               {activeFilters.release_date_preset &&
                 activeFilters.release_date_preset !== "all" && (
-                  <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                  <Badge variant="secondary" size="filter" >
                     <span>Year: {activeFilters.release_date_preset}</span>
-                    <button
+                    <Button variant="ghost" size="icon-xs"
                       type="button"
                       onClick={() => handleResetFilterKey("release_date_preset")}
-                      className="hover:text-foreground"
+
                       aria-label="Remove year filter"
                     >
                       <X className="size-3" />
-                    </button>
-                  </span>
+                    </Button>
+                  </Badge>
                 )}
 
               {/* Score */}
               {(activeFilters.vote_average_gte > 0 ||
                 activeFilters.vote_average_lte < 10) && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span>
                     Score: {activeFilters.vote_average_gte} -{" "}
                     {activeFilters.vote_average_lte} ★
                   </span>
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() => {
                       handleApplyFilters({
@@ -388,59 +387,59 @@ export function MovieCategoryListing({
                         vote_average_lte: 10,
                       });
                     }}
-                    className="hover:text-foreground"
+
                     aria-label="Remove score filter"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
 
               {/* Minimum Votes */}
               {activeFilters.vote_count_gte > 0 && (
-                <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                <Badge variant="secondary" size="filter" >
                   <span>Votes: {activeFilters.vote_count_gte}+</span>
-                  <button
+                  <Button variant="ghost" size="icon-xs"
                     type="button"
                     onClick={() => handleResetFilterKey("vote_count_gte")}
-                    className="hover:text-foreground"
+
                     aria-label="Remove vote count filter"
                   >
                     <X className="size-3" />
-                  </button>
-                </span>
+                  </Button>
+                </Badge>
               )}
 
               {/* Language */}
               {activeFilters.original_language &&
                 activeFilters.original_language !== "all" && (
-                  <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs">
+                  <Badge variant="secondary" size="filter" >
                     <span>Lang: {langLabel || activeFilters.original_language}</span>
-                    <button
+                    <Button variant="ghost" size="icon-xs"
                       type="button"
                       onClick={() => handleResetFilterKey("original_language")}
-                      className="hover:text-foreground"
+
                       aria-label="Remove language filter"
                     >
                       <X className="size-3" />
-                    </button>
-                  </span>
+                    </Button>
+                  </Badge>
                 )}
 
               {/* Certification */}
               {activeFilters.certification &&
                 activeFilters.certification !== "all" && (
-                  <span className="inline-flex items-center gap-1 rounded-none border border-border bg-secondary/80 px-2.5 py-1 text-xs uppercase">
+                  <Badge variant="secondary" size="filter" >
                     <span>Cert: {activeFilters.certification}</span>
-                    <button
+                    <Button variant="ghost" size="icon-xs"
                       type="button"
                       onClick={() => handleResetFilterKey("certification")}
-                      className="hover:text-foreground"
+
                       aria-label="Remove certification filter"
                     >
                       <X className="size-3" />
-                    </button>
-                  </span>
+                    </Button>
+                  </Badge>
                 )}
             </div>
           )}
@@ -453,11 +452,11 @@ export function MovieCategoryListing({
               ))}
             </div>
           ) : isError || movies.length === 0 ? (
-            <div className="flex min-h-80 flex-col items-center justify-center space-y-3 rounded-none border border-dashed border-border bg-card/50 p-8 text-center">
-              <div className="flex size-14 items-center justify-center rounded-none bg-secondary text-muted-foreground">
+            <div className="flex min-h-80 flex-col items-center justify-center space-y-3 rounded-3xl border border-dashed border-border bg-card/50 p-8 text-center">
+              <div className="flex size-14 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
                 <Film className="size-7" />
               </div>
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="heading-section text-foreground">
                 No movies match your filters
               </h2>
               <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
@@ -467,7 +466,6 @@ export function MovieCategoryListing({
                 variant="outline"
                 size="sm"
                 onClick={handleResetFilters}
-                className="gap-2"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Reset to Default</span>

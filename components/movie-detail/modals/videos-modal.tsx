@@ -150,7 +150,6 @@ export function VideosModal({
           variant="outline"
           size="sm"
           onClick={() => setViewMode("gallery")}
-          className="gap-1.5 rounded-none text-xs"
         >
           <LayoutGrid className="size-3.5" />
           <span>Back to Gallery</span>
@@ -161,10 +160,9 @@ export function VideosModal({
         variant="outline"
         size="sm"
         onClick={handleShare}
-        className="gap-1.5 rounded-none text-xs"
       >
         {copiedShare ? (
-          <Check className="size-3.5 text-emerald-500" />
+          <Check className="size-3.5 text-success" />
         ) : (
           <Share2 className="size-3.5" />
         )}
@@ -175,12 +173,6 @@ export function VideosModal({
         <Button
           size="sm"
           onClick={onToggleWatchlist}
-          className={cn(
-            "gap-1.5 rounded-none text-xs font-bold transition-colors",
-            isWatchlist
-              ? "bg-primary/80 text-primary-foreground hover:bg-primary/90"
-              : "bg-primary text-primary-foreground hover:bg-primary/90"
-          )}
         >
           <Bookmark className="size-3.5 fill-current" />
           <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
@@ -196,36 +188,26 @@ export function VideosModal({
           Video Types
         </h4>
         <div className="flex flex-col gap-1">
-          <button
+          <Button variant={videoFilterType === "all" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setVideoFilterType("all")}
-            className={cn(
-              "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              videoFilterType === "all"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
+            className="justify-between"
           >
             <span>All Types</span>
-            <span className="text-[11px] opacity-80">{videos.length}</span>
-          </button>
+            <span className="text-xs opacity-80">{videos.length}</span>
+          </Button>
           {videoTypes.map((type) => (
-            <button
+            <Button variant={videoFilterType === type ? "default" : "ghost"} size="sm"
               key={type}
               type="button"
               onClick={() => setVideoFilterType(type)}
-              className={cn(
-                "flex items-center justify-between rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-                videoFilterType === type
-                  ? "bg-primary font-semibold text-primary-foreground"
-                  : "text-foreground/80 hover:bg-muted"
-              )}
+              className="justify-between"
             >
               <span>{type}</span>
-              <span className="text-[11px] opacity-80">
+              <span className="text-xs opacity-80">
                 {videoTypeCounts[type]}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -235,30 +217,18 @@ export function VideosModal({
           Sort Order
         </h4>
         <div className="flex flex-col gap-1">
-          <button
+          <Button variant={videoSort === "date_desc" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setVideoSort("date_desc")}
-            className={cn(
-              "rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              videoSort === "date_desc"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
           >
             Newest First
-          </button>
-          <button
+          </Button>
+          <Button variant={videoSort === "date_asc" ? "default" : "ghost"} size="sm"
             type="button"
             onClick={() => setVideoSort("date_asc")}
-            className={cn(
-              "rounded-none px-3 py-2 text-left text-xs font-medium transition-colors",
-              videoSort === "date_asc"
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-foreground/80 hover:bg-muted"
-            )}
           >
             Oldest First
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -270,7 +240,7 @@ export function VideosModal({
         value={videoFilterType}
         onValueChange={(val) => setVideoFilterType(val)}
       >
-        <SelectTrigger className="h-8 rounded-none bg-card text-xs">
+        <SelectTrigger>
           <SelectValue placeholder="Video Type" />
         </SelectTrigger>
         <SelectContent>
@@ -287,7 +257,7 @@ export function VideosModal({
         value={videoSort}
         onValueChange={(val: "date_desc" | "date_asc") => setVideoSort(val)}
       >
-        <SelectTrigger className="h-8 rounded-none bg-card text-xs">
+        <SelectTrigger>
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
@@ -314,8 +284,8 @@ export function VideosModal({
         /* Showcase Player View: Stage + Identical Height Bottom Filmstrip */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Video Player Stage */}
-          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-black p-2 sm:p-4">
-            <div className="relative aspect-video max-h-[calc(100%-2.5rem)] w-full max-w-6xl overflow-hidden rounded-none shadow-2xl">
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-scrim p-2 sm:p-4">
+            <div className="relative aspect-video max-h-lightbox w-full max-w-6xl overflow-hidden rounded-xl shadow-2xl">
               <iframe
                 src={`https://www.youtube.com/embed/${selectedVideoModal.key}?autoplay=1&rel=0`}
                 title={selectedVideoModal.name}
@@ -326,7 +296,7 @@ export function VideosModal({
             </div>
 
             <div className="mt-2 w-full max-w-6xl text-center">
-              <h3 className="line-clamp-1 text-sm font-bold text-white">
+              <h3 className="line-clamp-1 heading-card text-media-foreground">
                 {selectedVideoModal.name}
               </h3>
             </div>
@@ -344,7 +314,7 @@ export function VideosModal({
                     type="button"
                     onClick={() => setSelectedVideoModal(video)}
                     className={cn(
-                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-none border-2 transition-all",
+                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
                       isActive
                         ? "scale-105 border-primary ring-2 ring-primary/40"
                         : "border-transparent opacity-60 hover:opacity-100"
@@ -357,8 +327,8 @@ export function VideosModal({
                       sizes="144px"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <Play className="size-4 fill-white text-white opacity-90" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-scrim/20">
+                      <Play className="size-4 fill-white text-media-foreground opacity-90" />
                     </div>
                   </button>
                 );
@@ -382,9 +352,9 @@ export function VideosModal({
                   <div
                     key={video.id}
                     onClick={() => handleSelectVideo(video)}
-                    className="group cursor-pointer overflow-hidden rounded-none border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:bg-card hover:shadow-lg"
+                    className="group cursor-pointer overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:bg-card hover:shadow-lg"
                   >
-                    <div className="relative aspect-video w-full overflow-hidden bg-black">
+                    <div className="relative aspect-video w-full overflow-hidden bg-scrim">
                       <Image
                         src={ytThumb}
                         alt={video.name}
@@ -392,14 +362,14 @@ export function VideosModal({
                         sizes="(max-width: 640px) 100vw, 400px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/30 transition-opacity group-hover:bg-black/10" />
+                      <div className="absolute inset-0 bg-scrim/30 transition-opacity group-hover:bg-scrim/10" />
 
-                      <div className="absolute top-1/2 left-1/2 flex size-12 -translate-1/2 items-center justify-center rounded-none bg-primary text-primary-foreground shadow-xl backdrop-blur-xs transition-transform duration-300 group-hover:scale-110">
+                      <div className="absolute top-1/2 left-1/2 flex size-12 -translate-1/2 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xl backdrop-blur-xs transition-transform duration-300 group-hover:scale-110">
                         <Play className="ml-0.5 size-6 fill-current" />
                       </div>
 
-                      <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-none border border-white/20 bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
-                        <Play className="size-3 fill-white text-white" />
+                      <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/70 px-2.5 py-1 text-xs font-semibold text-media-foreground backdrop-blur-md">
+                        <Play className="size-3 fill-white text-media-foreground" />
                         <span>{video.type || "Video"}</span>
                       </div>
                     </div>
