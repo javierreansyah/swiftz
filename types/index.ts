@@ -41,14 +41,14 @@ export interface RecommendationData {
   page: number;
   results: Movie[];
   total_pages: number;
-  total_result: number;
+  total_results: number;
 }
 
 export interface SearchData {
   page: number;
   results: Movie[];
   total_pages: number;
-  total_result: number;
+  total_results: number;
 }
 
 export interface CastData {
@@ -578,5 +578,4 @@ export interface SearchTypeCounts {
   networks: number;
   awards: number;
 }
-
 

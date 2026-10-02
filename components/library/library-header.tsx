@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { ExternalLink, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TMDBAccount } from "@/types/auth";
@@ -28,7 +28,6 @@ export function LibraryHeader({
                 fill
                 sizes="96px"
                 className="object-cover"
-                unoptimized
               />
             </div>
           ) : (

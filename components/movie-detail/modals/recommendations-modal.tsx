@@ -52,11 +52,13 @@ export function RecommendationsModal({
 
   const movieQuery = useMovieRecommendationsQuery(
     mediaType === "movie" ? String(targetId) : "",
-    page
+    page,
+    isOpen
   );
   const tvQuery = useTVRecommendationsQuery(
     mediaType === "tv" ? targetId : 0,
-    page
+    page,
+    isOpen
   );
 
   const recData = mediaType === "tv" ? tvQuery.data : movieQuery.data;

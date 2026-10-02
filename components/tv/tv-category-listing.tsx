@@ -2,7 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import React, { useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useClientQueryRouter } from "@/hooks/use-client-query-router";
+import { parsePage } from "@/lib/pagination";
 import { X, Tv, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PaginationSystem } from "@/components/common/pagination-system";
@@ -63,10 +65,10 @@ export function TVCategoryListing({
   subtitle,
 }: TVCategoryListingProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useClientQueryRouter();
 
   const pageParam = searchParams.get("page");
-  const currentPage = Number(pageParam) || 1;
+  const currentPage = parsePage(pageParam);
 
   // Category default sort
   const categoryDefaultSort =
@@ -132,13 +134,13 @@ export function TVCategoryListing({
   }, [activeFilters, category, currentPage]);
 
   // Category native queries (used when no custom filters are applied)
-  const popularQuery = usePopularTVShowsQuery(currentPage);
-  const topRatedQuery = useTopRatedTVShowsQuery(currentPage);
-  const onTheAirQuery = useOnTheAirTVShowsQuery(currentPage);
-  const airingTodayQuery = useAiringTodayTVShowsQuery(currentPage);
+  const popularQuery = usePopularTVShowsQuery(currentPage, !hasCustomFilters && category === "popular");
+  const topRatedQuery = useTopRatedTVShowsQuery(currentPage, !hasCustomFilters && category === "top-rated");
+  const onTheAirQuery = useOnTheAirTVShowsQuery(currentPage, !hasCustomFilters && category === "on-the-air");
+  const airingTodayQuery = useAiringTodayTVShowsQuery(currentPage, !hasCustomFilters && category === "airing-today");
 
   // Discover query (used when custom filters are applied)
-  const discoverQuery = useDiscoverTVShowsQuery(tmdbDiscoverFilters);
+  const discoverQuery = useDiscoverTVShowsQuery(tmdbDiscoverFilters, hasCustomFilters);
 
   // Pick active query
   const activeQuery = hasCustomFilters

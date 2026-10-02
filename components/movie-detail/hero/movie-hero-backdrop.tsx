@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 
 export interface MovieHeroBackdropProps {
   backdropUrl: string;
@@ -54,7 +54,7 @@ export function MovieHeroBackdrop({
           fill
           priority
           sizes="100vw"
-          className="scale-105 object-cover object-top opacity-70 blur-2xl brightness-80 contrast-105 filter transition-all duration-300 sm:blur-3xl dark:opacity-60 dark:brightness-75 dark:contrast-110"
+          variant="ambient"
         />
 
         {/* Mode-specific lighting/darkening: darkened on light mode, gently shaded on dark mode */}

@@ -67,7 +67,7 @@ export function MovieHero({
 
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
-    : "/assets/images/movie-placeholder.png";
+    : "/assets/images/movie-placeholder.svg";
 
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`

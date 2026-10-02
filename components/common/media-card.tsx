@@ -2,14 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import Link from "next/link";
 import {
   Film,
   Tv,
   User,
   Play,
-  Image as ImageIcon,
+  Camera,
   Star,
   Layers,
 } from "lucide-react";
@@ -25,6 +25,17 @@ export type MediaCardType =
 
 export type MediaCardAspectRatio = "poster" | "portrait" | "video" | "square";
 
+const SHELF_IMAGE_SIZES = {
+  sm: { poster: "8rem", portrait: "9rem", video: "16rem", square: "8rem" },
+  md: {
+    poster: "(min-width: 640px) 15rem, 13rem",
+    portrait: "(min-width: 640px) 11rem, 10rem",
+    video: "(min-width: 640px) 24rem, 20rem",
+    square: "(min-width: 640px) 15rem, 13rem",
+  },
+  lg: { poster: "12rem", portrait: "14rem", video: "28.75rem", square: "12rem" },
+} as const;
+
 export interface MediaCardProps {
   type: MediaCardType;
   id?: string | number;
@@ -37,13 +48,14 @@ export interface MediaCardProps {
   href?: string;
   onClick?: () => void;
   aspectRatio?: MediaCardAspectRatio;
-  variant?: "shelf" | "grid";
+  variant?: "shelf" | "grid" | "image";
   size?: "sm" | "md" | "lg";
   className?: string;
   actionIcon?: React.ReactNode;
   onActionClick?: (e: React.MouseEvent) => void;
   actionTitle?: string;
   priority?: boolean;
+  sizes?: string;
 }
 
 export function MediaCard({
@@ -64,6 +76,7 @@ export function MediaCard({
   onActionClick,
   actionTitle,
   priority = false,
+  sizes,
 }: MediaCardProps) {
   // Default aspect ratio based on card type
   const effectiveAspectRatio: MediaCardAspectRatio =
@@ -91,7 +104,7 @@ export function MediaCard({
       case "video":
         return <Play className="size-10 text-muted-foreground/60" />;
       case "photo":
-        return <ImageIcon className="size-10 text-muted-foreground/60" />;
+        return <Camera className="size-10 text-muted-foreground/60" />;
       case "season":
         return <Layers className="size-10 text-muted-foreground/60" />;
       case "tv":
@@ -158,6 +171,12 @@ export function MediaCard({
     }
   };
 
+  const imageSizes = sizes || (variant === "shelf"
+    ? SHELF_IMAGE_SIZES[size][effectiveAspectRatio]
+    : effectiveAspectRatio === "video"
+      ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      : "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw");
+
   const cardContent = (
     <div
       className={cn(
@@ -179,9 +198,9 @@ export function MediaCard({
             src={imageUrl}
             alt={title}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            sizes={imageSizes}
             priority={priority}
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            variant="card"
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-secondary">
@@ -224,35 +243,37 @@ export function MediaCard({
       </div>
 
       {/* Standardized Info Section */}
-      <div className="flex h-20 shrink-0 flex-col justify-between p-4">
-        <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
-          {title}
-        </h3>
+      {variant !== "image" && (
+        <div className="flex h-20 shrink-0 flex-col justify-between p-4">
+          <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
+            {title}
+          </h3>
 
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          {rating !== undefined && rating > 0 ? (
-            <div className="flex items-center gap-1 font-semibold text-primary">
-              <Star className="size-3 fill-primary text-primary" />
-              <span>{rating.toFixed(1)}</span>
-            </div>
-          ) : (
-            <span className="truncate text-muted-foreground/80">
-              {subtitle || (type === "person" ? "Actor" : "")}
-            </span>
-          )}
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            {rating !== undefined && rating > 0 ? (
+              <div className="flex items-center gap-1 font-semibold text-primary">
+                <Star className="size-3 fill-primary text-primary" />
+                <span>{rating.toFixed(1)}</span>
+              </div>
+            ) : (
+              <span className="truncate text-muted-foreground/80">
+                {subtitle || (type === "person" ? "Actor" : "")}
+              </span>
+            )}
 
-          {year && <span>{year}</span>}
-          {!year && subtitle && rating !== undefined && rating > 0 && (
-            <span className="truncate text-xs">{subtitle}</span>
-          )}
+            {year && <span>{year}</span>}
+            {!year && subtitle && rating !== undefined && rating > 0 && (
+              <span className="truncate text-xs">{subtitle}</span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
   if (href) {
     return (
-      <Link href={href} prefetch={false} className="block shrink-0">
+      <Link href={href} prefetch={false} onClick={onClick} className="block shrink-0 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
         {cardContent}
       </Link>
     );
@@ -265,12 +286,12 @@ export function MediaCard({
         tabIndex={0}
         onClick={onClick}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === "") {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             onClick();
           }
         }}
-        className="block shrink-0 focus:outline-hidden"
+        className="block shrink-0 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       >
         {cardContent}
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import Link from "next/link";
 import {
   Film,
@@ -36,7 +36,8 @@ export function CollectionModal({
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: collection, isLoading, error } = useMovieCollectionQuery(
-    isOpen ? collectionId : null
+    collectionId,
+    isOpen
   );
 
   const parts = useMemo(() => {
@@ -96,7 +97,7 @@ export function CollectionModal({
                 src={backdropUrl}
                 alt={displayName}
                 fill
-                className="object-cover opacity-25"
+                variant="watermark"
                 priority
               />
               <div className="absolute inset-0 bg-linear-to-r from-background via-background/85 to-transparent" />
@@ -189,7 +190,7 @@ export function CollectionModal({
                           alt={part.title}
                           fill
                           sizes="(max-width: 640px) 96px, 112px"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          variant="thumbnail"
                         />
                       ) : (
                         <div className="flex size-full items-center justify-center bg-secondary text-muted-foreground">
@@ -243,6 +244,7 @@ export function CollectionModal({
                         ) : (
                           <Link
                             href={`/movie/${part.id}`}
+                            prefetch={false}
                             onClick={onClose}
                             className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-transform group-hover:translate-x-0.5 hover:underline"
                           >

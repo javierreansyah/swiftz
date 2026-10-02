@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { Video } from "@/types";
 import { cn } from "@/lib/utils";
@@ -65,7 +65,6 @@ export function MediaHeroMedia({
             src={posterUrl}
             alt={title}
             fill
-            priority
             sizes="(max-width: 1024px) 100vw, 360px"
             className="object-cover"
           />
@@ -93,12 +92,7 @@ export function MediaHeroMedia({
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 900px"
-                className={cn(
-                  "transition-all duration-500",
-                  hasInteracted
-                    ? "object-contain object-center"
-                    : "object-cover object-center brightness-80"
-                )}
+                variant={hasInteracted ? "preview" : "hero"}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-scrim/80 via-scrim/20 to-transparent" />
 

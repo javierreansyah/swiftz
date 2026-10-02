@@ -18,6 +18,10 @@ export interface FeaturedHeroProps {
 
 export function FeaturedHero({ movies }: FeaturedHeroProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loadedIndices, setLoadedIndices] = useState([0]);
+  useEffect(() => {
+    setLoadedIndices((previous) => previous.includes(selectedIndex) ? previous : [...previous, selectedIndex]);
+  }, [selectedIndex]);
   const [offsetY, setOffsetY] = useState(0);
   const tickingRef = useRef(false);
   const [trailerModal, setTrailerModal] = useState<{
@@ -101,6 +105,7 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
       <FeaturedHeroBackdrop
         movies={movies}
         selectedIndex={selectedIndex}
+        loadedIndices={loadedIndices}
         offsetY={offsetY}
       />
 
@@ -110,6 +115,7 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
           <FeaturedHeroSpotlight
             movies={movies}
             selectedIndex={selectedIndex}
+            loadedIndices={loadedIndices}
             activeMovie={activeMovie}
             isAuthenticated={isAuthenticated}
             isWatchlist={isWatchlist}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import {
   Play,
   Share2,
@@ -10,15 +10,10 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
 import { Video } from "@/types";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
+import { MediaCard } from "@/components/common/media-card";
 import { cn } from "@/lib/utils";
 
 export interface VideosModalProps {
@@ -95,6 +90,7 @@ export function VideosModal({
 
   // Sync when initialVideoIndex or videos change
   useEffect(() => {
+    if (!isOpen) return;
     if (initialVideoIndex !== undefined && videos[initialVideoIndex]) {
       setSelectedVideoModal(videos[initialVideoIndex]);
       setViewMode("showcase");
@@ -102,7 +98,7 @@ export function VideosModal({
       setViewMode("gallery");
       setSelectedVideoModal(videos[0] || null);
     }
-  }, [initialVideoIndex, videos]);
+  }, [isOpen, initialVideoIndex, videos]);
 
   const videoTypeCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -236,35 +232,25 @@ export function VideosModal({
 
   const mobileControls = (
     <div className="grid grid-cols-2 gap-2">
-      <Select
+      <FilterSelect
         value={videoFilterType}
-        onValueChange={(val) => setVideoFilterType(val)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Video Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Types ({videos.length})</SelectItem>
-          {videoTypes.map((type) => (
-            <SelectItem key={type} value={type}>
-              {type} ({videoTypeCounts[type]})
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        onChange={setVideoFilterType}
+        placeholder="Video Type"
+        options={[
+          { value: "all", label: `All Types (${videos.length})` },
+          ...videoTypes.map((type) => ({ value: type, label: `${type} (${videoTypeCounts[type]})` })),
+        ]}
+      />
 
-      <Select
+      <FilterSelect
         value={videoSort}
-        onValueChange={(val: "date_desc" | "date_asc") => setVideoSort(val)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Sort" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="date_desc">Newest First</SelectItem>
-          <SelectItem value="date_asc">Oldest First</SelectItem>
-        </SelectContent>
-      </Select>
+        onChange={(val) => setVideoSort(val as typeof videoSort)}
+        placeholder="Sort videos"
+        options={[
+          { value: "date_desc", label: "Newest First" },
+          { value: "date_asc", label: "Oldest First" },
+        ]}
+      />
     </div>
   );
 
@@ -349,42 +335,18 @@ export function VideosModal({
                 const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
 
                 return (
-                  <div
+                  <MediaCard
                     key={video.id}
+                    type="video"
+                    title={video.name}
+                    image={ytThumb}
+                    badge={video.type || "Video"}
+                    subtitle={video.published_at
+                      ? new Date(video.published_at).toLocaleDateString()
+                      : `${displayTitle} (${displayYear})`}
+                    variant="grid"
                     onClick={() => handleSelectVideo(video)}
-                    className="group cursor-pointer overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:bg-card hover:shadow-lg"
-                  >
-                    <div className="relative aspect-video w-full overflow-hidden bg-scrim">
-                      <Image
-                        src={ytThumb}
-                        alt={video.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 400px"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-scrim/30 transition-opacity group-hover:bg-scrim/10" />
-
-                      <div className="absolute top-1/2 left-1/2 flex size-12 -translate-1/2 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xl backdrop-blur-xs transition-transform duration-300 group-hover:scale-110">
-                        <Play className="ml-0.5 size-6 fill-current" />
-                      </div>
-
-                      <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/70 px-2.5 py-1 text-xs font-semibold text-media-foreground backdrop-blur-md">
-                        <Play className="size-3 fill-white text-media-foreground" />
-                        <span>{video.type || "Video"}</span>
-                      </div>
-                    </div>
-
-                    <div className="p-3">
-                      <h4 className="line-clamp-2 text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-                        {video.name}
-                      </h4>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {video.published_at
-                          ? new Date(video.published_at).toLocaleDateString()
-                          : `${displayTitle} (${displayYear})`}
-                      </p>
-                    </div>
-                  </div>
+                  />
                 );
               })}
             </div>

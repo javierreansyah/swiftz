@@ -53,8 +53,6 @@ export function MovieBottomModals({
   onToggleWatchlist,
   isWatchlist = false,
 }: MovieBottomModalsProps) {
-  if (!activeModal) return null;
-
   return (
     <>
       <ReviewsModal

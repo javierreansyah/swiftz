@@ -1,20 +1,20 @@
 import React from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import Link from "next/link";
 import {
   User,
   Star,
   ExternalLink,
 } from "lucide-react";
-import {
-  getPersonDetails,
-  getPersonCombinedCredits,
-  getPersonExternalIds,
-} from "@/lib/tmdb";
+import { getPersonDetails } from "@/lib/tmdb";
+import { isTMDBNotFound } from "@/lib/tmdb-error";
+import { pageMetadata, siteUrl } from "@/lib/seo";
+import { tmdbImageUrl } from "@/lib/tmdb-images";
+import { StructuredData } from "@/components/common/structured-data";
 import { PersonBio } from "./person-bio";
-import { PersonCreditsTimeline } from "./person-credits-timeline";
-import { PersonCombinedCredits, PersonExternalIds } from "@/types";
+import { PersonCreditsTimelineLoader } from "./person-credits-timeline";
 import { ContentCarousel } from "@/components/common/content-carousel";
 import { MediaCard } from "@/components/common/media-card";
 
@@ -51,6 +51,24 @@ interface PersonDetailPageProps {
 }
 
 export const revalidate = 604800; // 7 days ISR
+
+export async function generateStaticParams() { return []; }
+
+export async function generateMetadata({ params }: PersonDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    const person = await getPersonDetails(id);
+    return pageMetadata({
+      title: `${person.name} — Biography & Filmography`,
+      description: person.biography?.slice(0, 160) || `Explore ${person.name}'s biography, movies, television credits, and career.`,
+      path: `/person/${person.id}`,
+      image: tmdbImageUrl(person.profile_path, 780),
+    });
+  } catch (error) {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
+  }
+}
 
 function formatBirthDate(birthDate: string, deathDate?: string | null): string {
   try {
@@ -96,27 +114,12 @@ export default async function PersonDetailPage({
 }: PersonDetailPageProps) {
   const { id } = await params;
 
-  let person;
-  let credits: PersonCombinedCredits;
-  let externalIds: PersonExternalIds;
-
-  try {
-    [person, credits, externalIds] = await Promise.all([
-      getPersonDetails(id),
-      getPersonCombinedCredits(id).catch(
-        () => ({ id: Number(id), cast: [], crew: [] } as PersonCombinedCredits)
-      ),
-      getPersonExternalIds(id).catch(
-        () => ({ id: Number(id) } as PersonExternalIds)
-      ),
-    ]);
-  } catch {
-    notFound();
-  }
-
-  if (!person || !person.id) {
-    notFound();
-  }
+  const person = await getPersonDetails(id).catch((error: unknown) => {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
+  });
+  const credits = person.combined_credits;
+  const externalIds = person.external_ids;
 
   const profileUrl = person.profile_path
     ? `https://image.tmdb.org/t/p/h632${person.profile_path}`
@@ -139,6 +142,17 @@ export default async function PersonDetailPage({
 
   return (
     <main className="container min-h-screen py-20">
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: person.name,
+        description: person.biography,
+        url: `${siteUrl}/person/${person.id}`,
+        image: tmdbImageUrl(person.profile_path, 780),
+        birthDate: person.birthday || undefined,
+        deathDate: person.deathday || undefined,
+        jobTitle: person.known_for_department,
+      }} />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
         {/* Left Column (Desktop 4 cols): Portrait, Socials, Personal Info */}
         <div className="space-y-6 lg:col-span-4 xl:col-span-3">
@@ -317,7 +331,7 @@ export default async function PersonDetailPage({
           </div>
 
           {/* Biography */}
-          <PersonBio biography={person.biography} />
+          <PersonBio key={person.id} biography={person.biography} />
 
           {/* Known For Shelf */}
           {knownForList.length > 0 && (
@@ -346,8 +360,9 @@ export default async function PersonDetailPage({
           )}
 
           {/* Searchable Career Credits Timeline */}
-          <PersonCreditsTimeline
-            credits={credits}
+          <PersonCreditsTimelineLoader
+            key={person.id}
+            personId={person.id}
             primaryDepartment={person.known_for_department}
           />
         </div>

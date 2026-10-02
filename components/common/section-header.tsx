@@ -23,6 +23,7 @@ export interface SectionHeaderAction {
 
 export interface SectionHeaderProps {
   title: string;
+  headingAs?: "h1" | "h2" | "h3";
   count?: number;
   badge?: string;
   tabs?: SectionHeaderTab[];
@@ -35,6 +36,7 @@ export interface SectionHeaderProps {
 
 export function SectionHeader({
   title,
+  headingAs: Heading = "h2",
   count,
   badge,
   tabs,
@@ -53,9 +55,9 @@ export function SectionHeader({
     >
       {/* Left side: Serif Title, Count Badge, Switcher/Tabs */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-        <h2 className="heading-section text-foreground">
+        <Heading className="heading-section text-foreground">
           {title}
-        </h2>
+        </Heading>
 
         {/* Count or Badge */}
         {count !== undefined && (

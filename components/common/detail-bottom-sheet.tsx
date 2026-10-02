@@ -2,7 +2,7 @@
 
 import React from "react";
 import { X, Search } from "lucide-react";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -70,11 +70,9 @@ export function DetailBottomSheet({
                 <SheetTitle>
                   {title}
                 </SheetTitle>
-                {subtitle && (
-                  <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase sm:text-sm">
-                    {subtitle}
-                  </p>
-                )}
+                <SheetDescription className={subtitle ? undefined : "sr-only"}>
+                  {subtitle || `Browse ${title}`}
+                </SheetDescription>
               </div>
               {badge !== undefined && (
                 <Badge
@@ -102,16 +100,16 @@ export function DetailBottomSheet({
               {headerActions}
 
               {/* Close Button on the Right Side */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="shrink-0"
-                aria-label="Close sheet"
-              >
-                <X className="size-5" />
-                <span className="sr-only">Close</span>
-              </Button>
+              <SheetClose asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="shrink-0"
+                  aria-label="Close sheet"
+                >
+                  <X />
+                </Button>
+              </SheetClose>
             </div>
           </div>
 

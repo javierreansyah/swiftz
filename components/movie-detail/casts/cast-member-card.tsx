@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { User } from "lucide-react";
 
 export interface CastMemberCardProps {

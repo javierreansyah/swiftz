@@ -23,7 +23,6 @@ import {
   SearchGenericResponse,
   SearchCollectionItem,
   SearchCompanyItem,
-  SearchTypeCounts,
   TVSeasonDetails,
   MovieCollectionData,
 } from "@/types";
@@ -33,6 +32,7 @@ import {
   AccountStates,
   TMDBReviewsResponse,
 } from "@/types/auth";
+import { TMDBError } from "@/lib/tmdb-error";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -42,6 +42,7 @@ async function fetchTMDBClient<T>(
   params: Record<string, string | number> = {},
   options?: RequestInit
 ): Promise<T> {
+  if (!API_KEY) throw new TMDBError("NEXT_PUBLIC_TMDB_API_KEY is not configured", 401);
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.set("api_key", API_KEY);
 
@@ -51,19 +52,25 @@ async function fetchTMDBClient<T>(
     }
   }
 
+  const headers = new Headers(options?.headers);
+  if (options?.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  const timeout = typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(15000) : undefined;
+  const signal = options?.signal && timeout && typeof AbortSignal.any === "function"
+    ? AbortSignal.any([options.signal, timeout]) : options?.signal || timeout;
+  const isPrivate = Boolean(params.session_id) || endpoint.startsWith("/authentication/");
   const res = await fetch(url.toString(), {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers || {}),
-    },
     ...options,
+    headers,
+    signal,
+    ...(isPrivate ? { cache: "no-store" } : {}),
   });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(
+    throw new TMDBError(
       errorData.status_message ||
-        `Failed to fetch ${endpoint}: ${res.status} ${res.statusText}`
+        `Failed to fetch ${endpoint}: ${res.status} ${res.statusText}`,
+      res.status
     );
   }
 
@@ -76,17 +83,18 @@ async function fetchTMDBClient<T>(
 
 export async function searchMoviesClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<SearchData> {
   if (!query.trim()) {
     return {
       page: 1,
       results: [],
       total_pages: 0,
-      total_result: 0,
+      total_results: 0,
     };
   }
-  return fetchTMDBClient<SearchData>("/search/movie", { query, page });
+  return fetchTMDBClient<SearchData>("/search/movie", { query: query.trim(), page }, { signal });
 }
 
 export async function getMoviesByGenresClient(
@@ -100,37 +108,43 @@ export async function getMoviesByGenresClient(
 }
 
 export async function getPopularMoviesClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularMoviesData> {
-  return fetchTMDBClient<PopularMoviesData>("/movie/popular", { page });
+  return fetchTMDBClient<PopularMoviesData>("/movie/popular", { page }, { signal });
 }
 
 export async function getTrendingMoviesClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<TrendingMoviesData> {
-  return fetchTMDBClient<TrendingMoviesData>("/trending/movie/day", { page });
+  return fetchTMDBClient<TrendingMoviesData>("/trending/movie/day", { page }, { signal });
 }
 
 export async function getNowPlayingMoviesClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<DiscoverMoviesData> {
-  return fetchTMDBClient<DiscoverMoviesData>("/movie/now_playing", { page });
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/now_playing", { page }, { signal });
 }
 
 export async function getTopRatedMoviesClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<DiscoverMoviesData> {
-  return fetchTMDBClient<DiscoverMoviesData>("/movie/top_rated", { page });
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/top_rated", { page }, { signal });
 }
 
 export async function getUpcomingMoviesClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<DiscoverMoviesData> {
-  return fetchTMDBClient<DiscoverMoviesData>("/movie/upcoming", { page });
+  return fetchTMDBClient<DiscoverMoviesData>("/movie/upcoming", { page }, { signal });
 }
 
 export async function discoverMoviesClient(
-  filters: DiscoverMovieFilters = {}
+  filters: DiscoverMovieFilters = {},
+  signal?: AbortSignal
 ): Promise<DiscoverMoviesData> {
   const params: Record<string, string | number> = {};
   for (const [key, val] of Object.entries(filters)) {
@@ -138,18 +152,19 @@ export async function discoverMoviesClient(
       params[key] = val;
     }
   }
-  return fetchTMDBClient<DiscoverMoviesData>("/discover/movie", params);
+  return fetchTMDBClient<DiscoverMoviesData>("/discover/movie", params, { signal });
 }
 
 export async function searchKeywordsClient(
-  query: string
+  query: string,
+  signal?: AbortSignal
 ): Promise<TMDBKeywordSearchResponse> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
   return fetchTMDBClient<TMDBKeywordSearchResponse>("/search/keyword", {
-    query,
-  });
+    query: query.trim(),
+  }, { signal });
 }
 
 export async function getWatchProvidersClient(
@@ -447,33 +462,38 @@ export async function getAccountRatedMovies(
 // -------------------------------------------------------------
 
 export async function getPopularTVShowsClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
-  return fetchTMDBClient<PopularTVData>("/tv/popular", { page });
+  return fetchTMDBClient<PopularTVData>("/tv/popular", { page }, { signal });
 }
 
 export async function getTrendingTVShowsClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
-  return fetchTMDBClient<PopularTVData>("/trending/tv/day", { page });
+  return fetchTMDBClient<PopularTVData>("/trending/tv/day", { page }, { signal });
 }
 
 export async function getTopRatedTVShowsClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
-  return fetchTMDBClient<PopularTVData>("/tv/top_rated", { page });
+  return fetchTMDBClient<PopularTVData>("/tv/top_rated", { page }, { signal });
 }
 
 export async function getOnTheAirTVShowsClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
-  return fetchTMDBClient<PopularTVData>("/tv/on_the_air", { page });
+  return fetchTMDBClient<PopularTVData>("/tv/on_the_air", { page }, { signal });
 }
 
 export async function getAiringTodayTVShowsClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
-  return fetchTMDBClient<PopularTVData>("/tv/airing_today", { page });
+  return fetchTMDBClient<PopularTVData>("/tv/airing_today", { page }, { signal });
 }
 
 export async function getTVDetailsClient(
@@ -502,7 +522,8 @@ export async function getTVRecommendationsClient(
 }
 
 export async function discoverTVShowsClient(
-  filters: DiscoverTVFilters = {}
+  filters: DiscoverTVFilters = {},
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
   const params: Record<string, string | number> = {};
   for (const [key, val] of Object.entries(filters)) {
@@ -510,7 +531,7 @@ export async function discoverTVShowsClient(
       params[key] = val;
     }
   }
-  return fetchTMDBClient<PopularTVData>("/discover/tv", params);
+  return fetchTMDBClient<PopularTVData>("/discover/tv", params, { signal });
 }
 
 export async function getTVSeasonDetailsClient(
@@ -533,9 +554,10 @@ export async function getMovieCollectionClient(
 // -------------------------------------------------------------
 
 export async function getPopularPeopleClient(
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularPeopleData> {
-  return fetchTMDBClient<PopularPeopleData>("/person/popular", { page });
+  return fetchTMDBClient<PopularPeopleData>("/person/popular", { page }, { signal });
 }
 
 export async function getPersonDetailsClient(
@@ -564,131 +586,66 @@ export async function getPersonExternalIdsClient(
 
 export async function searchMultiClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<MultiSearchResponse> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
   return fetchTMDBClient<MultiSearchResponse>("/search/multi", {
-    query,
+    query: query.trim(),
     page,
-  });
+  }, { signal });
 }
 
 export async function searchTVClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularTVData> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
-  return fetchTMDBClient<PopularTVData>("/search/tv", { query, page });
+  return fetchTMDBClient<PopularTVData>("/search/tv", { query: query.trim(), page }, { signal });
 }
 
 export async function searchPeopleClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<PopularPeopleData> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
-  return fetchTMDBClient<PopularPeopleData>("/search/person", { query, page });
+  return fetchTMDBClient<PopularPeopleData>("/search/person", { query: query.trim(), page }, { signal });
 }
 
 export async function searchCollectionsClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<SearchGenericResponse<SearchCollectionItem>> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
   return fetchTMDBClient<SearchGenericResponse<SearchCollectionItem>>(
     "/search/collection",
-    { query, page }
+    { query: query.trim(), page },
+    { signal }
   );
 }
 
 export async function searchCompaniesClient(
   query: string,
-  page: number = 1
+  page: number = 1,
+  signal?: AbortSignal
 ): Promise<SearchGenericResponse<SearchCompanyItem>> {
   if (!query.trim()) {
     return { page: 1, results: [], total_pages: 0, total_results: 0 };
   }
   return fetchTMDBClient<SearchGenericResponse<SearchCompanyItem>>(
     "/search/company",
-    { query, page }
+    { query: query.trim(), page },
+    { signal }
   );
 }
-
-export async function getSearchTypeCountsClient(
-  query: string
-): Promise<SearchTypeCounts> {
-  const trimmed = query.trim();
-  if (!trimmed) {
-    return {
-      movies: 0,
-      tv: 0,
-      people: 0,
-      collections: 0,
-      keywords: 0,
-      companies: 0,
-      networks: 0,
-      awards: 0,
-    };
-  }
-
-  // Fetch count headers concurrently from TMDB search endpoints
-  try {
-    const [movies, tv, people, collections, keywords, companies] =
-      await Promise.all([
-        fetchTMDBClient<{ total_results: number }>("/search/movie", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-        fetchTMDBClient<{ total_results: number }>("/search/tv", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-        fetchTMDBClient<{ total_results: number }>("/search/person", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-        fetchTMDBClient<{ total_results: number }>("/search/collection", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-        fetchTMDBClient<{ total_results: number }>("/search/keyword", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-        fetchTMDBClient<{ total_results: number }>("/search/company", {
-          query: trimmed,
-          page: 1,
-        }).catch(() => ({ total_results: 0 })),
-      ]);
-
-    return {
-      movies: movies.total_results || 0,
-      tv: tv.total_results || 0,
-      people: people.total_results || 0,
-      collections: collections.total_results || 0,
-      keywords: keywords.total_results || 0,
-      companies: companies.total_results || 0,
-      networks: 0,
-      awards: 0,
-    };
-  } catch {
-    return {
-      movies: 0,
-      tv: 0,
-      people: 0,
-      collections: 0,
-      keywords: 0,
-      companies: 0,
-      networks: 0,
-      awards: 0,
-    };
-  }
-}
-

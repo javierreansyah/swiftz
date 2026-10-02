@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useVisible } from "@/hooks/use-visible";
 import { MediaCarouselRow } from "@/components/common/media-carousel-row";
 import {
   usePopularMoviesQuery,
@@ -17,16 +18,20 @@ export interface DiscoverSectionsProps {
 }
 
 export function DiscoverSections() {
+  const trending = useVisible();
+  const nowPlaying = useVisible();
+  const topRated = useVisible();
+  const upcoming = useVisible();
   const { data: popularData, isLoading: isPopularLoading } =
     usePopularMoviesQuery(1);
   const { data: trendingData, isLoading: isTrendingLoading } =
-    useTrendingMoviesQuery(1);
+    useTrendingMoviesQuery(1, trending.visible);
   const { data: nowPlayingData, isLoading: isNowPlayingLoading } =
-    useNowPlayingMoviesQuery(1);
+    useNowPlayingMoviesQuery(1, nowPlaying.visible);
   const { data: topRatedData, isLoading: isTopRatedLoading } =
-    useTopRatedMoviesQuery(1);
+    useTopRatedMoviesQuery(1, topRated.visible);
   const { data: upcomingData, isLoading: isUpcomingLoading } =
-    useUpcomingMoviesQuery(1);
+    useUpcomingMoviesQuery(1, upcoming.visible);
 
   return (
     <div className="space-y-12">
@@ -37,34 +42,42 @@ export function DiscoverSections() {
         viewAllHref="/movie/popular"
         type="movie"
       />
+      <div ref={trending.ref}>
       <MediaCarouselRow
         title="Trending Today"
         items={trendingData?.results}
-        isLoading={isTrendingLoading}
+        isLoading={!trending.visible || isTrendingLoading}
         viewAllHref="/movie/trending-today"
         type="movie"
       />
+      </div>
+      <div ref={nowPlaying.ref}>
       <MediaCarouselRow
         title="Now Playing in Theatres"
         items={nowPlayingData?.results}
-        isLoading={isNowPlayingLoading}
+        isLoading={!nowPlaying.visible || isNowPlayingLoading}
         viewAllHref="/movie/now-playing"
         type="movie"
       />
+      </div>
+      <div ref={topRated.ref}>
       <MediaCarouselRow
         title="Top Rated Movies"
         items={topRatedData?.results}
-        isLoading={isTopRatedLoading}
+        isLoading={!topRated.visible || isTopRatedLoading}
         viewAllHref="/movie/top-rated"
         type="movie"
       />
+      </div>
+      <div ref={upcoming.ref}>
       <MediaCarouselRow
         title="Upcoming Releases"
         items={upcomingData?.results}
-        isLoading={isUpcomingLoading}
+        isLoading={!upcoming.visible || isUpcomingLoading}
         viewAllHref="/movie/upcoming"
         type="movie"
       />
+      </div>
     </div>
   );
 }

@@ -29,6 +29,17 @@ and overlay placement. Adjust internal spacing through shared components.
   geometry. Fullscreen sheets and line tabs intentionally have square outer edges.
 - `MediaCard`, `SectionHeader`, `ContentCarousel`, `DetailBottomSheet`, and filter
   helpers own repeated application compositions. Reuse them across movies and TV.
+- `FilterSelect` owns Luma option grouping; `FilterSearchSelect` uses the shared
+  Command/Popover composition for searchable filters. `PersonnelGrid` uses
+  `MediaCard` for cast and crew; `MediaCard`'s `image` variant supports photo-only
+  galleries.
+- Sheets use the registry's default animation classes and Radix close/presence
+  behavior. Keep controlled sheet roots mounted when closed so exit animations
+  can finish; disable queries with `enabled` instead of changing their cache keys.
+  Do not override sheet animations in global CSS.
+- `Image` in `components/ui/image.tsx` owns native responsive image delivery and
+  shared media effects. Use its variants and accurate `sizes`; do not reintroduce
+  Next image optimization or consumer appearance overrides.
 - Native buttons remain appropriate for image thumbnails, provider tiles, and
   rating stars whose geometry comes from their content.
 

@@ -23,10 +23,13 @@
 
 ## Tech Stack
 
-- **Framework:** [Next.js 14](https://nextjs.org/) & [React 18](https://react.dev/)
+- **Framework:** [Next.js 16](https://nextjs.org/) & [React 19](https://react.dev/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components:** [Shadcn](https://ui.shadcn.com/)
 - **Icons:** [Lucide React](https://lucide.dev/)
-- **Data Fetching:** [Axios](https://axios-http.com/)
+- **Data Fetching:** Native fetch, cached RSC/ISR, and [TanStack Query](https://tanstack.com/query)
 - **Forms:** [React Hook Form](https://react-hook-form.com/)
-- **Animations & Colors:** `tailwindcss-animate`, `fast-average-color`
+- **Images:** Responsive native images delivered directly by the TMDB CDN
+
+See [deployment and data-delivery guidance](docs/DEPLOYMENT.md) for Vercel setup,
+environment variables, caching, SEO, and validation commands.

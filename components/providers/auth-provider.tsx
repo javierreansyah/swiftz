@@ -14,6 +14,7 @@ import {
   getAccountDetails,
 } from "@/lib/tmdb-client";
 import { useQueryClient } from "@tanstack/react-query";
+import { TMDBError } from "@/lib/tmdb-error";
 
 interface AuthContextType {
   user: TMDBAccount | null;
@@ -55,7 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setUser(freshUser);
               localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(freshUser));
             })
-            .catch(() => {
+            .catch((error: unknown) => {
+              // A timeout, rate limit, or service outage must not log the user out.
+              if (!(error instanceof TMDBError) || ![401, 403].includes(error.status)) return;
               // If session is revoked on TMDB, clear local state
               localStorage.removeItem(SESSION_STORAGE_KEY);
               localStorage.removeItem(USER_STORAGE_KEY);

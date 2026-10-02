@@ -30,10 +30,12 @@ export function TrailerModal({
   // Query videos if mediaId is supplied and no directVideoKey was passed
   const isMovie = mediaType === "movie";
   const { data: movieVideos, isLoading: isMovieLoading } = useMovieVideosQuery(
-    !directVideoKey && isMovie && mediaId ? mediaId : ""
+    !directVideoKey && isMovie && mediaId ? mediaId : "",
+    isOpen
   );
   const { data: tvVideos, isLoading: isTvLoading } = useTVVideosQuery(
-    !directVideoKey && !isMovie && mediaId ? mediaId : ""
+    !directVideoKey && !isMovie && mediaId ? mediaId : "",
+    isOpen
   );
 
   const activeVideoKey = useMemo(() => {

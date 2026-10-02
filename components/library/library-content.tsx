@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useClientQueryRouter } from "@/hooks/use-client-query-router";
 import { Star, RefreshCw } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
@@ -22,7 +23,7 @@ import {
 } from "./library-empty-state";
 
 export function LibraryContent() {
-  const router = useRouter();
+  const router = useClientQueryRouter();
   const searchParams = useSearchParams();
   const {
     user,
@@ -65,17 +66,20 @@ export function LibraryContent() {
   const favoritesQuery = useAccountFavoritesQuery(
     accountId,
     sessionId,
-    activeTab === "favorites" ? page : 1
+    page,
+    activeTab === "favorites"
   );
   const watchlistQuery = useAccountWatchlistQuery(
     accountId,
     sessionId,
-    activeTab === "watchlist" ? page : 1
+    page,
+    activeTab === "watchlist"
   );
   const ratedQuery = useAccountRatedQuery(
     accountId,
     sessionId,
-    activeTab === "rated" ? page : 1
+    page,
+    activeTab === "rated"
   );
 
   const currentQuery =

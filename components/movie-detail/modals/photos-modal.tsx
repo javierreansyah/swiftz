@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import {
   Share2,
   ChevronLeft,
@@ -11,15 +11,10 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
 import { MovieImagesData, MovieImageItem } from "@/types";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
+import { MediaCard } from "@/components/common/media-card";
 import { cn } from "@/lib/utils";
 
 interface TypedMovieImage extends MovieImageItem {
@@ -160,6 +155,7 @@ export function PhotosModal({
   );
 
   useEffect(() => {
+    if (!isOpen) return;
     if (initialPhotoIndex !== undefined) {
       setActivePhotoIdx(initialPhotoIndex);
       setViewMode("showcase");
@@ -167,7 +163,7 @@ export function PhotosModal({
       setViewMode("gallery");
       setActivePhotoIdx(0);
     }
-  }, [initialPhotoIndex]);
+  }, [isOpen, initialPhotoIndex]);
 
   const activePhoto =
     filteredPhotos[activePhotoIdx] ||
@@ -307,42 +303,26 @@ export function PhotosModal({
 
   const mobileControls = (
     <div className="grid grid-cols-2 gap-2">
-      <Select
+      <FilterSelect
         value={photoTypeFilter}
-        onValueChange={(val: "all" | "backdrops" | "posters") =>
-          setPhotoTypeFilter(val)
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Photo Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Photos ({allPhotos.length})</SelectItem>
-          <SelectItem value="backdrops">
-            Backdrops ({images?.backdrops?.length || 0})
-          </SelectItem>
-          <SelectItem value="posters">
-            Posters ({images?.posters?.length || 0})
-          </SelectItem>
-        </SelectContent>
-      </Select>
+        onChange={(val) => setPhotoTypeFilter(val as typeof photoTypeFilter)}
+        placeholder="Photo Type"
+        options={[
+          { value: "all", label: `All Photos (${allPhotos.length})` },
+          { value: "backdrops", label: `Backdrops (${images?.backdrops?.length || 0})` },
+          { value: "posters", label: `Posters (${images?.posters?.length || 0})` },
+        ]}
+      />
 
-      <Select
+      <FilterSelect
         value={selectedLanguage}
-        onValueChange={(val) => setSelectedLanguage(val)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Language" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Languages</SelectItem>
-          {languagesAvailable.map((lang) => (
-            <SelectItem key={lang.code} value={lang.code}>
-              {lang.name} ({lang.count})
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        onChange={setSelectedLanguage}
+        placeholder="Language"
+        options={[
+          { value: "all", label: "All Languages" },
+          ...languagesAvailable.map((lang) => ({ value: lang.code, label: `${lang.name} (${lang.count})` })),
+        ]}
+      />
     </div>
   );
 
@@ -446,22 +426,19 @@ export function PhotosModal({
                 return (
                   <div
                     key={photo.file_path + idx}
-                    onClick={() => handleSelectPhoto(idx)}
-                    className={cn(
-                      "group relative cursor-pointer overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-lg",
-                      isBackdrop
-                        ? "col-span-2 aspect-video"
-                        : "col-span-1 aspect-2/3"
-                    )}
+                    className={isBackdrop ? "col-span-2" : "col-span-1"}
                   >
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w780${photo.file_path}`}
-                      alt={displayTitle}
-                      fill
-                      sizes="(max-width: 640px) 50vw, 300px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    <MediaCard
+                      type="photo"
+                      title={`${displayTitle} · ${isBackdrop ? "Backdrop" : "Poster"} ${idx + 1}`}
+                      image={`https://image.tmdb.org/t/p/w780${photo.file_path}`}
+                      aspectRatio={isBackdrop ? "video" : "poster"}
+                      variant="image"
+                      sizes={isBackdrop
+                        ? "(max-width: 640px) 100vw, (max-width: 768px) 66vw, (max-width: 1024px) 50vw, 40vw"
+                        : "(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"}
+                      onClick={() => handleSelectPhoto(idx)}
                     />
-                    <div className="absolute inset-0 bg-scrim/20 opacity-0 transition-opacity group-hover:opacity-100" />
                   </div>
                 );
               })}

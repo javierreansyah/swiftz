@@ -2,16 +2,15 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TVDetailClient } from "@/components/tv-detail/tv-detail-client";
-import {
-  getTVDetails,
-  getTVCredits,
-  getTVVideos,
-  getTVRecommendations,
-  getTVContentRatings,
-} from "@/lib/tmdb";
+import { getTVDetails } from "@/lib/tmdb";
+import { isTMDBNotFound } from "@/lib/tmdb-error";
+import { pageMetadata, siteUrl } from "@/lib/seo";
+import { tmdbImageUrl } from "@/lib/tmdb-images";
+import { StructuredData } from "@/components/common/structured-data";
 
-// Edge CDN caches for 7 days (604,800s)
-export const revalidate = 604800;
+export const revalidate = 86400;
+
+export async function generateStaticParams() { return []; }
 
 interface TVDetailsPageProps {
   params: Promise<{
@@ -25,72 +24,27 @@ export async function generateMetadata({
   const { id } = await params;
   try {
     const show = await getTVDetails(id);
-    if (!show) return { title: "TV Show | Swiftz" };
-
-    const year = show.first_air_date
-      ? `(${show.first_air_date.substring(0, 4)})`
-      : "";
-    const title = `${show.name}${year} | Swiftz`;
-    const description =
-      show.overview?.slice(0, 160) || "Discover television series on Swiftz";
-    const backdropUrl = show.backdrop_path
-      ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}`
-      : undefined;
-
-    return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        images: backdropUrl
-          ? [{ url: backdropUrl, width: 1280, height: 720, alt: show.name }]
-          : [],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: backdropUrl ? [backdropUrl] : [],
-      },
-    };
-  } catch {
-    return {
-      title: "TV Show Details | Swiftz",
-      description: "Discover television series on Swiftz",
-    };
+    const year = show.first_air_date?.substring(0, 4);
+    return pageMetadata({
+      title: `${show.name}${year ? ` (${year})` : ""}`,
+      description: show.overview?.slice(0, 160) || `Explore ${show.name}, its seasons, cast, and trailers.`,
+      path: `/tv/${show.id}`,
+      image: tmdbImageUrl(show.backdrop_path || show.poster_path),
+    });
+  } catch (error) {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
   }
 }
 
 export default async function TVDetailsPage({ params }: TVDetailsPageProps) {
   const { id } = await params;
 
-  let show;
-  let credits;
-  let videos;
-  let recommendations;
-  let contentRatings;
-
-  try {
-    [show, credits, videos, recommendations, contentRatings] = await Promise.all([
-      getTVDetails(id),
-      getTVCredits(id).catch(() => ({ id: Number(id), cast: [], crew: [] })),
-      getTVVideos(id).catch(() => ({ id, results: [] })),
-      getTVRecommendations(id, 1).catch(() => ({
-        page: 1,
-        results: [],
-        total_pages: 0,
-        total_results: 0,
-      })),
-      getTVContentRatings(id).catch(() => ({ id: Number(id), results: [] })),
-    ]);
-  } catch {
-    notFound();
-  }
-
-  if (!show || !show.id) {
-    notFound();
-  }
+  const data = await getTVDetails(id).catch((error: unknown) => {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
+  });
+  const { content_ratings: contentRatings, ...show } = data;
 
   const usRating =
     contentRatings?.results?.find(
@@ -101,13 +55,22 @@ export default async function TVDetailsPage({ params }: TVDetailsPageProps) {
 
   return (
     <main className="min-h-screen bg-background">
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "TVSeries",
+        name: show.name,
+        description: show.overview,
+        url: `${siteUrl}/tv/${show.id}`,
+        image: tmdbImageUrl(show.poster_path, 780),
+        datePublished: show.first_air_date || undefined,
+        genre: show.genres.map((genre) => genre.name),
+        numberOfSeasons: show.number_of_seasons,
+        ...(show.vote_count > 0 ? { aggregateRating: { "@type": "AggregateRating", ratingValue: show.vote_average, bestRating: 10, worstRating: 0, ratingCount: show.vote_count } } : {}),
+      }} />
       <TVDetailClient
+        key={show.id}
         show={show}
         certification={usRating}
-        videos={videos?.results || []}
-        cast={credits?.cast || []}
-        crew={credits?.crew || []}
-        recommendations={recommendations?.results || []}
       />
     </main>
   );

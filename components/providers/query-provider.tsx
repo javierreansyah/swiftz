@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TMDBError } from "@/lib/tmdb-error";
 
 export default function QueryProvider({
   children,
@@ -14,9 +15,10 @@ export default function QueryProvider({
         defaultOptions: {
           queries: {
             staleTime: 30 * 60 * 1000, // 30 minutes (TMDB data rarely changes)
-            gcTime: 24 * 60 * 60 * 1000, // 24 hours
+            gcTime: 60 * 60 * 1000, // Bound inactive cache memory to one hour
             refetchOnWindowFocus: false,
-            retry: 1,
+            retry: (failureCount, error) =>
+              failureCount < 1 && !(error instanceof TMDBError && error.status < 500),
           },
         },
       })

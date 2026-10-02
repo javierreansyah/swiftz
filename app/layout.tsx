@@ -9,14 +9,17 @@ import Navigation from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { siteUrl, isPreview } from "@/lib/seo";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const loraHeading = Lora({subsets:['latin'],variable:'--font-heading'});
 
 export const metadata: Metadata = {
-  title: "Swiftz",
-  description: "Discover movies at the speed of Taylor Swift",
+  metadataBase: new URL(siteUrl),
+  title: { default: "Swiftz — Movies, TV Shows & People", template: "%s | Swiftz" },
+  description: "Discover movies, television series, cast, trailers, and recommendations. Build your watchlist with Swiftz.",
+  robots: { index: !isPreview, follow: !isPreview },
 };
 
 export default function RootLayout({

@@ -2,7 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import React, { useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useClientQueryRouter } from "@/hooks/use-client-query-router";
+import { parsePage } from "@/lib/pagination";
 import { X, Film, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MovieGrid } from "@/components/common/movie-grid";
@@ -68,10 +70,10 @@ export function MovieCategoryListing({
   subtitle,
 }: MovieCategoryListingProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useClientQueryRouter();
 
   const pageParam = searchParams.get("page");
-  const currentPage = Number(pageParam) || 1;
+  const currentPage = parsePage(pageParam);
 
   // Category-specific base default sort
   const categoryDefaultSort =
@@ -157,13 +159,13 @@ export function MovieCategoryListing({
   }, [activeFilters, category, currentPage]);
 
   // Category native queries (used when no custom filters are applied)
-  const popularQuery = usePopularMoviesQuery(currentPage);
-  const topRatedQuery = useTopRatedMoviesQuery(currentPage);
-  const nowPlayingQuery = useNowPlayingMoviesQuery(currentPage);
-  const upcomingQuery = useUpcomingMoviesQuery(currentPage);
+  const popularQuery = usePopularMoviesQuery(currentPage, !hasCustomFilters && category === "popular");
+  const topRatedQuery = useTopRatedMoviesQuery(currentPage, !hasCustomFilters && category === "top-rated");
+  const nowPlayingQuery = useNowPlayingMoviesQuery(currentPage, !hasCustomFilters && category === "now-playing");
+  const upcomingQuery = useUpcomingMoviesQuery(currentPage, !hasCustomFilters && category === "upcoming");
 
   // Discover query (used when custom filters are applied)
-  const discoverQuery = useDiscoverMoviesQuery(tmdbDiscoverFilters);
+  const discoverQuery = useDiscoverMoviesQuery(tmdbDiscoverFilters, hasCustomFilters);
 
   // Pick active query
   const activeQuery = hasCustomFilters

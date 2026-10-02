@@ -1,3 +1,6 @@
+import "server-only";
+import { cache } from "react";
+import { TMDBError } from "@/lib/tmdb-error";
 import {
   PopularMoviesData,
   TrendingMoviesData,
@@ -23,7 +26,7 @@ import {
 } from "@/types";
 import { TMDBReviewsResponse } from "@/types/auth";
 
-const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
+const API_KEY = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY || "";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 async function fetchTMDB<T>(
@@ -31,6 +34,7 @@ async function fetchTMDB<T>(
   params: Record<string, string | number> = {},
   revalidate: number = 86400 // 24 hours default
 ): Promise<T> {
+  if (!API_KEY) throw new TMDBError("TMDB API key is not configured", 401);
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.set("api_key", API_KEY);
 
@@ -40,10 +44,11 @@ async function fetchTMDB<T>(
 
   const res = await fetch(url.toString(), {
     next: { revalidate },
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch ${endpoint}: ${res.statusText}`);
+    throw new TMDBError(`Failed to fetch ${endpoint}: ${res.statusText}`, res.status);
   }
 
   return res.json();
@@ -62,9 +67,10 @@ export async function getTrendingMovies(
 }
 
 // 7 days (604,800s) revalidation for movie details and sub-resources
-export async function getMovieDetails(id: string): Promise<MovieDetailsData> {
-  return fetchTMDB<MovieDetailsData>(`/movie/${id}`, {}, 604800);
-}
+export const getMovieDetails = cache(async (id: string): Promise<MovieDetailsData & { release_dates: MovieReleaseDateData }> => {
+  if (!/^[1-9]\d*$/.test(id)) throw new TMDBError("Invalid movie ID", 404);
+  return fetchTMDB(`/movie/${id}`, { append_to_response: "release_dates" }, 604800);
+});
 
 export async function getMovieReleaseDates(
   id: string
@@ -178,9 +184,10 @@ export async function getOnTheAirTVShows(
   return fetchTMDB<PopularTVData>("/tv/on_the_air", { page }, 86400);
 }
 
-export async function getTVDetails(id: string): Promise<TVShowDetailsData> {
-  return fetchTMDB<TVShowDetailsData>(`/tv/${id}`, {}, 604800);
-}
+export const getTVDetails = cache(async (id: string): Promise<TVShowDetailsData & { content_ratings: { results: Array<{ iso_3166_1: string; rating: string }> } }> => {
+  if (!/^[1-9]\d*$/.test(id)) throw new TMDBError("Invalid TV ID", 404);
+  return fetchTMDB(`/tv/${id}`, { append_to_response: "content_ratings" }, 86400);
+});
 
 export async function getTVCredits(id: string): Promise<CastData> {
   return fetchTMDB<CastData>(`/tv/${id}/credits`, {}, 604800);
@@ -254,11 +261,10 @@ export async function getPopularPeople(
   return fetchTMDB<PopularPeopleData>("/person/popular", { page }, 86400);
 }
 
-export async function getPersonDetails(
-  id: string
-): Promise<PersonDetailsData> {
-  return fetchTMDB<PersonDetailsData>(`/person/${id}`, {}, 604800);
-}
+export const getPersonDetails = cache(async (id: string): Promise<PersonDetailsData & { combined_credits: PersonCombinedCredits; external_ids: PersonExternalIds }> => {
+  if (!/^[1-9]\d*$/.test(id)) throw new TMDBError("Invalid person ID", 404);
+  return fetchTMDB(`/person/${id}`, { append_to_response: "combined_credits,external_ids" }, 604800);
+});
 
 export async function getPersonCombinedCredits(
   id: string
@@ -279,5 +285,3 @@ export async function getPersonExternalIds(
     604800
   );
 }
-
-

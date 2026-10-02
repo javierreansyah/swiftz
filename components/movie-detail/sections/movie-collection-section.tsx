@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { Layers, ChevronRight, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -56,7 +56,7 @@ export function MovieCollectionSection({
               src={backdropUrl}
               alt={collection.name}
               fill
-              className="object-cover opacity-20 transition-transform duration-500 group-hover:scale-105"
+              variant="collection"
             />
             <div className="absolute inset-0 bg-linear-to-r from-background via-background/90 to-background/50" />
           </div>
@@ -71,7 +71,7 @@ export function MovieCollectionSection({
                 alt={collection.name}
                 fill
                 sizes="96px"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                variant="thumbnail"
               />
             </div>
           )}

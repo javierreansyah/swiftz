@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Movie, TVShow } from "@/types";
+import { useTrendingMoviesQuery, useTrendingTVShowsQuery } from "@/hooks/use-tmdb";
 import { HomeMediaCarousel, MediaItem } from "./home-media-carousel";
+import { HomeShelfLoading } from "./home-shelf-loading";
 
-export interface TrendingSectionProps {
-  movies: Movie[];
-  tvShows: TVShow[];
-}
-
-export function TrendingSection({ movies, tvShows }: TrendingSectionProps) {
+export function TrendingSection() {
   const [activeTab, setActiveTab] = useState<string>("movies");
+  const movieQuery = useTrendingMoviesQuery(1, activeTab === "movies");
+  const tvQuery = useTrendingTVShowsQuery(1, activeTab === "tv");
+  const movies = movieQuery.data?.results || [];
+  const tvShows = tvQuery.data?.results || [];
+  const activeQuery = activeTab === "movies" ? movieQuery : tvQuery;
 
   const movieItems: MediaItem[] = movies.map((m) => ({
     id: m.id,
@@ -29,6 +30,8 @@ export function TrendingSection({ movies, tvShows }: TrendingSectionProps) {
     release_year: t.first_air_date ? t.first_air_date.substring(0, 4) : undefined,
     media_type: "tv",
   }));
+
+  if (!activeQuery.data) return <HomeShelfLoading title="Trending Today" isError={activeQuery.isError} />;
 
   return (
     <HomeMediaCarousel

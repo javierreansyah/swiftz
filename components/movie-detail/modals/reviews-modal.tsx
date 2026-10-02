@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import {
   Share2,
   Star,
@@ -12,7 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
 import { useMovieReviewsQuery, useTVReviewsQuery } from "@/hooks/use-tmdb";
 
@@ -75,11 +75,13 @@ export function ReviewsModal({
   // Movie or TV Reviews Query
   const movieReviews = useMovieReviewsQuery(
     mediaType === "movie" ? targetId : 0,
-    1
+    1,
+    isOpen
   );
   const tvReviews = useTVReviewsQuery(
     mediaType === "tv" ? targetId : 0,
-    1
+    1,
+    isOpen
   );
 
   const reviewsData =
@@ -199,35 +201,35 @@ export function ReviewsModal({
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Sort by:</span>
-          <Select
+          <FilterSelect
             value={reviewSort}
-            onValueChange={(value) => setReviewSort(value as typeof reviewSort)}
-          >
-            <SelectTrigger aria-label="Sort reviews"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="featured">Featured</SelectItem>
-              <SelectItem value="rating_desc">Highest Rating</SelectItem>
-              <SelectItem value="rating_asc">Lowest Rating</SelectItem>
-              <SelectItem value="date_desc">Most Recent</SelectItem>
-            </SelectContent>
-          </Select>
+            onChange={(value) => setReviewSort(value as typeof reviewSort)}
+            ariaLabel="Sort reviews"
+            fullWidth={false}
+            options={[
+              { value: "featured", label: "Featured" },
+              { value: "rating_desc", label: "Highest Rating" },
+              { value: "rating_asc", label: "Lowest Rating" },
+              { value: "date_desc", label: "Most Recent" },
+            ]}
+          />
         </div>
 
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Rating:</span>
-          <Select
+          <FilterSelect
             value={ratingFilter}
-            onValueChange={setRatingFilter}
-          >
-            <SelectTrigger aria-label="Filter reviews by rating"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Stars</SelectItem>
-              <SelectItem value="9">9+ Stars</SelectItem>
-              <SelectItem value="8">8+ Stars</SelectItem>
-              <SelectItem value="7">7+ Stars</SelectItem>
-              <SelectItem value="5">5+ Stars</SelectItem>
-            </SelectContent>
-          </Select>
+            onChange={setRatingFilter}
+            ariaLabel="Filter reviews by rating"
+            fullWidth={false}
+            options={[
+              { value: "all", label: "All Stars" },
+              { value: "9", label: "9+ Stars" },
+              { value: "8", label: "8+ Stars" },
+              { value: "7", label: "7+ Stars" },
+              { value: "5", label: "5+ Stars" },
+            ]}
+          />
         </div>
 
         <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">

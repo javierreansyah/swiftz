@@ -1,19 +1,21 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { Movie } from "@/types";
 import { cn } from "@/lib/utils";
 
 export interface FeaturedHeroBackdropProps {
   movies: Movie[];
   selectedIndex: number;
+  loadedIndices: number[];
   offsetY: number;
 }
 
 export function FeaturedHeroBackdrop({
   movies,
   selectedIndex,
+  loadedIndices,
   offsetY,
 }: FeaturedHeroBackdropProps) {
   return (
@@ -30,9 +32,10 @@ export function FeaturedHeroBackdrop({
       >
         {movies.slice(0, 8).map((movie, index) => {
           const isSelected = index === selectedIndex;
+          if (!isSelected && !loadedIndices.includes(index)) return null;
           const bgUrl = movie.backdrop_path
             ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
-            : `https://image.tmdb.org/t/p/w780${movie.poster_path}`;
+            : movie.poster_path ? `https://image.tmdb.org/t/p/w780${movie.poster_path}` : "/assets/images/movie-placeholder.svg";
 
           return (
             <div
@@ -48,7 +51,7 @@ export function FeaturedHeroBackdrop({
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                className="scale-105 object-cover object-top opacity-70 blur-2xl brightness-80 contrast-105 filter transition-all duration-300 sm:blur-3xl dark:opacity-60 dark:brightness-75 dark:contrast-110"
+                variant="ambient"
               />
             </div>
           );

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import Link from "next/link";
 import { Play, Star, Plus, Check } from "lucide-react";
 import { Movie } from "@/types";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export interface FeaturedHeroSpotlightProps {
   movies: Movie[];
   selectedIndex: number;
+  loadedIndices: number[];
   activeMovie: Movie;
   isAuthenticated: boolean;
   isWatchlist: boolean;
@@ -22,6 +23,7 @@ export interface FeaturedHeroSpotlightProps {
 export function FeaturedHeroSpotlight({
   movies,
   selectedIndex,
+  loadedIndices,
   activeMovie,
   isAuthenticated,
   isWatchlist,
@@ -34,9 +36,10 @@ export function FeaturedHeroSpotlight({
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
+        if (!isSelected && !loadedIndices.includes(index)) return null;
         const imgUrl = movie.backdrop_path
           ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
-          : `https://image.tmdb.org/t/p/w780${movie.poster_path}`;
+          : movie.poster_path ? `https://image.tmdb.org/t/p/w780${movie.poster_path}` : "/assets/images/movie-placeholder.svg";
 
         return (
           <div
@@ -52,7 +55,7 @@ export function FeaturedHeroSpotlight({
               fill
               priority={index === 0}
               sizes="(max-width: 1024px) 100vw, 66vw"
-              className="object-cover brightness-75 transition-transform duration-700 ease-out hover:scale-105"
+              variant="spotlight"
             />
           </div>
         );
@@ -65,6 +68,7 @@ export function FeaturedHeroSpotlight({
       {/* Banner Full-Coverage Clickable Link to Active Movie Detail */}
       <Link
         href={`/movie/${activeMovie.id}`}
+        prefetch={false}
         className="absolute inset-0 z-3 block cursor-pointer"
         aria-label={`View details for ${activeMovie.title}`}
       />
@@ -72,9 +76,11 @@ export function FeaturedHeroSpotlight({
       {/* Bottom Content Bars for all hero movies with smooth 1000ms crossfade */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
+        if (!isSelected && !loadedIndices.includes(index)) return null;
+        const Heading = isSelected ? "h1" : "h2";
         const pUrl = movie.poster_path
           ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-          : "/assets/images/movie-placeholder.png";
+          : "/assets/images/movie-placeholder.svg";
 
         return (
           <div
@@ -90,6 +96,7 @@ export function FeaturedHeroSpotlight({
               {/* 2x Enlarged Poster Thumbnail Badge */}
               <Link
                 href={`/movie/${movie.id}`}
+                prefetch={false}
                 aria-label={`View details for ${movie.title}`}
                 className="group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48"
               >
@@ -97,9 +104,8 @@ export function FeaturedHeroSpotlight({
                   src={pUrl}
                   alt={movie.title}
                   fill
-                  priority={index === 0}
                   sizes="(max-width: 1024px) 144px, 192px"
-                  className="object-cover transition-transform duration-500 group-hover/poster:scale-105"
+                  variant="card"
                 />
               </Link>
 
@@ -123,11 +129,12 @@ export function FeaturedHeroSpotlight({
 
                 <Link
                   href={`/movie/${movie.id}`}
+                  prefetch={false}
                   className="group/title block transition-colors"
                 >
-                  <h1 className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/title:text-primary">
+                  <Heading className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/title:text-primary">
                     {movie.title}
-                  </h1>
+                  </Heading>
                 </Link>
 
                 <p className="line-clamp-2 max-w-2xl text-xs text-media-foreground/80 sm:text-sm">

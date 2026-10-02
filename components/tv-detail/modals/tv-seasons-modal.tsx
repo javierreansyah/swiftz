@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import {
   Star,
   Clock,
@@ -15,13 +15,7 @@ import {
 } from "lucide-react";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
 import { TVShowDetailsData, TVSeason } from "@/types";
 import { useTVSeasonQuery } from "@/hooks/use-tmdb";
 import { cn } from "@/lib/utils";
@@ -59,8 +53,9 @@ export function TVSeasonsModal({
   }, [initialSeasonNumber]);
 
   const { data: seasonDetails, isLoading } = useTVSeasonQuery(
-    isOpen ? show.id : undefined,
-    isOpen ? activeSeasonNumber : undefined
+    show.id,
+    activeSeasonNumber,
+    isOpen
   );
 
   const toggleEpisodeExpand = (episodeId: number) => {
@@ -78,21 +73,15 @@ export function TVSeasonsModal({
 
   const mobileSeasonSelector = (
     <div className="p-3">
-      <Select
+      <FilterSelect
         value={String(activeSeasonNumber)}
-        onValueChange={(val) => setActiveSeasonNumber(Number(val))}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select Season" />
-        </SelectTrigger>
-        <SelectContent>
-          {seasons.map((s) => (
-            <SelectItem key={s.id} value={String(s.season_number)}>
-              {s.name} ({s.episode_count} Episodes)
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        onChange={(val) => setActiveSeasonNumber(Number(val))}
+        placeholder="Select Season"
+        options={seasons.map((s) => ({
+          value: String(s.season_number),
+          label: `${s.name} (${s.episode_count} Episodes)`,
+        }))}
+      />
     </div>
   );
 

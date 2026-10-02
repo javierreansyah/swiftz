@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -102,6 +103,8 @@ export interface FilterSelectProps {
   onChange: (val: string) => void;
   options: FilterSelectOption[];
   placeholder?: string;
+  ariaLabel?: string;
+  fullWidth?: boolean;
   className?: string;
 }
 
@@ -110,24 +113,29 @@ export function FilterSelect({
   onChange,
   options,
   placeholder = "Select...",
+  ariaLabel,
+  fullWidth = true,
   className,
 }: FilterSelectProps) {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger
+        aria-label={ariaLabel || placeholder}
         className={cn(
-          "w-full",
+          fullWidth && "w-full",
           className
         )}
       >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {options.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value}>
-            {opt.label}
-          </SelectItem>
-        ))}
+        <SelectGroup>
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
       </SelectContent>
     </Select>
   );

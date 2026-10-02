@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import Link from "next/link";
 import { Film, Heart, Bookmark, Star, LogIn, LogOut } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";

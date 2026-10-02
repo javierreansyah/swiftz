@@ -1,17 +1,9 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
+import { PersonnelGrid } from "@/components/common/personnel-grid";
 import { Cast, Crew } from "@/types";
 import { DetailBottomSheet } from "@/components/common/detail-bottom-sheet";
 
@@ -206,22 +198,18 @@ export function CastModal({
       </div>
 
       {castTab !== "cast" && allDepartments.length > 0 && (
-        <Select
+        <FilterSelect
           value={selectedDept}
-          onValueChange={(val) => setSelectedDept(val)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="All Departments" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Departments ({crew.length})</SelectItem>
-            {allDepartments.map((dept) => (
-              <SelectItem key={dept} value={dept}>
-                {dept} ({deptCounts[dept] || 0})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          onChange={setSelectedDept}
+          placeholder="All Departments"
+          options={[
+            { value: "all", label: `All Departments (${crew.length})` },
+            ...allDepartments.map((dept) => ({
+              value: dept,
+              label: `${dept} (${deptCounts[dept] || 0})`,
+            })),
+          ]}
+        />
       )}
     </div>
   );
@@ -244,103 +232,8 @@ export function CastModal({
       mobileControls={mobileControls}
     >
       <div className="space-y-8">
-        {/* Cast Section */}
-        {filteredCast.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="border-b border-border/50 pb-2 label-section text-muted-foreground uppercase">
-              Cast ({filteredCast.length})
-            </h3>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {filteredCast.map((c) => {
-                const profileUrl = c.profile_path
-                  ? `https://image.tmdb.org/t/p/w185${c.profile_path}`
-                  : null;
-
-                return (
-                  <Link
-                    key={c.id + (c.character || "")}
-                    href={`/person/${c.id}`}
-                    onClick={onClose}
-                    className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
-                  >
-                    <div className="relative aspect-4/5 w-full bg-muted">
-                      {profileUrl ? (
-                        <Image
-                          src={profileUrl}
-                          alt={c.name}
-                          fill
-                          sizes="180px"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex size-full items-center justify-center bg-secondary">
-                          <User className="size-8 text-muted-foreground/60" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <h4 className="line-clamp-1 text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-                        {c.name}
-                      </h4>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {c.character || "Actor"}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Crew Section */}
-        {filteredCrew.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="border-b border-border/50 pb-2 label-section text-muted-foreground uppercase">
-              Crew ({filteredCrew.length})
-            </h3>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {filteredCrew.map((c, i) => {
-                const profileUrl = c.profile_path
-                  ? `https://image.tmdb.org/t/p/w185${c.profile_path}`
-                  : null;
-
-                return (
-                  <Link
-                    key={`${c.id}-${c.job}-${i}`}
-                    href={`/person/${c.id}`}
-                    onClick={onClose}
-                    className="group flex flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/40 hover:shadow-md"
-                  >
-                    <div className="relative aspect-4/5 w-full bg-muted">
-                      {profileUrl ? (
-                        <Image
-                          src={profileUrl}
-                          alt={c.name}
-                          fill
-                          sizes="180px"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex size-full items-center justify-center bg-secondary">
-                          <User className="size-8 text-muted-foreground/60" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <h4 className="line-clamp-1 text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-                        {c.name}
-                      </h4>
-                      <p className="line-clamp-1 text-xs text-muted-foreground">
-                        {c.job || c.department}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        <PersonnelGrid title="Cast" people={filteredCast} onNavigate={onClose} />
+        <PersonnelGrid title="Crew" people={filteredCrew} onNavigate={onClose} />
 
         {filteredCast.length === 0 && filteredCrew.length === 0 && (
           <div className="py-20 text-center text-muted-foreground">

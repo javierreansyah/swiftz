@@ -2,13 +2,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
+import Image from "@/components/ui/image";
 import {
   Search,
   SlidersHorizontal,
   X,
-  Loader2,
   Tv,
   Calendar,
   Sparkles,
@@ -19,7 +18,7 @@ import {
   Users,
   ArrowDownUp,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { FilterSearchSelect } from "@/components/common/filter-search-select";
 import movieGenres from "@/public/data/genres";
 import { useKeywordSearchQuery } from "@/hooks/use-tmdb";
 import {
@@ -78,8 +77,6 @@ export function DiscoverSidebar({
 
   const [keywordInput, setKeywordInput] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
-  const [isKeywordDropdownOpen, setIsKeywordDropdownOpen] = useState(false);
-  const keywordContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setPendingFilters(activeFilters);
@@ -94,19 +91,6 @@ export function DiscoverSidebar({
 
   const { data: keywordResults, isLoading: isSearchingKeywords } =
     useKeywordSearchQuery(debouncedKeyword);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        keywordContainerRef.current &&
-        !keywordContainerRef.current.contains(e.target as Node)
-      ) {
-        setIsKeywordDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const pendingActiveCount = countActiveFilters(pendingFilters);
 
@@ -138,7 +122,6 @@ export function DiscoverSidebar({
       }));
     }
     setKeywordInput("");
-    setIsKeywordDropdownOpen(false);
   };
 
   const removeKeyword = (id: number) => {
@@ -178,7 +161,6 @@ export function DiscoverSidebar({
       {/* 2. Keywords Search */}
       <div
         className="space-y-3 border-b border-border/40 pb-4"
-        ref={keywordContainerRef}
       >
         <FilterSectionHeader
           icon={Tag}
@@ -186,41 +168,20 @@ export function DiscoverSidebar({
           selectedCount={pendingFilters.keywords.length}
         />
 
-        <div className="relative">
-          <Input
-            type="text"
-            placeholder="Filter by keyword (e.g. superhero, anime)..."
-            value={keywordInput}
-            onChange={(e) => {
-              setKeywordInput(e.target.value);
-              setIsKeywordDropdownOpen(true);
-            }}
-            onFocus={() => setIsKeywordDropdownOpen(true)}
-          />
-          {isSearchingKeywords && (
-            <Loader2 className="absolute top-2.5 right-3 size-4 animate-spin text-muted-foreground" />
-          )}
-
-          {isKeywordDropdownOpen &&
-            keywordInput.trim().length >= 2 &&
-            keywordResults &&
-            keywordResults.results.length > 0 && (
-              <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-border bg-popover p-1 shadow-lg backdrop-blur-md">
-                {keywordResults.results.slice(0, 8).map((kw) => (
-                  <li key={kw.id}>
-                    <Button variant="ghost" size="sm"
-                      type="button"
-                      onClick={() => addKeyword(kw)}
-                      className="w-full justify-between"
-                    >
-                      <span className="capitalize">{kw.name}</span>
-                      <span className="text-xs text-muted-foreground">Add</span>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            )}
-        </div>
+        <FilterSearchSelect
+          query={keywordInput}
+          onQueryChange={setKeywordInput}
+          placeholder="Search keywords..."
+          isLoading={isSearchingKeywords || keywordInput.trim() !== debouncedKeyword}
+          options={(keywordResults?.results || []).slice(0, 8).map((kw) => ({
+            value: String(kw.id),
+            label: kw.name,
+          }))}
+          onSelect={(value) => {
+            const keyword = keywordResults?.results.find((kw) => String(kw.id) === value);
+            if (keyword) addKeyword(keyword);
+          }}
+        />
 
         {pendingFilters.keywords.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-1">

@@ -51,8 +51,6 @@ export function MediaRatingDialog({
       ? deleteTVRatingMutation.isPending
       : deleteMovieRatingMutation.isPending;
 
-  if (!isOpen) return null;
-
   const displayRating = hoverRating !== null ? hoverRating : selectedRating;
 
   const handleRate = async (ratingVal: number) => {

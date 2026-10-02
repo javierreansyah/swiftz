@@ -1,18 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  TVShowDetailsData,
-  Cast,
-  Crew,
-  Video,
-  TVShow,
-} from "@/types";
+import { TVShowDetailsData } from "@/types";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
   useTVAccountStatesQuery,
   useTVReviewsQuery,
+  useTVCreditsQuery,
+  useTVVideosQuery,
+  useTVRecommendationsQuery,
 } from "@/hooks/use-tmdb";
+import { useVisible } from "@/hooks/use-visible";
 import { MovieHeroBackdrop } from "@/components/movie-detail/hero/movie-hero-backdrop";
 import { TVHero } from "./hero/tv-hero";
 import { TVRatingDialog } from "./hero/tv-rating-dialog";
@@ -26,24 +24,24 @@ import { TVBottomModals, TVModalType } from "./modals/tv-bottom-modals";
 export interface TVDetailClientProps {
   show: TVShowDetailsData;
   certification?: string;
-  videos: Video[];
-  cast: Cast[];
-  crew: Crew[];
-  recommendations?: TVShow[];
 }
 
 export function TVDetailClient({
   show,
   certification = "NR",
-  videos,
-  cast,
-  crew,
-  recommendations = [],
 }: TVDetailClientProps) {
   const [activeModal, setActiveModal] = useState<TVModalType>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [initialVideoIndex, setInitialVideoIndex] = useState<number | undefined>(undefined);
   const [selectedSeasonNumber, setSelectedSeasonNumber] = useState<number | undefined>(undefined);
+  const recommendationsSection = useVisible();
+  const { data: creditsData } = useTVCreditsQuery(show.id);
+  const { data: videoData } = useTVVideosQuery(show.id);
+  const { data: recommendationsData } = useTVRecommendationsQuery(show.id, 1, recommendationsSection.visible || activeModal === "recommendations");
+  const cast = creditsData?.cast || [];
+  const crew = creditsData?.crew || [];
+  const videos = videoData?.results || [];
+  const recommendations = recommendationsData?.results || [];
 
   const { sessionId } = useAuth();
   const { data: accountStates, refetch: refetchStates } = useTVAccountStatesQuery(
@@ -58,7 +56,7 @@ export function TVDetailClient({
       ? 10
       : null;
 
-  const { data: reviewsData } = useTVReviewsQuery(show.id, 1);
+  const { data: reviewsData } = useTVReviewsQuery(show.id, 1, activeModal === "reviews");
   const reviews = reviewsData?.results || [];
   const totalReviews = reviewsData?.total_results || reviews.length;
 
@@ -84,7 +82,7 @@ export function TVDetailClient({
 
   const posterUrl = show.poster_path
     ? `https://image.tmdb.org/t/p/w780${show.poster_path}`
-    : "/assets/images/movie-placeholder.png";
+    : "/assets/images/movie-placeholder.svg";
 
   const backdropUrl = show.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}`
@@ -99,7 +97,7 @@ export function TVDetailClient({
       <div className="relative z-10 container py-20">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-detail xl:grid-cols-detail-wide xl:gap-10">
           {/* Main Column */}
-          <main className="min-w-0 space-y-12">
+          <div className="min-w-0 space-y-12">
             {/* 1. Hero Showcase (Overview) */}
             <div id="section-overview" className="scroll-mt-24">
               <TVHero
@@ -146,13 +144,15 @@ export function TVDetailClient({
             />
 
             {/* 5. Recommendations / Related */}
+            <div ref={recommendationsSection.ref}>
             {recommendations.length > 0 && (
               <TVRecommendationsSection
                 shows={recommendations}
                 onOpenRecommendationsModal={() => setActiveModal("recommendations")}
               />
             )}
-          </main>
+            </div>
+          </div>
 
           {/* Dedicated Compact Sticky Sidebar (Desktop) */}
           <aside className="sticky top-24 hidden w-55 self-start lg:block xl:w-60">

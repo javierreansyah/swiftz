@@ -3,20 +3,40 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Search, Film, Tv, SlidersHorizontal } from "lucide-react";
-import { PersonCombinedCredits, PersonCastCredit, PersonCrewCredit } from "@/types";
+import { PersonCombinedCredits } from "@/types";
+import { usePersonCombinedCreditsQuery } from "@/hooks/use-tmdb";
+import { useVisible } from "@/hooks/use-visible";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FilterSelect } from "@/components/common/filter-sidebar-primitives";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export interface PersonCreditsTimelineProps {
   credits: PersonCombinedCredits;
   primaryDepartment?: string;
+}
+
+/** Keep the potentially huge full filmography out of the serialized RSC payload. */
+export function PersonCreditsTimelineLoader({ personId, primaryDepartment }: { personId: number; primaryDepartment?: string }) {
+  const { ref, visible } = useVisible();
+  const query = usePersonCombinedCreditsQuery(personId, visible);
+
+  return (
+    <div ref={ref}>
+      {query.data ? <PersonCreditsTimeline credits={query.data} primaryDepartment={primaryDepartment} /> : (
+        <section className="space-y-4" aria-busy={!query.isError}>
+          <h2 className="heading-section">Career Credits</h2>
+          {query.isError ? (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">Unable to load career credits.</p>
+              <Button variant="outline" onClick={() => query.refetch()}>Try again</Button>
+            </div>
+          ) : <Skeleton className="h-64 w-full" />}
+        </section>
+      )}
+    </div>
+  );
 }
 
 interface UnifiedCreditItem {
@@ -102,7 +122,7 @@ export function PersonCreditsTimeline({
 
   // Filter and sort credits
   const filteredCredits = useMemo(() => {
-    let result = allCredits;
+    let result = [...allCredits];
 
     // Department filter
     if (selectedDepartment && selectedDepartment !== "all") {
@@ -180,22 +200,17 @@ export function PersonCreditsTimeline({
 
           {/* Department Selector */}
           {availableDepartments.length > 1 && (
-            <Select
+            <FilterSelect
               value={selectedDepartment}
-              onValueChange={setSelectedDepartment}
-            >
-              <SelectTrigger className="w-36">
-                <SelectValue placeholder="Department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Departments</SelectItem>
-                {availableDepartments.map((dept) => (
-                  <SelectItem key={dept} value={dept}>
-                    {dept}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={setSelectedDepartment}
+              placeholder="Department"
+              fullWidth={false}
+              className="w-36"
+              options={[
+                { value: "all", label: "All Departments" },
+                ...availableDepartments.map((dept) => ({ value: dept, label: dept })),
+              ]}
+            />
           )}
 
           {/* Media Type Filter Tabs (Shadcn Default) */}

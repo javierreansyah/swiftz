@@ -1,28 +1,18 @@
 import React from "react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { MovieDetailClient } from "@/components/movie-detail/movie-detail-client";
-import {
-  getMovieDetails,
-  getPopularMovies,
-  getMovieReleaseDates,
-  getMovieCast,
-  getMovieVideos,
-  getMovieImages,
-  getMovieRecommendations,
-} from "@/lib/tmdb";
+import { getMovieDetails } from "@/lib/tmdb";
+import { isTMDBNotFound } from "@/lib/tmdb-error";
+import { pageMetadata, siteUrl } from "@/lib/seo";
+import { tmdbImageUrl } from "@/lib/tmdb-images";
+import { StructuredData } from "@/components/common/structured-data";
 
-// Edge CDN caches for 7 days (604,800s) - 0 function invocations on cache hits
+// On-demand ISR: no catalog crawl/build fan-out; cached HTML for seven days.
 export const revalidate = 604800;
 
 export async function generateStaticParams() {
-  try {
-    const popular = await getPopularMovies(1);
-    return popular.results.slice(0, 20).map((movie) => ({
-      id: String(movie.id),
-    }));
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 interface MovieDetailsProps {
@@ -37,86 +27,50 @@ export async function generateMetadata({
   const { id } = await params;
   try {
     const movie = await getMovieDetails(id);
-    if (!movie) return { title: "Movie | Swiftz" };
-
-    const year = movie.release_date
-      ? `(${movie.release_date.substring(0, 4)})`
-      : "";
-    const title = `${movie.title}${year} | Swiftz`;
-    const description =
-      movie.overview?.slice(0, 160) || "Discover movie details on Swiftz";
-    const backdropUrl = movie.backdrop_path
-      ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
-      : undefined;
-
-    return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        images: backdropUrl
-          ? [{ url: backdropUrl, width: 1280, height: 720, alt: movie.title }]
-          : [],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: backdropUrl ? [backdropUrl] : [],
-      },
-    };
-  } catch {
-    return {
-      title: "Movie Details | Swiftz",
-      description: "Discover movie details on Swiftz",
-    };
+    const year = movie.release_date?.substring(0, 4);
+    return pageMetadata({
+      title: `${movie.title}${year ? ` (${year})` : ""}`,
+      description: movie.overview?.slice(0, 160) || `Explore ${movie.title}, its cast, trailers, and recommendations.`,
+      path: `/movie/${movie.id}`,
+      image: tmdbImageUrl(movie.backdrop_path || movie.poster_path),
+    });
+  } catch (error) {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
   }
 }
 
 export default async function MovieDetailsPage({ params }: MovieDetailsProps) {
   const { id } = await params;
 
-  const [
-    movie,
-    releaseDates,
-    castData,
-    videoData,
-    imagesData,
-    recommendationsData,
-  ] = await Promise.all([
-    getMovieDetails(id),
-    getMovieReleaseDates(id).catch(() => ({ id: Number(id), results: [] })),
-    getMovieCast(id).catch(() => ({ id: Number(id), cast: [], crew: [] })),
-    getMovieVideos(id).catch(() => ({ id: String(id), results: [] })),
-    getMovieImages(id).catch(() => ({
-      id: Number(id),
-      backdrops: [],
-      posters: [],
-      logos: [],
-    })),
-    getMovieRecommendations(id, 1).catch(() => ({
-      page: 1,
-      results: [],
-      total_pages: 0,
-      total_results: 0,
-    })),
-  ]);
+  const data = await getMovieDetails(id).catch((error: unknown) => {
+    if (isTMDBNotFound(error)) notFound();
+    throw error;
+  });
+  const { release_dates: releaseDates, ...movie } = data;
 
   const certification =
-    releaseDates.results?.find((r) => r.iso_3166_1 === "US")?.release_dates[0]
+    releaseDates?.results?.find((r) => r.iso_3166_1 === "US")?.release_dates.find((release) => release.certification)
       ?.certification || "NR";
 
   return (
     <main className="min-h-screen bg-background">
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "Movie",
+        name: movie.title,
+        description: movie.overview,
+        url: `${siteUrl}/movie/${movie.id}`,
+        image: tmdbImageUrl(movie.poster_path, 780),
+        datePublished: movie.release_date || undefined,
+        duration: movie.runtime > 0 ? `PT${movie.runtime}M` : undefined,
+        genre: movie.genres.map((genre) => genre.name),
+        ...(movie.vote_count > 0 ? { aggregateRating: { "@type": "AggregateRating", ratingValue: movie.vote_average, bestRating: 10, worstRating: 0, ratingCount: movie.vote_count } } : {}),
+      }} />
       <MovieDetailClient
+        key={movie.id}
         movie={movie}
         certification={certification}
-        videos={videoData.results || []}
-        cast={castData.cast || []}
-        crew={castData.crew || []}
-        images={imagesData}
-        recommendations={recommendationsData.results || []}
       />
     </main>
   );

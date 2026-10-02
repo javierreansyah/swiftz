@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/image";
 import { Play } from "lucide-react";
 import { Movie } from "@/types";
 
@@ -46,7 +46,7 @@ export function FeaturedHeroUpNext({
                       alt={movie.title}
                       fill
                       sizes="(max-width: 1280px) 112px, 128px"
-                      className="object-cover transition-transform duration-500 group-hover/item:scale-105"
+                      variant="card"
                     />
                   )}
                   <div className="absolute inset-0 flex items-center justify-center bg-scrim/40 opacity-0 transition-opacity duration-300 group-hover/item:opacity-100">
