@@ -1,5 +1,4 @@
 import { serializeStructuredData } from "@/lib/seo";
-
 export function StructuredData({ data }: { data: Record<string, unknown> }) {
   return (
     <script

@@ -1,8 +1,6 @@
 "use client";
-
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
 export default function MovieError({
   error,
   reset,
@@ -17,7 +15,9 @@ export default function MovieError({
   return (
     <div className="container flex min-h-100 flex-col items-center justify-center space-y-4 py-12">
       <div className="w-full max-w-md space-y-4 rounded-3xl border bg-card p-8 text-center">
-        <h2 className="heading-section text-destructive">Failed to fetch movie details</h2>
+        <h2 className="heading-section text-destructive">
+          Failed to fetch movie details
+        </h2>
         <p className="text-sm text-muted-foreground">
           Could not load the requested movie information.
         </p>

@@ -6,7 +6,7 @@ Copy `.env.example` to `.env.local` for development. Configure these in Vercel
 before the production build:
 
 Enable Corepack in Vercel with `ENABLE_EXPERIMENTAL_COREPACK=1` so `packageManager`
-selects the pinned pnpm version instead of the legacy npm lockfile. Leave the
+selects the pinned pnpm version and uses the sole `pnpm-lock.yaml`. Leave the
 install command on automatic detection; use `pnpm build` for the build command.
 Locally, install with `pnpm install --frozen-lockfile`. Avoid overriding the Vercel
 install command with bare `pnpm install` without Corepack, which can select an
@@ -25,15 +25,15 @@ Preview builds are noindex, disallow crawling, and have an empty sitemap.
 
 ## Fetching split
 
-| Page/resource | Delivery |
-| --- | --- |
-| Homepage hero and popular film links | One server request, 24-hour ISR |
-| Movie core details and US certification | One appended server request, 7-day ISR |
-| TV core details and content ratings | One appended server request, 24-hour ISR |
-| Person biography and known-for summary | One appended server request, 7-day ISR |
-| Catalog filters, pagination, search, and account data | Browser directly to TMDB |
-| Home secondary shelves, galleries, reviews, recommendations, full career timeline | Browser; visibility/open-gated |
-| Sitemap | Up to 60 popular detail URLs plus public landing pages, daily cache |
+| Page/resource                                                                     | Delivery                                                            |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Homepage hero and popular film links                                              | One server request, 24-hour ISR                                     |
+| Movie core details and US certification                                           | One appended server request, 7-day ISR                              |
+| TV core details and content ratings                                               | One appended server request, 24-hour ISR                            |
+| Person biography and known-for summary                                            | One appended server request, 7-day ISR                              |
+| Catalog filters, pagination, search, and account data                             | Browser directly to TMDB                                            |
+| Home secondary shelves, galleries, reviews, recommendations, full career timeline | Browser; visibility/open-gated                                      |
+| Sitemap                                                                           | Up to 60 popular detail URLs plus public landing pages, daily cache |
 
 Detail routes use on-demand static generation rather than prebuilding or crawling
 the catalog. Core fetches are request-memoized across metadata and page rendering.
@@ -48,6 +48,12 @@ Query-only navigation uses the native History API, which Next synchronizes with
 Use the Next router for **different-page** navigation. Detail card links disable
 automatic prefetch so merely seeing a carousel does not generate all detail pages.
 
+Routes compose feature-owned screens. Server pages own metadata and outer
+Suspense boundaries; dynamic route parameters are resolved before passing plain
+IDs to client screens. Feature query-options modules and centralized query keys
+share fetch behavior across hooks, search counts, and category selection. See
+[ARCHITECTURE.md](ARCHITECTURE.md) for module ownership and conventions.
+
 React Query coalesces shared requests, caches catalog responses for 30 minutes,
 and garbage-collects inactive queries after an hour. Search requests consume abort
 signals, and category pages enable only the selected endpoint. Count badges reuse
@@ -59,7 +65,7 @@ still allows UI reuse. Requests time out after 15 seconds where supported.
 ## Images
 
 `components/ui/image.tsx` emits native responsive images. TMDB supplies resize
-URLs, not prebuilt srcsets: `lib/tmdb-images.ts` builds width candidates from its
+URLs, not prebuilt srcsets: `lib/tmdb/images.ts` builds width candidates from its
 CDN transforms. The browser chooses using `sizes`, viewport width, and pixel
 density. Always specify accurate `sizes` for fill images. SVG, local assets,
 Gravatar, and YouTube URLs pass through without TMDB transforms.
@@ -91,9 +97,10 @@ without accepting the resulting function and bandwidth costs.
 
 ## Checks
 
+- `pnpm format:check`
 - `pnpm exec tsc --noEmit`
 - `pnpm lint`
-- `pnpm test` (Node 22.18+ for native TypeScript stripping)
+- `pnpm test` (Node test runner with tsx)
 - `pnpm build` (requires a working TMDB key; checks static route generation)
 
 No browser verification is required for these checks.

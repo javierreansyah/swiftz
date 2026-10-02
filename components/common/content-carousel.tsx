@@ -1,15 +1,13 @@
 "use client";
-
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+  type SectionHeaderTab,
+  type SectionHeaderAction,
   SectionHeader,
-  SectionHeaderTab,
-  SectionHeaderAction,
-} from "./section-header";
+} from "@/components/common/section-header";
 import { cn } from "@/lib/utils";
-
 export interface ContentCarouselProps {
   title: string;
   count?: number;
@@ -95,7 +93,7 @@ export function ContentCarousel({
         ref={scrollContainerRef}
         className={cn(
           "flex scrollbar-none gap-4 overflow-x-auto scroll-smooth pt-1 pb-2",
-          carouselClassName
+          carouselClassName,
         )}
       >
         {children}
@@ -103,5 +101,3 @@ export function ContentCarousel({
     </section>
   );
 }
-
-export default ContentCarousel;

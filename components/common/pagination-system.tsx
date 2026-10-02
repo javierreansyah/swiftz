@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   Pagination,
@@ -10,7 +9,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
 export interface PaginationProps {
   currentPage: number;
   totalPage: number;
@@ -34,7 +32,7 @@ export function PaginationSystem({
 
   const handlePageClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    pageNumber: number
+    pageNumber: number,
   ) => {
     if (onPageChange) {
       e.preventDefault();
@@ -79,10 +77,7 @@ export function PaginationSystem({
                     </PaginationLink>
                   </PaginationItem>
                 );
-              } else if (
-                pageNumber === 2 ||
-                pageNumber === safeTotalPage - 1
-              ) {
+              } else if (pageNumber === 2 || pageNumber === safeTotalPage - 1) {
                 return (
                   <PaginationItem key={index}>
                     <PaginationEllipsis />
@@ -127,10 +122,7 @@ export function PaginationSystem({
                     </PaginationLink>
                   </PaginationItem>
                 );
-              } else if (
-                pageNumber === 2 ||
-                pageNumber === safeTotalPage - 1
-              ) {
+              } else if (pageNumber === 2 || pageNumber === safeTotalPage - 1) {
                 return (
                   <PaginationItem key={index}>
                     <PaginationEllipsis />
@@ -166,5 +158,3 @@ export function PaginationSystem({
     </>
   );
 }
-
-export default PaginationSystem;

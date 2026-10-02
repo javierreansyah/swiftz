@@ -1,24 +1,28 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
-import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import QueryProvider from "@/components/providers/query-provider";
-import { AuthProvider } from "@/components/providers/auth-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
+import { AuthProvider } from "@/features/auth/auth-provider";
 import { MovieNavProvider } from "@/components/providers/movie-nav-provider";
-import Navigation from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { Navbar as Navigation } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { siteUrl, isPreview } from "@/lib/seo";
+import "./globals.css";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-const loraHeading = Lora({subsets:['latin'],variable:'--font-heading'});
+const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Swiftz — Movies, TV Shows & People", template: "%s | Swiftz" },
-  description: "Discover movies, television series, cast, trailers, and recommendations. Build your watchlist with Swiftz.",
+  title: {
+    default: "Swiftz — Movies, TV Shows & People",
+    template: "%s | Swiftz",
+  },
+  description:
+    "Discover movies, television series, cast, trailers, and recommendations. Build your watchlist with Swiftz.",
   robots: { index: !isPreview, follow: !isPreview },
 };
 

@@ -1,15 +1,14 @@
 "use client";
-
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useMovieVideosQuery, useTVVideosQuery } from "@/hooks/use-tmdb";
+import { useMovieVideosQuery } from "@/features/movies/hooks/queries";
+import { useTVVideosQuery } from "@/features/tv/hooks/queries";
 import { Film, Loader2 } from "lucide-react";
-
 export interface TrailerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,11 +30,11 @@ export function TrailerModal({
   const isMovie = mediaType === "movie";
   const { data: movieVideos, isLoading: isMovieLoading } = useMovieVideosQuery(
     !directVideoKey && isMovie && mediaId ? mediaId : "",
-    isOpen
+    isOpen,
   );
   const { data: tvVideos, isLoading: isTvLoading } = useTVVideosQuery(
     !directVideoKey && !isMovie && mediaId ? mediaId : "",
-    isOpen
+    isOpen,
   );
 
   const activeVideoKey = useMemo(() => {
@@ -48,7 +47,7 @@ export function TrailerModal({
       (v) =>
         v.site?.toLowerCase() === "youtube" &&
         v.type?.toLowerCase() === "trailer" &&
-        v.official
+        v.official,
     );
     if (officialTrailer) return officialTrailer.key;
 
@@ -56,7 +55,7 @@ export function TrailerModal({
     const trailer = vList.find(
       (v) =>
         v.site?.toLowerCase() === "youtube" &&
-        v.type?.toLowerCase() === "trailer"
+        v.type?.toLowerCase() === "trailer",
     );
     if (trailer) return trailer.key;
 
@@ -64,7 +63,8 @@ export function TrailerModal({
     const teaserOrClip = vList.find(
       (v) =>
         v.site?.toLowerCase() === "youtube" &&
-        (v.type?.toLowerCase() === "teaser" || v.type?.toLowerCase() === "clip")
+        (v.type?.toLowerCase() === "teaser" ||
+          v.type?.toLowerCase() === "clip"),
     );
     if (teaserOrClip) return teaserOrClip.key;
 
@@ -78,11 +78,16 @@ export function TrailerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent surface="cinema" className="max-w-4xl overflow-hidden sm:max-w-4xl">
+      <DialogContent
+        surface="cinema"
+        className="max-w-4xl overflow-hidden sm:max-w-4xl"
+      >
         <DialogHeader inset>
           <DialogTitle className="flex items-center">
             <Film className="size-4 text-primary" />
-            <span className="line-clamp-1">{title} &mdash; Official Trailer</span>
+            <span className="line-clamp-1">
+              {title} &mdash; Official Trailer
+            </span>
           </DialogTitle>
         </DialogHeader>
 
@@ -107,7 +112,8 @@ export function TrailerModal({
                 Trailer Not Available
               </h3>
               <p className="max-w-sm text-xs text-media-muted">
-                TMDB currently has no video trailer registered for &quot;{title}&quot;.
+                TMDB currently has no video trailer registered for &quot;{title}
+                &quot;.
               </p>
             </div>
           )}
@@ -116,5 +122,3 @@ export function TrailerModal({
     </Dialog>
   );
 }
-
-export default TrailerModal;

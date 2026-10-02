@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-
-const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+const configuredUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 export const siteUrl = new URL(configuredUrl).origin;
 export const isPreview = process.env.VERCEL_ENV === "preview";
 
-export function pageMetadata({ title, description, path, image, noIndex = false }: {
+export function pageMetadata({
+  title,
+  description,
+  path,
+  image,
+  noIndex = false,
+}: {
   title: string;
   description: string;
   path: string;

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Image from "@/components/ui/image";
 import Link from "next/link";
@@ -11,9 +10,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ThemeSwitcher } from "./theme-switcher";
-import { useAuth } from "@/components/providers/auth-provider";
-
+import { ThemeSwitcher } from "@/components/layout/theme-switcher";
+import { useAuth } from "@/features/auth/auth-provider";
 interface MobileDrawerProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,12 +36,13 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
   const avatarUrl = user?.avatar?.tmdb?.avatar_path
     ? `https://image.tmdb.org/t/p/w185${user.avatar.tmdb.avatar_path}`
     : user?.avatar?.gravatar?.hash
-    ? `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}?d=identicon`
-    : null;
+      ? `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}?d=identicon`
+      : null;
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent surface="default"
+      <SheetContent
+        surface="default"
         side="right"
         showCloseButton={false}
         className="flex w-65 flex-col justify-between sm:w-80"
@@ -59,10 +58,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                 <ArrowRightToLine className="size-5" />
                 <span className="sr-only">Close menu</span>
               </Button>
-              <SheetTitle
-              >
-                Swiftz
-              </SheetTitle>
+              <SheetTitle>Swiftz</SheetTitle>
               <ThemeSwitcher variant="ghost" />
             </div>
           </SheetHeader>
@@ -144,5 +140,3 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
     </Sheet>
   );
 }
-
-export default MobileDrawer;

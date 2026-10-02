@@ -33,3 +33,8 @@
 
 See [deployment and data-delivery guidance](docs/DEPLOYMENT.md) for Vercel setup,
 environment variables, caching, SEO, and validation commands.
+
+See [application architecture](docs/ARCHITECTURE.md) for feature ownership,
+server/client boundaries, shared query options, and coding conventions. Use pnpm
+with the pinned package-manager version; `pnpm format:check`, `pnpm lint`, and
+`pnpm test` verify formatting, conventions, and data behavior.

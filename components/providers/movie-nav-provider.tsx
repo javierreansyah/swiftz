@@ -1,8 +1,6 @@
 "use client";
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-
 interface MovieNavContextType {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
@@ -12,7 +10,9 @@ interface MovieNavContextType {
   setIsAvailable: (available: boolean) => void;
 }
 
-const MovieNavContext = createContext<MovieNavContextType | undefined>(undefined);
+const MovieNavContext = createContext<MovieNavContextType | undefined>(
+  undefined,
+);
 
 export function MovieNavProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,9 +1,13 @@
 import { pageMetadata } from "@/lib/seo";
-import React, { Suspense } from "react";
-import { TVCategoryListing } from "@/components/tv";
-import { MediaListingSkeleton } from "@/components/common/media-listing-skeleton";
-
-export const metadata = pageMetadata({ title: "Top-Rated TV Shows", description: "Discover acclaimed television series and audience favorites across every genre.", path: "/tv/top-rated" });
+import { Suspense } from "react";
+import { TVCategoryListing } from "@/features/tv/discovery/tv-category-listing";
+import { MediaListingSkeleton } from "@/features/media/components/media-listing-skeleton";
+export const metadata = pageMetadata({
+  title: "Top-Rated TV Shows",
+  description:
+    "Discover acclaimed television series and audience favorites across every genre.",
+  path: "/tv/top-rated",
+});
 
 export default function TopRatedTVPage() {
   return (

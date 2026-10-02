@@ -1,18 +1,16 @@
 "use client";
-
-import React, { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Compass } from "lucide-react";
 import Logo from "@/public/assets/svg-components/logo";
 import { Button } from "@/components/ui/button";
-import { ThemeSwitcher } from "./theme-switcher";
-import { MobileDrawer } from "./mobile-drawer";
-import { UserNavDropdown } from "./user-nav-dropdown";
-import { HeaderSearch } from "./header-search";
-import { useAuth } from "@/components/providers/auth-provider";
+import { ThemeSwitcher } from "@/components/layout/theme-switcher";
+import { MobileDrawer } from "@/components/layout/mobile-drawer";
+import { UserNavDropdown } from "@/components/layout/user-nav-dropdown";
+import { HeaderSearch } from "@/features/search/components/header-search";
+import { useAuth } from "@/features/auth/auth-provider";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
-
 interface NavigationRoute {
   route: string;
   name: string;
@@ -25,7 +23,7 @@ export function Navbar() {
   const { isAuthenticated } = useAuth();
 
   const isDetailPage = Boolean(
-    pathname?.startsWith("/movie/") || pathname?.startsWith("/tv/")
+    pathname?.startsWith("/movie/") || pathname?.startsWith("/tv/"),
   );
 
   useEffect(() => {
@@ -154,5 +152,3 @@ export function Navbar() {
     </header>
   );
 }
-
-export default Navbar;

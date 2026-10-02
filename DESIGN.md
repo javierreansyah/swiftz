@@ -29,6 +29,9 @@ and overlay placement. Adjust internal spacing through shared components.
   geometry. Fullscreen sheets and line tabs intentionally have square outer edges.
 - `MediaCard`, `SectionHeader`, `ContentCarousel`, `DetailBottomSheet`, and filter
   helpers own repeated application compositions. Reuse them across movies and TV.
+  Shared media compositions live in `features/media`; generic application
+  compositions remain in `components/common`. `MediaListingLayout` owns discovery
+  and category geometry through named variants and composition slots.
 - `FilterSelect` owns Luma option grouping; `FilterSearchSelect` uses the shared
   Command/Popover composition for searchable filters. `PersonnelGrid` uses
   `MediaCard` for cast and crew; `MediaCard`'s `image` variant supports photo-only

@@ -123,10 +123,10 @@
   --text-base: clamp(0.9375rem, 0.915rem + 0.096vw, 1rem);
   --text-lg: clamp(1.08rem, 1.03rem + 0.21vw, 1.25rem);
   --text-xl: clamp(1.24rem, 1.16rem + 0.34vw, 1.5rem);
-  --text-2xl: clamp(1.43rem, 1.30rem + 0.55vw, 1.875rem);
+  --text-2xl: clamp(1.43rem, 1.3rem + 0.55vw, 1.875rem);
   --text-3xl: clamp(1.64rem, 1.45rem + 0.81vw, 2.25rem);
   --text-4xl: clamp(1.89rem, 1.62rem + 1.15vw, 2.75rem);
-  --text-5xl: clamp(2.17rem, 1.80rem + 1.58vw, 3.4rem);
+  --text-5xl: clamp(2.17rem, 1.8rem + 1.58vw, 3.4rem);
 
   --gutter: clamp(1rem, 0.45rem + 2.34vw, 3.5rem);
   --spacing-gutter: var(--gutter);
@@ -170,10 +170,18 @@
   --rating: oklch(0.83 0.16 85);
 }
 
-@utility grid-cols-detail { grid-template-columns: 1fr 220px; }
-@utility grid-cols-detail-wide { grid-template-columns: 1fr 240px; }
-@utility grid-cols-hero { grid-template-columns: 3fr 8fr; }
-@utility parallax-backdrop { transform: translate3d(0, var(--parallax-offset, 0px), 0); }
+@utility grid-cols-detail {
+  grid-template-columns: 1fr 220px;
+}
+@utility grid-cols-detail-wide {
+  grid-template-columns: 1fr 240px;
+}
+@utility grid-cols-hero {
+  grid-template-columns: 3fr 8fr;
+}
+@utility parallax-backdrop {
+  transform: translate3d(0, var(--parallax-offset, 0px), 0);
+}
 @utility heading-page {
   @apply font-heading text-3xl font-semibold tracking-tight sm:text-4xl;
 }
@@ -191,13 +199,21 @@
 }
 
 @keyframes accordion-down {
-  from { height: 0; }
-  to { height: var(--radix-accordion-content-height); }
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
 
 @keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to { height: 0; }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 @utility container {
@@ -257,7 +273,8 @@
 
     * {
       scrollbar-width: thin;
-      scrollbar-color: color-mix(in srgb, var(--foreground) 16%, transparent) transparent;
+      scrollbar-color: color-mix(in srgb, var(--foreground) 16%, transparent)
+        transparent;
     }
 
     .scrollbar-thin::-webkit-scrollbar {

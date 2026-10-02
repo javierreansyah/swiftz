@@ -1,7 +1,5 @@
 import Link from "next/link";
-import React from "react";
-
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="container py-8 text-center text-sm text-muted-foreground">
       <p>

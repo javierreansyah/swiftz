@@ -1,10 +1,8 @@
 "use client";
-
-import React from "react";
 import Image from "@/components/ui/image";
 import Link from "next/link";
 import { Film, Heart, Bookmark, Star, LogIn, LogOut } from "lucide-react";
-import { useAuth } from "@/components/providers/auth-provider";
+import { useAuth } from "@/features/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 export function UserNavDropdown() {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
 
@@ -24,11 +21,7 @@ export function UserNavDropdown() {
 
   if (!isAuthenticated || !user) {
     return (
-      <Button
-        variant="outline"
-        size="default"
-        onClick={() => login()}
-      >
+      <Button variant="outline" size="default" onClick={() => login()}>
         <LogIn className="size-4" />
         <span>Sign In</span>
       </Button>
@@ -38,8 +31,8 @@ export function UserNavDropdown() {
   const avatarUrl = user.avatar?.tmdb?.avatar_path
     ? `https://image.tmdb.org/t/p/w185${user.avatar.tmdb.avatar_path}`
     : user.avatar?.gravatar?.hash
-    ? `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}?d=identicon`
-    : null;
+      ? `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}?d=identicon`
+      : null;
 
   return (
     <DropdownMenu>
@@ -70,7 +63,9 @@ export function UserNavDropdown() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-semibold">{user.name || user.username}</p>
+            <p className="text-sm font-semibold">
+              {user.name || user.username}
+            </p>
             <p className="text-xs font-normal text-muted-foreground">
               @{user.username}
             </p>
@@ -78,7 +73,10 @@ export function UserNavDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/library" className="flex cursor-pointer items-center gap-2">
+          <Link
+            href="/library"
+            className="flex cursor-pointer items-center gap-2"
+          >
             <Film className="size-4" />
             <span>My Library</span>
           </Link>
@@ -122,5 +120,3 @@ export function UserNavDropdown() {
     </DropdownMenu>
   );
 }
-
-export default UserNavDropdown;

@@ -1,9 +1,13 @@
 import { pageMetadata } from "@/lib/seo";
-import React, { Suspense } from "react";
-import { MovieCategoryListing } from "@/components/discover";
-import { MediaListingSkeleton } from "@/components/common/media-listing-skeleton";
-
-export const metadata = pageMetadata({ title: "Top-Rated Movies", description: "Explore highly rated movies, audience favorites, and acclaimed films across genres.", path: "/movie/top-rated" });
+import { Suspense } from "react";
+import { MovieCategoryListing } from "@/features/movies/discovery/movie-category-listing";
+import { MediaListingSkeleton } from "@/features/media/components/media-listing-skeleton";
+export const metadata = pageMetadata({
+  title: "Top-Rated Movies",
+  description:
+    "Explore highly rated movies, audience favorites, and acclaimed films across genres.",
+  path: "/movie/top-rated",
+});
 
 export default function TopRatedMoviesPage() {
   return (

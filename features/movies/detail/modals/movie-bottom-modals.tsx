@@ -1,0 +1,105 @@
+"use client";
+import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
+import type {
+  Cast,
+  Crew,
+  Video,
+  MovieImagesData,
+} from "@/lib/tmdb/types/common";
+import { ReviewsModal } from "@/features/media/components/reviews-modal";
+import { VideosModal } from "@/features/media/components/videos-modal";
+import { PhotosModal } from "@/features/media/components/photos-modal";
+import { CastModal } from "@/features/media/components/cast-modal";
+import { RecommendationsModal } from "@/features/media/components/recommendations-modal";
+import { CollectionModal } from "@/features/movies/detail/modals/collection-modal";
+export type ModalType =
+  | "reviews"
+  | "videos"
+  | "photos"
+  | "cast"
+  | "recommendations"
+  | "collection"
+  | null;
+
+export interface MovieBottomModalsProps {
+  activeModal: ModalType;
+  onClose: () => void;
+  movie: MovieDetailsData;
+  cast: Cast[];
+  crew: Crew[];
+  videos: Video[];
+  images?: MovieImagesData;
+  initialPhotoIndex?: number;
+  initialVideoIndex?: number;
+  onOpenRating?: () => void;
+  onToggleWatchlist?: () => void;
+  isWatchlist?: boolean;
+}
+
+export function MovieBottomModals({
+  activeModal,
+  onClose,
+  movie,
+  cast,
+  crew,
+  videos,
+  images,
+  initialPhotoIndex = 0,
+  initialVideoIndex = 0,
+  onOpenRating,
+  onToggleWatchlist,
+  isWatchlist = false,
+}: MovieBottomModalsProps) {
+  return (
+    <>
+      <ReviewsModal
+        isOpen={activeModal === "reviews"}
+        onClose={onClose}
+        movie={movie}
+        onOpenRating={onOpenRating}
+      />
+
+      <VideosModal
+        isOpen={activeModal === "videos"}
+        onClose={onClose}
+        movie={movie}
+        videos={videos}
+        initialVideoIndex={initialVideoIndex}
+        onToggleWatchlist={onToggleWatchlist}
+        isWatchlist={isWatchlist}
+      />
+
+      <PhotosModal
+        isOpen={activeModal === "photos"}
+        onClose={onClose}
+        movie={movie}
+        images={images}
+        initialPhotoIndex={initialPhotoIndex}
+      />
+
+      <CastModal
+        isOpen={activeModal === "cast"}
+        onClose={onClose}
+        movie={movie}
+        cast={cast}
+        crew={crew}
+      />
+
+      <RecommendationsModal
+        isOpen={activeModal === "recommendations"}
+        onClose={onClose}
+        movie={movie}
+      />
+
+      {movie.belongs_to_collection && (
+        <CollectionModal
+          isOpen={activeModal === "collection"}
+          onClose={onClose}
+          collectionId={movie.belongs_to_collection.id}
+          collectionName={movie.belongs_to_collection.name}
+          currentMovieId={movie.id}
+        />
+      )}
+    </>
+  );
+}
