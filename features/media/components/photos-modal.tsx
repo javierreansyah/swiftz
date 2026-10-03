@@ -394,7 +394,7 @@ export function PhotosModal({
 
           {/* Standardized Bottom Filmstrip (Identical h-20 container to Videos) */}
           <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3.5">
-            <div className="flex scrollbar-none gap-2.5 overflow-x-auto pb-0.5">
+            <div className="flex scrollbar-none gap-3 overflow-x-auto p-2">
               {filteredPhotos.map((photo, i) => {
                 const isActive = i === activePhotoIdx;
                 return (

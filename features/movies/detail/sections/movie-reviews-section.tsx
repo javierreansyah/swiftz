@@ -1,6 +1,6 @@
 "use client";
 import { ChevronRight, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SectionHeader } from "@/components/common/section-header";
 import type { TMDBReview } from "@/lib/tmdb/types/account";
 export interface MovieReviewsSectionProps {
   reviews: TMDBReview[];
@@ -17,33 +17,13 @@ export function MovieReviewsSection({
 
   return (
     <section id="section-reviews" className="scroll-mt-24 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/70 pb-3">
-        {/* Left: Title + Desktop See all */}
-        <div className="flex items-center gap-3">
-          <h2 className="heading-section text-foreground">User Reviews</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onOpenReviewsModal}
-            className="hidden sm:inline-flex"
-          >
-            <span>See all {totalReviews}</span>
-            <ChevronRight className="size-3.5" />
-          </Button>
-        </div>
-
-        {/* Right: Mobile See all */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onOpenReviewsModal}
-          className="sm:hidden"
-        >
-          <span>See all {totalReviews}</span>
-          <ChevronRight className="size-3.5" />
-        </Button>
-      </div>
+      <SectionHeader
+        title="User Reviews"
+        action={{
+          label: totalReviews > 0 ? `See all ${totalReviews}` : "See all",
+          onClick: onOpenReviewsModal,
+        }}
+      />
 
       {/* 2 Reviews Side by Side */}
       {displayReviews.length > 0 ? (
@@ -96,16 +76,8 @@ export function MovieReviewsSection({
       ) : (
         <div className="rounded-xl border border-dashed border-border/80 p-8 text-center">
           <p className="text-sm text-muted-foreground">
-            No reviews yet. Click below to view or submit the first review!
+            No reviews yet for this title.
           </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onOpenReviewsModal}
-            className="mt-3"
-          >
-            Open Reviews Modal
-          </Button>
         </div>
       )}
     </section>

@@ -1,7 +1,4 @@
-# Swiftz design system
-
-## Foundation
-
+Foundation
 Preset `b4GmhKTlYG` uses shadcn's `radix-luma` style, zinc surfaces, rose primary,
 Inter body text, and Lora headings. `components.json` records the registry style;
 `app/globals.css` owns theme, radius, typography, and layout tokens.
@@ -9,8 +6,7 @@ Inter body text, and Lora headings. `components.json` records the registry style
 Keep the current page regions, responsive grids, sidebar widths, carousel order,
 and overlay placement. Adjust internal spacing through shared components.
 
-## Component ownership
-
+Component ownership
 - Use `components/ui` for buttons, badges, inputs, selects, tabs, cards, menus,
   dialogs, sheets, sliders, and skeletons. Change their defaults here.
 - Consumers may position components with `className`; appearance belongs in
@@ -46,8 +42,7 @@ and overlay placement. Adjust internal spacing through shared components.
 - Native buttons remain appropriate for image thumbnails, provider tiles, and
   rating stars whose geometry comes from their content.
 
-## Rhythm and typography
-
+Rhythm and typography
 Use Tailwind's spacing scale: 1–2 for icon/label gaps, 3–4 for compact groups,
 4–6 for card content, 6–8 for panels, and 8–12 for page sections. Keep responsive
 page gutters on `container` / `gutter`. Avoid arbitrary values or new fractional
@@ -62,8 +57,7 @@ Use the preset radius scale: `rounded-4xl` for panels/cards/dialogs,
 `rounded-3xl` for media cards and controls, `rounded-xl` / `rounded-2xl` for
 nested surfaces, and pill/circle controls from the shared primitives.
 
-## Tokens and strict checks
-
+Tokens and strict checks
 Use semantic colors (`primary`, `muted`, `destructive`, `success`, `info`,
 `highlight`, `rating`) rather than palette colors. Media uses `media`,
 `media-foreground`, `media-muted`, and `scrim` independently of light/dark mode.

@@ -32,6 +32,46 @@ export interface SectionHeaderProps {
   className?: string;
 }
 
+function renderAction(
+  action: SectionHeaderAction,
+  placement: "desktop" | "mobile",
+) {
+  const content = (
+    <>
+      <span>{action.label}</span>
+      <ChevronRight className="size-3.5" />
+    </>
+  );
+
+  if (action.href) {
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        className={
+          placement === "desktop" ? "hidden sm:inline-flex" : "sm:hidden"
+        }
+        asChild
+      >
+        <Link href={action.href}>{content}</Link>
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={action.onClick}
+      className={
+        placement === "desktop" ? "hidden sm:inline-flex" : "sm:hidden"
+      }
+    >
+      {content}
+    </Button>
+  );
+}
+
 export function SectionHeader({
   title,
   headingAs: Heading = "h2",
@@ -87,51 +127,13 @@ export function SectionHeader({
         )}
 
         {/* Action Button for Desktop alongside Title */}
-        {action &&
-          (action.href ? (
-            <Link
-              href={action.href}
-              className="hidden items-center gap-1 font-sans text-xs font-semibold text-primary hover:underline sm:inline-flex"
-            >
-              <span>{action.label}</span>
-              <ChevronRight className="size-3.5" />
-            </Link>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={action.onClick}
-              className="hidden sm:inline-flex"
-            >
-              <span>{action.label}</span>
-              <ChevronRight className="size-3.5" />
-            </Button>
-          ))}
+        {action && renderAction(action, "desktop")}
       </div>
 
       {/* Right side: Mobile Action or Desktop Carousel Arrow Controls */}
       <div className="flex items-center gap-2">
         {/* Mobile Action */}
-        {action &&
-          (action.href ? (
-            <Link
-              href={action.href}
-              className="inline-flex items-center gap-1 font-sans text-xs font-semibold text-primary sm:hidden"
-            >
-              <span>{action.label}</span>
-              <ChevronRight className="size-3.5" />
-            </Link>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={action.onClick}
-              className="sm:hidden"
-            >
-              <span>{action.label}</span>
-              <ChevronRight className="size-3.5" />
-            </Button>
-          ))}
+        {action && renderAction(action, "mobile")}
 
         {/* Carousel Navigation Arrow Controls or Custom Controls */}
         {controls}

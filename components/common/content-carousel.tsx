@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +38,35 @@ export function ContentCarousel({
   carouselClassName,
 }: ContentCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ atStart: true, atEnd: true });
+
+  const updateEdges = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const atStart = el.scrollLeft <= 1;
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+    setEdges((prev) =>
+      prev.atStart === atStart && prev.atEnd === atEnd
+        ? prev
+        : { atStart, atEnd },
+    );
+  }, []);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    updateEdges();
+    el.addEventListener("scroll", updateEdges, { passive: true });
+    const resizeObserver = new ResizeObserver(updateEdges);
+    resizeObserver.observe(el);
+    const mutationObserver = new MutationObserver(updateEdges);
+    mutationObserver.observe(el, { childList: true });
+    return () => {
+      el.removeEventListener("scroll", updateEdges);
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [updateEdges]);
 
   const scrollPrev = () => {
     scrollContainerRef.current?.scrollBy({
@@ -59,6 +88,7 @@ export function ContentCarousel({
         variant="outline"
         size="icon-sm"
         onClick={scrollPrev}
+        disabled={edges.atStart}
         aria-label={`Scroll ${title} left`}
       >
         <ChevronLeft className="size-4" />
@@ -67,6 +97,7 @@ export function ContentCarousel({
         variant="outline"
         size="icon-sm"
         onClick={scrollNext}
+        disabled={edges.atEnd}
         aria-label={`Scroll ${title} right`}
       >
         <ChevronRight className="size-4" />

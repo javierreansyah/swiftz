@@ -1,15 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Image from "@/components/ui/image";
-import {
-  Share2,
-  Star,
-  ThumbsUp,
-  ThumbsDown,
-  User,
-  Check,
-  Plus,
-} from "lucide-react";
+import { Share2, Star, ThumbsUp, ThumbsDown, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
@@ -31,7 +23,6 @@ export interface ReviewsModalProps {
   mediaType?: "movie" | "tv";
   title?: string;
   releaseYear?: string;
-  onOpenRating?: () => void;
 }
 
 export function ReviewsModal({
@@ -42,7 +33,6 @@ export function ReviewsModal({
   mediaType = "movie",
   title: customTitle,
   releaseYear: customReleaseYear,
-  onOpenRating,
 }: ReviewsModalProps) {
   const targetId = customMediaId || movie?.id || 0;
   const displayTitle = customTitle || movie?.title || movie?.name || "Reviews";
@@ -173,19 +163,6 @@ export function ReviewsModal({
         )}
         <span>Share</span>
       </Button>
-
-      {onOpenRating && (
-        <Button
-          size="sm"
-          onClick={() => {
-            onClose();
-            onOpenRating();
-          }}
-        >
-          <Plus className="size-4" />
-          <span>Review this title</span>
-        </Button>
-      )}
     </div>
   );
 

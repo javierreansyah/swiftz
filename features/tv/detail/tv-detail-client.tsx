@@ -87,6 +87,7 @@ export function TVDetailClient({
     if (modal === "seasons") {
       handleOpenSeason();
     } else {
+      if (modal === "videos") setInitialVideoIndex(undefined);
       setActiveModal(modal);
     }
   };
@@ -159,6 +160,7 @@ export function TVDetailClient({
               {recommendations.length > 0 && (
                 <TVRecommendationsSection
                   shows={recommendations}
+                  totalCount={recommendationsData?.total_results}
                   onOpenRecommendationsModal={() =>
                     setActiveModal("recommendations")
                   }

@@ -82,24 +82,30 @@ export function FeaturedHeroSpotlight({
         const pUrl = movie.poster_path
           ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
           : "/assets/images/movie-placeholder.svg";
+        const interactive = isSelected
+          ? "pointer-events-auto"
+          : "pointer-events-none";
+        const linkTabIndex = isSelected ? 0 : -1;
 
         return (
           <div
             key={movie.id}
             className={cn(
-              "absolute inset-x-0 bottom-0 z-10 p-4 transition-opacity duration-1000 ease-in-out sm:p-6 lg:p-8",
-              isSelected
-                ? "pointer-events-auto opacity-100"
-                : "pointer-events-none opacity-0",
+              "pointer-events-none absolute inset-x-0 bottom-0 z-10 p-4 transition-opacity duration-1000 ease-in-out sm:p-6 lg:p-8",
+              isSelected ? "opacity-100" : "opacity-0",
             )}
           >
             <div className="flex items-end gap-5 lg:gap-6">
-              {/* 2x Enlarged Poster Thumbnail Badge */}
+              {/* Poster group */}
               <Link
                 href={`/movie/${movie.id}`}
                 prefetch={false}
+                tabIndex={linkTabIndex}
                 aria-label={`View details for ${movie.title}`}
-                className="group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48"
+                className={cn(
+                  "group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48",
+                  interactive,
+                )}
               >
                 <Image
                   src={pUrl}
@@ -110,43 +116,48 @@ export function FeaturedHeroSpotlight({
                 />
               </Link>
 
-              {/* Title & Metadata */}
               <div className="min-w-0 flex-1 space-y-2">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex items-center gap-1 rounded-xl bg-primary/20 px-2 py-0.5 text-primary">
-                    <Star className="size-3 fill-current" />
-                    {movie.vote_average.toFixed(1)}
-                  </span>
-                  {movie.release_date && (
-                    <span className="text-media-foreground/80">
-                      {movie.release_date.substring(0, 4)}
-                    </span>
-                  )}
-                  <span className="text-media-foreground/60">&bull;</span>
-                  <span className="tracking-wider text-primary uppercase">
-                    Featured Today
-                  </span>
-                </div>
-
+                {/* Text group */}
                 <Link
                   href={`/movie/${movie.id}`}
                   prefetch={false}
-                  className="group/title block transition-colors"
+                  tabIndex={linkTabIndex}
+                  className={cn(
+                    "group/text block min-w-0 space-y-2 transition-colors",
+                    interactive,
+                  )}
                 >
-                  <Heading className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/title:text-primary">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-primary">
+                    <span className="flex items-center gap-1 rounded-xl bg-primary/20 px-2 py-0.5 text-primary">
+                      <Star className="size-3 fill-current" />
+                      {movie.vote_average.toFixed(1)}
+                    </span>
+                    {movie.release_date && (
+                      <span className="text-media-foreground/80">
+                        {movie.release_date.substring(0, 4)}
+                      </span>
+                    )}
+                    <span className="text-media-foreground/60">&bull;</span>
+                    <span className="tracking-wider text-primary uppercase">
+                      Featured Today
+                    </span>
+                  </div>
+
+                  <Heading className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/text:text-primary">
                     {movie.title}
                   </Heading>
+
+                  <p className="line-clamp-2 max-w-2xl text-xs text-media-foreground/80 sm:text-sm">
+                    {movie.overview}
+                  </p>
                 </Link>
 
-                <p className="line-clamp-2 max-w-2xl text-xs text-media-foreground/80 sm:text-sm">
-                  {movie.overview}
-                </p>
-
                 {/* Actions Row */}
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="pointer-events-none flex w-fit flex-wrap items-center gap-3 pt-2">
                   <Button
                     size="sm"
                     onClick={() => onWatchTrailer(movie.id, movie.title)}
+                    className={cn(interactive)}
                   >
                     <Play className="size-4 fill-current" />
                     <span>Watch Trailer</span>
@@ -158,6 +169,7 @@ export function FeaturedHeroSpotlight({
                       variant="ghost"
                       onClick={onToggleWatchlist}
                       disabled={isWatchlistPending}
+                      className={cn(interactive)}
                     >
                       {isWatchlist ? (
                         <>

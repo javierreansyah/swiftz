@@ -31,7 +31,6 @@ export interface MovieBottomModalsProps {
   images?: MovieImagesData;
   initialPhotoIndex?: number;
   initialVideoIndex?: number;
-  onOpenRating?: () => void;
   onToggleWatchlist?: () => void;
   isWatchlist?: boolean;
 }
@@ -44,9 +43,8 @@ export function MovieBottomModals({
   crew,
   videos,
   images,
-  initialPhotoIndex = 0,
-  initialVideoIndex = 0,
-  onOpenRating,
+  initialPhotoIndex,
+  initialVideoIndex,
   onToggleWatchlist,
   isWatchlist = false,
 }: MovieBottomModalsProps) {
@@ -56,7 +54,6 @@ export function MovieBottomModals({
         isOpen={activeModal === "reviews"}
         onClose={onClose}
         movie={movie}
-        onOpenRating={onOpenRating}
       />
 
       <VideosModal

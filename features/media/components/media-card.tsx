@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import React from "react";
 import Image from "@/components/ui/image";
 import Link from "next/link";
@@ -41,9 +40,6 @@ export interface MediaCardProps {
   variant?: "shelf" | "grid" | "image";
   size?: "sm" | "md" | "lg";
   className?: string;
-  actionIcon?: React.ReactNode;
-  onActionClick?: (e: React.MouseEvent) => void;
-  actionTitle?: string;
   priority?: boolean;
   sizes?: string;
 }
@@ -62,9 +58,6 @@ export function MediaCard({
   variant = "shelf",
   size = "md",
   className,
-  actionIcon,
-  onActionClick,
-  actionTitle,
   priority = false,
   sizes,
 }: MediaCardProps) {
@@ -198,34 +191,6 @@ export function MediaCard({
           <div className="flex size-full items-center justify-center bg-secondary">
             {renderFallbackIcon()}
           </div>
-        )}
-
-        {/* Video Overlay Play Button */}
-        {type === "video" && (
-          <>
-            <div className="absolute inset-0 bg-scrim/25 transition-opacity group-hover:bg-scrim/10" />
-            <div className="absolute top-1/2 left-1/2 flex size-10 -translate-1/2 items-center justify-center rounded-xl bg-primary/90 text-primary-foreground shadow-lg backdrop-blur-xs transition-transform group-hover:scale-110">
-              <Play className="ml-0.5 size-5 fill-current" />
-            </div>
-          </>
-        )}
-
-        {/* Custom Quick Action Button (e.g. trailer or watchlist) */}
-        {actionIcon && (
-          <Button
-            variant="media"
-            size="sm"
-            type="button"
-            title={actionTitle}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onActionClick?.(e);
-            }}
-            className="absolute top-2.5 right-2.5"
-          >
-            {actionIcon}
-          </Button>
         )}
 
         {/* Overlay Badge */}

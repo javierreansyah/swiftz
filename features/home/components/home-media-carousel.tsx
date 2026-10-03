@@ -1,9 +1,6 @@
 "use client";
-import { useState } from "react";
-import { Play } from "lucide-react";
 import { ContentCarousel } from "@/components/common/content-carousel";
 import { MediaCard } from "@/features/media/components/media-card";
-import { TrailerModal } from "@/components/common/trailer-modal";
 export type MediaItem = {
   id: number;
   title: string;
@@ -33,18 +30,6 @@ export function HomeMediaCarousel({
   onTabChange,
   viewAllHref,
 }: HomeMediaCarouselProps) {
-  const [trailerModal, setTrailerModal] = useState<{
-    isOpen: boolean;
-    mediaId: number;
-    title: string;
-    mediaType: "movie" | "tv";
-  }>({
-    isOpen: false,
-    mediaId: 0,
-    title: "",
-    mediaType: "movie",
-  });
-
   if (!items || items.length === 0) return null;
 
   return (
@@ -73,36 +58,10 @@ export function HomeMediaCarousel({
               year={item.release_year}
               href={detailHref}
               variant="shelf"
-              actionIcon={<Play className="size-3.5 fill-current" />}
-              actionTitle="Watch Trailer"
-              onActionClick={() =>
-                setTrailerModal({
-                  isOpen: true,
-                  mediaId: item.id,
-                  title: item.title,
-                  mediaType: item.media_type,
-                })
-              }
             />
           );
         })}
       </ContentCarousel>
-
-      {/* Trailer Modal */}
-      <TrailerModal
-        isOpen={trailerModal.isOpen}
-        onClose={() =>
-          setTrailerModal({
-            isOpen: false,
-            mediaId: 0,
-            title: "",
-            mediaType: "movie",
-          })
-        }
-        title={trailerModal.title}
-        mediaId={trailerModal.mediaId}
-        mediaType={trailerModal.mediaType}
-      />
     </div>
   );
 }

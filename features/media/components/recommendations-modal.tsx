@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import { Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { MediaCard } from "@/features/media/components/media-card";
 import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
 import { useMovieRecommendationsQuery } from "@/features/movies/hooks/queries";
@@ -72,6 +73,15 @@ export function RecommendationsModal({
     }
   }, [recData]);
 
+  const totalCount =
+    typeof recData?.total_results === "number" && recData.total_results > 0
+      ? recData.total_results
+      : undefined;
+  const hasMore =
+    typeof recData?.total_pages === "number"
+      ? page < recData.total_pages
+      : false;
+
   const filteredTitles = useMemo(() => {
     if (!searchQuery.trim()) return allTitles;
     const q = searchQuery.toLowerCase();
@@ -93,7 +103,7 @@ export function RecommendationsModal({
           ? `Recommended Titles · ${displayYear}`
           : "Recommended Titles"
       }
-      badge={`${allTitles.length} Titles`}
+      badge={totalCount !== undefined ? `${totalCount} Titles` : undefined}
       search={{
         value: searchQuery,
         onChange: setSearchQuery,
@@ -124,36 +134,50 @@ export function RecommendationsModal({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-          {filteredTitles.map((item) => {
-            const itemTitle = item.title || item.name || "Untitled";
-            const itemYear = item.release_date
-              ? item.release_date.substring(0, 4)
-              : item.first_air_date
-                ? item.first_air_date.substring(0, 4)
-                : undefined;
-            const href =
-              mediaType === "tv" || item.first_air_date
-                ? `/tv/${item.id}`
-                : `/movie/${item.id}`;
+        <div className="space-y-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {filteredTitles.map((item) => {
+              const itemTitle = item.title || item.name || "Untitled";
+              const itemYear = item.release_date
+                ? item.release_date.substring(0, 4)
+                : item.first_air_date
+                  ? item.first_air_date.substring(0, 4)
+                  : undefined;
+              const href =
+                mediaType === "tv" || item.first_air_date
+                  ? `/tv/${item.id}`
+                  : `/movie/${item.id}`;
 
-            return (
-              <MediaCard
-                key={item.id}
-                type={
-                  mediaType === "tv" || item.first_air_date ? "tv" : "movie"
-                }
-                id={item.id}
-                title={itemTitle}
-                image={item.poster_path}
-                rating={item.vote_average}
-                year={itemYear}
-                href={href}
-                onClick={onClose}
-                variant="grid"
-              />
-            );
-          })}
+              return (
+                <MediaCard
+                  key={item.id}
+                  type={
+                    mediaType === "tv" || item.first_air_date ? "tv" : "movie"
+                  }
+                  id={item.id}
+                  title={itemTitle}
+                  image={item.poster_path}
+                  rating={item.vote_average}
+                  year={itemYear}
+                  href={href}
+                  onClick={onClose}
+                  variant="grid"
+                />
+              );
+            })}
+          </div>
+
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                disabled={isFetching}
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                {isFetching ? "Loading..." : "Load more"}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </DetailBottomSheet>

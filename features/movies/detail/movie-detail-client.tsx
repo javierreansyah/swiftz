@@ -101,6 +101,12 @@ export function MovieDetailClient({
     setActiveModal("videos");
   };
 
+  const handleOpenModal = (modal: ModalType) => {
+    if (modal === "photos") setInitialPhotoIndex(undefined);
+    if (modal === "videos") setInitialVideoIndex(undefined);
+    setActiveModal(modal);
+  };
+
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
     : "/assets/images/movie-placeholder.svg";
@@ -128,7 +134,7 @@ export function MovieDetailClient({
                 cast={cast}
                 crew={crew}
                 reviewCount={totalReviews}
-                onOpenModal={(m) => setActiveModal(m)}
+                onOpenModal={handleOpenModal}
                 onOpenRating={() => setShowRatingModal(true)}
               />
             </div>
@@ -140,7 +146,7 @@ export function MovieDetailClient({
                 movieId={movie.id}
                 movieTitle={movie.title}
                 hasCollection={Boolean(movie.belongs_to_collection)}
-                onOpenModal={(m) => setActiveModal(m)}
+                onOpenModal={handleOpenModal}
                 onOpenRating={() => setShowRatingModal(true)}
               />
             </div>
@@ -188,6 +194,7 @@ export function MovieDetailClient({
               {recommendations.length > 0 ? (
                 <MovieRecommendationsSection
                   movies={recommendations}
+                  totalCount={recommendationsData?.total_results}
                   onOpenRecommendationsModal={() =>
                     setActiveModal("recommendations")
                   }
@@ -209,7 +216,7 @@ export function MovieDetailClient({
               movieId={movie.id}
               movieTitle={movie.title}
               hasCollection={Boolean(movie.belongs_to_collection)}
-              onOpenModal={(m) => setActiveModal(m)}
+              onOpenModal={handleOpenModal}
               onOpenRating={() => setShowRatingModal(true)}
             />
           </aside>
@@ -227,7 +234,6 @@ export function MovieDetailClient({
         images={images}
         initialPhotoIndex={initialPhotoIndex}
         initialVideoIndex={initialVideoIndex}
-        onOpenRating={() => setShowRatingModal(true)}
       />
 
       {/* Unified Rating Dialog */}

@@ -7,6 +7,7 @@ export interface MediaRecommendationsSectionProps {
   items: (Movie | TVShow)[];
   type: "movie" | "tv";
   title?: string;
+  totalCount?: number;
   onOpenRecommendationsModal?: () => void;
 }
 
@@ -14,6 +15,7 @@ export function MediaRecommendationsSection({
   items,
   type,
   title = type === "movie" ? "Recommendations" : "More Like This",
+  totalCount,
   onOpenRecommendationsModal,
 }: MediaRecommendationsSectionProps) {
   if (!items || items.length === 0) return null;
@@ -25,7 +27,10 @@ export function MediaRecommendationsSection({
       action={
         onOpenRecommendationsModal
           ? {
-              label: `See all ${items.length}`,
+              label:
+                totalCount !== undefined && totalCount > 0
+                  ? `See all ${totalCount}`
+                  : "See all",
               onClick: onOpenRecommendationsModal,
             }
           : undefined

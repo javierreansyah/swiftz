@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import Image from "@/components/ui/image";
-import { Play, Share2, Bookmark, Check, LayoutGrid } from "lucide-react";
+import { Share2, Bookmark, Check, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import type { Video } from "@/lib/tmdb/types/common";
@@ -285,7 +285,7 @@ export function VideosModal({
 
           {/* Standardized Bottom Filmstrip (Identical h-20 container to Photos) */}
           <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3.5">
-            <div className="flex scrollbar-none gap-2.5 overflow-x-auto pb-0.5">
+            <div className="flex scrollbar-none gap-3 overflow-x-auto p-2">
               {filteredVideos.map((video) => {
                 const isActive = video.id === selectedVideoModal.id;
                 const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
@@ -308,9 +308,6 @@ export function VideosModal({
                       sizes="144px"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-scrim/20">
-                      <Play className="size-4 fill-white text-media-foreground opacity-90" />
-                    </div>
                   </button>
                 );
               })}
