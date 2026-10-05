@@ -2,7 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Compass } from "lucide-react";
+import { Menu, Compass, Film } from "lucide-react";
 import Logo from "@/public/assets/svg-components/logo";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
@@ -40,7 +40,6 @@ export function Navbar() {
     { route: "/movie", name: "Movies" },
     { route: "/tv", name: "TV Shows" },
     { route: "/person", name: "People" },
-    ...(isAuthenticated ? [{ route: "/library", name: "Library" }] : []),
   ];
 
   const {
@@ -74,14 +73,15 @@ export function Navbar() {
       />
 
       {/* Content Layer */}
-      <div className="relative z-10 container flex h-full items-center justify-between">
-        <div className="flex items-center gap-8">
+      <div className="relative z-10 container flex h-full items-center gap-4">
+        {/* Left: Brand Logo & Navigation */}
+        <div className="flex shrink-0 items-center gap-6 lg:gap-8">
           <Link href="/">
             <Logo className="size-16" />
           </Link>
 
           <nav className="hidden lg:block">
-            <ul className="flex gap-8">
+            <ul className="flex gap-6 lg:gap-8">
               {navigationList.map((item, index) => (
                 <li key={index}>
                   <Link href={item.route}>
@@ -101,14 +101,33 @@ export function Navbar() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Header Search (Inline on Desktop, Icon + Top Sheet on Mobile) */}
-          <Suspense fallback={<div className="size-9" />}>
+        {/* Center: Search Bar taking full width of available space */}
+        <div className="flex min-w-0 flex-1 items-center justify-end md:justify-start">
+          <Suspense fallback={<div className="h-10 w-full" />}>
             <HeaderSearch
+              className="w-full"
               isScrolled={isScrolled}
               isMovieDetailPage={isDetailPage}
             />
           </Suspense>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex shrink-0 items-center gap-2">
+          {/* Library Button on the right of the search bar */}
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              size="default"
+              asChild
+              className="shrink-0"
+            >
+              <Link href="/library" aria-label="Library">
+                <Film className="size-4" />
+                <span className="hidden sm:inline">Library</span>
+              </Link>
+            </Button>
+          )}
 
           <div className="hidden lg:block">
             <ThemeSwitcher variant="outline" />

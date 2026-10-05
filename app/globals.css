@@ -151,6 +151,7 @@
   --spacing-detail-sheet: 92vh;
   --spacing-dialog: 85vh;
   --spacing-search-sheet: 90vh;
+  --spacing-filter-sheet: 70vh;
   --spacing-empty-page: 80vh;
   --spacing-sidebar: calc(100vh - 6rem);
   --spacing-lightbox: calc(100% - 2.5rem);

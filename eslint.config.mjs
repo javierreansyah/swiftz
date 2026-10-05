@@ -79,13 +79,29 @@ export default [
             {
               pattern:
                 "^(Button|Input|SelectTrigger|Badge|TabsList|TabsTrigger)$",
-              deny: ["h-*", "min-h-*", "max-h-*", "size-*"],
+              deny: ["h-*", "min-h-*", "max-h-*", "size-*", "rounded-*"],
+            },
+            {
+              pattern: "^Card$",
+              deny: [
+                "p-*",
+                "px-*",
+                "py-*",
+                "pt-*",
+                "pb-*",
+                "gap-*",
+                "rounded-*",
+              ],
+            },
+            {
+              pattern: "^(DialogContent|SheetContent)$",
+              deny: ["rounded-*"],
             },
           ],
         },
       ],
-      "shadcn/no-raw-colors": "error",
-      "shadcn/no-arbitrary-values": "error",
+      "shadcn/no-raw-colors": ["error", { scanAllStrings: true }],
+      "shadcn/no-arbitrary-values": ["error", { scanAllStrings: true }],
       "shadcn/no-inline-styles": "error",
       "shadcn/no-unknown-classes": "error",
       "shadcn/require-static-classes": "error",
@@ -93,6 +109,10 @@ export default [
     settings: {
       shadcn: {
         note: "See DESIGN.md. Use shared variants for appearance and theme tokens for values.",
+        componentImports: [
+          "^@/components/common(/|$)",
+          "^@/features/media(/|$)",
+        ],
       },
       tailwindcss: {
         cssConfigPath: "./app/globals.css",

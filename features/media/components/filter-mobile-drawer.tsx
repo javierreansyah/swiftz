@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -28,47 +28,34 @@ export function FilterMobileDrawer({
         <SheetTrigger asChild>
           <Button
             variant="outline"
-            size="sm"
+            size="default"
             className="w-full justify-between"
           >
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="size-3.5 text-primary" />
+              <SlidersHorizontal className="size-4 text-primary" />
               <span>{title}</span>
             </div>
             {activeCount > 0 ? (
-              <span className="rounded-xl bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground">
+              <span className="rounded-xl bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
                 {activeCount} active
               </span>
             ) : (
-              <span className="text-muted-foreground">None active</span>
+              <span className="text-xs text-muted-foreground">None active</span>
             )}
           </Button>
         </SheetTrigger>
 
-        {/* Full-width mobile filter screen */}
+        {/* 70% height mobile bottom sheet */}
         <SheetContent
-          surface="fullscreen"
+          surface="filter"
           side="bottom"
           showCloseButton={false}
-          className="inset-0 flex size-full max-h-screen max-w-full flex-col sm:max-w-full"
+          className="inset-x-0 bottom-0 flex flex-col overflow-hidden"
         >
-          {/* Top Header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-border/70 px-6 py-4">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="size-4 text-primary" />
-              <SheetTitle>{title}</SheetTitle>
-              {activeCount > 0 && (
-                <span className="rounded-xl bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
-                  {activeCount} active
-                </span>
-              )}
-            </div>
+          <SheetTitle className="sr-only">{title}</SheetTitle>
 
-            <Button variant="ghost" size="icon" onClick={close}>
-              <X className="size-4" />
-              <span className="sr-only">Close</span>
-            </Button>
-          </div>
+          {/* Bottom Sheet Pill Drag Handle */}
+          <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-muted-foreground/20" />
 
           {/* Scrollable Filter Options Body */}
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">

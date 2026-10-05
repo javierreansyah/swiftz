@@ -30,7 +30,7 @@ export function FilterSectionHeader({
   className,
 }: FilterSectionHeaderProps) {
   return (
-    <div className={cn("flex items-center justify-between", className)}>
+    <div className={cn("flex min-h-6 items-center justify-between", className)}>
       <label className="flex items-center gap-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
         <Icon className="size-3.5 text-primary" />
         <span>{title}</span>
@@ -194,7 +194,7 @@ export function FilterStickyActionBar({
   return (
     <div
       className={cn(
-        "sticky bottom-0 z-10 -mx-1 flex items-center gap-2 border-t border-border/70 bg-background/95 pt-3 pb-2 backdrop-blur-md",
+        "sticky bottom-0 z-10 flex w-full items-center gap-2 border-t border-border/70 bg-background/95 pt-3 pb-2 backdrop-blur-md",
         className,
       )}
     >

@@ -30,6 +30,7 @@ export function PersonCreditsTimelineLoader({
     <div ref={ref}>
       {query.data ? (
         <PersonCreditsTimeline
+          key={personId}
           credits={query.data}
           primaryDepartment={primaryDepartment}
         />

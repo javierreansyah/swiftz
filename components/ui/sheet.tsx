@@ -54,7 +54,7 @@ function SheetContent({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
-  surface?: "default" | "detail" | "fullscreen" | "search";
+  surface?: "default" | "detail" | "fullscreen" | "search" | "filter";
   showCloseButton?: boolean;
 }) {
   return (
@@ -71,6 +71,8 @@ function SheetContent({
             "rounded-none border-0 bg-background data-[side=bottom]:h-full data-[side=bottom]:rounded-none",
           surface === "search" &&
             "max-h-search-sheet bg-background/95 p-6 backdrop-blur-xl",
+          surface === "filter" &&
+            "max-h-filter-sheet data-[side=bottom]:h-filter-sheet data-[side=bottom]:rounded-t-4xl",
           className,
         )}
         {...props}

@@ -46,5 +46,5 @@ export default async function PersonDetailPage({
     if (isTMDBNotFound(error)) notFound();
     throw error;
   });
-  return <PersonDetail person={person} />;
+  return <PersonDetail key={person.id} person={person} />;
 }

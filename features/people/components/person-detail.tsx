@@ -297,7 +297,7 @@ export function PersonDetail({
           </div>
 
           {/* Biography */}
-          <PersonBio key={person.id} biography={person.biography} />
+          <PersonBio biography={person.biography} />
 
           {/* Known For Shelf */}
           {knownForList.length > 0 && (
@@ -327,7 +327,6 @@ export function PersonDetail({
 
           {/* Searchable Career Credits Timeline */}
           <PersonCreditsTimelineLoader
-            key={person.id}
             personId={person.id}
             primaryDepartment={person.known_for_department}
           />

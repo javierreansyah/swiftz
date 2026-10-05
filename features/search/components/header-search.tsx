@@ -1,16 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import {
-  Search,
-  X,
-  CornerDownLeft,
-  Film,
-  Tv,
-  User,
-  Loader2,
-  ArrowRight,
-} from "lucide-react";
+import { Search, X, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -130,14 +121,17 @@ export function HeaderSearch({
   return (
     <div
       ref={containerRef}
-      className={cn("relative flex items-center", className)}
+      className={cn(
+        "relative flex w-full items-center justify-end md:justify-start",
+        className,
+      )}
     >
       {/* Desktop Inline Search Bar */}
       <form
         onSubmit={handleSearchSubmit}
-        className="relative hidden items-center md:flex"
+        className="relative hidden w-full items-center md:flex"
       >
-        <div className="relative flex w-56 items-center transition-all duration-300 focus-within:w-80 lg:w-72 lg:focus-within:w-96">
+        <div className="relative flex w-full items-center">
           <Search
             className={cn(
               "pointer-events-none absolute left-3 size-4 transition-colors",
@@ -148,7 +142,7 @@ export function HeaderSearch({
           />
           <Input
             leadingIcon
-            trailingIcon
+            trailingIcon={Boolean(searchQuery)}
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -159,7 +153,7 @@ export function HeaderSearch({
             aria-label="Search"
             className="w-full"
           />
-          {searchQuery ? (
+          {searchQuery && (
             <Button
               variant="ghost"
               size="icon-xs"
@@ -170,24 +164,13 @@ export function HeaderSearch({
             >
               <X className="size-3.5" />
             </Button>
-          ) : (
-            <span
-              className={cn(
-                "pointer-events-none absolute right-2.5 hidden rounded-xl border px-1.5 py-0.5 text-xs font-medium select-none lg:inline-block",
-                !isScrolled && isMovieDetailPage
-                  ? "border-media-foreground/20 text-media-foreground/50"
-                  : "border-border/60 text-muted-foreground/70",
-              )}
-            >
-              ⌘K
-            </span>
           )}
         </div>
       </form>
 
       {/* Desktop Live Dropdown Tooltip */}
       {isDropdownOpen && debouncedQuery.length >= 2 && (
-        <div className="absolute top-12 left-0 z-50 hidden w-96 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl md:block">
+        <div className="absolute inset-x-0 top-12 z-50 hidden overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl md:block">
           {isError && searchResults && (
             <QueryFeedback hasData onRetry={() => void refetch()} />
           )}
@@ -291,7 +274,12 @@ export function HeaderSearch({
 
       {/* Mobile Search Sheet From Top */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetContent surface="search" side="top" className="overflow-y-auto">
+        <SheetContent
+          surface="search"
+          side="top"
+          showCloseButton={false}
+          className="overflow-y-auto"
+        >
           <SheetHeader className="sr-only">
             <SheetTitle>Search Swiftz</SheetTitle>
           </SheetHeader>
@@ -302,16 +290,15 @@ export function HeaderSearch({
           >
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute top-1/2 left-3 size-4.5 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  leadingIcon
-                  trailingIcon
+                  trailingIcon={Boolean(searchQuery)}
                   ref={mobileInputRef}
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search movies, TV shows, people..."
                   aria-label="Search query"
+                  className="w-full"
                 />
                 {searchQuery && (
                   <Button
@@ -319,15 +306,15 @@ export function HeaderSearch({
                     size="icon-xs"
                     type="button"
                     onClick={clearSearch}
-                    className="absolute top-1/2 right-3 -translate-y-1/2"
+                    aria-label="Clear search"
+                    className="absolute top-1/2 right-2.5 -translate-y-1/2"
                   >
-                    <X className="size-4" />
+                    <X className="size-3.5" />
                   </Button>
                 )}
               </div>
-              <Button type="submit" size="lg">
+              <Button type="submit" size="default">
                 <span>Search</span>
-                <CornerDownLeft className="size-3.5" />
               </Button>
             </div>
 
@@ -404,18 +391,6 @@ export function HeaderSearch({
                 )}
               </div>
             )}
-
-            <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-              <span>Press enter to search across all categories</span>
-              <Button
-                variant="link"
-                size="inline"
-                type="button"
-                onClick={() => setIsMobileOpen(false)}
-              >
-                Cancel
-              </Button>
-            </div>
           </form>
         </SheetContent>
       </Sheet>

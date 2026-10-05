@@ -32,7 +32,7 @@ export function PeopleClient() {
         headingAs="h1"
         title="Popular People"
         badge={`Page ${currentPage} of ${totalPages}`}
-        className="pt-4"
+        className="mt-4"
       />
 
       {isError && (

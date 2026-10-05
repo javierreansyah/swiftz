@@ -31,7 +31,7 @@ export function TrendingTVClient() {
         headingAs="h1"
         title="Trending TV Shows - Today"
         badge={`Page ${currentPage} of ${totalPages}`}
-        className="pt-4"
+        className="mt-4"
       />
 
       {isError && (

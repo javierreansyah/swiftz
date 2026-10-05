@@ -29,7 +29,7 @@ export function MediaListingLayout({
       <div className="mb-6 lg:hidden">{mobileFilters}</div>
       <div className="flex gap-8 xl:gap-12">
         <div className="hidden w-64 shrink-0 lg:block lg:w-72 xl:w-80">
-          <div className="sticky top-20 max-h-sidebar scrollbar-thin overflow-y-auto pr-3">
+          <div className="sticky top-20 max-h-sidebar scrollbar-thin overflow-x-hidden overflow-y-auto pr-3">
             {sidebar}
           </div>
         </div>

@@ -7,6 +7,7 @@ Keep the current page regions, responsive grids, sidebar widths, carousel order,
 and overlay placement. Adjust internal spacing through shared components.
 
 Component ownership
+
 - Use `components/ui` for buttons, badges, inputs, selects, tabs, cards, menus,
   dialogs, sheets, sliders, and skeletons. Change their defaults here.
 - Consumers may position components with `className`; appearance belongs in
