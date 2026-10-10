@@ -29,7 +29,7 @@ export function FeaturedHeroSpotlight({
   onToggleWatchlist,
 }: FeaturedHeroSpotlightProps) {
   return (
-    <div className="relative aspect-16/10 w-full overflow-hidden rounded-xl border border-media-foreground/10 bg-media/80 shadow-2xl backdrop-blur-xs sm:aspect-video lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
+    <div className="relative h-136 w-full overflow-hidden rounded-2xl border border-media-foreground/10 bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
@@ -44,7 +44,7 @@ export function FeaturedHeroSpotlight({
           <div
             key={movie.id}
             className={cn(
-              "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+              "absolute inset-x-0 top-0 h-3/5 overflow-hidden transition-opacity duration-1000 ease-in-out sm:inset-0 sm:h-full",
               isSelected
                 ? "z-1 opacity-100"
                 : "pointer-events-none z-0 opacity-0",
@@ -57,14 +57,20 @@ export function FeaturedHeroSpotlight({
               priority={index === 0}
               sizes="(max-width: 1024px) 100vw, 66vw"
               variant="spotlight"
+              className="object-cover object-center"
             />
+            {/* Mobile bottom fade clipping the backdrop in the middle of the card */}
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-media via-media/60 to-transparent sm:hidden" />
           </div>
         );
       })}
 
-      {/* Gradient Overlays inside Spotlight */}
-      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-t from-scrim via-scrim/40 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-r from-scrim/70 via-transparent to-black/30" />
+      {/* Desktop Gradient Overlays inside Spotlight */}
+      <div className="pointer-events-none absolute inset-0 z-2 hidden bg-linear-to-t from-scrim via-scrim/40 to-transparent sm:block" />
+      <div className="pointer-events-none absolute inset-0 z-2 hidden bg-linear-to-r from-scrim/70 via-transparent to-black/30 sm:block" />
+
+      {/* Mobile Vignette Overlay */}
+      <div className="pointer-events-none absolute inset-0 z-2 bg-linear-to-t from-media via-media/40 to-transparent sm:hidden" />
 
       {/* Banner Full-Coverage Clickable Link to Active Movie Detail */}
       <Link
@@ -95,15 +101,15 @@ export function FeaturedHeroSpotlight({
               isSelected ? "opacity-100" : "opacity-0",
             )}
           >
-            <div className="flex items-end gap-5 lg:gap-6">
-              {/* Poster group */}
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:gap-5 lg:gap-6">
+              {/* Poster group - slightly bigger on mobile and on top of main text */}
               <Link
                 href={`/movie/${movie.id}`}
                 prefetch={false}
                 tabIndex={linkTabIndex}
                 aria-label={`View details for ${movie.title}`}
                 className={cn(
-                  "group/poster relative hidden aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:block lg:w-48",
+                  "group/poster relative block aspect-2/3 w-28 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:w-36 lg:w-48",
                   interactive,
                 )}
               >
@@ -111,23 +117,23 @@ export function FeaturedHeroSpotlight({
                   src={pUrl}
                   alt={movie.title}
                   fill
-                  sizes="(max-width: 1024px) 144px, 192px"
+                  sizes="(max-width: 640px) 112px, (max-width: 1024px) 144px, 192px"
                   variant="card"
                 />
               </Link>
 
-              <div className="min-w-0 flex-1 space-y-2">
+              <div className="w-full min-w-0 flex-1 space-y-1.5 sm:space-y-2">
                 {/* Text group */}
                 <Link
                   href={`/movie/${movie.id}`}
                   prefetch={false}
                   tabIndex={linkTabIndex}
                   className={cn(
-                    "group/text block min-w-0 space-y-2 transition-colors",
+                    "group/text block min-w-0 space-y-1 transition-colors sm:space-y-2",
                     interactive,
                   )}
                 >
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-primary">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-primary sm:gap-2">
                     <span className="flex items-center gap-1 rounded-xl bg-primary/20 px-2 py-0.5 text-primary">
                       <Star className="size-3 fill-current" />
                       {movie.vote_average.toFixed(1)}
@@ -138,12 +144,12 @@ export function FeaturedHeroSpotlight({
                       </span>
                     )}
                     <span className="text-media-foreground/60">&bull;</span>
-                    <span className="tracking-wider text-primary uppercase">
+                    <span className="text-xs tracking-wider text-primary uppercase">
                       Featured Today
                     </span>
                   </div>
 
-                  <Heading className="line-clamp-2 heading-page text-media-foreground drop-shadow-md transition-colors group-hover/text:text-primary">
+                  <Heading className="line-clamp-2 heading-card text-media-foreground drop-shadow-md transition-colors group-hover/text:text-primary sm:heading-page">
                     {movie.title}
                   </Heading>
 
@@ -153,7 +159,7 @@ export function FeaturedHeroSpotlight({
                 </Link>
 
                 {/* Actions Row */}
-                <div className="pointer-events-none flex w-fit flex-wrap items-center gap-3 pt-2">
+                <div className="pointer-events-none flex w-fit flex-wrap items-center gap-2 pt-1 sm:gap-3 sm:pt-2">
                   <Button
                     size="sm"
                     onClick={() => onWatchTrailer(movie.id, movie.title)}

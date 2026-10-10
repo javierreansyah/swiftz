@@ -43,19 +43,19 @@ export function HomeSecondarySections() {
         {trending.visible ? (
           <TrendingSection />
         ) : (
-          <HomeShelfLoading title="Trending Today" />
+          <HomeShelfLoading title="Trending" />
         )}
       </div>
       <div ref={topRated.ref}>
         {moviesQuery.data ? (
           <HomeMediaCarousel
-            title="Top Rated Across Cinema"
+            title="Top Rated"
             items={movieItems}
             viewAllHref="/movie/top-rated"
           />
         ) : (
           <HomeShelfLoading
-            title="Top Rated Across Cinema"
+            title="Top Rated"
             isError={moviesQuery.isError}
             onRetry={() => void moviesQuery.refetch()}
           />
@@ -64,13 +64,13 @@ export function HomeSecondarySections() {
       <div ref={television.ref}>
         {tvQuery.data ? (
           <HomeMediaCarousel
-            title="Popular Television Series"
+            title="Popular TV Series"
             items={tvItems}
             viewAllHref="/tv/popular"
           />
         ) : (
           <HomeShelfLoading
-            title="Popular Television Series"
+            title="Popular TV Series"
             isError={tvQuery.isError}
             onRetry={() => void tvQuery.refetch()}
           />

@@ -37,13 +37,19 @@ export default async function HomePage() {
 
       {/* 2. Rest of the Popular Movies Shelf */}
       {remainingPopular.length > 0 && (
-        <PopularMoviesShelf movies={remainingPopular} />
+        <div className="relative z-1">
+          <PopularMoviesShelf movies={remainingPopular} />
+        </div>
       )}
 
-      <HomeSecondarySections />
+      <div className="relative z-1">
+        <HomeSecondarySections />
+      </div>
 
       {/* 7. Explore by Genres */}
-      <GenresCard />
+      <div className="relative z-1">
+        <GenresCard />
+      </div>
     </main>
   );
 }

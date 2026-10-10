@@ -1,7 +1,14 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
-import { Share2, Bookmark, Check, LayoutGrid } from "lucide-react";
+import {
+  Share2,
+  Bookmark,
+  Check,
+  LayoutGrid,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import type { Video } from "@/lib/tmdb/types/common";
@@ -130,6 +137,56 @@ export function VideosModal({
     setViewMode("showcase");
   };
 
+  const currentVideoIdx = useMemo(() => {
+    if (!selectedVideoModal) return -1;
+    return filteredVideos.findIndex((v) => v.id === selectedVideoModal.id);
+  }, [filteredVideos, selectedVideoModal]);
+
+  const handlePrevVideo = () => {
+    if (filteredVideos.length === 0) return;
+    const nextIdx =
+      currentVideoIdx <= 0 ? filteredVideos.length - 1 : currentVideoIdx - 1;
+    setSelectedVideoModal(filteredVideos[nextIdx]);
+  };
+
+  const handleNextVideo = () => {
+    if (filteredVideos.length === 0) return;
+    const nextIdx =
+      currentVideoIdx >= filteredVideos.length - 1 ? 0 : currentVideoIdx + 1;
+    setSelectedVideoModal(filteredVideos[nextIdx]);
+  };
+
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!isOpen || viewMode !== "showcase" || currentVideoIdx === -1) return;
+    const centerActive = () => {
+      const container = thumbnailContainerRef.current;
+      const activeThumb = thumbnailRefs.current[currentVideoIdx];
+      if (!container || !activeThumb) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeThumb.getBoundingClientRect();
+      if (containerRect.width === 0) return;
+
+      const offset =
+        activeRect.left +
+        activeRect.width / 2 -
+        (containerRect.left + containerRect.width / 2);
+
+      container.scrollBy({ left: offset, behavior: "smooth" });
+    };
+
+    const frameId = requestAnimationFrame(centerActive);
+    const timerId = setTimeout(centerActive, 150);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timerId);
+    };
+  }, [isOpen, viewMode, currentVideoIdx]);
+
   const headerActions = (
     <div className="flex items-center gap-2">
       {viewMode === "showcase" && (
@@ -206,6 +263,7 @@ export function VideosModal({
             size="sm"
             type="button"
             onClick={() => setVideoSort("date_desc")}
+            className="justify-start"
           >
             Newest First
           </Button>
@@ -214,6 +272,7 @@ export function VideosModal({
             size="sm"
             type="button"
             onClick={() => setVideoSort("date_asc")}
+            className="justify-start"
           >
             Oldest First
           </Button>
@@ -283,15 +342,50 @@ export function VideosModal({
             </div>
           </div>
 
-          {/* Standardized Bottom Filmstrip (Identical h-20 container to Photos) */}
-          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3.5">
-            <div className="flex scrollbar-none gap-3 overflow-x-auto p-2">
-              {filteredVideos.map((video) => {
+          {/* Standardized Bottom Filmstrip */}
+          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">
+                {currentVideoIdx >= 0
+                  ? `${currentVideoIdx + 1} of ${filteredVideos.length}`
+                  : ""}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handlePrevVideo}
+                  disabled={filteredVideos.length <= 1}
+                  aria-label="Previous video"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handleNextVideo}
+                  disabled={filteredVideos.length <= 1}
+                  aria-label="Next video"
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
+            </div>
+            <div
+              ref={thumbnailContainerRef}
+              className="flex scrollbar-none gap-3 overflow-x-auto p-2"
+            >
+              {filteredVideos.map((video, idx) => {
                 const isActive = video.id === selectedVideoModal.id;
                 const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
                 return (
                   <button
                     key={video.id}
+                    ref={(el) => {
+                      thumbnailRefs.current[idx] = el;
+                    }}
                     type="button"
                     onClick={() => setSelectedVideoModal(video)}
                     className={cn(

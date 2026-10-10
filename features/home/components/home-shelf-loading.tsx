@@ -22,7 +22,10 @@ export function HomeShelfLoading({
         )
       ) : (
         Array.from({ length: 5 }, (_, index) => (
-          <div key={index} className="h-hero-xl w-52 shrink-0">
+          <div
+            key={index}
+            className="h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-60"
+          >
             <Skeleton className="size-full" />
           </div>
         ))

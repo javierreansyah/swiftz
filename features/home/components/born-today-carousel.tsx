@@ -12,7 +12,7 @@ export function BornTodayCarousel({ people }: BornTodayCarouselProps) {
   return (
     <div className="container">
       <ContentCarousel
-        title="Born Today & Popular Stars"
+        title="Popular Stars"
         action={{ label: "Explore People", href: "/person" }}
       >
         {people.map((person) => {

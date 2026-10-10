@@ -143,7 +143,7 @@ export function CastModal({
           <h4 className="mb-2 px-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             Departments
           </h4>
-          <div className="flex max-h-60 flex-col gap-1 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-1">
             <Button
               variant={selectedDept === "all" ? "default" : "ghost"}
               size="sm"

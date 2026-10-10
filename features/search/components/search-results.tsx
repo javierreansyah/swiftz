@@ -1,6 +1,6 @@
 import Image from "@/components/ui/image";
 import Link from "next/link";
-import { Film, Tv, User, Layers, Tag, Building } from "lucide-react";
+import { Tag, Building } from "lucide-react";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import type { TVShow } from "@/lib/tmdb/types/tv";
 import type { Person } from "@/lib/tmdb/types/people";
@@ -10,180 +10,81 @@ import type {
   TMDBKeyword,
 } from "@/lib/tmdb/types/search";
 import type { SearchDataset } from "@/features/search/types";
-import { SearchResultImage } from "@/features/search/components/search-result-image";
+import { MovieCard } from "@/features/movies/components/movie-card";
+import { TVCard } from "@/features/tv/discovery/tv-card";
+import { PersonCard } from "@/features/people/components/person-card";
+import { MediaCard } from "@/features/media/components/media-card";
+
 function MovieSearchResults({ items: movies }: { items: Movie[] }) {
   return (
-    <div className="space-y-4">
-      {movies.map((movie) => {
-        const releaseFormatted = movie.release_date
-          ? new Date(movie.release_date).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })
-          : null;
-
-        return (
-          <Link
-            key={movie.id}
-            href={`/movie/${movie.id}`}
-            className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
-          >
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
-              <SearchResultImage
-                path={movie.poster_path}
-                title={movie.title}
-                icon={Film}
-              />
-            </div>
-
-            <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-              <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
-                {movie.title}
-              </h3>
-              {releaseFormatted && (
-                <p className="text-xs text-muted-foreground">
-                  {releaseFormatted}
-                </p>
-              )}
-              <p className="line-clamp-3 text-xs text-muted-foreground/90 sm:text-sm">
-                {movie.overview || "No overview available."}
-              </p>
-            </div>
-          </Link>
-        );
-      })}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+      {movies.map((movie) => (
+        <MovieCard
+          key={movie.id}
+          id={movie.id}
+          title={movie.title}
+          poster={movie.poster_path}
+          rating={movie.vote_average}
+          year={
+            movie.release_date ? movie.release_date.substring(0, 4) : undefined
+          }
+          variant="grid"
+        />
+      ))}
     </div>
   );
 }
+
 function TVSearchResults({ items: tvShows }: { items: TVShow[] }) {
   return (
-    <div className="space-y-4">
-      {tvShows.map((show) => {
-        const airFormatted = show.first_air_date
-          ? new Date(show.first_air_date).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })
-          : null;
-
-        return (
-          <Link
-            key={show.id}
-            href={`/tv/${show.id}`}
-            className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
-          >
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
-              <SearchResultImage
-                path={show.poster_path}
-                title={show.name}
-                icon={Tv}
-              />
-            </div>
-
-            <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-              <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
-                {show.name}
-              </h3>
-              {airFormatted && (
-                <p className="text-xs text-muted-foreground">{airFormatted}</p>
-              )}
-              <p className="line-clamp-3 text-xs text-muted-foreground/90 sm:text-sm">
-                {show.overview || "No overview available."}
-              </p>
-            </div>
-          </Link>
-        );
-      })}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+      {tvShows.map((show) => (
+        <TVCard key={show.id} show={show} variant="grid" />
+      ))}
     </div>
   );
 }
+
 function PeopleSearchResults({ items: people }: { items: Person[] }) {
   return (
-    <div className="space-y-4">
-      {people.map((person) => {
-        const knownForSummary = person.known_for
-          ?.map((k) => k.title || k.name)
-          .filter(Boolean)
-          .join(", ");
-
-        return (
-          <Link
-            key={person.id}
-            href={`/person/${person.id}`}
-            className="group flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs transition-all hover:border-primary/50 hover:shadow-md sm:p-4"
-          >
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
-              <SearchResultImage
-                path={person.profile_path}
-                title={person.name}
-                icon={User}
-              />
-            </div>
-
-            <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-              <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
-                {person.name}
-              </h3>
-              <p className="text-xs font-semibold text-primary">
-                {person.known_for_department || "Actor"}
-              </p>
-              {knownForSummary && (
-                <p className="line-clamp-2 text-xs text-muted-foreground/90 sm:text-sm">
-                  Known for: {knownForSummary}
-                </p>
-              )}
-            </div>
-          </Link>
-        );
-      })}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+      {people.map((person) => (
+        <PersonCard key={person.id} person={person} variant="grid" />
+      ))}
     </div>
   );
 }
+
 function CollectionSearchResults({
   items: collections,
 }: {
   items: SearchCollectionItem[];
 }) {
   return (
-    <div className="space-y-4">
-      {collections.map((col) => {
-        return (
-          <div
-            key={col.id}
-            className="flex gap-4 overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-xs sm:p-4"
-          >
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden bg-muted sm:w-24">
-              <SearchResultImage
-                path={col.poster_path}
-                title={col.name}
-                icon={Layers}
-              />
-            </div>
-
-            <div className="flex min-w-0 flex-1 flex-col justify-center space-y-1.5">
-              <h3 className="line-clamp-1 heading-card text-foreground">
-                {col.name}
-              </h3>
-              <p className="line-clamp-3 text-xs text-muted-foreground/90 sm:text-sm">
-                {col.overview || "Movie franchise collection."}
-              </p>
-            </div>
-          </div>
-        );
-      })}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+      {collections.map((col) => (
+        <MediaCard
+          key={col.id}
+          type="movie"
+          id={col.id}
+          title={col.name}
+          image={col.poster_path}
+          subtitle="Collection"
+          variant="grid"
+        />
+      ))}
     </div>
   );
 }
+
 function KeywordSearchResults({ items: keywords }: { items: TMDBKeyword[] }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+    <div className="flex flex-wrap gap-2">
       {keywords.map((kw) => (
         <Link
           key={kw.id}
           href={`/movie?with_keywords=${kw.id}&keywords_names=${encodeURIComponent(encodeURIComponent(kw.name))}`}
-          className="group flex items-center justify-between rounded-3xl border border-border bg-card p-3 text-xs font-semibold text-foreground transition-all hover:border-primary hover:text-primary"
+          className="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:text-primary"
         >
           <span className="line-clamp-1">{kw.name}</span>
           <Tag className="size-3 text-muted-foreground group-hover:text-primary" />
@@ -192,13 +93,14 @@ function KeywordSearchResults({ items: keywords }: { items: TMDBKeyword[] }) {
     </div>
   );
 }
+
 function CompanySearchResults({
   items: companies,
 }: {
   items: SearchCompanyItem[];
 }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {companies.map((comp) => {
         const logoUrl = comp.logo_path
           ? `https://image.tmdb.org/t/p/w185${comp.logo_path}`
@@ -207,9 +109,9 @@ function CompanySearchResults({
         return (
           <div
             key={comp.id}
-            className="flex items-center gap-4 rounded-3xl border border-border bg-card p-4 shadow-xs"
+            className="flex items-center gap-3.5 rounded-3xl border border-border/70 bg-card/60 p-3.5 shadow-xs transition-colors hover:border-primary/40"
           >
-            <div className="relative flex size-12 shrink-0 items-center justify-center bg-muted p-1">
+            <div className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-muted p-1">
               {logoUrl ? (
                 <Image
                   src={logoUrl}
@@ -223,7 +125,7 @@ function CompanySearchResults({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="line-clamp-1 text-sm font-bold text-foreground">
+              <h4 className="line-clamp-1 text-sm font-semibold text-foreground">
                 {comp.name}
               </h4>
               {comp.origin_country && (

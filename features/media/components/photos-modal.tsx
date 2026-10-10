@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
 import {
   Share2,
@@ -182,6 +182,37 @@ export function PhotosModal({
     setViewMode("showcase");
   };
 
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!isOpen || viewMode !== "showcase") return;
+    const centerActive = () => {
+      const container = thumbnailContainerRef.current;
+      const activeThumb = thumbnailRefs.current[activePhotoIdx];
+      if (!container || !activeThumb) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeThumb.getBoundingClientRect();
+      if (containerRect.width === 0) return;
+
+      const offset =
+        activeRect.left +
+        activeRect.width / 2 -
+        (containerRect.left + containerRect.width / 2);
+
+      container.scrollBy({ left: offset, behavior: "smooth" });
+    };
+
+    const frameId = requestAnimationFrame(centerActive);
+    const timerId = setTimeout(centerActive, 150);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timerId);
+    };
+  }, [isOpen, viewMode, activePhotoIdx]);
+
   const headerActions = (
     <div className="flex items-center gap-2">
       {viewMode === "showcase" && (
@@ -213,7 +244,7 @@ export function PhotosModal({
             download
           >
             <Download className="size-3.5" />
-            <span>High-Res</span>
+            <span>Download</span>
           </a>
         </Button>
       )}
@@ -269,7 +300,7 @@ export function PhotosModal({
           <h4 className="mb-2 px-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             Language
           </h4>
-          <div className="flex max-h-48 flex-col gap-1 overflow-y-auto">
+          <div className="flex flex-col gap-1">
             <Button
               variant={selectedLanguage === "all" ? "default" : "ghost"}
               size="sm"
@@ -345,7 +376,7 @@ export function PhotosModal({
       disableDefaultScroll={viewMode === "showcase"}
     >
       {viewMode === "showcase" && activePhoto ? (
-        /* Showcase View: Stage + Identical Height Bottom Filmstrip */
+        /* Showcase View: Stage + Carousel */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Photo Stage */}
           <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-scrim/95 p-2 sm:p-4">
@@ -358,48 +389,50 @@ export function PhotosModal({
                 className="object-contain select-none"
                 priority
               />
-
-              {/* Photo meta overlay */}
-              <div className="absolute top-3 right-3 rounded-xl border border-media-foreground/20 bg-scrim/60 px-3 py-1.5 text-xs text-media-foreground/80 backdrop-blur-md">
-                <p className="font-semibold">{displayTitle}</p>
-                <p className="text-xs text-media-foreground/60">
-                  {activePhoto.width} &times; {activePhoto.height} &bull;{" "}
-                  {activePhoto.type === "backdrop" ? "Backdrop" : "Poster"}
-                </p>
-              </div>
-
-              {/* Prev/Next Buttons */}
-              <Button
-                variant="media"
-                size="icon-lg"
-                type="button"
-                onClick={handlePrevPhoto}
-                aria-label="Previous photo"
-                className="absolute top-1/2 left-2 -translate-y-1/2"
-              >
-                <ChevronLeft className="size-6" />
-              </Button>
-              <Button
-                variant="media"
-                size="icon-lg"
-                type="button"
-                onClick={handleNextPhoto}
-                aria-label="Next photo"
-                className="absolute top-1/2 right-2 -translate-y-1/2"
-              >
-                <ChevronRight className="size-6" />
-              </Button>
             </div>
           </div>
 
-          {/* Standardized Bottom Filmstrip (Identical h-20 container to Videos) */}
-          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3.5">
-            <div className="flex scrollbar-none gap-3 overflow-x-auto p-2">
+          {/* Standardized Bottom Filmstrip */}
+          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">
+                {activePhotoIdx + 1} of {filteredPhotos.length}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handlePrevPhoto}
+                  disabled={filteredPhotos.length <= 1}
+                  aria-label="Previous photo"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  type="button"
+                  onClick={handleNextPhoto}
+                  disabled={filteredPhotos.length <= 1}
+                  aria-label="Next photo"
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
+            </div>
+            <div
+              ref={thumbnailContainerRef}
+              className="flex scrollbar-none gap-3 overflow-x-auto p-2"
+            >
               {filteredPhotos.map((photo, i) => {
                 const isActive = i === activePhotoIdx;
                 return (
                   <button
                     key={photo.file_path + i}
+                    ref={(el) => {
+                      thumbnailRefs.current[i] = el;
+                    }}
                     type="button"
                     onClick={() => setActivePhotoIdx(i)}
                     className={cn(

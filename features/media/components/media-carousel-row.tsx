@@ -31,7 +31,7 @@ export function MediaCarouselRow({
         />
         <div className="flex gap-4 overflow-hidden">
           {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="w-52 shrink-0 sm:w-60">
+            <div key={i} className="w-36 shrink-0 sm:w-60">
               <MovieCardSkeleton />
             </div>
           ))}

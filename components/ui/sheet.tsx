@@ -70,7 +70,7 @@ function SheetContent({
           surface === "fullscreen" &&
             "rounded-none border-0 bg-background data-[side=bottom]:h-full data-[side=bottom]:rounded-none",
           surface === "search" &&
-            "max-h-search-sheet border-none bg-background p-0 shadow-none backdrop-blur-xl",
+            "max-h-search-sheet border-none bg-transparent p-0 shadow-none",
           surface === "filter" &&
             "max-h-filter-sheet data-[side=bottom]:h-filter-sheet data-[side=bottom]:rounded-t-4xl",
           className,

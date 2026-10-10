@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, X, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
+import { Search, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -142,29 +142,21 @@ export function HeaderSearch({
           />
           <Input
             leadingIcon
-            trailingIcon={Boolean(searchQuery)}
             type="search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              if (!e.target.value) {
+                clearSearch();
+              }
+            }}
             onFocus={() => {
               if (debouncedQuery.length >= 2) setIsDropdownOpen(true);
             }}
-            placeholder="Search movies, TV, people..."
+            placeholder="Search movies, TV shows, people..."
             aria-label="Search"
             className="w-full"
           />
-          {searchQuery && (
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              type="button"
-              onClick={clearSearch}
-              aria-label="Clear search"
-              className="absolute right-2.5"
-            >
-              <X className="size-3.5" />
-            </Button>
-          )}
         </div>
       </form>
 
@@ -246,16 +238,18 @@ export function HeaderSearch({
               })}
 
               {/* View All Results Footer */}
-              <Button
-                variant="default"
-                size="sm"
-                type="button"
-                onClick={handleSearchSubmit}
-                className="w-full justify-between"
-              >
-                <span>See all results for &quot;{debouncedQuery}&quot;</span>
-                <ArrowRight className="size-3.5" />
-              </Button>
+              <div className="p-2">
+                <Button
+                  variant="default"
+                  size="sm"
+                  type="button"
+                  onClick={handleSearchSubmit}
+                  className="w-full justify-between"
+                >
+                  <span>See all results for &quot;{debouncedQuery}&quot;</span>
+                  <ArrowRight className="size-3.5" />
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -285,40 +279,27 @@ export function HeaderSearch({
           </SheetHeader>
 
           <div className="container py-3">
-            <form onSubmit={handleSearchSubmit} className="w-full space-y-4">
-              <div className="flex w-full items-center gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    trailingIcon={Boolean(searchQuery)}
-                    ref={mobileInputRef}
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search movies, TV shows, people..."
-                    aria-label="Search query"
-                    className="w-full"
-                  />
-                  {searchQuery && (
-                    <Button
-                      variant="ghost"
-                      size="icon-xs"
-                      type="button"
-                      onClick={clearSearch}
-                      aria-label="Clear search"
-                      className="absolute top-1/2 right-2.5 -translate-y-1/2"
-                    >
-                      <X className="size-3.5" />
-                    </Button>
-                  )}
-                </div>
-                <Button type="submit" size="default">
-                  <span>Search</span>
-                </Button>
+            <form onSubmit={handleSearchSubmit} className="w-full space-y-3">
+              <div className="relative w-full">
+                <Input
+                  ref={mobileInputRef}
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (!e.target.value) {
+                      clearSearch();
+                    }
+                  }}
+                  placeholder="Search movies, TV shows, people..."
+                  aria-label="Search query"
+                  className="w-full"
+                />
               </div>
 
               {/* Mobile Live Autocomplete List */}
               {debouncedQuery.length >= 2 && (
-                <div className="overflow-hidden rounded-3xl border border-border bg-card">
+                <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/90 shadow-2xl backdrop-blur-md">
                   {isError && searchResults && (
                     <QueryFeedback hasData onRetry={() => void refetch()} />
                   )}
@@ -335,7 +316,7 @@ export function HeaderSearch({
                   ) : liveResults.length === 0 ? (
                     <div className="p-4 text-center text-xs text-muted-foreground">
                       No results found for &quot;{debouncedQuery}&quot;. Press
-                      Search to see all.
+                      enter to search all.
                     </div>
                   ) : (
                     <div className="divide-y divide-border/60">
@@ -350,9 +331,9 @@ export function HeaderSearch({
                           <div
                             key={`${item.media_type}-${item.id}`}
                             onClick={() => handleSelectResult(item)}
-                            className="flex cursor-pointer items-center gap-3 p-2.5 transition-colors hover:bg-muted"
+                            className="flex cursor-pointer items-center gap-3 p-3 transition-colors hover:bg-muted/70 active:bg-muted"
                           >
-                            <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden bg-muted">
+                            <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">
                               <SearchResultImage
                                 path={imagePath}
                                 title={title}
@@ -372,7 +353,15 @@ export function HeaderSearch({
                                 <span className="line-clamp-1 text-xs font-bold text-foreground">
                                   {title}
                                 </span>
-                                <span className="rounded-xl bg-secondary px-1 py-0.5 text-xs font-bold text-muted-foreground uppercase">
+                                <span
+                                  className={`rounded-xl px-1.5 py-0.5 text-xs font-bold uppercase ${
+                                    item.media_type === "movie"
+                                      ? "bg-info/10 text-info"
+                                      : item.media_type === "tv"
+                                        ? "bg-highlight/10 text-highlight"
+                                        : "bg-success/10 text-success"
+                                  }`}
+                                >
                                   {item.media_type}
                                 </span>
                               </div>
@@ -385,6 +374,22 @@ export function HeaderSearch({
                           </div>
                         );
                       })}
+
+                      {/* View All Recommendation Results */}
+                      <div className="p-2">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          type="button"
+                          onClick={handleSearchSubmit}
+                          className="w-full justify-between"
+                        >
+                          <span>
+                            See all results for &quot;{debouncedQuery}&quot;
+                          </span>
+                          <ArrowRight className="size-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -19,7 +19,7 @@ export function FeaturedHeroBackdrop({
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-312.5 overflow-hidden select-none"
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-full overflow-hidden select-none sm:h-312.5"
     >
       {/* Parallax Image Wrapper with generous bleed for continuous motion */}
       <div
@@ -67,7 +67,7 @@ export function FeaturedHeroBackdrop({
       <div className="absolute inset-x-0 top-0 h-36 bg-linear-to-b from-background/90 via-background/40 to-transparent" />
 
       {/* Bottom smooth bleed into next section */}
-      <div className="absolute inset-x-0 bottom-0 h-140 bg-linear-to-b from-transparent via-background/60 to-background" />
+      <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-b from-transparent via-background/60 to-background sm:h-140" />
     </div>
   );
 }

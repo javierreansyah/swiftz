@@ -1,12 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { useSearchController } from "@/features/search/hooks/use-search-controller";
 import { SearchCategoryNavigation } from "@/features/search/components/search-category-navigation";
 import { SearchResults } from "@/features/search/components/search-results";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
+import { MovieCardSkeleton } from "@/features/media/components/movie-card-skeleton";
 export function SearchClient() {
   const {
     rawQuery,
@@ -25,39 +25,29 @@ export function SearchClient() {
     dataset,
   } = useSearchController();
   return (
-    <main className="container min-h-screen space-y-8 py-20">
-      {/* Top Search Bar with Clear Button */}
+    <main className="container min-h-screen space-y-3 pt-20 pb-12 sm:space-y-6">
+      {/* Top Search Bar */}
       <form
         onSubmit={handleSearchSubmit}
-        className="relative flex w-full items-center border-b border-border pb-4"
+        className="relative flex w-full items-center"
       >
         <Search className="pointer-events-none absolute left-3 size-5 text-muted-foreground" />
         <Input
           leadingIcon
-          trailingIcon
           type="search"
           value={inputVal}
-          onChange={(e) => setInputVal(e.target.value)}
+          onChange={(e) => {
+            setInputVal(e.target.value);
+            if (!e.target.value) {
+              router.push("/search");
+            }
+          }}
           placeholder="Search movies, TV shows, people, collections..."
         />
-        {inputVal && (
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            type="button"
-            onClick={() => {
-              setInputVal("");
-              router.push("/search");
-            }}
-            className="absolute right-3"
-          >
-            <X className="size-4" />
-          </Button>
-        )}
       </form>
 
       {/* Main Two-Column Layout matching Reference 3 */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-10">
         {/* Left Sidebar (Desktop 4 cols) / Top Pills (Mobile) */}
         <SearchCategoryNavigation
           categories={categories}
@@ -83,12 +73,9 @@ export function SearchClient() {
               </p>
             </div>
           ) : isLoading ? (
-            <div className="space-y-4">
-              {Array.from({ length: 6 }, (_, i) => (
-                <div
-                  key={i}
-                  className="flex h-32 animate-pulse rounded-xl bg-secondary/40"
-                />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }, (_, i) => (
+                <MovieCardSkeleton key={i} />
               ))}
             </div>
           ) : activeQuery?.isError && !activeQuery.data ? null : dataset.items

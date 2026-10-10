@@ -103,7 +103,7 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
   }
 
   return (
-    <section className="relative w-full text-media-foreground">
+    <section className="relative w-full overflow-hidden text-media-foreground sm:overflow-visible">
       {/* 1. Full-Bleed Blurred Crossfade Backdrop */}
       <FeaturedHeroBackdrop
         movies={movies}

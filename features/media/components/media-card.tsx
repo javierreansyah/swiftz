@@ -12,10 +12,10 @@ export type MediaCardAspectRatio = "poster" | "portrait" | "video" | "square";
 const SHELF_IMAGE_SIZES = {
   sm: { poster: "8rem", portrait: "9rem", video: "16rem", square: "8rem" },
   md: {
-    poster: "(min-width: 640px) 15rem, 13rem",
-    portrait: "(min-width: 640px) 11rem, 10rem",
-    video: "(min-width: 640px) 24rem, 20rem",
-    square: "(min-width: 640px) 15rem, 13rem",
+    poster: "(min-width: 640px) 15rem, 9rem",
+    portrait: "(min-width: 640px) 11rem, 9rem",
+    video: "(min-width: 640px) 24rem, 18rem",
+    square: "(min-width: 640px) 15rem, 9rem",
   },
   lg: {
     poster: "12rem",
@@ -127,15 +127,15 @@ export function MediaCard({
         }
       case "md":
       default:
-        // Overall height: ~280px (Standard baseline across all shelves)
+        // Height: h-hero-md (280px) on mobile, h-hero-xl (420px) on desktop
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-hero-md w-80 shrink-0 sm:w-96";
+            return "h-hero-sm w-72 shrink-0 sm:h-hero-md sm:w-96";
           case "portrait":
-            return "h-hero-md w-40 shrink-0 sm:w-44";
+            return "h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-44";
           case "poster":
           default:
-            return "h-hero-xl w-52 shrink-0 sm:w-60";
+            return "h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-60";
         }
     }
   };
@@ -203,8 +203,8 @@ export function MediaCard({
 
       {/* Standardized Info Section */}
       {variant !== "image" && (
-        <div className="flex h-20 shrink-0 flex-col justify-between p-4">
-          <h3 className="line-clamp-1 heading-card text-foreground transition-colors group-hover:text-primary">
+        <div className="flex h-16 shrink-0 flex-col justify-between p-2.5 sm:h-20 sm:p-4">
+          <h3 className="line-clamp-1 heading-card text-sm text-foreground transition-colors group-hover:text-primary sm:text-base">
             {title}
           </h3>
 

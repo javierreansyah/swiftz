@@ -38,7 +38,7 @@ export function TrendingSection() {
   if (!activeQuery.data)
     return (
       <HomeShelfLoading
-        title="Trending Today"
+        title="Trending"
         isError={activeQuery.isError}
         onRetry={() => void activeQuery.refetch()}
       />
@@ -46,7 +46,7 @@ export function TrendingSection() {
 
   return (
     <HomeMediaCarousel
-      title="Trending Today"
+      title="Trending"
       items={activeTab === "movies" ? movieItems : tvItems}
       tabs={[
         { id: "movies", label: "Movies" },
