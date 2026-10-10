@@ -83,7 +83,7 @@ export function ContentCarousel({
   };
 
   const arrowControls = (
-    <div className="hidden items-center gap-1 sm:flex">
+    <div className="flex items-center gap-1">
       <Button
         variant="outline"
         size="icon-sm"
@@ -119,11 +119,11 @@ export function ContentCarousel({
         controls={arrowControls}
       />
 
-      {/* Horizontal Carousel Shelf */}
+      {/* Horizontal Carousel Shelf: swipeable on mobile, arrow-only on desktop */}
       <div
         ref={scrollContainerRef}
         className={cn(
-          "flex scrollbar-none gap-4 overflow-x-auto scroll-smooth pt-1 pb-2",
+          "flex scrollbar-none gap-4 overflow-x-auto scroll-smooth pt-1 pb-2 lg:overflow-x-hidden",
           carouselClassName,
         )}
       >

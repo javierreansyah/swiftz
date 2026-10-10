@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 export interface FilterMobileDrawerProps {
   title: string;
   activeCount: number;
@@ -24,8 +25,8 @@ export function FilterMobileDrawer({
 
   return (
     <div className="lg:hidden">
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} dismissible>
+        <DrawerTrigger asChild>
           <Button
             variant="outline"
             size="default"
@@ -43,26 +44,19 @@ export function FilterMobileDrawer({
               <span className="text-xs text-muted-foreground">None active</span>
             )}
           </Button>
-        </SheetTrigger>
+        </DrawerTrigger>
 
-        {/* 70% height mobile bottom sheet */}
-        <SheetContent
-          surface="filter"
-          side="bottom"
-          showCloseButton={false}
-          className="inset-x-0 bottom-0 flex flex-col overflow-hidden"
-        >
-          <SheetTitle className="sr-only">{title}</SheetTitle>
+        {/* Draggable bottom sheet (vaul): drag the handle to close */}
+        <DrawerContent>
+          <DrawerTitle className="sr-only">{title}</DrawerTitle>
 
-          {/* Bottom Sheet Pill Drag Handle */}
-          <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-muted-foreground/20" />
+          <DrawerHandle />
 
-          {/* Scrollable Filter Options Body */}
-          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             {children({ close })}
           </div>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

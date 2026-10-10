@@ -42,6 +42,7 @@ export interface DiscoverSidebarProps {
   activeFilters: DiscoverFilterState;
   onApplyFilters: (filters: DiscoverFilterState) => void;
   onResetFilters: () => void;
+  bareActions?: boolean;
   className?: string;
 }
 
@@ -69,6 +70,7 @@ export function DiscoverSidebar({
   activeFilters,
   onApplyFilters,
   onResetFilters,
+  bareActions = false,
   className,
 }: DiscoverSidebarProps) {
   const [pendingFilters, setPendingFilters] =
@@ -142,8 +144,8 @@ export function DiscoverSidebar({
 
   const activeProviders = TOP_WATCH_PROVIDERS;
 
-  return (
-    <aside className={cn("space-y-6 pb-4 text-sm", className)}>
+  const filterSections = (
+    <>
       {/* 1. Sort Section */}
       <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
@@ -318,7 +320,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 9. Watch Providers */}
-      <div className="space-y-3 pb-2">
+      <div className="space-y-3 pb-4">
         <FilterSectionHeader
           icon={Tv}
           title="Watch Providers"
@@ -369,14 +371,45 @@ export function DiscoverSidebar({
           })}
         </div>
       </div>
+    </>
+  );
 
-      {/* Standardized Sticky Bottom Search & Reset Action Bar */}
+  if (bareActions) {
+    return (
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col overflow-hidden",
+          className,
+        )}
+      >
+        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-6 py-4">
+          <div className="space-y-6 text-sm">{filterSections}</div>
+        </div>
+
+        <div className="shrink-0 bg-background px-6 pt-4 pb-8">
+          <FilterStickyActionBar
+            onApply={handleApply}
+            onReset={handleReset}
+            activeCount={pendingActiveCount}
+            applyLabel="Search Movies"
+            searchIcon={Search}
+            bare
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <aside className={cn("space-y-6 text-sm", className)}>
+      {filterSections}
       <FilterStickyActionBar
         onApply={handleApply}
         onReset={handleReset}
         activeCount={pendingActiveCount}
         applyLabel="Search Movies"
         searchIcon={Search}
+        bare={false}
       />
     </aside>
   );

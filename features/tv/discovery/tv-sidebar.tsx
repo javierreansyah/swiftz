@@ -20,6 +20,7 @@ export interface TVSidebarProps {
   activeFilters: TVFilterState;
   onApplyFilters: (filters: TVFilterState) => void;
   onResetFilters: () => void;
+  bareActions?: boolean;
   className?: string;
 }
 
@@ -41,6 +42,7 @@ export function TVSidebar({
   activeFilters,
   onApplyFilters,
   onResetFilters,
+  bareActions = false,
   className,
 }: TVSidebarProps) {
   const [pendingFilters, setPendingFilters] =
@@ -90,8 +92,8 @@ export function TVSidebar({
     setPendingFilters((prev) => ({ ...prev, first_air_date_year: val }));
   };
 
-  return (
-    <aside className={cn("space-y-6 pb-4 text-sm", className)}>
+  const filterSections = (
+    <>
       {/* 1. Sort Section */}
       <div className="space-y-3 border-b border-border/40 pb-4">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
@@ -143,7 +145,7 @@ export function TVSidebar({
       </div>
 
       {/* 4. Minimum User Rating */}
-      <div className="space-y-3 pb-2">
+      <div className="space-y-3 pb-4">
         <FilterSectionHeader
           icon={Star}
           title="Minimum Rating"
@@ -172,14 +174,45 @@ export function TVSidebar({
           ticks={[0, 5, 10]}
         />
       </div>
+    </>
+  );
 
-      {/* Sticky Bottom Search & Reset Action Bar */}
+  if (bareActions) {
+    return (
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col overflow-hidden",
+          className,
+        )}
+      >
+        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-6 py-4">
+          <div className="space-y-6 text-sm">{filterSections}</div>
+        </div>
+
+        <div className="shrink-0 bg-background px-6 pt-4 pb-8">
+          <FilterStickyActionBar
+            onApply={handleApply}
+            onReset={handleReset}
+            activeCount={pendingActiveCount}
+            applyLabel="Search TV Shows"
+            searchIcon={Search}
+            bare
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <aside className={cn("space-y-6 text-sm", className)}>
+      {filterSections}
       <FilterStickyActionBar
         onApply={handleApply}
         onReset={handleReset}
         activeCount={pendingActiveCount}
         applyLabel="Search TV Shows"
         searchIcon={Search}
+        bare={false}
       />
     </aside>
   );

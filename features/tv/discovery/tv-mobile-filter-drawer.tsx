@@ -27,6 +27,7 @@ export function TVMobileFilterDrawer({
       {({ close }) => (
         <TVSidebar
           activeFilters={activeFilters}
+          bareActions
           onApplyFilters={(filters) => {
             onApplyFilters(filters);
             close();

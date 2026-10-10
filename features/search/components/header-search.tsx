@@ -284,114 +284,113 @@ export function HeaderSearch({
             <SheetTitle>Search Swiftz</SheetTitle>
           </SheetHeader>
 
-          <form
-            onSubmit={handleSearchSubmit}
-            className="mx-auto max-w-xl space-y-4"
-          >
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Input
-                  trailingIcon={Boolean(searchQuery)}
-                  ref={mobileInputRef}
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search movies, TV shows, people..."
-                  aria-label="Search query"
-                  className="w-full"
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="icon-xs"
-                    type="button"
-                    onClick={clearSearch}
-                    aria-label="Clear search"
-                    className="absolute top-1/2 right-2.5 -translate-y-1/2"
-                  >
-                    <X className="size-3.5" />
-                  </Button>
-                )}
-              </div>
-              <Button type="submit" size="default">
-                <span>Search</span>
-              </Button>
-            </div>
-
-            {/* Mobile Live Autocomplete List */}
-            {debouncedQuery.length >= 2 && (
-              <div className="overflow-hidden rounded-3xl border border-border bg-card">
-                {isError && searchResults && (
-                  <QueryFeedback hasData onRetry={() => void refetch()} />
-                )}
-                {isLoading ? (
-                  <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
-                    <Loader2 className="size-4 animate-spin text-primary" />
-                    <span>Searching...</span>
-                  </div>
-                ) : isError && !searchResults ? (
-                  <QueryFeedback
-                    hasData={false}
-                    onRetry={() => void refetch()}
+          <div className="container py-3">
+            <form onSubmit={handleSearchSubmit} className="w-full space-y-4">
+              <div className="flex w-full items-center gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    trailingIcon={Boolean(searchQuery)}
+                    ref={mobileInputRef}
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search movies, TV shows, people..."
+                    aria-label="Search query"
+                    className="w-full"
                   />
-                ) : liveResults.length === 0 ? (
-                  <div className="p-4 text-center text-xs text-muted-foreground">
-                    No results found for &quot;{debouncedQuery}&quot;. Press
-                    Search to see all.
-                  </div>
-                ) : (
-                  <div className="divide-y divide-border/60">
-                    {liveResults.map((item) => {
-                      const {
-                        title,
-                        imagePath,
-                        subtitle: subText,
-                      } = searchResultSummary(item, item.media_type);
-
-                      return (
-                        <div
-                          key={`${item.media_type}-${item.id}`}
-                          onClick={() => handleSelectResult(item)}
-                          className="flex cursor-pointer items-center gap-3 p-2.5 transition-colors hover:bg-muted"
-                        >
-                          <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden bg-muted">
-                            <SearchResultImage
-                              path={imagePath}
-                              title={title}
-                              icon={
-                                item.media_type === "person"
-                                  ? User
-                                  : item.media_type === "tv"
-                                    ? Tv
-                                    : Film
-                              }
-                              size="compact"
-                              fallback={false}
-                            />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="line-clamp-1 text-xs font-bold text-foreground">
-                                {title}
-                              </span>
-                              <span className="rounded-xl bg-secondary px-1 py-0.5 text-xs font-bold text-muted-foreground uppercase">
-                                {item.media_type}
-                              </span>
-                            </div>
-                            {subText && (
-                              <p className="text-xs text-muted-foreground">
-                                {subText}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                  {searchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      type="button"
+                      onClick={clearSearch}
+                      aria-label="Clear search"
+                      className="absolute top-1/2 right-2.5 -translate-y-1/2"
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  )}
+                </div>
+                <Button type="submit" size="default">
+                  <span>Search</span>
+                </Button>
               </div>
-            )}
-          </form>
+
+              {/* Mobile Live Autocomplete List */}
+              {debouncedQuery.length >= 2 && (
+                <div className="overflow-hidden rounded-3xl border border-border bg-card">
+                  {isError && searchResults && (
+                    <QueryFeedback hasData onRetry={() => void refetch()} />
+                  )}
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
+                      <Loader2 className="size-4 animate-spin text-primary" />
+                      <span>Searching...</span>
+                    </div>
+                  ) : isError && !searchResults ? (
+                    <QueryFeedback
+                      hasData={false}
+                      onRetry={() => void refetch()}
+                    />
+                  ) : liveResults.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-muted-foreground">
+                      No results found for &quot;{debouncedQuery}&quot;. Press
+                      Search to see all.
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-border/60">
+                      {liveResults.map((item) => {
+                        const {
+                          title,
+                          imagePath,
+                          subtitle: subText,
+                        } = searchResultSummary(item, item.media_type);
+
+                        return (
+                          <div
+                            key={`${item.media_type}-${item.id}`}
+                            onClick={() => handleSelectResult(item)}
+                            className="flex cursor-pointer items-center gap-3 p-2.5 transition-colors hover:bg-muted"
+                          >
+                            <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden bg-muted">
+                              <SearchResultImage
+                                path={imagePath}
+                                title={title}
+                                icon={
+                                  item.media_type === "person"
+                                    ? User
+                                    : item.media_type === "tv"
+                                      ? Tv
+                                      : Film
+                                }
+                                size="compact"
+                                fallback={false}
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="line-clamp-1 text-xs font-bold text-foreground">
+                                  {title}
+                                </span>
+                                <span className="rounded-xl bg-secondary px-1 py-0.5 text-xs font-bold text-muted-foreground uppercase">
+                                  {item.media_type}
+                                </span>
+                              </div>
+                              {subText && (
+                                <p className="text-xs text-muted-foreground">
+                                  {subText}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </form>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

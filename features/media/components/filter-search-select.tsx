@@ -1,15 +1,14 @@
 "use client";
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Command,
-  CommandInput,
   CommandList,
   CommandEmpty,
   CommandGroup,
@@ -40,31 +39,31 @@ export function FilterSearchSelect({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full justify-start"
-        >
-          <Search />
-          <span className="truncate">{placeholder}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent surface="command" align="start" aria-label={placeholder}>
-        <Command shouldFilter={false}>
-          <CommandInput
+      <PopoverAnchor asChild>
+        <div className="relative">
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            leadingIcon
+            type="text"
             value={query}
-            onValueChange={onQueryChange}
+            onChange={(e) => {
+              onQueryChange(e.target.value);
+              setOpen(true);
+            }}
+            onFocus={() => setOpen(true)}
             placeholder={placeholder}
             aria-label={placeholder}
+            role="combobox"
+            aria-expanded={open}
+            aria-autocomplete="list"
           />
+        </div>
+      </PopoverAnchor>
+      <PopoverContent surface="command" align="start" aria-label={placeholder}>
+        <Command shouldFilter={false}>
           <CommandList aria-busy={isLoading}>
             <CommandEmpty>
-              {!canSearch
-                ? `Type at least ${minQueryLength} characters.`
-                : isLoading
-                  ? "Searching..."
-                  : "No results found."}
+              {isLoading ? "Searching..." : "No results found."}
             </CommandEmpty>
             {canSearch && !isLoading && (
               <CommandGroup>

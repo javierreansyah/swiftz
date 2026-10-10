@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Check, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -77,7 +77,6 @@ export function MultiSelectBadges({
             onClick={() => onToggle(item.id)}
             className="cursor-pointer select-none"
           >
-            {isSelected && <Check className="mr-1 size-3 stroke-2" />}
             <span>{item.label}</span>
           </Button>
         );
@@ -180,6 +179,7 @@ export interface FilterStickyActionBarProps {
   activeCount: number;
   applyLabel?: string;
   searchIcon?: React.ComponentType<{ className?: string }>;
+  bare?: boolean;
   className?: string;
 }
 
@@ -189,12 +189,14 @@ export function FilterStickyActionBar({
   activeCount,
   applyLabel = "Search",
   searchIcon: SearchIcon,
+  bare = false,
   className,
 }: FilterStickyActionBarProps) {
   return (
     <div
       className={cn(
-        "sticky bottom-0 z-10 flex w-full items-center gap-2 border-t border-border/70 bg-background/95 pt-3 pb-2 backdrop-blur-md",
+        "z-10 flex w-full items-center gap-2 bg-background",
+        !bare && "sticky bottom-0 -mr-3 pt-3 pr-3 pb-4",
         className,
       )}
     >

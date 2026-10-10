@@ -27,6 +27,7 @@ export function DiscoverMobileFilterDrawer({
         <DiscoverSidebar
           defaultFilters={defaultFilters}
           activeFilters={activeFilters}
+          bareActions
           onApplyFilters={(filters) => {
             onApplyFilters(filters);
             close();

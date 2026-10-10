@@ -2,12 +2,13 @@
 import React from "react";
 import { X, Search } from "lucide-react";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHandle,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -56,26 +57,31 @@ export function DetailBottomSheet({
   disableDefaultScroll = false,
 }: DetailBottomSheetProps) {
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent
+    <Drawer
+      open={isOpen}
+      onOpenChange={(open) => !open && onClose()}
+      dismissible
+    >
+      <DrawerContent
         surface="detail"
-        side="bottom"
-        showCloseButton={false}
         className={cn(
-          "inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden ",
+          "inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden",
           className,
         )}
       >
+        {/* Mobile drag handle */}
+        <DrawerHandle className="md:hidden" />
+
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Top Header */}
           <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4 sm:px-8 sm:py-5">
             {/* Left: Title, Subtitle, and Badge */}
             <div className="flex items-center gap-3">
               <div>
-                <SheetTitle>{title}</SheetTitle>
-                <SheetDescription className={subtitle ? undefined : "sr-only"}>
+                <DrawerTitle>{title}</DrawerTitle>
+                <DrawerDescription className={subtitle ? undefined : "sr-only"}>
                   {subtitle || `Browse ${title}`}
-                </SheetDescription>
+                </DrawerDescription>
               </div>
               {badge !== undefined && (
                 <Badge variant={badgeVariant}>{badge}</Badge>
@@ -99,17 +105,17 @@ export function DetailBottomSheet({
 
               {headerActions}
 
-              {/* Close Button on the Right Side */}
-              <SheetClose asChild>
+              {/* Close Button on the Right Side (Desktop only) */}
+              <DrawerClose asChild>
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="shrink-0"
+                  className="hidden shrink-0 md:inline-flex"
                   aria-label="Close sheet"
                 >
                   <X />
                 </Button>
-              </SheetClose>
+              </DrawerClose>
             </div>
           </div>
 
@@ -159,7 +165,7 @@ export function DetailBottomSheet({
             )}
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }
