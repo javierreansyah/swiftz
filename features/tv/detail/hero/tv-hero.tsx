@@ -128,6 +128,7 @@ export function TVHero({
 
       <TVHeroActions
         show={show}
+        posterUrl={posterUrl}
         cast={cast}
         reviewCount={reviewCount}
         isWatchlist={isWatchlist}
@@ -136,6 +137,7 @@ export function TVHero({
         onOpenModal={onOpenModal}
         onOpenRating={handleRateOpen}
         onShareClick={handleShareClick}
+        copiedShare={copiedShare}
       />
 
       <TVRatingDialog

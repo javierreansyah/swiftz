@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
+import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
 export interface QuickRailSectionItem {
   id: string;
   label: string;
@@ -98,18 +99,20 @@ export function MediaQuickRail({
   }, [sections]);
 
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const headerOffset = 96; // 64px fixed header + 32px padding
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-      closeMobileNav();
-    }
+    closeMobileNav();
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        const headerOffset = 96; // 64px fixed header + 32px padding
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }, 150);
   };
 
   const handleShare = async () => {
@@ -280,51 +283,73 @@ export function MediaQuickRail({
     </div>
   );
 
-  /* ----------------- MOBILE 2-COLUMN COLLAPSIBLE CONTENT ----------------- */
+  /* ----------------- MOBILE NAVIGATION BOTTOM SHEET CONTENT ----------------- */
   const renderMobileContent = () => (
-    <div className="flex flex-col space-y-4">
-      {/* 2-Column Section Jumpers with Icon Highlighting */}
-      <div className="space-y-2">
-        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          Sections
-        </p>
+    <div className="flex flex-col space-y-6">
+      {/* Section Jumpers with Icon Highlighting and Open Sheet Actions */}
+      <div className="space-y-3">
+        <p className="label-section text-muted-foreground">Jump to Section</p>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {sections.map((item) => {
             const isActive = activeSection === item.id;
             const Icon = item.icon;
             return (
-              <Button
-                variant={isActive ? "default" : "ghost"}
-                size="sm"
+              <div
                 key={item.id}
-                type="button"
-                onClick={() => scrollToSection(item.id)}
+                className={cn(
+                  "flex items-center justify-between rounded-2xl border p-2.5 transition-colors",
+                  isActive
+                    ? "border-primary/50 bg-primary/10 text-primary"
+                    : "border-border/60 bg-card/60 text-foreground hover:bg-muted/50",
+                )}
               >
-                <div
-                  className={cn(
-                    "flex size-7 shrink-0 items-center justify-center rounded-xl transition-colors",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "bg-muted/70 text-muted-foreground/80",
-                  )}
+                <button
+                  type="button"
+                  onClick={() => scrollToSection(item.id)}
+                  className="flex flex-1 items-center gap-3 text-left font-medium select-none cursor-pointer"
                 >
-                  <Icon className="size-3.5" />
-                </div>
-                <span className="truncate">{item.label}</span>
-              </Button>
+                  <div
+                    className={cn(
+                      "flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors",
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-xs"
+                        : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    <Icon className="size-4" />
+                  </div>
+                  <span className="text-sm font-semibold">{item.label}</span>
+                </button>
+
+                {item.modal && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeMobileNav();
+                      onOpenModal(item.modal!);
+                    }}
+                    title={`Open ${item.label} sheet`}
+                    className="shrink-0"
+                  >
+                    <span>Open</span>
+                    <ChevronRight className="size-3" />
+                  </Button>
+                )}
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* 2-Column Quick Actions */}
-      <div className="space-y-2 border-t border-border/60 pt-3">
-        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          Actions
-        </p>
+      {/* Quick Actions */}
+      <div className="space-y-3 border-t border-border/60 pt-4">
+        <p className="label-section text-muted-foreground">Quick Actions</p>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {/* Watchlist */}
           <Button
             size="default"
@@ -423,23 +448,17 @@ export function MediaQuickRail({
         </div>
       )}
 
-      {/* Mobile Sticky Collapsible Dropdown below Header (Triggered by header Compass button) */}
-      {(mode === "mobile" || mode === "all") && isMobileNavOpen && (
-        <>
-          {/* Transparent Backdrop to dismiss outside */}
-          <div
-            className="fixed inset-0 z-40 lg:hidden"
-            onClick={closeMobileNav}
-            aria-hidden="true"
-          />
-
-          {/* Frosted Translucent Collapsible below Header */}
-          <div className="fixed inset-x-0 top-16 z-50 max-h-dialog animate-in overflow-y-auto border-b border-border/80 bg-background/85 p-4 shadow-xl backdrop-blur-md duration-200 slide-in-from-top-2 lg:hidden">
-            <div className="container max-w-md space-y-4">
-              {renderMobileContent()}
-            </div>
-          </div>
-        </>
+      {/* Mobile Navigation Bottom Sheet (Triggered by header Compass button) */}
+      {(mode === "mobile" || mode === "all") && (
+        <DetailBottomSheet
+          isOpen={isMobileNavOpen}
+          onClose={closeMobileNav}
+          title="Navigation"
+          subtitle={title}
+          badge={`${sections.length} Sections`}
+        >
+          {renderMobileContent()}
+        </DetailBottomSheet>
       )}
     </>
   );

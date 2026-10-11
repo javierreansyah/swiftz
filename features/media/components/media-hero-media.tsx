@@ -94,19 +94,6 @@ export function MediaHeroMedia({
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-scrim/80 via-scrim/20 to-transparent" />
 
-              {/* Mobile Poster Thumbnail (visible on small screens) */}
-              <div className="absolute bottom-4 left-4 flex items-end gap-3 lg:hidden">
-                <div className="relative h-28 w-20 flex-none overflow-hidden rounded-xl border border-media-foreground/20 shadow-xl">
-                  <Image
-                    src={posterUrl}
-                    alt={title}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
               {/* Floating Trailer Play Button Container (Bottom-Left) */}
               {currentVideo && (
                 <Button
@@ -114,7 +101,7 @@ export function MediaHeroMedia({
                   size="sm"
                   type="button"
                   onClick={() => setIsPlayingTrailer(true)}
-                  className="group absolute bottom-4 left-26 sm:left-6"
+                  className="group absolute bottom-4 left-4 sm:left-6"
                   aria-label="Play Trailer"
                 >
                   <div className="flex size-6 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
@@ -126,15 +113,14 @@ export function MediaHeroMedia({
                 </Button>
               )}
 
-              {/* Carousel Chevron Controls on Bottom Right */}
+              {/* Carousel Chevron Controls on Bottom Right (Desktop Only) */}
               {playableVideos.length > 1 && (
-                <div className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/60 p-1 backdrop-blur-md">
+                <div className="hidden lg:flex absolute right-4 bottom-4 items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/60 p-1 backdrop-blur-md">
                   <Button
                     variant="media-ghost"
                     size="icon-xs"
                     type="button"
                     onClick={handlePrevVideo}
-
                     aria-label="Previous Video"
                   >
                     <ChevronLeft className="size-4" />
@@ -147,7 +133,6 @@ export function MediaHeroMedia({
                     size="icon-xs"
                     type="button"
                     onClick={handleNextVideo}
-
                     aria-label="Next Video"
                   >
                     <ChevronRight className="size-4" />

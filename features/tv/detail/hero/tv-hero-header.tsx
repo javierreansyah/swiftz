@@ -32,7 +32,7 @@ export function TVHeroHeader({
   copiedShare,
 }: TVHeroHeaderProps) {
   return (
-    <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+    <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
       <div className="space-y-1.5">
         <h1 className="heading-hero text-foreground">{show.name}</h1>
         <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-muted-foreground sm:text-base">
@@ -56,8 +56,8 @@ export function TVHeroHeader({
         </div>
       </div>
 
-      {/* Right side header badges & rate action */}
-      <div className="flex flex-wrap items-center gap-3">
+      {/* Right side header badges & rate action (Desktop only) */}
+      <div className="hidden lg:flex flex-wrap items-center gap-3">
         {/* Rate button */}
         <Tooltip>
           <TooltipTrigger asChild>

@@ -125,6 +125,7 @@ export function MovieHero({
 
       <MovieHeroActions
         movie={movie}
+        posterUrl={posterUrl}
         cast={cast}
         crew={crew}
         reviewCount={reviewCount}
@@ -134,6 +135,7 @@ export function MovieHero({
         onOpenModal={onOpenModal}
         onOpenRating={handleRateOpen}
         onShareClick={handleShareClick}
+        copiedShare={copiedShare}
       />
 
       <MovieRatingDialog
