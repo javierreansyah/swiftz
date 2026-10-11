@@ -73,10 +73,6 @@ export function RecommendationsModal({
     }
   }, [recData]);
 
-  const totalCount =
-    typeof recData?.total_results === "number" && recData.total_results > 0
-      ? recData.total_results
-      : undefined;
   const hasMore =
     typeof recData?.total_pages === "number"
       ? page < recData.total_pages
@@ -103,7 +99,6 @@ export function RecommendationsModal({
           ? `Recommended Titles · ${displayYear}`
           : "Recommended Titles"
       }
-      badge={totalCount !== undefined ? `${totalCount} Titles` : undefined}
       search={{
         value: searchQuery,
         onChange: setSearchQuery,

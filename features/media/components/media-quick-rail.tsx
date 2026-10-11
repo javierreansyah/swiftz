@@ -13,7 +13,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
-import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer";
 export interface QuickRailSectionItem {
   id: string;
   label: string;
@@ -285,156 +291,129 @@ export function MediaQuickRail({
 
   /* ----------------- MOBILE NAVIGATION BOTTOM SHEET CONTENT ----------------- */
   const renderMobileContent = () => (
-    <div className="flex flex-col space-y-6">
-      {/* Section Jumpers with Icon Highlighting and Open Sheet Actions */}
-      <div className="space-y-3">
-        <p className="label-section text-muted-foreground">Jump to Section</p>
-
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {sections.map((item) => {
-            const isActive = activeSection === item.id;
-            const Icon = item.icon;
-            return (
+    <div className="flex flex-col space-y-4">
+      {/* Connected Section Container divided by horizontal dividers */}
+      <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
+        {sections.map((item) => {
+          const isActive = activeSection === item.id;
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => scrollToSection(item.id)}
+              className={cn(
+                "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors select-none",
+                isActive
+                  ? "bg-primary/10 font-semibold text-primary"
+                  : "font-medium text-foreground hover:bg-muted/50",
+              )}
+            >
               <div
-                key={item.id}
                 className={cn(
-                  "flex items-center justify-between rounded-2xl border p-2.5 transition-colors",
+                  "flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors",
                   isActive
-                    ? "border-primary/50 bg-primary/10 text-primary"
-                    : "border-border/60 bg-card/60 text-foreground hover:bg-muted/50",
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "bg-muted text-muted-foreground",
                 )}
               >
-                <button
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className="flex flex-1 items-center gap-3 text-left font-medium select-none cursor-pointer"
-                >
-                  <div
-                    className={cn(
-                      "flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-xs"
-                        : "bg-muted text-muted-foreground",
-                    )}
-                  >
-                    <Icon className="size-4" />
-                  </div>
-                  <span className="text-sm font-semibold">{item.label}</span>
-                </button>
-
-                {item.modal && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      closeMobileNav();
-                      onOpenModal(item.modal!);
-                    }}
-                    title={`Open ${item.label} sheet`}
-                    className="shrink-0"
-                  >
-                    <span>Open</span>
-                    <ChevronRight className="size-3" />
-                  </Button>
-                )}
+                <Icon className="size-4" />
               </div>
-            );
-          })}
-        </div>
+              <span className="flex-1 text-sm">{item.label}</span>
+              {isActive && (
+                <div className="size-2 shrink-0 rounded-full bg-primary" />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Quick Actions */}
-      <div className="space-y-3 border-t border-border/60 pt-4">
-        <p className="label-section text-muted-foreground">Quick Actions</p>
+      <div className="grid grid-cols-2 gap-2">
+        {/* Watchlist */}
+        <Button
+          size="default"
+          variant={isWatchlist ? "default" : "outline"}
+          onClick={() => {
+            onToggleWatchlist();
+            closeMobileNav();
+          }}
+          disabled={isWatchlistPending}
+          className="w-full justify-start"
+        >
+          {isWatchlistPending ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Bookmark
+              className={cn("size-3.5", isWatchlist && "fill-current")}
+            />
+          )}
+          <span className="truncate">
+            {isWatchlist ? "In Watchlist" : "Watchlist"}
+          </span>
+        </Button>
 
-        <div className="grid grid-cols-2 gap-2.5">
-          {/* Watchlist */}
-          <Button
-            size="default"
-            variant={isWatchlist ? "default" : "outline"}
-            onClick={() => {
-              onToggleWatchlist();
-              closeMobileNav();
-            }}
-            disabled={isWatchlistPending}
-            className="w-full justify-start"
-          >
-            {isWatchlistPending ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Bookmark
-                className={cn("size-3.5", isWatchlist && "fill-current")}
-              />
-            )}
-            <span className="truncate">
-              {isWatchlist ? "In Watchlist" : "Watchlist"}
-            </span>
-          </Button>
-
-          {/* Favorite */}
-          <Button
-            size="default"
-            variant={isFavorite ? "default" : "outline"}
-            onClick={() => {
-              onToggleFavorite();
-              closeMobileNav();
-            }}
-            disabled={isFavoritePending}
-            className="w-full justify-start"
-          >
-            {isFavoritePending ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Heart
-                className={cn(
-                  "size-3.5",
-                  isFavorite && "fill-current text-destructive",
-                )}
-              />
-            )}
-            <span className="truncate">
-              {isFavorite ? "Favorited" : "Favorite"}
-            </span>
-          </Button>
-
-          {/* Rate */}
-          <Button
-            size="default"
-            variant="outline"
-            onClick={() => {
-              closeMobileNav();
-              onOpenRating();
-            }}
-            className="w-full justify-start"
-          >
-            <Star
+        {/* Favorite */}
+        <Button
+          size="default"
+          variant={isFavorite ? "default" : "outline"}
+          onClick={() => {
+            onToggleFavorite();
+            closeMobileNav();
+          }}
+          disabled={isFavoritePending}
+          className="w-full justify-start"
+        >
+          {isFavoritePending ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Heart
               className={cn(
                 "size-3.5",
-                userRating ? "fill-primary text-primary" : "text-primary",
+                isFavorite && "fill-current text-destructive",
               )}
             />
-            <span className="truncate">
-              {userRating ? `${userRating}/10` : "Rate"}
-            </span>
-          </Button>
+          )}
+          <span className="truncate">
+            {isFavorite ? "Favorited" : "Favorite"}
+          </span>
+        </Button>
 
-          {/* Share */}
-          <Button
-            size="default"
-            variant="outline"
-            onClick={handleShare}
-            className="w-full justify-start"
-          >
-            {copied ? (
-              <Check className="size-3.5 text-success" />
-            ) : (
-              <Share2 className="size-3.5" />
+        {/* Rate */}
+        <Button
+          size="default"
+          variant="outline"
+          onClick={() => {
+            closeMobileNav();
+            onOpenRating();
+          }}
+          className="w-full justify-start"
+        >
+          <Star
+            className={cn(
+              "size-3.5",
+              userRating ? "fill-primary text-primary" : "text-primary",
             )}
-            <span className="truncate">{copied ? "Copied!" : "Share"}</span>
-          </Button>
-        </div>
+          />
+          <span className="truncate">
+            {userRating ? `${userRating}/10` : "Rate"}
+          </span>
+        </Button>
+
+        {/* Share */}
+        <Button
+          size="default"
+          variant="outline"
+          onClick={handleShare}
+          className="w-full justify-start"
+        >
+          {copied ? (
+            <Check className="size-3.5 text-success" />
+          ) : (
+            <Share2 className="size-3.5" />
+          )}
+          <span className="truncate">{copied ? "Copied!" : "Share"}</span>
+        </Button>
       </div>
     </div>
   );
@@ -450,15 +429,23 @@ export function MediaQuickRail({
 
       {/* Mobile Navigation Bottom Sheet (Triggered by header Compass button) */}
       {(mode === "mobile" || mode === "all") && (
-        <DetailBottomSheet
-          isOpen={isMobileNavOpen}
-          onClose={closeMobileNav}
-          title="Navigation"
-          subtitle={title}
-          badge={`${sections.length} Sections`}
+        <Drawer
+          open={isMobileNavOpen}
+          onOpenChange={(open) => !open && closeMobileNav()}
         >
-          {renderMobileContent()}
-        </DetailBottomSheet>
+          <DrawerContent
+            surface="fit"
+            className="inset-x-0 bottom-0 mx-auto w-full max-w-(--max-container)"
+          >
+            <DrawerHandle className="md:hidden" />
+            <DrawerTitle className="sr-only">Navigation</DrawerTitle>
+            <DrawerDescription className="sr-only">
+              Browse sections for {title}
+            </DrawerDescription>
+
+            <div className="px-4 pt-5 pb-8">{renderMobileContent()}</div>
+          </DrawerContent>
+        </Drawer>
       )}
     </>
   );

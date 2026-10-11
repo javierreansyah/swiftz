@@ -314,10 +314,9 @@ export function VideosModal({
       onClose={onClose}
       title={displayTitle}
       subtitle={displayYear ? `Videos · ${displayYear}` : "Videos"}
-      badge={`${videos.length} Videos`}
       headerActions={headerActions}
       sidebar={desktopSidebar}
-      mobileControls={mobileControls}
+      mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >
       {viewMode === "showcase" && selectedVideoModal ? (
@@ -325,6 +324,16 @@ export function VideosModal({
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Video Player Stage */}
           <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-scrim p-2 sm:p-4">
+            {/* Mobile Back to Gallery Button */}
+            <Button
+              variant="media"
+              size="sm"
+              onClick={() => setViewMode("gallery")}
+              className="absolute top-3 left-3 z-20 md:hidden"
+            >
+              <LayoutGrid className="size-3.5" />
+              <span>Gallery</span>
+            </Button>
             <div className="relative aspect-video max-h-lightbox w-full max-w-6xl overflow-hidden rounded-xl shadow-2xl">
               <iframe
                 src={`https://www.youtube.com/embed/${selectedVideoModal.key}?autoplay=1&rel=0`}

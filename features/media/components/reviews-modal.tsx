@@ -166,41 +166,65 @@ export function ReviewsModal({
     </div>
   );
 
+  const mobileControls = (
+    <div className="grid grid-cols-2 gap-2">
+      <FilterSelect
+        value={reviewSort}
+        onChange={(value) => setReviewSort(value as typeof reviewSort)}
+        ariaLabel="Sort reviews"
+        placeholder="Sort by"
+        options={[
+          { value: "featured", label: "Featured" },
+          { value: "rating_desc", label: "Highest Rating" },
+          { value: "rating_asc", label: "Lowest Rating" },
+          { value: "date_desc", label: "Most Recent" },
+        ]}
+      />
+      <FilterSelect
+        value={ratingFilter}
+        onChange={setRatingFilter}
+        ariaLabel="Filter reviews by rating"
+        placeholder="Rating"
+        options={[
+          { value: "all", label: "All Stars" },
+          { value: "9", label: "9+ Stars" },
+          { value: "8", label: "8+ Stars" },
+          { value: "7", label: "7+ Stars" },
+          { value: "5", label: "5+ Stars" },
+        ]}
+      />
+    </div>
+  );
+
   const subHeader = (
     <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Sort by:</span>
-          <FilterSelect
-            value={reviewSort}
-            onChange={(value) => setReviewSort(value as typeof reviewSort)}
-            ariaLabel="Sort reviews"
-            fullWidth={false}
-            options={[
-              { value: "featured", label: "Featured" },
-              { value: "rating_desc", label: "Highest Rating" },
-              { value: "rating_asc", label: "Lowest Rating" },
-              { value: "date_desc", label: "Most Recent" },
-            ]}
-          />
-        </div>
+        <FilterSelect
+          value={reviewSort}
+          onChange={(value) => setReviewSort(value as typeof reviewSort)}
+          ariaLabel="Sort reviews"
+          fullWidth={false}
+          options={[
+            { value: "featured", label: "Featured" },
+            { value: "rating_desc", label: "Highest Rating" },
+            { value: "rating_asc", label: "Lowest Rating" },
+            { value: "date_desc", label: "Most Recent" },
+          ]}
+        />
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Rating:</span>
-          <FilterSelect
-            value={ratingFilter}
-            onChange={setRatingFilter}
-            ariaLabel="Filter reviews by rating"
-            fullWidth={false}
-            options={[
-              { value: "all", label: "All Stars" },
-              { value: "9", label: "9+ Stars" },
-              { value: "8", label: "8+ Stars" },
-              { value: "7", label: "7+ Stars" },
-              { value: "5", label: "5+ Stars" },
-            ]}
-          />
-        </div>
+        <FilterSelect
+          value={ratingFilter}
+          onChange={setRatingFilter}
+          ariaLabel="Filter reviews by rating"
+          fullWidth={false}
+          options={[
+            { value: "all", label: "All Stars" },
+            { value: "9", label: "9+ Stars" },
+            { value: "8", label: "8+ Stars" },
+            { value: "7", label: "7+ Stars" },
+            { value: "5", label: "5+ Stars" },
+          ]}
+        />
 
         <label className="flex cursor-pointer items-center gap-2 text-muted-foreground select-none hover:text-foreground">
           <input
@@ -227,9 +251,9 @@ export function ReviewsModal({
       onClose={onClose}
       title="User Reviews"
       subtitle={`${displayTitle} ${displayYear ? `(${displayYear})` : ""}`}
-      badge={`${rawReviews.length} Total`}
       headerActions={headerActions}
       subHeader={subHeader}
+      mobileControls={mobileControls}
     >
       {activeReviews.isError && (
         <QueryFeedback

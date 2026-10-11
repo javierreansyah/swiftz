@@ -9,15 +9,20 @@ import {
   Tv,
   Users,
   Bookmark,
-  X,
   LogIn,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
 import { useAuth } from "@/features/auth/auth-provider";
+import { cn } from "@/lib/utils";
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -56,84 +61,83 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
       : null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent
-        surface="default"
-        side="right"
-        showCloseButton={false}
-        className="flex w-72 flex-col justify-between sm:w-80"
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
+      <DrawerContent
+        surface="fit"
+        className="inset-x-0 bottom-0 mx-auto w-full max-w-(--max-container)"
       >
-        <div className="flex flex-1 flex-col justify-between p-6">
-          <div className="space-y-6">
-            <div className="flex h-10 items-center justify-between">
-              <ThemeSwitcher variant="ghost" />
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close menu"
-              >
-                <X className="size-5" />
-              </Button>
-            </div>
+        <DrawerHandle className="md:hidden" />
+        <DrawerTitle className="sr-only">Menu</DrawerTitle>
 
-            {/* User Profile Card */}
-            {isAuthenticated && user ? (
-              <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/60 p-3 shadow-xs">
-                {avatarUrl ? (
-                  <div className="relative size-10 flex-none overflow-clip rounded-xl">
-                    <Image
-                      src={avatarUrl}
-                      alt={user.username || "User"}
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex size-10 flex-none items-center justify-center rounded-xl bg-primary/20 text-sm font-bold text-primary">
-                    {(user.username || "U").charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div className="min-w-0 flex-1 overflow-hidden">
-                  <p className="truncate text-sm font-semibold text-foreground">
-                    {user.name || user.username}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    @{user.username}
-                  </p>
+        <div className="space-y-4 px-4 pt-5 pb-8">
+          {/* User Profile Card (if authenticated) */}
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card p-3 shadow-xs">
+              {avatarUrl ? (
+                <div className="relative size-10 flex-none overflow-clip rounded-xl">
+                  <Image
+                    src={avatarUrl}
+                    alt={user.username || "User"}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
                 </div>
+              ) : (
+                <div className="flex size-10 flex-none items-center justify-center rounded-xl bg-primary/20 text-sm font-bold text-primary">
+                  {(user.username || "U").charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {user.name || user.username}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  @{user.username}
+                </p>
               </div>
-            ) : null}
+            </div>
+          ) : null}
 
-            <nav>
-              <ul className="space-y-2">
-                {navigationList.map((item) => {
-                  const isActive = isActiveRoute(item.route);
-                  const Icon = item.icon;
+          {/* Connected Navigation Links */}
+          <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
+            {navigationList.map((item) => {
+              const isActive = isActiveRoute(item.route);
+              const Icon = item.icon;
 
-                  return (
-                    <li key={item.route}>
-                      <Button
-                        asChild
-                        variant={isActive ? "default" : "secondary"}
-                        className="w-full justify-start"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <Link href={item.route}>
-                          <Icon className="size-4" />
-                          <span className="font-medium">{item.name}</span>
-                        </Link>
-                      </Button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+              return (
+                <Link
+                  key={item.route}
+                  href={item.route}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors select-none",
+                    isActive
+                      ? "bg-primary/10 font-semibold text-primary"
+                      : "font-medium text-foreground hover:bg-muted/50",
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors",
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-xs"
+                        : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    <Icon className="size-4" />
+                  </div>
+                  <span className="flex-1 text-sm">{item.name}</span>
+                  {isActive && (
+                    <div className="size-2 shrink-0 rounded-full bg-primary" />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="pt-4">
+          {/* Footer Auth Action & Theme Switcher */}
+          <div className="flex items-center gap-2 pt-1">
             {isAuthenticated ? (
               <Button
                 variant="outline"
@@ -141,7 +145,7 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                   logout();
                   setIsOpen(false);
                 }}
-                className="w-full"
+                className="flex-1 justify-start"
               >
                 <LogOut className="size-4" />
                 <span>Sign Out</span>
@@ -152,15 +156,16 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
                   login();
                   setIsOpen(false);
                 }}
-                className="w-full"
+                className="flex-1 justify-start"
               >
                 <LogIn className="size-4" />
                 <span>Sign In with TMDB</span>
               </Button>
             )}
+            <ThemeSwitcher variant="outline" />
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }

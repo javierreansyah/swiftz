@@ -29,6 +29,7 @@ export interface WatchlistDropdownProps {
   onRateClick: () => void;
   onShareClick: () => void;
   className?: string;
+  size?: "default" | "sm";
 }
 
 export function WatchlistDropdown({
@@ -43,7 +44,10 @@ export function WatchlistDropdown({
   onRateClick,
   onShareClick,
   className,
+  size = "default",
 }: WatchlistDropdownProps) {
+  const isSm = size === "sm";
+
   return (
     <div
       className={cn(
@@ -54,17 +58,21 @@ export function WatchlistDropdown({
       <DropdownMenu>
         <div className="inline-flex items-center gap-1">
           <Button
-            size="default"
+            size={isSm ? "sm" : "default"}
             variant={isWatchlist ? "secondary" : "default"}
             onClick={onWatchlistClick}
             disabled={isPendingWatchlist}
           >
             {isPendingWatchlist ? (
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2
+                className={cn("animate-spin", isSm ? "size-3.5" : "size-4")}
+              />
             ) : isWatchlist ? (
-              <Check className="size-4" />
+              <Check className={isSm ? "size-3.5" : "size-4"} />
             ) : (
-              <Bookmark className="size-4 fill-current" />
+              <Bookmark
+                className={cn("fill-current", isSm ? "size-3.5" : "size-4")}
+              />
             )}
             <span>
               {voteCountFormatted} ·{" "}
@@ -72,8 +80,11 @@ export function WatchlistDropdown({
             </span>
           </Button>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" variant={isWatchlist ? "secondary" : "default"}>
-              <ChevronDown className="size-4" />
+            <Button
+              size={isSm ? "icon-sm" : "icon"}
+              variant={isWatchlist ? "secondary" : "default"}
+            >
+              <ChevronDown className={isSm ? "size-3.5" : "size-4"} />
               <span className="sr-only">More options</span>
             </Button>
           </DropdownMenuTrigger>

@@ -5,6 +5,7 @@ import { FilterSelect } from "@/features/media/components/filter-sidebar-primiti
 import { PersonnelGrid } from "@/features/media/components/personnel-grid";
 import type { Cast, Crew } from "@/lib/tmdb/types/common";
 import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
+import { cn } from "@/lib/utils";
 export interface CastModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -174,44 +175,40 @@ export function CastModal({
   );
 
   const mobileControls = (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
-        <Button
-          variant={castTab === "all" ? "default" : "secondary"}
-          size="sm"
-          onClick={() => {
-            setCastTab("all");
+    <div
+      className={cn(
+        "grid gap-2",
+        castTab !== "cast" && allDepartments.length > 0
+          ? "grid-cols-2"
+          : "grid-cols-1",
+      )}
+    >
+      <FilterSelect
+        value={castTab}
+        onChange={(val) => {
+          const tab = val as "all" | "cast" | "crew";
+          setCastTab(tab);
+          if (tab === "cast") {
             setSelectedDept("all");
-          }}
-        >
-          All ({totalPersonnel})
-        </Button>
-        <Button
-          variant={castTab === "cast" ? "default" : "secondary"}
-          size="sm"
-          onClick={() => {
-            setCastTab("cast");
-            setSelectedDept("all");
-          }}
-        >
-          Cast ({cast.length})
-        </Button>
-        <Button
-          variant={castTab === "crew" ? "default" : "secondary"}
-          size="sm"
-          onClick={() => setCastTab("crew")}
-        >
-          Crew ({crew.length})
-        </Button>
-      </div>
+          }
+        }}
+        placeholder="Category"
+        ariaLabel="Filter category"
+        options={[
+          { value: "all", label: `All (${totalPersonnel})` },
+          { value: "cast", label: `Cast (${cast.length})` },
+          { value: "crew", label: `Crew (${crew.length})` },
+        ]}
+      />
 
       {castTab !== "cast" && allDepartments.length > 0 && (
         <FilterSelect
           value={selectedDept}
           onChange={setSelectedDept}
           placeholder="All Departments"
+          ariaLabel="Filter by department"
           options={[
-            { value: "all", label: `All Departments (${crew.length})` },
+            { value: "all", label: `All Depts (${crew.length})` },
             ...allDepartments.map((dept) => ({
               value: dept,
               label: `${dept} (${deptCounts[dept] || 0})`,
@@ -230,7 +227,6 @@ export function CastModal({
       subtitle={
         displayYear ? `Full Cast & Crew · ${displayYear}` : "Full Cast & Crew"
       }
-      badge={`${totalPersonnel} Personnel`}
       search={{
         value: castSearch,
         onChange: setCastSearch,

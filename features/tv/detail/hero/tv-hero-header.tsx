@@ -57,7 +57,7 @@ export function TVHeroHeader({
       </div>
 
       {/* Right side header badges & rate action (Desktop only) */}
-      <div className="hidden lg:flex flex-wrap items-center gap-3">
+      <div className="hidden flex-wrap items-center gap-3 lg:flex">
         {/* Rate button */}
         <Tooltip>
           <TooltipTrigger asChild>

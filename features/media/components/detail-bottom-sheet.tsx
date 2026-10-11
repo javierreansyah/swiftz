@@ -36,6 +36,8 @@ export interface DetailBottomSheetProps {
   className?: string;
   contentClassName?: string;
   disableDefaultScroll?: boolean;
+  hideHeader?: boolean;
+  fitContent?: boolean;
 }
 
 export function DetailBottomSheet({
@@ -55,6 +57,8 @@ export function DetailBottomSheet({
   className,
   contentClassName,
   disableDefaultScroll = false,
+  hideHeader = false,
+  fitContent = false,
 }: DetailBottomSheetProps) {
   return (
     <Drawer
@@ -63,7 +67,7 @@ export function DetailBottomSheet({
       dismissible
     >
       <DrawerContent
-        surface="detail"
+        surface={fitContent ? "fit" : "detail"}
         className={cn(
           "inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden",
           className,
@@ -72,65 +76,104 @@ export function DetailBottomSheet({
         {/* Mobile drag handle */}
         <DrawerHandle className="md:hidden" />
 
-        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-          {/* Main Top Header */}
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4 sm:px-8 sm:py-5">
-            {/* Left: Title, Subtitle, and Badge */}
-            <div className="flex items-center gap-3">
-              <div>
-                <DrawerTitle>{title}</DrawerTitle>
-                <DrawerDescription className={subtitle ? undefined : "sr-only"}>
-                  {subtitle || `Browse ${title}`}
-                </DrawerDescription>
-              </div>
-              {badge !== undefined && (
-                <Badge variant={badgeVariant}>{badge}</Badge>
-              )}
-            </div>
+        <div
+          className={cn(
+            "flex min-h-0 flex-col overflow-hidden",
+            fitContent
+              ? "h-auto flex-initial overflow-visible"
+              : "h-full flex-1",
+          )}
+        >
+          {/* Mobile Accessible Title/Description (Visually hidden) */}
+          <div className="sr-only md:hidden">
+            <DrawerTitle>{title}</DrawerTitle>
+            <DrawerDescription>
+              {subtitle || `Browse ${title}`}
+            </DrawerDescription>
+          </div>
 
-            {/* Right: Search, Custom Actions, and Close Button on the FAR RIGHT */}
-            <div className="flex items-center gap-2.5">
+          {/* Desktop Top Header */}
+          {!hideHeader && (
+            <div className="hidden shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border/70 px-6 py-4 sm:px-8 sm:py-5 md:flex">
+              {/* Left: Title, Subtitle, and Badge */}
+              <div className="flex items-center gap-3">
+                <div>
+                  <h2 className="font-heading text-lg font-semibold text-foreground">
+                    {title}
+                  </h2>
+                  {subtitle && (
+                    <p className="text-xs text-muted-foreground">{subtitle}</p>
+                  )}
+                </div>
+                {badge !== undefined && (
+                  <Badge variant={badgeVariant}>{badge}</Badge>
+                )}
+              </div>
+
+              {/* Right: Search, Custom Actions, and Close Button on the FAR RIGHT */}
+              <div className="flex items-center gap-2.5">
+                {search && (
+                  <div className="relative w-60">
+                    <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      leadingIcon
+                      type="search"
+                      placeholder={search.placeholder || "Search..."}
+                      value={search.value}
+                      onChange={(e) => search.onChange(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {headerActions}
+
+                {/* Close Button on the Right Side (Desktop only) */}
+                <DrawerClose asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="shrink-0"
+                    aria-label="Close sheet"
+                  >
+                    <X />
+                  </Button>
+                </DrawerClose>
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Top Controls (Minimal, directly on background, no border container) */}
+          {(search || mobileControls) && (
+            <div className="flex shrink-0 flex-col gap-2 px-4 pt-3 pb-1 md:hidden">
               {search && (
-                <div className="relative w-44 sm:w-60">
+                <div className="relative w-full">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     leadingIcon
-                    type="text"
+                    type="search"
                     placeholder={search.placeholder || "Search..."}
                     value={search.value}
                     onChange={(e) => search.onChange(e.target.value)}
+                    className="w-full"
                   />
                 </div>
               )}
-
-              {headerActions}
-
-              {/* Close Button on the Right Side (Desktop only) */}
-              <DrawerClose asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="hidden shrink-0 md:inline-flex"
-                  aria-label="Close sheet"
-                >
-                  <X />
-                </Button>
-              </DrawerClose>
-            </div>
-          </div>
-
-          {/* Optional Subheader (e.g. Review filter bar, tags, or sort controls) */}
-          {subHeader}
-
-          {/* Optional Mobile Controls Bar */}
-          {mobileControls && (
-            <div className="border-b border-border/60 bg-muted/20 p-3 md:hidden">
               {mobileControls}
             </div>
           )}
 
+          {/* Optional Desktop Subheader (e.g. Review filter bar) */}
+          {subHeader && <div className="hidden md:block">{subHeader}</div>}
+
           {/* Main Body Area: Optional Desktop Sidebar + Main Scrollable Content */}
-          <div className="flex min-h-0 flex-1 overflow-hidden">
+          <div
+            className={cn(
+              "flex min-h-0",
+              fitContent
+                ? "flex-initial overflow-visible"
+                : "flex-1 overflow-hidden",
+            )}
+          >
             {/* Optional Desktop Sidebar */}
             {sidebar && (
               <aside
@@ -147,7 +190,10 @@ export function DetailBottomSheet({
             {disableDefaultScroll ? (
               <div
                 className={cn(
-                  "flex min-h-0 flex-1 flex-col overflow-hidden",
+                  "flex min-h-0",
+                  fitContent
+                    ? "flex-initial overflow-visible"
+                    : "flex-1 flex-col overflow-hidden",
                   contentClassName,
                 )}
               >
@@ -156,7 +202,9 @@ export function DetailBottomSheet({
             ) : (
               <div
                 className={cn(
-                  "min-h-0 flex-1 overflow-y-auto p-6 sm:p-8 sm:px-10",
+                  fitContent
+                    ? "flex-initial overflow-visible p-4 pt-2 pb-8 sm:p-6"
+                    : "min-h-0 flex-1 overflow-y-auto p-4 pt-2 sm:p-8 sm:px-10",
                   contentClassName,
                 )}
               >

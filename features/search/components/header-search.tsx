@@ -5,11 +5,12 @@ import { Search, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer";
 import { useMultiSearchQuery } from "@/features/search/hooks/queries";
 import type { MultiSearchResultItem } from "@/lib/tmdb/types/search";
 import { cn } from "@/lib/utils";
@@ -266,23 +267,26 @@ export function HeaderSearch({
         <Search className="size-5" />
       </Button>
 
-      {/* Mobile Search Sheet From Top */}
-      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetContent
-          surface="search"
-          side="top"
-          showCloseButton={false}
-          className="overflow-y-auto"
+      {/* Mobile Search Bottom Sheet */}
+      <Drawer open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+        <DrawerContent
+          surface="detail"
+          className="inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
         >
-          <SheetHeader className="sr-only">
-            <SheetTitle>Search Swiftz</SheetTitle>
-          </SheetHeader>
+          <DrawerHandle className="md:hidden" />
+          <DrawerTitle className="sr-only">Search Swiftz</DrawerTitle>
+          <DrawerDescription className="sr-only">
+            Search movies, TV shows, and people
+          </DrawerDescription>
 
-          <div className="container py-3">
-            <form onSubmit={handleSearchSubmit} className="w-full space-y-3">
-              <div className="relative w-full">
+          <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+            {/* Search Input Bar (Full Width, No Divider) */}
+            <div className="p-4 pb-1">
+              <form onSubmit={handleSearchSubmit} className="relative w-full">
+                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   ref={mobileInputRef}
+                  leadingIcon
                   type="search"
                   value={searchQuery}
                   onChange={(e) => {
@@ -294,17 +298,20 @@ export function HeaderSearch({
                   placeholder="Search movies, TV shows, people..."
                   aria-label="Search query"
                   className="w-full"
+                  autoFocus
                 />
-              </div>
+              </form>
+            </div>
 
-              {/* Mobile Live Autocomplete List */}
-              {debouncedQuery.length >= 2 && (
-                <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/90 shadow-2xl backdrop-blur-md">
+            {/* Scrollable Results Area */}
+            <div className="min-h-0 flex-1 overflow-y-auto p-4">
+              {debouncedQuery.length >= 2 ? (
+                <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
                   {isError && searchResults && (
                     <QueryFeedback hasData onRetry={() => void refetch()} />
                   )}
                   {isLoading ? (
-                    <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
+                    <div className="flex items-center justify-center gap-2 p-6 text-xs text-muted-foreground">
                       <Loader2 className="size-4 animate-spin text-primary" />
                       <span>Searching...</span>
                     </div>
@@ -314,12 +321,12 @@ export function HeaderSearch({
                       onRetry={() => void refetch()}
                     />
                   ) : liveResults.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-muted-foreground">
+                    <div className="p-6 text-center text-xs text-muted-foreground">
                       No results found for &quot;{debouncedQuery}&quot;. Press
                       enter to search all.
                     </div>
                   ) : (
-                    <div className="divide-y divide-border/60">
+                    <>
                       {liveResults.map((item) => {
                         const {
                           title,
@@ -390,14 +397,59 @@ export function HeaderSearch({
                           <ArrowRight className="size-3.5" />
                         </Button>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
+              ) : (
+                /* Empty query state with quick category jumps */
+                <div className="py-1">
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      onClick={() => {
+                        setIsMobileOpen(false);
+                        router.push("/movie");
+                      }}
+                      className="justify-start"
+                    >
+                      <Film className="size-3.5 text-primary" />
+                      <span>Movies</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      onClick={() => {
+                        setIsMobileOpen(false);
+                        router.push("/tv");
+                      }}
+                      className="justify-start"
+                    >
+                      <Tv className="size-3.5 text-primary" />
+                      <span>TV</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      onClick={() => {
+                        setIsMobileOpen(false);
+                        router.push("/person");
+                      }}
+                      className="justify-start"
+                    >
+                      <User className="size-3.5 text-primary" />
+                      <span>People</span>
+                    </Button>
+                  </div>
+                </div>
               )}
-            </form>
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

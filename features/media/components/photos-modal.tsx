@@ -369,10 +369,9 @@ export function PhotosModal({
       onClose={onClose}
       title={displayTitle}
       subtitle={displayYear ? `Photos · ${displayYear}` : "Photos"}
-      badge={`${allPhotos.length} Photos`}
       headerActions={headerActions}
       sidebar={desktopSidebar}
-      mobileControls={mobileControls}
+      mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >
       {viewMode === "showcase" && activePhoto ? (
@@ -380,6 +379,16 @@ export function PhotosModal({
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Photo Stage */}
           <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-scrim/95 p-2 sm:p-4">
+            {/* Mobile Back to Gallery Button */}
+            <Button
+              variant="media"
+              size="sm"
+              onClick={() => setViewMode("gallery")}
+              className="absolute top-3 left-3 z-20 md:hidden"
+            >
+              <LayoutGrid className="size-3.5" />
+              <span>Gallery</span>
+            </Button>
             <div className="relative size-full">
               <Image
                 src={`https://image.tmdb.org/t/p/original${activePhoto.file_path}`}

@@ -127,7 +127,6 @@ export function TVSeasonsModal({
       onClose={onClose}
       title={show.name}
       subtitle="Seasons & Episode Guide"
-      badge={`${seasons.length} ${seasons.length === 1 ? "Season" : "Seasons"}`}
       sidebar={desktopSidebar}
       sidebarWidth="w-64"
       mobileControls={mobileSeasonSelector}

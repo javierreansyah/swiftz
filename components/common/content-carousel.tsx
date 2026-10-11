@@ -123,7 +123,7 @@ export function ContentCarousel({
       <div
         ref={scrollContainerRef}
         className={cn(
-          "flex scrollbar-none gap-3 overflow-x-auto scroll-smooth pt-1 pb-2 sm:gap-4 lg:overflow-x-hidden",
+          "-mx-4 flex scrollbar-none gap-3 overflow-x-auto scroll-smooth px-4 pt-1 pb-2 sm:mx-0 sm:gap-4 sm:px-0 lg:overflow-x-hidden",
           carouselClassName,
         )}
       >

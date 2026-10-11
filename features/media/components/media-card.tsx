@@ -99,43 +99,39 @@ export function MediaCard({
   };
 
   // Dimensions based on size and variant
-  // In shelf mode, all cards share the exact same height baseline!
-  // Width is derived from aspect ratio.
+  // In shelf mode, width is derived from aspect ratio.
   const getShelfDimensions = () => {
     switch (size) {
       case "sm":
-        // Overall height: ~230px
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-hero-sm w-64 shrink-0";
+            return "w-64 shrink-0";
           case "portrait":
-            return "h-hero-sm w-36 shrink-0";
+            return "w-36 shrink-0";
           case "poster":
           default:
-            return "h-hero-sm w-32 shrink-0";
+            return "w-32 shrink-0";
         }
       case "lg":
-        // Overall height: ~340px
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-hero-lg w-featured shrink-0";
+            return "w-featured shrink-0";
           case "portrait":
-            return "h-hero-lg w-56 shrink-0";
+            return "w-56 shrink-0";
           case "poster":
           default:
-            return "h-hero-lg w-48 shrink-0";
+            return "w-48 shrink-0";
         }
       case "md":
       default:
-        // Height: h-hero-md (280px) on mobile, h-hero-xl (420px) on desktop
         switch (effectiveAspectRatio) {
           case "video":
-            return "h-hero-sm w-72 shrink-0 sm:h-hero-md sm:w-96";
+            return "w-72 shrink-0 sm:w-96";
           case "portrait":
-            return "h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-44";
+            return "w-36 shrink-0 sm:w-44";
           case "poster":
           default:
-            return "h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-60";
+            return "w-36 shrink-0 sm:w-60";
         }
     }
   };
@@ -175,7 +171,7 @@ export function MediaCard({
       <div
         className={cn(
           "relative w-full overflow-hidden bg-muted",
-          variant === "shelf" ? "min-h-0 flex-1" : getMediaAspectClass(),
+          getMediaAspectClass(),
         )}
       >
         {imageUrl ? (

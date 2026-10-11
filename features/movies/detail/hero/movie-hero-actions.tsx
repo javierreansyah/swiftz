@@ -2,7 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "@/components/ui/image";
-import { Star, TrendingUp, Share2, Check } from "lucide-react";
+import {
+  Star,
+  TrendingUp,
+  Share2,
+  Check,
+  Bookmark,
+  Loader2,
+  Heart,
+} from "lucide-react";
 import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
 import type { Cast, Crew } from "@/lib/tmdb/types/common";
 import { WatchlistDropdown } from "@/features/auth/components/watchlist-dropdown";
@@ -69,32 +77,56 @@ export function MovieHeroActions({
     <>
       <div className="space-y-6 pt-2">
         {/* MOBILE ONLY: Swipable Buttons Carousel */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none lg:hidden -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth snap-x">
-          {/* Watchlist with Dropdown */}
-          <WatchlistDropdown
-            isWatchlist={isWatchlist}
-            isFavorite={isFavorite}
-            userRating={userRating}
-            isPendingWatchlist={toggleWatchlist.isPending}
-            voteCountFormatted={formatNumberShort(movie.vote_count * 3)}
-            mediaTypeLabel="Movie"
-            onWatchlistClick={handleWatchlistClick}
-            onFavoriteClick={handleFavoriteClick}
-            onRateClick={handleRateClick}
-            onShareClick={onShareClick}
-            className="order-0 self-auto shrink-0 snap-start"
-          />
+        <div className="flex snap-x scrollbar-none items-center gap-2 overflow-x-auto scroll-smooth pb-1 lg:hidden">
+          {/* Watchlist Button */}
+          <Button
+            size="sm"
+            variant={isWatchlist ? "secondary" : "default"}
+            onClick={handleWatchlistClick}
+            disabled={toggleWatchlist.isPending}
+            className="shrink-0 snap-start"
+          >
+            {toggleWatchlist.isPending ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : isWatchlist ? (
+              <Check className="size-3.5" />
+            ) : (
+              <Bookmark className="size-3.5 fill-current" />
+            )}
+            <span>
+              {formatNumberShort(movie.vote_count * 3)} ·{" "}
+              {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
+            </span>
+          </Button>
+
+          {/* Favorite Button */}
+          <Button
+            size="sm"
+            variant={isFavorite ? "secondary" : "outline"}
+            onClick={handleFavoriteClick}
+            className="shrink-0 snap-start"
+          >
+            <Heart
+              className={cn(
+                "size-3.5",
+                isFavorite
+                  ? "fill-destructive text-destructive"
+                  : "text-muted-foreground",
+              )}
+            />
+            <span>{isFavorite ? "Favorited" : "Favorite"}</span>
+          </Button>
 
           {/* Rate Button */}
           <Button
             variant="outline"
-            size="default"
+            size="sm"
             onClick={onOpenRating}
             className="shrink-0 snap-start"
           >
             <Star
               className={cn(
-                "size-4",
+                "size-3.5",
                 userRating
                   ? "fill-primary text-primary"
                   : "text-muted-foreground",
@@ -106,28 +138,28 @@ export function MovieHeroActions({
           </Button>
 
           {/* Stars Score Badge */}
-          <div className="flex h-10 shrink-0 snap-start items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
-            <Star className="size-4 fill-primary text-primary" />
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl border border-primary/30 bg-primary/10 px-3 text-xs text-primary backdrop-blur-sm">
+            <Star className="size-3.5 fill-primary text-primary" />
             <div className="flex items-baseline gap-1">
               <span className="font-bold text-foreground">
                 {movie.vote_average.toFixed(1)}
               </span>
               <span className="text-xs text-muted-foreground">/10</span>
-              <span className="ml-1 text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 ({formatNumberShort(movie.vote_count)})
               </span>
             </div>
           </div>
 
           {/* Trending Badge */}
-          <div className="flex h-10 shrink-0 snap-start items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
-            <TrendingUp className="size-4 text-primary" />
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl border border-border/80 bg-background/60 px-3 text-xs font-semibold text-muted-foreground backdrop-blur-sm">
+            <TrendingUp className="size-3.5 text-primary" />
             <span>{Math.round(movie.popularity)}</span>
           </div>
 
           {/* Share Button */}
           <Button
-            size="icon"
+            size="sm"
             variant="outline"
             onClick={onShareClick}
             className="shrink-0 snap-start"
@@ -138,46 +170,43 @@ export function MovieHeroActions({
             ) : (
               <Share2 className="size-3.5 text-muted-foreground" />
             )}
+            <span>{copiedShare ? "Copied" : "Share"}</span>
           </Button>
         </div>
 
-        {/* MOBILE ONLY: Poster + Genres & Plot Beside Poster */}
-        <div className="flex gap-4 items-start lg:hidden">
-          <div className="relative aspect-2/3 w-28 sm:w-36 shrink-0 overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+        {/* MOBILE ONLY: Poster (1:3) + Genres & Plot (2:3) */}
+        <div className="grid grid-cols-3 items-start gap-3.5 lg:hidden">
+          <div className="relative col-span-1 aspect-2/3 w-full overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
             <Image
               src={posterUrl}
               alt={movie.title}
               fill
-              sizes="(max-width: 640px) 112px, 144px"
+              sizes="(max-width: 640px) 33vw, 160px"
               className="object-cover"
             />
           </div>
 
-          <div className="min-w-0 flex-1 space-y-2.5">
+          <div className="col-span-2 min-w-0 space-y-2">
+            {/* Genres scrollable carousel */}
             {movie.genres && movie.genres.length > 0 && (
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-1.5">
-                  {movie.genres.length > 1 ? "Genres" : "Genre"}
-                </p>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {movie.genres.map((genre) => (
-                    <Badge key={genre.id} variant="secondary">
-                      {genre.name}
-                    </Badge>
-                  ))}
-                </div>
+              <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto">
+                {movie.genres.map((genre) => (
+                  <Badge
+                    key={genre.id}
+                    variant="secondary"
+                    className="shrink-0"
+                  >
+                    {genre.name}
+                  </Badge>
+                ))}
               </div>
             )}
 
+            {/* Plot overview without label */}
             {movie.overview && (
-              <div>
-                <p className="text-xs font-bold text-muted-foreground mb-1">
-                  Plot
-                </p>
-                <p className="text-sm leading-relaxed text-foreground">
-                  {movie.overview}
-                </p>
-              </div>
+              <p className="text-sm leading-relaxed text-foreground">
+                {movie.overview}
+              </p>
             )}
           </div>
         </div>
@@ -187,13 +216,13 @@ export function MovieHeroActions({
           {/* METADATA GRID */}
           <div className="min-w-0 flex-1 space-y-4">
             {/* DESKTOP ONLY: Genres and Plot */}
-            <div className="hidden lg:block space-y-4">
+            <div className="hidden space-y-4 lg:block">
               {movie.genres && movie.genres.length > 0 && (
                 <div className="grid grid-cols-12 gap-4">
-                  <span className="text-sm font-bold text-muted-foreground col-span-2">
+                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
                     {movie.genres.length > 1 ? "Genres" : "Genre"}
                   </span>
-                  <div className="flex flex-wrap items-center gap-2 col-span-10">
+                  <div className="col-span-10 flex flex-wrap items-center gap-2">
                     {movie.genres.map((genre) => (
                       <Badge key={genre.id} variant="secondary">
                         {genre.name}
@@ -207,10 +236,10 @@ export function MovieHeroActions({
 
               {movie.overview && (
                 <div className="grid grid-cols-12 gap-4">
-                  <span className="text-sm font-bold text-muted-foreground col-span-2">
+                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
                     Plot
                   </span>
-                  <p className="text-sm leading-relaxed text-foreground sm:text-base col-span-10">
+                  <p className="col-span-10 text-sm leading-relaxed text-foreground sm:text-base">
                     {movie.overview}
                   </p>
                 </div>
@@ -362,7 +391,7 @@ export function MovieHeroActions({
           </div>
 
           {/* DESKTOP ONLY: Watchlist Button with Dropdown (Right side on desktop) */}
-          <div className="hidden lg:flex shrink-0 items-center justify-end self-start">
+          <div className="hidden shrink-0 items-center justify-end self-start lg:flex">
             <WatchlistDropdown
               isWatchlist={isWatchlist}
               isFavorite={isFavorite}

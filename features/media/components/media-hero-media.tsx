@@ -70,8 +70,8 @@ export function MediaHeroMedia({
       </div>
 
       {/* Right Column: Interactive Trailer / Video Hero */}
-      <div className="h-full">
-        <div className="relative aspect-video size-full overflow-hidden rounded-xl border border-border bg-scrim shadow-2xl">
+      <div className="-mx-4 h-full sm:mx-0">
+        <div className="relative aspect-video size-full overflow-hidden rounded-none border-x-0 border-y border-border bg-scrim shadow-2xl sm:rounded-xl sm:border">
           {isPlayingTrailer && currentVideo ? (
             <iframe
               src={`https://www.youtube.com/embed/${currentVideo.key}?autoplay=1&rel=0`}
@@ -115,7 +115,7 @@ export function MediaHeroMedia({
 
               {/* Carousel Chevron Controls on Bottom Right (Desktop Only) */}
               {playableVideos.length > 1 && (
-                <div className="hidden lg:flex absolute right-4 bottom-4 items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/60 p-1 backdrop-blur-md">
+                <div className="absolute right-4 bottom-4 hidden items-center gap-1.5 rounded-xl border border-media-foreground/20 bg-scrim/60 p-1 backdrop-blur-md lg:flex">
                   <Button
                     variant="media-ghost"
                     size="icon-xs"

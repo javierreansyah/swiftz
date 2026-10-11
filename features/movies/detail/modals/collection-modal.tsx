@@ -84,7 +84,6 @@ export function CollectionModal({
       subtitle={
         yearSpan ? `Franchise Collection · ${yearSpan}` : "Franchise Collection"
       }
-      badge={parts.length > 0 ? `${parts.length} Films` : undefined}
       search={{
         value: searchQuery,
         onChange: setSearchQuery,
