@@ -28,12 +28,7 @@ export function PeopleClient() {
 
   return (
     <main className="container min-h-screen space-y-8 pt-20 pb-16">
-      <SectionHeader
-        headingAs="h1"
-        title="Popular People"
-        badge={`Page ${currentPage} of ${totalPages}`}
-        className="mt-4"
-      />
+      <SectionHeader headingAs="h1" title="Popular People" className="mt-4" />
 
       {isError && (
         <QueryFeedback hasData={Boolean(data)} onRetry={() => void refetch()} />

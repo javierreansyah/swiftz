@@ -137,7 +137,7 @@ export function HeaderSearch({
             className={cn(
               "pointer-events-none absolute left-3 size-4 transition-colors",
               !isScrolled && isMovieDetailPage
-                ? "text-media-foreground/70"
+                ? "text-muted-foreground dark:text-media-foreground/70"
                 : "text-muted-foreground",
             )}
           />
@@ -258,7 +258,7 @@ export function HeaderSearch({
 
       {/* Mobile Search Button Trigger */}
       <Button
-        variant={!isScrolled && isMovieDetailPage ? "media-ghost" : "ghost"}
+        variant="ghost"
         size="icon"
         onClick={() => setIsMobileOpen(true)}
         aria-label="Search"

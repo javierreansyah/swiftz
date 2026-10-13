@@ -107,7 +107,7 @@ export function MovieCategoryListing({
       }
       variant="category"
       header={
-        <div className="flex flex-col gap-3 border-b border-border/50 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 pb-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="heading-page text-foreground">{title}</h1>
             <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
@@ -121,7 +121,7 @@ export function MovieCategoryListing({
                       <span className="font-semibold text-foreground">
                         {totalResults.toLocaleString()}
                       </span>{" "}
-                      movies &bull; Page {currentPage} of {totalPages}
+                      movies
                     </>
                   )}
                   {isFetching && (

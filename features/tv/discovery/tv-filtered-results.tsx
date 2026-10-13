@@ -82,8 +82,7 @@ export function TVFilteredResults({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          {totalResults.toLocaleString()} shows found &bull; Page {currentPage}{" "}
-          of {totalPages}
+          {totalResults.toLocaleString()} shows found
         </p>
       </div>
 

@@ -59,8 +59,8 @@ export function FeaturedHeroBackdrop({
           );
         })}
 
-        {/* Mode-specific lighting/darkening */}
-        <div className="absolute inset-0 bg-scrim/25 transition-colors duration-300 dark:bg-scrim/40" />
+        {/* Mode-specific lighting/darkening: softened with background tint on light mode, gently shaded on dark mode */}
+        <div className="absolute inset-0 bg-background/25 transition-colors duration-300 dark:bg-scrim/40" />
       </div>
 
       {/* Top subtle fade for navbar readability */}

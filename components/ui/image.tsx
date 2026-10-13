@@ -27,10 +27,10 @@ const imageVariants = {
   thumbnail:
     "object-cover transition-transform duration-300 group-hover:scale-105",
   ambient:
-    "scale-105 object-cover object-top opacity-70 blur-2xl brightness-80 contrast-105 transition-all duration-300 sm:blur-3xl dark:opacity-60 dark:brightness-75 dark:contrast-110",
+    "scale-105 object-cover object-top opacity-25 blur-2xl brightness-120 contrast-100 transition-all duration-300 sm:blur-3xl sm:opacity-30 dark:opacity-60 dark:brightness-75 dark:contrast-110",
   spotlight:
-    "object-cover brightness-75 transition-transform duration-700 ease-out hover:scale-105",
-  hero: "object-cover object-center brightness-80 transition-all duration-500",
+    "object-cover brightness-95 transition-transform duration-700 ease-out hover:scale-105 dark:brightness-75",
+  hero: "object-cover object-center transition-all duration-500 dark:brightness-90",
   preview: "object-contain object-center transition-all duration-500",
   collection:
     "object-cover opacity-20 transition-transform duration-500 group-hover:scale-105",

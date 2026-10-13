@@ -30,7 +30,6 @@ export function TrendingMoviesClient() {
       <SectionHeader
         headingAs="h1"
         title="Trending Movies - Today"
-        badge={`Page ${currentPage} of ${totalPages}`}
         className="mt-4"
       />
 

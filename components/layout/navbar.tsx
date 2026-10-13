@@ -88,7 +88,7 @@ export function Navbar() {
                     <p
                       className={`font-medium transition-colors duration-300 ${
                         !isScrolled && isDetailPage
-                          ? "text-media-foreground drop-shadow hover:text-primary"
+                          ? "text-foreground drop-shadow-xs hover:text-primary dark:text-media-foreground"
                           : "text-foreground hover:text-primary"
                       }`}
                     >

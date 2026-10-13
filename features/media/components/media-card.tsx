@@ -161,7 +161,7 @@ export function MediaCard({
   const cardContent = (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all duration-300 select-none hover:border-primary/40 hover:shadow-lg",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-card/60 font-sans transition-all duration-300 select-none hover:border-primary/40 hover:shadow-lg",
         variant === "shelf" ? getShelfDimensions() : "w-full",
         (onClick || href) && "cursor-pointer",
         className,
@@ -200,7 +200,7 @@ export function MediaCard({
       {/* Standardized Info Section */}
       {variant !== "image" && (
         <div className="flex h-16 shrink-0 flex-col justify-between p-2.5 sm:h-20 sm:p-4">
-          <h3 className="line-clamp-1 heading-card text-sm text-foreground transition-colors group-hover:text-primary sm:text-base">
+          <h3 className="line-clamp-1 font-sans text-sm leading-snug font-semibold text-foreground transition-colors group-hover:text-primary sm:text-base">
             {title}
           </h3>
 

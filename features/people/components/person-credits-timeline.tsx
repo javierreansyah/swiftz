@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Film, Tv } from "lucide-react";
+import { Search } from "lucide-react";
 import type { PersonCombinedCredits } from "@/lib/tmdb/types/people";
 import { usePersonCombinedCreditsQuery } from "@/features/people/hooks/queries";
 import { useVisible } from "@/hooks/use-visible";
@@ -9,7 +9,13 @@ import { Input } from "@/components/ui/input";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const MEDIA_TYPE_OPTIONS = [
+  { value: "all", label: "All Media" },
+  { value: "movie", label: "Movies" },
+  { value: "tv", label: "TV Shows" },
+];
+
 export interface PersonCreditsTimelineProps {
   credits: PersonCombinedCredits;
   primaryDepartment?: string;
@@ -138,6 +144,20 @@ export function PersonCreditsTimeline({
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const departmentTitle =
+    selectedDepartment === "all" ? "All" : selectedDepartment;
+
+  const departmentOptions = useMemo(
+    () => [
+      { value: "all", label: "All Departments" },
+      ...availableDepartments.map((dept) => ({
+        value: dept,
+        label: dept,
+      })),
+    ],
+    [availableDepartments],
+  );
+
   // Filter and sort credits
   const filteredCredits = useMemo(() => {
     let result = [...allCredits];
@@ -208,64 +228,53 @@ export function PersonCreditsTimeline({
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-card">
       {/* Controls Bar / Header: Title, Department Selector, Media Filter, and Search */}
-      <div className="flex flex-col gap-3 border-b border-border bg-card/60 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="border-b border-border bg-card/60 p-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          {/* Tier 1 on mobile: Top Label */}
           <h2 className="heading-section text-foreground">
-            {selectedDepartment} Credits ({filteredCredits.length})
+            {departmentTitle} Credits ({filteredCredits.length})
           </h2>
 
-          {/* Department Selector */}
-          {availableDepartments.length > 1 && (
-            <FilterSelect
-              value={selectedDepartment}
-              onChange={setSelectedDepartment}
-              placeholder="Department"
-              fullWidth={false}
-              className="w-36"
-              options={[
-                { value: "all", label: "All Departments" },
-                ...availableDepartments.map((dept) => ({
-                  value: dept,
-                  label: dept,
-                })),
-              ]}
-            />
-          )}
+          {/* Right-aligned filters & search (Tiers 2 & 3 on mobile) */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            {/* Tier 2 on mobile: Search Input */}
+            <div className="relative w-full sm:w-48 lg:w-56">
+              <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                leadingIcon
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search credits..."
+                className="w-full"
+              />
+            </div>
 
-          {/* Media Type Filter Tabs (Shadcn Default) */}
-          <Tabs
-            value={selectedMediaType}
-            onValueChange={(val) =>
-              setSelectedMediaType(val as "all" | "movie" | "tv")
-            }
-            className="w-auto"
-          >
-            <TabsList>
-              <TabsTrigger value="all" className="cursor-pointer">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="movie" className="cursor-pointer">
-                <Film className="size-3" />
-                <span>Movies</span>
-              </TabsTrigger>
-              <TabsTrigger value="tv" className="cursor-pointer">
-                <Tv className="size-3" />
-                <span>TV</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+            {/* Tier 3 on mobile: 2 dropdown menus side by side with grid of 2 columns */}
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
+              <FilterSelect
+                value={selectedDepartment}
+                onChange={setSelectedDepartment}
+                placeholder="Department"
+                ariaLabel="Department"
+                fullWidth
+                className="w-full sm:w-36 lg:w-40"
+                options={departmentOptions}
+              />
 
-        {/* Live Search Input */}
-        <div className="relative w-full sm:w-56">
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            leadingIcon
-            type="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search credits..."
-          />
+              <FilterSelect
+                value={selectedMediaType}
+                onChange={(val) =>
+                  setSelectedMediaType(val as "all" | "movie" | "tv")
+                }
+                placeholder="Media Type"
+                ariaLabel="Media Type"
+                fullWidth
+                className="w-full sm:w-32"
+                options={MEDIA_TYPE_OPTIONS}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -301,11 +310,6 @@ export function PersonCreditsTimeline({
                       prefetch={false}
                       className="group flex cursor-pointer items-start gap-3 p-3.5 transition-colors hover:bg-muted/40 sm:items-center sm:gap-4 sm:px-4"
                     >
-                      {/* Bullet Dot */}
-                      <div className="mt-1 flex size-3 shrink-0 items-center justify-center sm:mt-0">
-                        <span className="size-2 rounded-full border border-border bg-muted transition-colors group-hover:border-primary group-hover:bg-primary" />
-                      </div>
-
                       {/* Title & Role Column */}
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-baseline gap-2">
