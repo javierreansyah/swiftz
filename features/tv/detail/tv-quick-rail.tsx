@@ -68,9 +68,9 @@ export function TVQuickRail({
 
   const sections: QuickRailSectionItem[] = [
     { id: "section-overview", label: "Overview", icon: Tv },
-    { id: "section-seasons", label: "Seasons", icon: Layers, modal: "seasons" },
-    { id: "section-cast", label: "Cast", icon: Users, modal: "cast" },
-    { id: "section-videos", label: "Videos", icon: Video, modal: "videos" },
+    { id: "section-seasons", label: "Seasons", icon: Layers },
+    { id: "section-cast", label: "Cast", icon: Users },
+    { id: "section-videos", label: "Videos", icon: Video },
     { id: "section-recommendations", label: "Related", icon: Sparkles },
   ];
 
@@ -87,11 +87,6 @@ export function TVQuickRail({
       onToggleWatchlist={handleWatchlist}
       onToggleFavorite={handleFavorite}
       onOpenRating={handleRateClick}
-      onOpenModal={(modal) =>
-        onOpenModal(
-          modal as "reviews" | "videos" | "photos" | "cast" | "seasons",
-        )
-      }
       mode={mode}
       className={className}
     />

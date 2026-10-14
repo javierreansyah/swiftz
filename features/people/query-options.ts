@@ -15,11 +15,11 @@ export function popularPeopleOptions(page: number = 1, enabled = true) {
   });
 }
 
-export function personDetailsOptions(id: string | number) {
+export function personDetailsOptions(id: string | number, enabled = true) {
   return queryOptions({
     queryKey: queryKeys.personDetails(id),
     queryFn: ({ signal }) => getPersonDetailsClient(id, signal),
-    enabled: Boolean(id),
+    enabled: Boolean(id) && enabled,
   });
 }
 
@@ -34,10 +34,10 @@ export function personCombinedCreditsOptions(
   });
 }
 
-export function personExternalIdsOptions(id: string | number) {
+export function personExternalIdsOptions(id: string | number, enabled = true) {
   return queryOptions({
     queryKey: queryKeys.personExternalIds(id),
     queryFn: ({ signal }) => getPersonExternalIdsClient(id, signal),
-    enabled: Boolean(id),
+    enabled: Boolean(id) && enabled,
   });
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import type { PersonCombinedCredits } from "@/lib/tmdb/types/people";
@@ -286,57 +286,71 @@ export function PersonCreditsTimeline({
       ) : (
         <div>
           {yearGroups.map((group, groupIdx) => (
-            <div
-              key={`${group.year}-${groupIdx}`}
-              className="flex border-b border-border/60 last:border-b-0"
-            >
-              {/* Year Column - rendered ONCE per year group */}
-              <div className="w-14 shrink-0 border-r border-border/40 p-3.5 text-xs font-bold text-muted-foreground select-none sm:w-20 sm:p-4 sm:text-sm">
-                <span className="font-mono">{group.year}</span>
-              </div>
+            <div key={`${group.year}-${groupIdx}`}>
+              {groupIdx > 0 && (
+                <div
+                  aria-hidden="true"
+                  className="mx-4 border-t border-border/60"
+                />
+              )}
+              <div className="flex">
+                {/* Year Column - rendered ONCE per year group */}
+                <div className="w-14 shrink-0 px-4 py-3.5 text-xs font-bold text-muted-foreground select-none sm:w-20 sm:p-4 sm:text-sm">
+                  {group.year}
+                </div>
 
-              {/* Credits List for this Year */}
-              <div className="min-w-0 flex-1 divide-y divide-border/40">
-                {group.items.map((credit, idx) => {
-                  const detailHref =
-                    credit.mediaType === "tv"
-                      ? `/tv/${credit.id}`
-                      : `/movie/${credit.id}`;
+                {/* Credits List for this Year */}
+                <div className="min-w-0 flex-1">
+                  {group.items.map((credit, idx) => {
+                    const detailHref =
+                      credit.mediaType === "tv"
+                        ? `/tv/${credit.id}`
+                        : `/movie/${credit.id}`;
 
-                  return (
-                    <Link
-                      key={`${credit.id}-${credit.department}-${credit.characterOrJob}-${idx}`}
-                      href={detailHref}
-                      prefetch={false}
-                      className="group flex cursor-pointer items-start gap-3 p-3.5 transition-colors hover:bg-muted/40 sm:items-center sm:gap-4 sm:px-4"
-                    >
-                      {/* Title & Role Column */}
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-baseline gap-2">
-                          <span className="text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-                            {credit.title}
-                          </span>
+                    return (
+                      <Fragment
+                        key={`${credit.id}-${credit.department}-${credit.characterOrJob}-${idx}`}
+                      >
+                        {idx > 0 && (
+                          <div
+                            aria-hidden="true"
+                            className="mx-4 border-t border-border/40"
+                          />
+                        )}
+                        <Link
+                          href={detailHref}
+                          prefetch={false}
+                          className="group flex cursor-pointer items-start gap-3 px-4 py-3.5 transition-colors hover:bg-muted/40 sm:items-center sm:gap-4"
+                        >
+                          {/* Title & Role Column */}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-baseline gap-2">
+                              <span className="text-sm font-bold text-foreground transition-colors group-hover:text-primary">
+                                {credit.title}
+                              </span>
 
-                          {credit.mediaType === "tv" && (
-                            <span className="rounded-xl bg-secondary px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">
-                              TV
-                            </span>
-                          )}
-                        </div>
+                              {credit.mediaType === "tv" && (
+                                <span className="rounded-xl bg-secondary px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">
+                                  TV
+                                </span>
+                              )}
+                            </div>
 
-                        <p className="text-xs text-muted-foreground">
-                          {credit.episodeCount ? (
-                            <span className="font-semibold text-foreground/80">
-                              {credit.episodeCount} episode
-                              {credit.episodeCount > 1 ? "s" : ""}{" "}
-                            </span>
-                          ) : null}
-                          <span>{credit.characterOrJob}</span>
-                        </p>
-                      </div>
-                    </Link>
-                  );
-                })}
+                            <p className="text-xs text-muted-foreground">
+                              {credit.episodeCount ? (
+                                <span className="font-semibold text-foreground/80">
+                                  {credit.episodeCount} episode
+                                  {credit.episodeCount > 1 ? "s" : ""}{" "}
+                                </span>
+                              ) : null}
+                              <span>{credit.characterOrJob}</span>
+                            </p>
+                          </div>
+                        </Link>
+                      </Fragment>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           ))}

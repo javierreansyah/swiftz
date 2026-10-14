@@ -32,7 +32,7 @@ export function MediaVideosSection({
             type="video"
             id={vid.id || vid.key}
             title={vid.name}
-            badge={vid.type || "Video"}
+            subtitle={vid.type || "Video"}
             image={thumb}
             onClick={() => onOpenVideosModal(idx)}
             variant="shelf"

@@ -370,7 +370,7 @@ export function PhotosModal({
       title={displayTitle}
       subtitle={displayYear ? `Photos · ${displayYear}` : "Photos"}
       headerActions={headerActions}
-      sidebar={desktopSidebar}
+      sidebar={viewMode === "gallery" ? desktopSidebar : undefined}
       mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >

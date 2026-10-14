@@ -5,12 +5,14 @@ import { MediaCard } from "@/features/media/components/media-card";
 export interface MediaCastSectionProps {
   cast: Cast[];
   onOpenCastModal: () => void;
+  onSelectPerson?: (personId: number) => void;
   title?: string;
 }
 
 export function MediaCastSection({
   cast,
   onOpenCastModal,
+  onSelectPerson,
   title = "Top Cast",
 }: MediaCastSectionProps) {
   if (!cast || cast.length === 0) return null;
@@ -32,7 +34,9 @@ export function MediaCastSection({
           title={c.name}
           subtitle={c.character || "Actor"}
           image={c.profile_path}
-          onClick={onOpenCastModal}
+          onClick={
+            onSelectPerson ? () => onSelectPerson(c.id) : onOpenCastModal
+          }
           variant="shelf"
         />
       ))}

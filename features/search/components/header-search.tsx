@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Search, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { MenuList } from "@/components/common/menu-list";
 import {
   Drawer,
   DrawerContent,
@@ -180,78 +181,72 @@ export function HeaderSearch({
               search all.
             </div>
           ) : (
-            <div className="divide-y divide-border/60">
-              {liveResults.map((item) => {
-                const {
-                  title,
-                  imagePath,
-                  subtitle: subText,
-                } = searchResultSummary(item, item.media_type);
+            <MenuList
+              items={[
+                ...liveResults.map((item) => {
+                  const {
+                    title,
+                    imagePath,
+                    subtitle: subText,
+                  } = searchResultSummary(item, item.media_type);
 
-                return (
-                  <div
-                    key={`${item.media_type}-${item.id}`}
-                    onClick={() => handleSelectResult(item)}
-                    className="group flex cursor-pointer items-center gap-3 p-2.5 transition-colors hover:bg-muted/70"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden bg-muted">
-                      <SearchResultImage
-                        path={imagePath}
-                        title={title}
-                        icon={
-                          item.media_type === "person"
-                            ? User
-                            : item.media_type === "tv"
-                              ? Tv
-                              : Film
-                        }
-                        size="compact"
-                      />
-                    </div>
+                  return {
+                    key: `${item.media_type}-${item.id}`,
+                    onClick: () => handleSelectResult(item),
+                    content: (
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        {/* Thumbnail */}
+                        <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden bg-muted">
+                          <SearchResultImage
+                            path={imagePath}
+                            title={title}
+                            icon={
+                              item.media_type === "person"
+                                ? User
+                                : item.media_type === "tv"
+                                  ? Tv
+                                  : Film
+                            }
+                            size="compact"
+                          />
+                        </div>
 
-                    {/* Metadata */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="line-clamp-1 text-xs font-bold text-foreground transition-colors group-hover:text-primary">
-                          {title}
-                        </span>
-                        <span
-                          className={`rounded-xl px-1 py-0.5 text-xs font-bold uppercase ${
-                            item.media_type === "movie"
-                              ? "bg-info/10 text-info"
-                              : item.media_type === "tv"
-                                ? "bg-highlight/10 text-highlight"
-                                : "bg-success/10 text-success"
-                          }`}
-                        >
-                          {item.media_type}
-                        </span>
+                        {/* Metadata */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="line-clamp-1 text-xs font-bold text-foreground">
+                              {title}
+                            </span>
+                            <span
+                              className={`rounded-xl px-1 py-0.5 text-xs font-bold uppercase ${
+                                item.media_type === "movie"
+                                  ? "bg-info/10 text-info"
+                                  : item.media_type === "tv"
+                                    ? "bg-highlight/10 text-highlight"
+                                    : "bg-success/10 text-success"
+                              }`}
+                            >
+                              {item.media_type}
+                            </span>
+                          </div>
+                          {subText && (
+                            <p className="text-xs text-muted-foreground">
+                              {subText}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      {subText && (
-                        <p className="text-xs text-muted-foreground">
-                          {subText}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* View All Results Footer */}
-              <div className="p-2">
-                <Button
-                  variant="default"
-                  size="sm"
-                  type="button"
-                  onClick={handleSearchSubmit}
-                  className="w-full justify-between"
-                >
-                  <span>See all results for &quot;{debouncedQuery}&quot;</span>
-                  <ArrowRight className="size-3.5" />
-                </Button>
-              </div>
-            </div>
+                    ),
+                  };
+                }),
+                {
+                  key: "see-all-results",
+                  icon: ArrowRight,
+                  label: `See all results for "${debouncedQuery}"`,
+                  onClick: () => handleSearchSubmit(),
+                },
+              ]}
+            />
           )}
         </div>
       )}
@@ -306,7 +301,7 @@ export function HeaderSearch({
             {/* Scrollable Results Area */}
             <div className="min-h-0 flex-1 overflow-y-auto p-4">
               {debouncedQuery.length >= 2 ? (
-                <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
+                <div className="flex flex-col">
                   {isError && searchResults && (
                     <QueryFeedback hasData onRetry={() => void refetch()} />
                   )}
@@ -326,78 +321,70 @@ export function HeaderSearch({
                       enter to search all.
                     </div>
                   ) : (
-                    <>
-                      {liveResults.map((item) => {
-                        const {
-                          title,
-                          imagePath,
-                          subtitle: subText,
-                        } = searchResultSummary(item, item.media_type);
+                    <MenuList
+                      items={[
+                        ...liveResults.map((item) => {
+                          const {
+                            title,
+                            imagePath,
+                            subtitle: subText,
+                          } = searchResultSummary(item, item.media_type);
 
-                        return (
-                          <div
-                            key={`${item.media_type}-${item.id}`}
-                            onClick={() => handleSelectResult(item)}
-                            className="flex cursor-pointer items-center gap-3 p-3 transition-colors hover:bg-muted/70 active:bg-muted"
-                          >
-                            <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">
-                              <SearchResultImage
-                                path={imagePath}
-                                title={title}
-                                icon={
-                                  item.media_type === "person"
-                                    ? User
-                                    : item.media_type === "tv"
-                                      ? Tv
-                                      : Film
-                                }
-                                size="compact"
-                                fallback={false}
-                              />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2">
-                                <span className="line-clamp-1 text-xs font-bold text-foreground">
-                                  {title}
-                                </span>
-                                <span
-                                  className={`rounded-xl px-1.5 py-0.5 text-xs font-bold uppercase ${
-                                    item.media_type === "movie"
-                                      ? "bg-info/10 text-info"
-                                      : item.media_type === "tv"
-                                        ? "bg-highlight/10 text-highlight"
-                                        : "bg-success/10 text-success"
-                                  }`}
-                                >
-                                  {item.media_type}
-                                </span>
+                          return {
+                            key: `${item.media_type}-${item.id}`,
+                            onClick: () => handleSelectResult(item),
+                            content: (
+                              <div className="flex min-w-0 flex-1 items-center gap-3">
+                                <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">
+                                  <SearchResultImage
+                                    path={imagePath}
+                                    title={title}
+                                    icon={
+                                      item.media_type === "person"
+                                        ? User
+                                        : item.media_type === "tv"
+                                          ? Tv
+                                          : Film
+                                    }
+                                    size="compact"
+                                    fallback={false}
+                                  />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="line-clamp-1 text-xs font-bold text-foreground">
+                                      {title}
+                                    </span>
+                                    <span
+                                      className={`rounded-xl px-1.5 py-0.5 text-xs font-bold uppercase ${
+                                        item.media_type === "movie"
+                                          ? "bg-info/10 text-info"
+                                          : item.media_type === "tv"
+                                            ? "bg-highlight/10 text-highlight"
+                                            : "bg-success/10 text-success"
+                                      }`}
+                                    >
+                                      {item.media_type}
+                                    </span>
+                                  </div>
+                                  {subText && (
+                                    <p className="text-xs text-muted-foreground">
+                                      {subText}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                              {subText && (
-                                <p className="text-xs text-muted-foreground">
-                                  {subText}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-
-                      {/* View All Recommendation Results */}
-                      <div className="p-2">
-                        <Button
-                          variant="default"
-                          size="sm"
-                          type="button"
-                          onClick={handleSearchSubmit}
-                          className="w-full justify-between"
-                        >
-                          <span>
-                            See all results for &quot;{debouncedQuery}&quot;
-                          </span>
-                          <ArrowRight className="size-3.5" />
-                        </Button>
-                      </div>
-                    </>
+                            ),
+                          };
+                        }),
+                        {
+                          key: "see-all-results",
+                          icon: ArrowRight,
+                          label: `See all results for "${debouncedQuery}"`,
+                          onClick: () => handleSearchSubmit(),
+                        },
+                      ]}
+                    />
                   )}
                 </div>
               ) : (

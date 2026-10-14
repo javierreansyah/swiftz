@@ -5,12 +5,14 @@ interface PersonnelGridProps {
   title: string;
   people: (Cast | Crew)[];
   onNavigate?: () => void;
+  onSelectPerson?: (personId: number) => void;
 }
 
 export function PersonnelGrid({
   title,
   people,
   onNavigate,
+  onSelectPerson,
 }: PersonnelGridProps) {
   if (people.length === 0) return null;
 
@@ -32,8 +34,10 @@ export function PersonnelGrid({
                 : person.job || person.department
             }
             image={person.profile_path}
-            href={`/person/${person.id}`}
-            onClick={onNavigate}
+            href={onSelectPerson ? undefined : `/person/${person.id}`}
+            onClick={
+              onSelectPerson ? () => onSelectPerson(person.id) : onNavigate
+            }
             variant="grid"
           />
         ))}

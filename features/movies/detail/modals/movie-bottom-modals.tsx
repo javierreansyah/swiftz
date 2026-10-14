@@ -31,6 +31,7 @@ export interface MovieBottomModalsProps {
   images?: MovieImagesData;
   initialPhotoIndex?: number;
   initialVideoIndex?: number;
+  selectedPersonId?: number | null;
   onToggleWatchlist?: () => void;
   isWatchlist?: boolean;
 }
@@ -45,6 +46,7 @@ export function MovieBottomModals({
   images,
   initialPhotoIndex,
   initialVideoIndex,
+  selectedPersonId = null,
   onToggleWatchlist,
   isWatchlist = false,
 }: MovieBottomModalsProps) {
@@ -80,6 +82,7 @@ export function MovieBottomModals({
         movie={movie}
         cast={cast}
         crew={crew}
+        initialPersonId={selectedPersonId}
       />
 
       <RecommendationsModal

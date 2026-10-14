@@ -315,7 +315,7 @@ export function VideosModal({
       title={displayTitle}
       subtitle={displayYear ? `Videos · ${displayYear}` : "Videos"}
       headerActions={headerActions}
-      sidebar={desktopSidebar}
+      sidebar={viewMode === "gallery" ? desktopSidebar : undefined}
       mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >
@@ -435,11 +435,11 @@ export function VideosModal({
                     type="video"
                     title={video.name}
                     image={ytThumb}
-                    badge={video.type || "Video"}
-                    subtitle={
+                    subtitle={video.type || "Video"}
+                    year={
                       video.published_at
                         ? new Date(video.published_at).toLocaleDateString()
-                        : `${displayTitle} (${displayYear})`
+                        : undefined
                     }
                     variant="grid"
                     onClick={() => handleSelectVideo(video)}

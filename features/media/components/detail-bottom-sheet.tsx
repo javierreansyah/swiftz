@@ -94,7 +94,7 @@ export function DetailBottomSheet({
 
           {/* Desktop Top Header */}
           {!hideHeader && (
-            <div className="hidden shrink-0 flex-wrap items-center justify-between gap-4 px-6 py-4 sm:px-8 sm:py-5 md:flex">
+            <div className="hidden shrink-0 flex-wrap items-center justify-between gap-4 p-4 sm:px-10 sm:py-5 md:flex">
               {/* Left: Title, Subtitle, and Badge */}
               <div className="flex items-center gap-3">
                 <div>
@@ -178,7 +178,7 @@ export function DetailBottomSheet({
             {sidebar && (
               <aside
                 className={cn(
-                  "hidden shrink-0 flex-col gap-4 overflow-y-auto p-4 md:flex",
+                  "hidden shrink-0 flex-col gap-4 overflow-y-auto p-4 md:flex md:pl-10",
                   sidebarWidth,
                 )}
               >

@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "@/components/ui/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home,
@@ -20,9 +19,9 @@ import {
   DrawerHandle,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { MenuList } from "@/components/common/menu-list";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
 import { useAuth } from "@/features/auth/auth-provider";
-import { cn } from "@/lib/utils";
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -99,42 +98,17 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
             </div>
           ) : null}
 
-          {/* Connected Navigation Links */}
-          <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
-            {navigationList.map((item) => {
-              const isActive = isActiveRoute(item.route);
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  key={item.route}
-                  href={item.route}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors select-none",
-                    isActive
-                      ? "bg-primary/10 font-semibold text-primary"
-                      : "font-medium text-foreground hover:bg-muted/50",
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-xs"
-                        : "bg-muted text-muted-foreground",
-                    )}
-                  >
-                    <Icon className="size-4" />
-                  </div>
-                  <span className="flex-1 text-sm">{item.name}</span>
-                  {isActive && (
-                    <div className="size-2 shrink-0 rounded-full bg-primary" />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
+          {/* Navigation Links */}
+          <MenuList
+            items={navigationList.map((item) => ({
+              key: item.route,
+              icon: item.icon,
+              label: item.name,
+              active: isActiveRoute(item.route),
+              href: item.route,
+              onClick: () => setIsOpen(false),
+            }))}
+          />
 
           {/* Footer Auth Action & Theme Switcher */}
           <div className="flex items-center gap-2 pt-1">

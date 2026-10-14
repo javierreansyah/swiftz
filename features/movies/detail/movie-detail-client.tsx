@@ -44,6 +44,7 @@ export function MovieDetailClient({
   const [initialVideoIndex, setInitialVideoIndex] = useState<
     number | undefined
   >(undefined);
+  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
   const photosSection = useVisible();
   const reviewsSection = useVisible();
   const recommendationsSection = useVisible();
@@ -104,7 +105,13 @@ export function MovieDetailClient({
   const handleOpenModal = (modal: ModalType) => {
     if (modal === "photos") setInitialPhotoIndex(undefined);
     if (modal === "videos") setInitialVideoIndex(undefined);
+    if (modal === "cast") setSelectedPersonId(null);
     setActiveModal(modal);
+  };
+
+  const handleOpenPerson = (id: number) => {
+    setSelectedPersonId(id);
+    setActiveModal("cast");
   };
 
   const posterUrl = movie.poster_path
@@ -135,6 +142,7 @@ export function MovieDetailClient({
                 crew={crew}
                 reviewCount={totalReviews}
                 onOpenModal={handleOpenModal}
+                onOpenPerson={handleOpenPerson}
                 onOpenRating={() => setShowRatingModal(true)}
               />
             </div>
@@ -154,7 +162,8 @@ export function MovieDetailClient({
             {/* 2. Cast Excerpt */}
             <MovieCastSection
               cast={cast}
-              onOpenCastModal={() => setActiveModal("cast")}
+              onOpenCastModal={() => handleOpenModal("cast")}
+              onSelectPerson={handleOpenPerson}
             />
 
             {/* 3. Videos Excerpt */}
@@ -210,7 +219,7 @@ export function MovieDetailClient({
           </div>
 
           {/* Dedicated Compact Sticky Sidebar Column (Desktop): Starts at the top alongside Hero, always sticky */}
-          <aside className="sticky top-24 hidden w-55 self-start lg:block xl:w-60">
+          <aside className="sticky top-24 hidden w-50 self-start lg:block xl:w-55">
             <MovieQuickRail
               mode="desktop"
               movieId={movie.id}
@@ -234,6 +243,7 @@ export function MovieDetailClient({
         images={images}
         initialPhotoIndex={initialPhotoIndex}
         initialVideoIndex={initialVideoIndex}
+        selectedPersonId={selectedPersonId}
       />
 
       {/* Unified Rating Dialog */}

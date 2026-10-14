@@ -16,6 +16,7 @@ export interface MovieHeroProps {
   crew: Crew[];
   reviewCount?: number;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
+  onOpenPerson: (personId: number) => void;
   onOpenRating?: () => void;
 }
 
@@ -27,6 +28,7 @@ export function MovieHero({
   crew,
   reviewCount = 0,
   onOpenModal,
+  onOpenPerson,
   onOpenRating,
 }: MovieHeroProps) {
   const { sessionId } = useAuth();
@@ -133,6 +135,7 @@ export function MovieHero({
         isFavorite={isFavorite}
         userRating={userRating}
         onOpenModal={onOpenModal}
+        onOpenPerson={onOpenPerson}
         onOpenRating={handleRateOpen}
         onShareClick={handleShareClick}
         copiedShare={copiedShare}

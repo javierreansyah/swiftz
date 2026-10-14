@@ -97,40 +97,32 @@ export function MediaHeroMedia({
               {/* Floating Trailer Play Button Container (Bottom-Left) */}
               {currentVideo && (
                 <Button
-                  variant="media"
                   size="sm"
                   type="button"
                   onClick={() => setIsPlayingTrailer(true)}
-                  className="group absolute bottom-4 left-4 sm:left-6"
+                  className="absolute bottom-4 left-4 sm:left-6"
                   aria-label="Play Trailer"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-110">
-                    <Play className="ml-0.5 size-3.5 fill-current" />
-                  </div>
-                  <span className="max-w-50 truncate sm:max-w-xs">
-                    {currentVideo.type || "Trailer"} · {currentVideo.name}
-                  </span>
+                  <Play className="size-4 fill-current" />
+                  <span>Watch Trailer</span>
                 </Button>
               )}
 
               {/* Carousel Chevron Controls on Bottom Right (Desktop Only) */}
               {playableVideos.length > 1 && (
-                <div className="absolute right-4 bottom-4 hidden items-center gap-1.5 rounded-xl bg-scrim/60 p-1 backdrop-blur-md lg:flex">
+                <div className="absolute right-4 bottom-4 hidden shrink-0 items-center gap-1.5 lg:flex">
                   <Button
-                    variant="media-ghost"
-                    size="icon-xs"
+                    variant="media"
+                    size="icon-sm"
                     type="button"
                     onClick={handlePrevVideo}
                     aria-label="Previous Video"
                   >
                     <ChevronLeft className="size-4" />
                   </Button>
-                  <span className="px-1 text-xs font-semibold text-media-foreground/90">
-                    {activeVideoIndex + 1}/{playableVideos.length}
-                  </span>
                   <Button
-                    variant="media-ghost"
-                    size="icon-xs"
+                    variant="media"
+                    size="icon-sm"
                     type="button"
                     onClick={handleNextVideo}
                     aria-label="Next Video"

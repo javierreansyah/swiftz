@@ -1,6 +1,6 @@
 "use client";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Image from "@/components/ui/image";
 import {
   Star,
@@ -29,6 +29,7 @@ export interface MovieHeroActionsProps {
   isFavorite: boolean;
   userRating: number | null;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
+  onOpenPerson: (personId: number) => void;
   onOpenRating: () => void;
   onShareClick: () => void;
   copiedShare?: boolean;
@@ -44,6 +45,7 @@ export function MovieHeroActions({
   isFavorite,
   userRating,
   onOpenModal,
+  onOpenPerson,
   onOpenRating,
   onShareClick,
   copiedShare = false,
@@ -65,12 +67,16 @@ export function MovieHeroActions({
     onRate: onOpenRating,
   });
 
-  const directors = crew.filter((c) => c.job === "Director").map((c) => c.name);
+  const directors = crew
+    .filter((c) => c.job === "Director")
+    .map((member) => ({ id: member.id, name: member.name }));
   const writers = crew
     .filter((c) => ["Screenplay", "Writer", "Story"].includes(c.job))
     .slice(0, 3)
-    .map((c) => c.name);
-  const stars = cast.slice(0, 4).map((c) => c.name);
+    .map((member) => ({ id: member.id, name: member.name }));
+  const stars = cast
+    .slice(0, 4)
+    .map((member) => ({ id: member.id, name: member.name }));
   const metascore = Math.round(movie.vote_average * 10);
 
   return (
@@ -138,7 +144,7 @@ export function MovieHeroActions({
           </Button>
 
           {/* Stars Score Badge */}
-          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl bg-primary/10 px-3 text-xs text-primary backdrop-blur-sm">
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-3xl bg-secondary px-3 text-secondary-foreground">
             <Star className="size-3.5 fill-primary text-primary" />
             <div className="flex items-baseline gap-1">
               <span className="font-bold text-foreground">
@@ -152,7 +158,7 @@ export function MovieHeroActions({
           </div>
 
           {/* Trending Badge */}
-          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl bg-background/60 px-3 text-xs font-semibold text-muted-foreground backdrop-blur-sm">
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-3xl bg-secondary px-3 text-xs font-semibold text-secondary-foreground">
             <TrendingUp className="size-3.5 text-primary" />
             <span>{Math.round(movie.popularity)}</span>
           </div>
@@ -191,13 +197,20 @@ export function MovieHeroActions({
             {movie.genres && movie.genres.length > 0 && (
               <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto">
                 {movie.genres.map((genre) => (
-                  <Badge
+                  <Button
                     key={genre.id}
+                    asChild
                     variant="secondary"
+                    size="sm"
                     className="shrink-0"
                   >
-                    {genre.name}
-                  </Badge>
+                    <Link
+                      href={`/movie?with_genres=${genre.id}`}
+                      prefetch={false}
+                    >
+                      {genre.name}
+                    </Link>
+                  </Button>
                 ))}
               </div>
             )}
@@ -224,9 +237,19 @@ export function MovieHeroActions({
                   </span>
                   <div className="col-span-10 flex flex-wrap items-center gap-2">
                     {movie.genres.map((genre) => (
-                      <Badge key={genre.id} variant="secondary">
-                        {genre.name}
-                      </Badge>
+                      <Button
+                        key={genre.id}
+                        asChild
+                        variant="secondary"
+                        size="sm"
+                      >
+                        <Link
+                          href={`/movie?with_genres=${genre.id}`}
+                          prefetch={false}
+                        >
+                          {genre.name}
+                        </Link>
+                      </Button>
                     ))}
                   </div>
                 </div>
@@ -258,9 +281,15 @@ export function MovieHeroActions({
                   {directors.length > 1 ? "Directors" : "Director"}
                 </span>
                 <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {directors.map((name, i) => (
-                    <span key={i} className="font-semibold text-primary">
-                      {name}
+                  {directors.map((director, i) => (
+                    <span key={`${director.id}-${i}`}>
+                      <button
+                        type="button"
+                        onClick={() => onOpenPerson(director.id)}
+                        className="cursor-pointer font-semibold text-primary hover:underline"
+                      >
+                        {director.name}
+                      </button>
                       {i < directors.length - 1 && (
                         <span className="text-muted-foreground"> · </span>
                       )}
@@ -277,9 +306,15 @@ export function MovieHeroActions({
                   {writers.length > 1 ? "Writers" : "Writer"}
                 </span>
                 <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {writers.map((name, i) => (
-                    <span key={i} className="font-semibold text-primary">
-                      {name}
+                  {writers.map((writer, i) => (
+                    <span key={`${writer.id}-${i}`}>
+                      <button
+                        type="button"
+                        onClick={() => onOpenPerson(writer.id)}
+                        className="cursor-pointer font-semibold text-primary hover:underline"
+                      >
+                        {writer.name}
+                      </button>
                       {i < writers.length - 1 && (
                         <span className="text-muted-foreground"> · </span>
                       )}
@@ -296,9 +331,15 @@ export function MovieHeroActions({
                   Stars
                 </span>
                 <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {stars.map((name, i) => (
-                    <span key={i} className="font-semibold text-primary">
-                      {name}
+                  {stars.map((star, i) => (
+                    <span key={star.id}>
+                      <button
+                        type="button"
+                        onClick={() => onOpenPerson(star.id)}
+                        className="cursor-pointer font-semibold text-primary hover:underline"
+                      >
+                        {star.name}
+                      </button>
                       {i < stars.length - 1 && (
                         <span className="text-muted-foreground"> · </span>
                       )}

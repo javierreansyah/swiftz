@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import {
-  ChevronRight,
   Bookmark,
   Heart,
   Star,
@@ -11,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MenuList } from "@/components/common/menu-list";
 import { cn } from "@/lib/utils";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
 import {
@@ -24,7 +24,6 @@ export interface QuickRailSectionItem {
   id: string;
   label: string;
   icon: LucideIcon;
-  modal?: string;
 }
 
 export interface MediaQuickRailProps {
@@ -39,7 +38,6 @@ export interface MediaQuickRailProps {
   onToggleWatchlist: () => void;
   onToggleFavorite: () => void;
   onOpenRating: () => void;
-  onOpenModal: (modal: string) => void;
   mode?: "all" | "desktop" | "mobile";
   className?: string;
 }
@@ -56,7 +54,6 @@ export function MediaQuickRail({
   onToggleWatchlist,
   onToggleFavorite,
   onOpenRating,
-  onOpenModal,
   mode = "all",
   className,
 }: MediaQuickRailProps) {
@@ -155,136 +152,111 @@ export function MediaQuickRail({
             <div
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="group relative flex w-full cursor-pointer items-center justify-between py-1.5 text-xs font-semibold select-none"
+              className="group relative flex w-full cursor-pointer items-center gap-2.5 py-1.5 text-xs font-semibold select-none"
             >
               {/* Primary colored bar on the activated section */}
               {isActive && (
                 <span className="absolute inset-y-0.5 -left-3 w-0.5 rounded-xl bg-primary transition-all duration-300" />
               )}
 
-              <div className="flex items-center gap-2.5">
-                <Icon
-                  className={cn(
-                    "size-3.5 transition-colors duration-200",
-                    isActive
-                      ? "text-primary"
-                      : "text-muted-foreground/60 group-hover:text-foreground",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "transition-colors duration-200",
-                    isActive
-                      ? "font-bold text-foreground"
-                      : "text-muted-foreground/70 group-hover:text-foreground",
-                  )}
-                >
-                  {item.label}
-                </span>
-              </div>
-
-              {item.modal && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenModal(item.modal!);
-                  }}
-
-                  title={`Open ${item.label} sheet`}
-                >
-                  <span>Open</span>
-                  <ChevronRight className="size-3" />
-                </Button>
-              )}
+              <Icon
+                className={cn(
+                  "size-3.5 transition-colors duration-200",
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground/60 group-hover:text-foreground",
+                )}
+              />
+              <span
+                className={cn(
+                  "transition-colors duration-200",
+                  isActive
+                    ? "font-bold text-foreground"
+                    : "text-muted-foreground/70 group-hover:text-foreground",
+                )}
+              >
+                {item.label}
+              </span>
             </div>
           );
         })}
       </nav>
 
       {/* Quick Actions */}
-      <div className="space-y-2 border-t border-border/60 pt-3">
-        <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-          Actions
-        </p>
+      <div className="grid grid-cols-1 gap-1.5">
+        {/* Watchlist button */}
+        <Button
+          size="default"
+          variant={isWatchlist ? "default" : "secondary"}
+          onClick={onToggleWatchlist}
+          disabled={isWatchlistPending}
+          className="w-full justify-start"
+        >
+          {isWatchlistPending ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Bookmark
+              className={cn("size-3.5", isWatchlist && "fill-current")}
+            />
+          )}
+          <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
+        </Button>
 
-        <div className="grid grid-cols-1 gap-1.5">
-          {/* Watchlist button */}
-          <Button
-            size="default"
-            variant={isWatchlist ? "default" : "secondary"}
-            onClick={onToggleWatchlist}
-            disabled={isWatchlistPending}
-            className="w-full justify-start"
-          >
-            {isWatchlistPending ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Bookmark
-                className={cn("size-3.5", isWatchlist && "fill-current")}
-              />
-            )}
-            <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
-          </Button>
-
-          {/* Favorite button */}
-          <Button
-            size="default"
-            variant={isFavorite ? "default" : "secondary"}
-            onClick={onToggleFavorite}
-            disabled={isFavoritePending}
-            className="w-full justify-start"
-          >
-            {isFavoritePending ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Heart
-                className={cn(
-                  "size-3.5",
-                  isFavorite && "fill-current text-destructive",
-                )}
-              />
-            )}
-            <span>{isFavorite ? "In Favorites" : "Add to Favorites"}</span>
-          </Button>
-
-          {/* Rate button */}
-          <Button
-            size="default"
-            variant="secondary"
-            onClick={onOpenRating}
-            className="w-full justify-start"
-          >
-            <Star
+        {/* Favorite button */}
+        <Button
+          size="default"
+          variant={isFavorite ? "default" : "secondary"}
+          onClick={onToggleFavorite}
+          disabled={isFavoritePending}
+          className="w-full justify-start"
+        >
+          {isFavoritePending ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Heart
               className={cn(
                 "size-3.5",
-                userRating ? "fill-primary text-primary" : "text-primary",
+                isFavorite && "fill-current text-destructive",
               )}
             />
-            <span>
-              {userRating
-                ? `Your Rating: ${userRating}/10`
-                : `Rate This ${mediaTypeName}`}
-            </span>
-          </Button>
+          )}
+          <span>{isFavorite ? "In Favorites" : "Add to Favorites"}</span>
+        </Button>
 
-          {/* Share button */}
-          <Button
-            size="default"
-            variant="secondary"
-            onClick={handleShare}
-            className="w-full justify-start"
-          >
-            {copied ? (
-              <Check className="size-3.5 text-success" />
-            ) : (
-              <Share2 className="size-3.5" />
+        {/* Rate button */}
+        <Button
+          size="default"
+          variant="secondary"
+          onClick={onOpenRating}
+          className="w-full justify-start"
+        >
+          <Star
+            className={cn(
+              "size-3.5",
+              userRating ? "fill-primary text-primary" : "text-primary",
             )}
-            <span>{copied ? "Copied Link!" : `Share ${mediaTypeName}`}</span>
-          </Button>
-        </div>
+          />
+          <span>
+            {userRating
+              ? `Your Rating: ${userRating}/10`
+              : `Rate This ${mediaTypeName}`}
+          </span>
+        </Button>
+
+        {/* Share button */}
+        <Button
+          size="default"
+          variant="secondary"
+          onClick={handleShare}
+          className="w-full justify-start"
+        >
+          {copied ? (
+            <Check className="size-3.5 text-success" />
+          ) : (
+            <Share2 className="size-3.5" />
+          )}
+          <span>{copied ? "Copied Link!" : `Share ${mediaTypeName}`}</span>
+        </Button>
       </div>
     </div>
   );
@@ -292,41 +264,16 @@ export function MediaQuickRail({
   /* ----------------- MOBILE NAVIGATION BOTTOM SHEET CONTENT ----------------- */
   const renderMobileContent = () => (
     <div className="flex flex-col space-y-4">
-      {/* Connected Section Container divided by horizontal dividers */}
-      <div className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/70 bg-card">
-        {sections.map((item) => {
-          const isActive = activeSection === item.id;
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => scrollToSection(item.id)}
-              className={cn(
-                "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors select-none",
-                isActive
-                  ? "bg-primary/10 font-semibold text-primary"
-                  : "font-medium text-foreground hover:bg-muted/50",
-              )}
-            >
-              <div
-                className={cn(
-                  "flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors",
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-xs"
-                    : "bg-muted text-muted-foreground",
-                )}
-              >
-                <Icon className="size-4" />
-              </div>
-              <span className="flex-1 text-sm">{item.label}</span>
-              {isActive && (
-                <div className="size-2 shrink-0 rounded-full bg-primary" />
-              )}
-            </button>
-          );
-        })}
-      </div>
+      {/* Section Navigation List */}
+      <MenuList
+        items={sections.map((item) => ({
+          key: item.id,
+          icon: item.icon,
+          label: item.label,
+          active: activeSection === item.id,
+          onClick: () => scrollToSection(item.id),
+        }))}
+      />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-2">

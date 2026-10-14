@@ -75,7 +75,7 @@ export function MovieHeroHeader({
         </Tooltip>
 
         {/* IMDb / TMDB Score Badge: ★ 8.9/10 (200K) */}
-        <div className="flex h-9 items-center gap-2 rounded-xl bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
+        <div className="flex h-10 items-center gap-2 rounded-3xl bg-secondary px-3.5 text-secondary-foreground">
           <Star className="size-4 fill-primary text-primary" />
           <div className="flex items-baseline gap-1">
             <span className="font-bold text-foreground">
@@ -89,7 +89,7 @@ export function MovieHeroHeader({
         </div>
 
         {/* Popularity / Trending Badge: ↗ 1 */}
-        <div className="flex h-9 items-center gap-1.5 rounded-xl bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
+        <div className="flex h-10 items-center gap-1.5 rounded-3xl bg-secondary px-3.5 text-sm font-semibold text-secondary-foreground">
           <TrendingUp className="size-4 text-primary" />
           <span>{Math.round(movie.popularity)}</span>
         </div>

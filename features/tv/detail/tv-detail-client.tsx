@@ -170,7 +170,7 @@ export function TVDetailClient({
           </div>
 
           {/* Dedicated Compact Sticky Sidebar (Desktop) */}
-          <aside className="sticky top-24 hidden w-55 self-start lg:block xl:w-60">
+          <aside className="sticky top-24 hidden w-50 self-start lg:block xl:w-55">
             <TVQuickRail
               mode="desktop"
               tvId={show.id}

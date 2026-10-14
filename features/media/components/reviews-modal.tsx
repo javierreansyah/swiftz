@@ -197,7 +197,7 @@ export function ReviewsModal({
   );
 
   const subHeader = (
-    <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-muted/30 px-6 py-3 text-xs sm:px-10 sm:text-sm">
+    <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 px-4 py-3 text-xs sm:px-10 sm:text-sm">
       <div className="flex flex-wrap items-center gap-3">
         <FilterSelect
           value={reviewSort}

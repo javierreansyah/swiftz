@@ -81,22 +81,16 @@ export function MovieQuickRail({
 
   const sections: QuickRailSectionItem[] = [
     { id: "section-overview", label: "Overview", icon: Film },
-    { id: "section-cast", label: "Cast", icon: Users, modal: "cast" },
-    { id: "section-videos", label: "Videos", icon: Video, modal: "videos" },
-    { id: "section-photos", label: "Photos", icon: ImageIcon, modal: "photos" },
-    {
-      id: "section-reviews",
-      label: "Reviews",
-      icon: MessageSquare,
-      modal: "reviews",
-    },
+    { id: "section-cast", label: "Cast", icon: Users },
+    { id: "section-videos", label: "Videos", icon: Video },
+    { id: "section-photos", label: "Photos", icon: ImageIcon },
+    { id: "section-reviews", label: "Reviews", icon: MessageSquare },
     ...(hasCollection
       ? [
           {
             id: "section-collection",
             label: "Franchise",
             icon: Layers,
-            modal: "collection",
           },
         ]
       : []),
@@ -104,7 +98,6 @@ export function MovieQuickRail({
       id: "section-recommendations",
       label: "Related",
       icon: Sparkles,
-      modal: "recommendations",
     },
   ];
 
@@ -121,17 +114,6 @@ export function MovieQuickRail({
       onToggleWatchlist={handleWatchlist}
       onToggleFavorite={handleFavorite}
       onOpenRating={handleRateClick}
-      onOpenModal={(modal) =>
-        onOpenModal(
-          modal as
-            | "reviews"
-            | "videos"
-            | "photos"
-            | "cast"
-            | "recommendations"
-            | "collection",
-        )
-      }
       mode={mode}
       className={className}
     />
