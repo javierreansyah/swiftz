@@ -1,7 +1,14 @@
 "use client";
 import Image from "@/components/ui/image";
 import Link from "next/link";
-import { Play, Star, Plus, Check } from "lucide-react";
+import {
+  Play,
+  Star,
+  Plus,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,6 +22,8 @@ export interface FeaturedHeroSpotlightProps {
   isWatchlistPending: boolean;
   onWatchTrailer: (movieId: number, movieTitle: string) => void;
   onToggleWatchlist: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
 export function FeaturedHeroSpotlight({
@@ -27,6 +36,8 @@ export function FeaturedHeroSpotlight({
   isWatchlistPending,
   onWatchTrailer,
   onToggleWatchlist,
+  onPrev,
+  onNext,
 }: FeaturedHeroSpotlightProps) {
   return (
     <div className="relative h-136 w-full overflow-hidden rounded-2xl border border-media-foreground/10 bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
@@ -159,37 +170,71 @@ export function FeaturedHeroSpotlight({
                 </Link>
 
                 {/* Actions Row */}
-                <div className="pointer-events-none flex w-fit flex-wrap items-center gap-2 pt-1 sm:gap-3 sm:pt-2">
-                  <Button
-                    size="sm"
-                    onClick={() => onWatchTrailer(movie.id, movie.title)}
-                    className={cn(interactive)}
-                  >
-                    <Play className="size-4 fill-current" />
-                    <span>Watch Trailer</span>
-                  </Button>
-
-                  {isAuthenticated && isSelected && (
+                <div className="pointer-events-none flex w-full items-center justify-between gap-2 pt-1 sm:gap-3 sm:pt-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                     <Button
                       size="sm"
-                      variant="ghost"
-                      onClick={onToggleWatchlist}
-                      disabled={isWatchlistPending}
+                      onClick={() => onWatchTrailer(movie.id, movie.title)}
                       className={cn(interactive)}
                     >
-                      {isWatchlist ? (
-                        <>
-                          <Check className="size-4 text-success" />
-                          <span>In Watchlist</span>
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="size-4" />
-                          <span>Watchlist</span>
-                        </>
-                      )}
+                      <Play className="size-4 fill-current" />
+                      <span>Watch Trailer</span>
                     </Button>
-                  )}
+
+                    {isAuthenticated && isSelected && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={onToggleWatchlist}
+                        disabled={isWatchlistPending}
+                        className={cn(interactive)}
+                      >
+                        {isWatchlist ? (
+                          <>
+                            <Check className="size-4 text-success" />
+                            <span>In Watchlist</span>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="size-4" />
+                            <span>Watchlist</span>
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Navigation Arrows */}
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Button
+                      variant="media"
+                      size="icon-sm"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onPrev?.();
+                      }}
+                      className={cn(interactive)}
+                      aria-label="Previous movie"
+                    >
+                      <ChevronLeft className="size-4" />
+                    </Button>
+                    <Button
+                      variant="media"
+                      size="icon-sm"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onNext?.();
+                      }}
+                      className={cn(interactive)}
+                      aria-label="Next movie"
+                    >
+                      <ChevronRight className="size-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

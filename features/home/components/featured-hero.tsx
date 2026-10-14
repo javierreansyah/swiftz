@@ -79,24 +79,36 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
     });
   };
 
+  const heroCount = Math.min(movies.length, 8);
+
+  const handlePrev = () => {
+    if (heroCount <= 1) return;
+    setSelectedIndex((prev) => (prev - 1 + heroCount) % heroCount);
+  };
+
+  const handleNext = () => {
+    if (heroCount <= 1) return;
+    setSelectedIndex((prev) => (prev + 1) % heroCount);
+  };
+
   // Up next list (next 3 movies)
   const upNextMovies =
-    movies.length > 1
+    heroCount > 1
       ? [
-          movies[(selectedIndex + 1) % movies.length],
-          movies[(selectedIndex + 2) % movies.length],
-          movies[(selectedIndex + 3) % movies.length],
+          movies[(selectedIndex + 1) % heroCount],
+          movies[(selectedIndex + 2) % heroCount],
+          movies[(selectedIndex + 3) % heroCount],
         ].filter(Boolean)
       : [];
 
-  // Auto-advance every 9 seconds if trailer modal is closed
+  // Auto-advance every 9 seconds if trailer modal is closed (resets on index change)
   useEffect(() => {
-    if (movies.length <= 1 || trailerModal.isOpen) return;
+    if (heroCount <= 1 || trailerModal.isOpen) return;
     const interval = setInterval(() => {
-      setSelectedIndex((prev) => (prev + 1) % Math.min(movies.length, 8));
+      setSelectedIndex((prev) => (prev + 1) % heroCount);
     }, 9000);
     return () => clearInterval(interval);
-  }, [movies.length, trailerModal.isOpen]);
+  }, [heroCount, trailerModal.isOpen, selectedIndex]);
 
   if (!activeMovie) {
     return null;
@@ -127,12 +139,14 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
               setTrailerModal({ isOpen: true, mediaId: id, title })
             }
             onToggleWatchlist={handleToggleWatchlist}
+            onPrev={handlePrev}
+            onNext={handleNext}
           />
 
           <FeaturedHeroUpNext
             upNextMovies={upNextMovies}
             onSelectMovie={(offset) =>
-              setSelectedIndex((selectedIndex + offset) % movies.length)
+              setSelectedIndex((selectedIndex + offset) % heroCount)
             }
           />
         </div>
