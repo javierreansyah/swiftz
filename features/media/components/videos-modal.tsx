@@ -191,7 +191,7 @@ export function VideosModal({
     <div className="flex items-center gap-2">
       {viewMode === "showcase" && (
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={() => setViewMode("gallery")}
         >
@@ -200,7 +200,7 @@ export function VideosModal({
         </Button>
       )}
 
-      <Button variant="outline" size="sm" onClick={handleShare}>
+      <Button variant="secondary" size="sm" onClick={handleShare}>
         {copiedShare ? (
           <Check className="size-3.5 text-success" />
         ) : (
@@ -361,7 +361,7 @@ export function VideosModal({
               </span>
               <div className="flex items-center gap-1.5">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="icon-sm"
                   type="button"
                   onClick={handlePrevVideo}
@@ -371,7 +371,7 @@ export function VideosModal({
                   <ChevronLeft className="size-4" />
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="icon-sm"
                   type="button"
                   onClick={handleNextVideo}

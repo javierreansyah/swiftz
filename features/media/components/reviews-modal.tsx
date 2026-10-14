@@ -155,7 +155,7 @@ export function ReviewsModal({
 
   const headerActions = (
     <div className="flex items-center gap-2">
-      <Button variant="outline" size="sm" onClick={handleShare}>
+      <Button variant="secondary" size="sm" onClick={handleShare}>
         {copiedShare ? (
           <Check className="size-4 text-success" />
         ) : (
@@ -314,7 +314,7 @@ export function ReviewsModal({
             return (
               <article
                 key={review.id}
-                className="rounded-3xl border border-border/70 bg-card/60 p-5 transition-colors hover:border-primary/40 sm:p-6"
+                className="rounded-3xl bg-card/60 p-5 shadow-xs transition-shadow hover:shadow-md sm:p-6"
               >
                 {/* Author row */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-3">
@@ -362,7 +362,7 @@ export function ReviewsModal({
                   </span>
                   <div className="flex items-center gap-2">
                     <Button
-                      variant={votes.voted === "up" ? "default" : "outline"}
+                      variant={votes.voted === "up" ? "default" : "secondary"}
                       size="sm"
                       onClick={() => handleHelpfulVote(review.id, "up")}
                     >
@@ -370,7 +370,7 @@ export function ReviewsModal({
                       <span>Helpful ({votes.up})</span>
                     </Button>
                     <Button
-                      variant={votes.voted === "down" ? "default" : "outline"}
+                      variant={votes.voted === "down" ? "default" : "secondary"}
                       size="sm"
                       onClick={() => handleHelpfulVote(review.id, "down")}
                     >

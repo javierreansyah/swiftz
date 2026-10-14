@@ -161,7 +161,7 @@ export function MediaCard({
   const cardContent = (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-card/60 font-sans transition-all duration-300 select-none hover:border-primary/40 hover:shadow-lg",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-card/60 font-sans transition-all duration-300 select-none hover:shadow-lg",
         variant === "shelf" ? getShelfDimensions() : "w-full",
         (onClick || href) && "cursor-pointer",
         className,

@@ -43,7 +43,7 @@ export function MovieCollectionSection({
       {/* Cinematic Banner Card */}
       <div
         onClick={onOpenCollectionModal}
-        className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-all hover:border-primary/50 hover:shadow-xl"
+        className="group relative cursor-pointer overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-all hover:shadow-xl"
       >
         {/* Background Image with Gradient Mask */}
         {backdropUrl && (
@@ -61,7 +61,7 @@ export function MovieCollectionSection({
         <div className="relative z-10 flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:p-6 lg:p-8">
           {/* Mini Poster */}
           {posterUrl && (
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-muted shadow-md sm:w-24">
+            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden rounded-xl bg-muted shadow-md sm:w-24">
               <Image
                 src={posterUrl}
                 alt={collection.name}

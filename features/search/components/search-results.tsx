@@ -109,7 +109,7 @@ function CompanySearchResults({
         return (
           <div
             key={comp.id}
-            className="flex items-center gap-3.5 rounded-3xl border border-border/70 bg-card/60 p-3.5 shadow-xs transition-colors hover:border-primary/40"
+            className="flex items-center gap-3.5 rounded-3xl bg-card/60 p-3.5 shadow-xs transition-shadow hover:shadow-md"
           >
             <div className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-muted p-1">
               {logoUrl ? (

@@ -43,7 +43,7 @@ export function LibraryUnauthenticated({
               <span>Connect with TMDB</span>
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
               size="lg"
               onClick={onLoginDemo}
               className="w-full sm:w-auto"

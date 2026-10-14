@@ -40,7 +40,7 @@ export function FeaturedHeroSpotlight({
   onNext,
 }: FeaturedHeroSpotlightProps) {
   return (
-    <div className="relative h-136 w-full overflow-hidden rounded-2xl border border-media-foreground/10 bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
+    <div className="relative h-136 w-full overflow-hidden rounded-2xl bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
@@ -120,7 +120,7 @@ export function FeaturedHeroSpotlight({
                 tabIndex={linkTabIndex}
                 aria-label={`View details for ${movie.title}`}
                 className={cn(
-                  "group/poster relative block aspect-2/3 w-28 shrink-0 overflow-hidden rounded-xl border border-media-foreground/25 shadow-2xl transition-all duration-300 hover:scale-102 hover:border-primary sm:w-36 lg:w-48",
+                  "group/poster relative block aspect-2/3 w-28 shrink-0 overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-102 sm:w-36 lg:w-48",
                   interactive,
                 )}
               >

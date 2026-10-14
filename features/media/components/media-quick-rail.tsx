@@ -214,7 +214,7 @@ export function MediaQuickRail({
           {/* Watchlist button */}
           <Button
             size="default"
-            variant={isWatchlist ? "default" : "outline"}
+            variant={isWatchlist ? "default" : "secondary"}
             onClick={onToggleWatchlist}
             disabled={isWatchlistPending}
             className="w-full justify-start"
@@ -232,7 +232,7 @@ export function MediaQuickRail({
           {/* Favorite button */}
           <Button
             size="default"
-            variant={isFavorite ? "default" : "outline"}
+            variant={isFavorite ? "default" : "secondary"}
             onClick={onToggleFavorite}
             disabled={isFavoritePending}
             className="w-full justify-start"
@@ -253,7 +253,7 @@ export function MediaQuickRail({
           {/* Rate button */}
           <Button
             size="default"
-            variant="outline"
+            variant="secondary"
             onClick={onOpenRating}
             className="w-full justify-start"
           >
@@ -273,7 +273,7 @@ export function MediaQuickRail({
           {/* Share button */}
           <Button
             size="default"
-            variant="outline"
+            variant="secondary"
             onClick={handleShare}
             className="w-full justify-start"
           >
@@ -333,7 +333,7 @@ export function MediaQuickRail({
         {/* Watchlist */}
         <Button
           size="default"
-          variant={isWatchlist ? "default" : "outline"}
+          variant={isWatchlist ? "default" : "secondary"}
           onClick={() => {
             onToggleWatchlist();
             closeMobileNav();
@@ -356,7 +356,7 @@ export function MediaQuickRail({
         {/* Favorite */}
         <Button
           size="default"
-          variant={isFavorite ? "default" : "outline"}
+          variant={isFavorite ? "default" : "secondary"}
           onClick={() => {
             onToggleFavorite();
             closeMobileNav();
@@ -382,7 +382,7 @@ export function MediaQuickRail({
         {/* Rate */}
         <Button
           size="default"
-          variant="outline"
+          variant="secondary"
           onClick={() => {
             closeMobileNav();
             onOpenRating();
@@ -403,7 +403,7 @@ export function MediaQuickRail({
         {/* Share */}
         <Button
           size="default"
-          variant="outline"
+          variant="secondary"
           onClick={handleShare}
           className="w-full justify-start"
         >

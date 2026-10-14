@@ -32,7 +32,7 @@ export function MovieRecommendationsClient({ id }: { id: string }) {
   return (
     <main className="container space-y-8 pt-20 pb-10">
       <div className="flex items-center gap-3 pt-4">
-        <Button variant="outline" size="icon" asChild>
+        <Button variant="secondary" size="icon" asChild>
           <Link href={`/movie/${id}`}>
             <ArrowLeft className="size-5" />
             <span className="sr-only">Back to movie</span>

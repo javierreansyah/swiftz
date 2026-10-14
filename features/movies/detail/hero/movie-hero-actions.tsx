@@ -102,7 +102,7 @@ export function MovieHeroActions({
           {/* Favorite Button */}
           <Button
             size="sm"
-            variant={isFavorite ? "secondary" : "outline"}
+            variant={isFavorite ? "default" : "secondary"}
             onClick={handleFavoriteClick}
             className="shrink-0 snap-start"
           >
@@ -119,7 +119,7 @@ export function MovieHeroActions({
 
           {/* Rate Button */}
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onOpenRating}
             className="shrink-0 snap-start"
@@ -138,7 +138,7 @@ export function MovieHeroActions({
           </Button>
 
           {/* Stars Score Badge */}
-          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl border border-primary/30 bg-primary/10 px-3 text-xs text-primary backdrop-blur-sm">
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl bg-primary/10 px-3 text-xs text-primary backdrop-blur-sm">
             <Star className="size-3.5 fill-primary text-primary" />
             <div className="flex items-baseline gap-1">
               <span className="font-bold text-foreground">
@@ -152,7 +152,7 @@ export function MovieHeroActions({
           </div>
 
           {/* Trending Badge */}
-          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl border border-border/80 bg-background/60 px-3 text-xs font-semibold text-muted-foreground backdrop-blur-sm">
+          <div className="flex h-8 shrink-0 snap-start items-center gap-1.5 rounded-4xl bg-background/60 px-3 text-xs font-semibold text-muted-foreground backdrop-blur-sm">
             <TrendingUp className="size-3.5 text-primary" />
             <span>{Math.round(movie.popularity)}</span>
           </div>
@@ -160,7 +160,7 @@ export function MovieHeroActions({
           {/* Share Button */}
           <Button
             size="sm"
-            variant="outline"
+            variant="secondary"
             onClick={onShareClick}
             className="shrink-0 snap-start"
             aria-label="Share movie"
@@ -176,7 +176,7 @@ export function MovieHeroActions({
 
         {/* MOBILE ONLY: Poster (1:3) + Genres & Plot (2:3) */}
         <div className="grid grid-cols-3 items-start gap-3.5 lg:hidden">
-          <div className="relative col-span-1 aspect-2/3 w-full overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+          <div className="relative col-span-1 aspect-2/3 w-full overflow-hidden rounded-2xl bg-card shadow-lg">
             <Image
               src={posterUrl}
               alt={movie.title}

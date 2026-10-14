@@ -59,7 +59,7 @@ function DrawerContent({
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-4xl border-t bg-background",
+          "fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-4xl bg-background shadow-2xl",
           (surface === "default" || surface === "filter") &&
             "h-filter-sheet max-h-filter-sheet",
           surface === "detail" &&

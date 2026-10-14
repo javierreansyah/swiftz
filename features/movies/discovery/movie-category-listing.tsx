@@ -136,7 +136,7 @@ export function MovieCategoryListing({
 
           {hasCustomFilters && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleResetFilters}
               className="w-fit"
@@ -337,7 +337,7 @@ export function MovieCategoryListing({
             Try adjusting your search criteria, removing some filters, or
             broadening your release date and rating requirements.
           </p>
-          <Button variant="outline" size="sm" onClick={handleResetFilters}>
+          <Button variant="secondary" size="sm" onClick={handleResetFilters}>
             <RotateCcw className="size-3.5" />
             <span>Reset to Default</span>
           </Button>

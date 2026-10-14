@@ -124,7 +124,7 @@ export function DiscoverFilteredResults({
 
         {(activeCount > 0 || Boolean(view)) && (
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onClearAll}
             className="w-fit"
@@ -373,7 +373,7 @@ export function DiscoverFilteredResults({
             Try adjusting your search criteria, removing some filters, or
             broadening your release date and rating requirements.
           </p>
-          <Button variant="outline" size="sm" onClick={onClearAll}>
+          <Button variant="secondary" size="sm" onClick={onClearAll}>
             <RotateCcw className="size-3.5" />
             <span>Reset All Filters</span>
           </Button>

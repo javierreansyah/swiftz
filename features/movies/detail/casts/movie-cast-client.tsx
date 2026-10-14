@@ -48,7 +48,7 @@ export function MovieCastClient({ id }: { id: string }) {
       {/* Header with back button */}
       <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon" asChild>
+          <Button variant="secondary" size="icon" asChild>
             <Link href={`/movie/${id}`}>
               <ArrowLeft className="size-5" />
               <span className="sr-only">Back to movie</span>
@@ -76,23 +76,23 @@ export function MovieCastClient({ id }: { id: string }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b pb-2">
+      <div className="flex gap-2 pb-2">
         <Button
-          variant={activeTab === "all" ? "default" : "outline"}
+          variant={activeTab === "all" ? "default" : "secondary"}
           size="sm"
           onClick={() => setActiveTab("all")}
         >
           All ({castList.length + crewList.length})
         </Button>
         <Button
-          variant={activeTab === "cast" ? "default" : "outline"}
+          variant={activeTab === "cast" ? "default" : "secondary"}
           size="sm"
           onClick={() => setActiveTab("cast")}
         >
           Cast ({castList.length})
         </Button>
         <Button
-          variant={activeTab === "crew" ? "default" : "outline"}
+          variant={activeTab === "crew" ? "default" : "secondary"}
           size="sm"
           onClick={() => setActiveTab("crew")}
         >

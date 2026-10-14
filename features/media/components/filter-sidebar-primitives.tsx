@@ -71,7 +71,7 @@ export function MultiSelectBadges({
         return (
           <Button
             key={item.id}
-            variant={isSelected ? "default" : "outline"}
+            variant={isSelected ? "default" : "secondary"}
             size="sm"
             aria-pressed={isSelected}
             onClick={() => onToggle(item.id)}
@@ -208,7 +208,7 @@ export function FilterStickyActionBar({
       </Button>
 
       <Button
-        variant="outline"
+        variant="secondary"
         size="icon"
         onClick={onReset}
         disabled={activeCount === 0}

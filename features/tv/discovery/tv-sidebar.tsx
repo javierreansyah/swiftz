@@ -95,7 +95,7 @@ export function TVSidebar({
   const filterSections = (
     <>
       {/* 1. Sort Section */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
         <FilterSelect
           value={pendingFilters.sort_by}
@@ -106,7 +106,7 @@ export function TVSidebar({
       </div>
 
       {/* 2. TV Genres (Multi-Select using Shadcn Badge pattern) */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Sparkles}
           title="Genres"
@@ -120,7 +120,7 @@ export function TVSidebar({
       </div>
 
       {/* 3. First Air Year */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Calendar}
           title="First Air Year"

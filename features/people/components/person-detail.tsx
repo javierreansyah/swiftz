@@ -125,7 +125,7 @@ export function PersonDetail({
         {/* Left Column (Desktop 4 cols): Portrait, Socials, Personal Info */}
         <div className="space-y-6 lg:col-span-4 xl:col-span-3">
           {/* Portrait Photo */}
-          <div className="relative aspect-2/3 w-full max-w-xs overflow-hidden rounded-xl border border-border bg-muted shadow-md sm:max-w-sm lg:max-w-none">
+          <div className="relative aspect-2/3 w-full max-w-xs overflow-hidden rounded-xl bg-muted shadow-md sm:max-w-sm lg:max-w-none">
             {profileUrl ? (
               <Image
                 src={profileUrl}
@@ -149,7 +149,7 @@ export function PersonDetail({
                 href={`https://x.com/${externalIds.twitter_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl bg-card text-muted-foreground shadow-xs transition-colors hover:text-primary"
                 aria-label="X / Twitter"
               >
                 <XIcon className="size-4" />
@@ -161,7 +161,7 @@ export function PersonDetail({
                 href={`https://instagram.com/${externalIds.instagram_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl bg-card text-muted-foreground shadow-xs transition-colors hover:text-primary"
                 aria-label="Instagram"
               >
                 <InstagramIcon className="size-4" />
@@ -173,7 +173,7 @@ export function PersonDetail({
                 href={`https://facebook.com/${externalIds.facebook_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl bg-card text-muted-foreground shadow-xs transition-colors hover:text-primary"
                 aria-label="Facebook"
               >
                 <FacebookIcon className="size-4" />
@@ -185,7 +185,7 @@ export function PersonDetail({
                 href={`https://www.imdb.com/name/${person.imdb_id || externalIds.imdb_id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 items-center justify-center rounded-3xl border border-border bg-card px-2.5 text-xs font-black text-primary transition-colors hover:border-primary"
+                className="flex h-9 items-center justify-center rounded-3xl bg-card px-2.5 text-xs font-black text-primary shadow-xs transition-colors hover:text-primary"
                 aria-label="IMDb"
               >
                 IMDb
@@ -197,7 +197,7 @@ export function PersonDetail({
                 href={person.homepage}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex size-9 items-center justify-center rounded-3xl border border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="flex size-9 items-center justify-center rounded-3xl bg-card text-muted-foreground shadow-xs transition-colors hover:text-primary"
                 aria-label="Website"
               >
                 <ExternalLink className="size-4" />
@@ -206,7 +206,7 @@ export function PersonDetail({
           </div>
 
           {/* Personal Info Card */}
-          <div className="space-y-4 rounded-3xl border border-border bg-card p-5">
+          <div className="space-y-4 rounded-3xl bg-card p-5 shadow-md">
             <h2 className="heading-section text-foreground">Personal Info</h2>
 
             <div className="space-y-3 text-xs sm:text-sm">

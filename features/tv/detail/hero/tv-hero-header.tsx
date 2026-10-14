@@ -62,7 +62,7 @@ export function TVHeroHeader({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant="secondary"
               size="default"
               onClick={onRateClick}
               className={`${userRating ? "" : ""}`}
@@ -85,7 +85,7 @@ export function TVHeroHeader({
         </Tooltip>
 
         {/* TMDB Score Badge: ★ 8.9/10 (200K) */}
-        <div className="flex h-9 items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-2 rounded-xl bg-primary/10 px-3.5 text-primary backdrop-blur-sm">
           <Star className="size-4 fill-primary text-primary" />
           <div className="flex items-baseline gap-1">
             <span className="font-bold text-foreground">
@@ -99,7 +99,7 @@ export function TVHeroHeader({
         </div>
 
         {/* Popularity / Trending Badge */}
-        <div className="flex h-9 items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
+        <div className="flex h-9 items-center gap-1.5 rounded-xl bg-background/60 px-3.5 text-sm font-semibold text-muted-foreground backdrop-blur-sm">
           <TrendingUp className="size-4 text-primary" />
           <span>{Math.round(show.popularity)}</span>
         </div>
@@ -107,7 +107,7 @@ export function TVHeroHeader({
         {/* Share button */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon" variant="outline" onClick={onShareClick}>
+            <Button size="icon" variant="secondary" onClick={onShareClick}>
               {copiedShare ? (
                 <Check className="size-3.5 text-success" />
               ) : (

@@ -147,7 +147,7 @@ export function DiscoverSidebar({
   const filterSections = (
     <>
       {/* 1. Sort Section */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader icon={ArrowDownUp} title="Sort Results By" />
         <FilterSelect
           value={pendingFilters.sort_by}
@@ -160,7 +160,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 2. Keywords Search */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Tag}
           title="Keywords"
@@ -206,7 +206,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 3. Genres (Multi-Select using Shadcn Badge pattern) */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Sparkles}
           title="Genres"
@@ -220,7 +220,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 4. Release Year Presets */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader icon={Calendar} title="Release Year" />
         <MultiSelectBadges
           items={RELEASE_PRESET_ITEMS}
@@ -235,7 +235,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 5. Certification (US Content Rating) */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader icon={ShieldCheck} title="Certification (US)" />
         <MultiSelectBadges
           items={CERT_ITEMS}
@@ -250,7 +250,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 6. Original Language */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader icon={Globe} title="Original Language" />
         <FilterSelect
           value={pendingFilters.original_language || "all"}
@@ -263,7 +263,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 7. User Score Slider (0 - 10) */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Star}
           title="User Score"
@@ -294,7 +294,7 @@ export function DiscoverSidebar({
       </div>
 
       {/* 8. Minimum Votes */}
-      <div className="space-y-3 border-b border-border/40 pb-4">
+      <div className="space-y-3">
         <FilterSectionHeader
           icon={Users}
           title="Minimum Votes"
@@ -348,10 +348,10 @@ export function DiscoverSidebar({
                 onClick={() => toggleProvider(provider.id)}
                 title={provider.name}
                 className={cn(
-                  "group relative flex aspect-square flex-col items-center justify-center rounded-xl border p-1 transition-all",
+                  "group relative flex aspect-square flex-col items-center justify-center rounded-xl p-1 shadow-xs transition-all",
                   isSelected
-                    ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary"
-                    : "border-border/60 bg-card hover:border-border hover:bg-muted/50",
+                    ? "bg-primary/10 shadow-sm ring-2 ring-primary"
+                    : "bg-card hover:bg-muted/50",
                 )}
               >
                 <div className="relative size-8 overflow-clip rounded-xl">

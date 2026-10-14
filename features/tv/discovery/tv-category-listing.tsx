@@ -113,7 +113,7 @@ export function TVCategoryListing({
 
           {hasCustomFilters && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               onClick={handleResetFilters}
               className="w-fit"
@@ -240,7 +240,7 @@ export function TVCategoryListing({
           <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
             Try adjusting your genres, rating, or release year filters.
           </p>
-          <Button variant="outline" size="sm" onClick={handleResetFilters}>
+          <Button variant="secondary" size="sm" onClick={handleResetFilters}>
             <RotateCcw className="size-3.5" />
             <span>Reset to Default</span>
           </Button>

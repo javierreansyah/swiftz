@@ -405,7 +405,7 @@ export function HeaderSearch({
                 <div className="py-1">
                   <div className="grid grid-cols-3 gap-2">
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       type="button"
                       onClick={() => {
@@ -418,7 +418,7 @@ export function HeaderSearch({
                       <span>Movies</span>
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       type="button"
                       onClick={() => {
@@ -431,7 +431,7 @@ export function HeaderSearch({
                       <span>TV</span>
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       type="button"
                       onClick={() => {

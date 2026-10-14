@@ -32,7 +32,7 @@ export function MovieReviewsSection({
             <div
               key={rev.id}
               onClick={onOpenReviewsModal}
-              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-3xl border border-border/80 bg-card/70 p-5 transition-all hover:border-primary/40 hover:shadow-xl"
+              className="group flex cursor-pointer flex-col justify-between space-y-3 rounded-3xl bg-card/70 p-5 shadow-xs transition-all hover:shadow-xl"
             >
               <div className="space-y-2.5">
                 {/* Author & Rating Header */}

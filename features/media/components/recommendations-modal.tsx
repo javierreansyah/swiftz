@@ -165,7 +165,7 @@ export function RecommendationsModal({
           {hasMore && (
             <div className="flex justify-center">
               <Button
-                variant="outline"
+                variant="secondary"
                 disabled={isFetching}
                 onClick={() => setPage((prev) => prev + 1)}
               >

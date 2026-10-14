@@ -135,7 +135,7 @@ export function TVSeasonsModal({
       <div className="mx-auto max-w-4xl space-y-8">
         {/* Season Banner Card */}
         {currentSeasonSummary && (
-          <div className="flex flex-col gap-4 rounded-3xl border border-border/70 bg-card/60 p-4 sm:flex-row sm:items-start sm:p-5">
+          <div className="flex flex-col gap-4 rounded-3xl bg-card/60 p-4 shadow-xs sm:flex-row sm:items-start sm:p-5">
             {/* Season Poster */}
             <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden bg-muted sm:w-32">
               {currentSeasonSummary.poster_path ? (
@@ -189,7 +189,7 @@ export function TVSeasonsModal({
               {Array.from({ length: 5 }, (_, i) => (
                 <div
                   key={i}
-                  className="flex flex-col gap-4 rounded-3xl border border-border/60 bg-card/40 p-4 sm:flex-row"
+                  className="flex flex-col gap-4 rounded-3xl bg-card/40 p-4 shadow-xs sm:flex-row"
                 >
                   <Skeleton className="aspect-video w-full sm:w-48" />
                   <div className="flex-1 space-y-2">
@@ -223,7 +223,7 @@ export function TVSeasonsModal({
                 return (
                   <div
                     key={ep.id}
-                    className="overflow-hidden rounded-3xl border border-border/70 bg-card/60 transition-colors hover:border-primary/40"
+                    className="overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-shadow hover:shadow-md"
                   >
                     <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
                       {/* 16:9 Episode Still Image */}

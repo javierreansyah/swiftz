@@ -28,7 +28,7 @@ export function FilterMobileDrawer({
       <Drawer open={isOpen} onOpenChange={setIsOpen} dismissible>
         <DrawerTrigger asChild>
           <Button
-            variant="outline"
+            variant="secondary"
             size="default"
             className="w-full justify-between"
           >

@@ -64,7 +64,7 @@ export function LibraryHeader({
 
         {/* Sign Out Button */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onLogout}>
+          <Button variant="secondary" size="sm" onClick={onLogout}>
             <LogOut className="size-3.5" />
             <span>Sign Out</span>
           </Button>

@@ -47,7 +47,7 @@ export function AuthPromptModal({
             <span>Connect TMDB Account</span>
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             onClick={() => {
               onClose();
               onLoginDemo();

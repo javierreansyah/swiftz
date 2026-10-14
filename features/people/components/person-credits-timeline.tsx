@@ -48,7 +48,7 @@ export function PersonCreditsTimelineLoader({
               <p className="text-sm text-muted-foreground">
                 Unable to load career credits.
               </p>
-              <Button variant="outline" onClick={() => query.refetch()}>
+              <Button variant="secondary" onClick={() => query.refetch()}>
                 Try again
               </Button>
             </div>
@@ -226,9 +226,9 @@ export function PersonCreditsTimeline({
   }, [filteredCredits]);
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-card">
+    <div className="overflow-hidden rounded-3xl bg-card shadow-md">
       {/* Controls Bar / Header: Title, Department Selector, Media Filter, and Search */}
-      <div className="border-b border-border bg-card/60 p-4">
+      <div className="bg-card/60 p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           {/* Tier 1 on mobile: Top Label */}
           <h2 className="heading-section text-foreground">

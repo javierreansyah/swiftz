@@ -198,6 +198,34 @@
 @utility label-section {
   @apply text-xs font-semibold tracking-wider text-muted-foreground uppercase;
 }
+@utility shadow-tactile-primary {
+  box-shadow:
+    inset 0 1.5px 2px 0
+      color-mix(in srgb, var(--primary-foreground) 22%, transparent),
+    inset 0 -2px 3px 0 color-mix(in srgb, var(--color-scrim) 18%, transparent),
+    0 2px 4px -1px color-mix(in srgb, var(--color-scrim) 12%, transparent);
+}
+@utility shadow-tactile-secondary {
+  box-shadow:
+    inset 0 1.5px 2px 0
+      color-mix(in srgb, var(--primary-foreground) 18%, transparent),
+    inset 0 -2px 3px 0 color-mix(in srgb, var(--color-scrim) 10%, transparent),
+    0 2px 4px -1px color-mix(in srgb, var(--color-scrim) 8%, transparent);
+}
+@utility shadow-tactile-destructive {
+  box-shadow:
+    inset 0 1.5px 2px 0
+      color-mix(in srgb, var(--primary-foreground) 22%, transparent),
+    inset 0 -2px 3px 0 color-mix(in srgb, var(--color-scrim) 15%, transparent),
+    0 2px 4px -1px color-mix(in srgb, var(--color-scrim) 10%, transparent);
+}
+@utility shadow-tactile-media {
+  box-shadow:
+    inset 0 1.5px 2px 0
+      color-mix(in srgb, var(--color-media-foreground) 20%, transparent),
+    inset 0 -2px 3px 0 color-mix(in srgb, var(--color-scrim) 28%, transparent),
+    0 2px 4px -1px color-mix(in srgb, var(--color-scrim) 20%, transparent);
+}
 
 @keyframes accordion-down {
   from {

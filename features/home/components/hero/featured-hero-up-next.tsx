@@ -38,7 +38,7 @@ export function FeaturedHeroUpNext({
                 onSelectMovie(idx + 1);
               }
             }}
-            className="group/item relative flex min-h-0 flex-1 cursor-pointer items-stretch overflow-hidden rounded-2xl border border-media-foreground/15 p-2.5 shadow-xl transition-all duration-300 hover:border-primary/50 xl:p-3"
+            className="group/item relative flex min-h-0 flex-1 cursor-pointer items-stretch overflow-hidden rounded-2xl p-2.5 shadow-xl transition-all duration-300 xl:p-3"
           >
             {/* Backdrop as Card Container */}
             <div className="absolute inset-0 z-0 overflow-hidden">
@@ -58,7 +58,7 @@ export function FeaturedHeroUpNext({
             {/* Card Content */}
             <div className="relative z-1 flex size-full items-start gap-3.5 sm:gap-4">
               {/* 2x Enlarged Thumbnail with play overlay */}
-              <div className="relative aspect-2/3 h-full shrink-0 overflow-hidden rounded-xl border border-media-foreground/15 bg-media/80 shadow-lg">
+              <div className="relative aspect-2/3 h-full shrink-0 overflow-hidden rounded-xl bg-media/80 shadow-lg">
                 {itemPoster && (
                   <Image
                     src={itemPoster}

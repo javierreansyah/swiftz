@@ -93,7 +93,7 @@ export function CollectionModal({
       <div className="space-y-6">
         {/* Franchise Spotlight Banner */}
         {backdropUrl && (
-          <div className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/40 p-6 sm:p-8">
+          <div className="relative overflow-hidden rounded-xl bg-muted/40 p-6 shadow-md sm:p-8">
             <div className="absolute inset-0 -z-10">
               <Image
                 src={backdropUrl}
@@ -126,7 +126,7 @@ export function CollectionModal({
             {Array.from({ length: 4 }, (_, i) => (
               <div
                 key={i}
-                className="flex gap-4 border border-border/50 bg-card/40 p-4"
+                className="flex gap-4 rounded-3xl bg-card/40 p-4 shadow-xs"
               >
                 <Skeleton className="h-36 w-24 shrink-0" />
                 <div className="flex-1 space-y-2 py-1">
@@ -173,10 +173,8 @@ export function CollectionModal({
                 <div
                   key={part.id}
                   className={cn(
-                    "group relative flex flex-col justify-between overflow-hidden rounded-3xl border bg-card/60 transition-all hover:shadow-lg",
-                    isCurrent
-                      ? "border-primary/60 bg-primary/5 ring-1 ring-primary/40"
-                      : "border-border/70 hover:border-primary/40",
+                    "group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-all hover:shadow-lg",
+                    isCurrent && "bg-primary/10 ring-2 ring-primary/40",
                   )}
                 >
                   <div className="flex gap-3.5 p-3.5 sm:p-4">
