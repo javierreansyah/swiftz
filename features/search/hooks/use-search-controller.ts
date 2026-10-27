@@ -1,6 +1,5 @@
 "use client";
-import type React from "react";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useClientQueryRouter } from "@/hooks/use-client-query-router";
 import { parsePage } from "@/lib/pagination";
@@ -40,12 +39,6 @@ export function useSearchController() {
     : "movies";
   const pageParam = searchParams.get("page");
   const currentPage = parsePage(pageParam);
-
-  const [inputVal, setInputVal] = useState(rawQuery);
-
-  useEffect(() => {
-    setInputVal(rawQuery);
-  }, [rawQuery]);
 
   // Support year filter shorthand (e.g., "spider man y:2002")
   const { cleanQuery, yearFilter } = useMemo(() => {
@@ -87,16 +80,6 @@ export function useSearchController() {
     currentPage,
   );
   const keywordsQuery = useSearchKeywordsQuery(isKeywords ? cleanQuery : "");
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = inputVal.trim();
-    if (trimmed) {
-      router.push(
-        `/search?q=${encodeURIComponent(trimmed)}&type=${typeParam}&page=1`,
-      );
-    }
-  };
 
   const handleCategoryChange = (newCategory: SearchCategory) => {
     router.push(
@@ -215,10 +198,6 @@ export function useSearchController() {
   return {
     rawQuery,
     typeParam,
-    inputVal,
-    setInputVal,
-    router,
-    handleSearchSubmit,
     handleCategoryChange,
     handlePageChange,
     categories,

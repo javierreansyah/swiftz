@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
 } from "react";
 import type { TMDBAccount } from "@/lib/tmdb/types/account";
 import {
@@ -153,22 +154,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        sessionId,
-        isLoading,
-        isAuthenticated: Boolean(user && sessionId),
-        login,
-        loginDemo,
-        logout,
-        setSessionAndUser,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      sessionId,
+      isLoading,
+      isAuthenticated: Boolean(user && sessionId),
+      login,
+      loginDemo,
+      logout,
+      setSessionAndUser,
+    }),
+    [user, sessionId, isLoading, login, loginDemo, logout, setSessionAndUser],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

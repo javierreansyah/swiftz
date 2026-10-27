@@ -1,7 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
-export function MovieCardSkeleton() {
+import { cn } from "@/lib/utils";
+export function MovieCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className="flex flex-col space-y-3">
+    <div className={cn("flex flex-col space-y-3", className)}>
       <Skeleton className="aspect-2/3 w-full" />
       <div className="space-y-2">
         <Skeleton className="h-4 w-3/4" />

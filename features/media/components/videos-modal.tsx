@@ -111,26 +111,26 @@ export function VideosModal({
     return Object.keys(videoTypeCounts);
   }, [videoTypeCounts]);
 
+  const datedVideos = useMemo(
+    () =>
+      videos.map((video) => ({
+        video,
+        timestamp: new Date(video.published_at || "").getTime(),
+      })),
+    [videos],
+  );
+
   const filteredVideos = useMemo(() => {
-    let list = [...videos];
-    if (videoFilterType !== "all") {
-      list = list.filter((v) => (v.type || "Other") === videoFilterType);
-    }
-    if (videoSort === "date_desc") {
-      list.sort(
-        (a, b) =>
-          new Date(b.published_at || "").getTime() -
-          new Date(a.published_at || "").getTime(),
-      );
-    } else {
-      list.sort(
-        (a, b) =>
-          new Date(a.published_at || "").getTime() -
-          new Date(b.published_at || "").getTime(),
-      );
-    }
-    return list;
-  }, [videos, videoFilterType, videoSort]);
+    const direction = videoSort === "date_desc" ? -1 : 1;
+    return datedVideos
+      .filter(
+        ({ video }) =>
+          videoFilterType === "all" ||
+          (video.type || "Other") === videoFilterType,
+      )
+      .sort((a, b) => direction * (a.timestamp - b.timestamp))
+      .map(({ video }) => video);
+  }, [datedVideos, videoFilterType, videoSort]);
 
   const handleSelectVideo = (video: Video) => {
     setSelectedVideoModal(video);

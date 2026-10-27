@@ -14,7 +14,7 @@ export function SearchCategoryNavigation({
   handleCategoryChange: (category: SearchCategory) => void;
 }) {
   return (
-    <aside className="space-y-3 lg:col-span-4 xl:col-span-3">
+    <aside className="space-y-3 lg:w-60 lg:shrink-0">
       {/* Category Chips / Nav */}
       <div className="flex flex-wrap gap-2 lg:flex-col lg:gap-1.5">
         {categories.map((cat) => {

@@ -25,6 +25,43 @@ const SHELF_IMAGE_SIZES = {
   },
 } as const;
 
+const FALLBACK_ICONS = {
+  movie: Film,
+  tv: Tv,
+  person: User,
+  video: Play,
+  photo: Camera,
+  season: Layers,
+} as const;
+
+const ASPECT_CLASSES = {
+  poster: "aspect-2/3",
+  portrait: "aspect-4/5",
+  video: "aspect-video",
+  square: "aspect-square",
+} as const;
+
+const SHELF_CLASSES = {
+  sm: {
+    poster: "w-32 shrink-0",
+    square: "w-32 shrink-0",
+    portrait: "w-36 shrink-0",
+    video: "w-64 shrink-0",
+  },
+  md: {
+    poster: "w-36 shrink-0 sm:w-60",
+    square: "w-36 shrink-0 sm:w-60",
+    portrait: "w-36 shrink-0 sm:w-44",
+    video: "w-72 shrink-0 sm:w-96",
+  },
+  lg: {
+    poster: "w-48 shrink-0",
+    square: "w-48 shrink-0",
+    portrait: "w-56 shrink-0",
+    video: "w-featured shrink-0",
+  },
+} as const;
+
 export interface MediaCardProps {
   type: MediaCardType;
   id?: string | number;
@@ -79,76 +116,7 @@ export function MediaCard({
         }${image}`
     : null;
 
-  // Placeholder icon by type
-  const renderFallbackIcon = () => {
-    switch (type) {
-      case "person":
-        return <User className="size-10 text-muted-foreground/60" />;
-      case "video":
-        return <Play className="size-10 text-muted-foreground/60" />;
-      case "photo":
-        return <Camera className="size-10 text-muted-foreground/60" />;
-      case "season":
-        return <Layers className="size-10 text-muted-foreground/60" />;
-      case "tv":
-        return <Tv className="size-10 text-muted-foreground/60" />;
-      case "movie":
-      default:
-        return <Film className="size-10 text-muted-foreground/60" />;
-    }
-  };
-
-  // Dimensions based on size and variant
-  // In shelf mode, width is derived from aspect ratio.
-  const getShelfDimensions = () => {
-    switch (size) {
-      case "sm":
-        switch (effectiveAspectRatio) {
-          case "video":
-            return "w-64 shrink-0";
-          case "portrait":
-            return "w-36 shrink-0";
-          case "poster":
-          default:
-            return "w-32 shrink-0";
-        }
-      case "lg":
-        switch (effectiveAspectRatio) {
-          case "video":
-            return "w-featured shrink-0";
-          case "portrait":
-            return "w-56 shrink-0";
-          case "poster":
-          default:
-            return "w-48 shrink-0";
-        }
-      case "md":
-      default:
-        switch (effectiveAspectRatio) {
-          case "video":
-            return "w-72 shrink-0 sm:w-96";
-          case "portrait":
-            return "w-36 shrink-0 sm:w-44";
-          case "poster":
-          default:
-            return "w-36 shrink-0 sm:w-60";
-        }
-    }
-  };
-
-  const getMediaAspectClass = () => {
-    switch (effectiveAspectRatio) {
-      case "video":
-        return "aspect-video";
-      case "portrait":
-        return "aspect-4/5";
-      case "square":
-        return "aspect-square";
-      case "poster":
-      default:
-        return "aspect-2/3";
-    }
-  };
+  const FallbackIcon = FALLBACK_ICONS[type];
 
   const imageSizes =
     sizes ||
@@ -162,7 +130,9 @@ export function MediaCard({
     <div
       className={cn(
         "group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-card/60 font-sans transition-all duration-300 select-none hover:shadow-lg",
-        variant === "shelf" ? getShelfDimensions() : "w-full",
+        variant === "shelf"
+          ? SHELF_CLASSES[size][effectiveAspectRatio]
+          : "w-full",
         (onClick || href) && "cursor-pointer",
         className,
       )}
@@ -171,7 +141,7 @@ export function MediaCard({
       <div
         className={cn(
           "relative w-full overflow-hidden bg-muted",
-          getMediaAspectClass(),
+          ASPECT_CLASSES[effectiveAspectRatio],
         )}
       >
         {imageUrl ? (
@@ -185,7 +155,7 @@ export function MediaCard({
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-secondary">
-            {renderFallbackIcon()}
+            <FallbackIcon className="size-10 text-muted-foreground/60" />
           </div>
         )}
 

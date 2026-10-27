@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
+import { useParallax } from "@/hooks/use-parallax";
 export interface MovieHeroBackdropProps {
   backdropUrl: string;
   alt?: string;
@@ -10,29 +10,7 @@ export function MovieHeroBackdrop({
   backdropUrl,
   alt = "Movie Backdrop",
 }: MovieHeroBackdropProps) {
-  const [offsetY, setOffsetY] = useState(0);
-  const tickingRef = useRef(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!tickingRef.current) {
-        window.requestAnimationFrame(() => {
-          // Parallax motion: translates downward by 38% of scroll,
-          // creating a distinct, elegant lag compared to foreground content
-          setOffsetY(window.scrollY * 0.38);
-          tickingRef.current = false;
-        });
-        tickingRef.current = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const parallaxRef = useParallax();
 
   return (
     <div
@@ -41,12 +19,8 @@ export function MovieHeroBackdrop({
     >
       {/* Parallax Image Wrapper with generous bleed for continuous parallax motion */}
       <div
+        ref={parallaxRef}
         className="absolute -inset-x-12 -top-40 h-362.5 parallax-backdrop will-change-transform"
-        style={
-          {
-            "--parallax-offset": `${offsetY}px`,
-          } as React.CSSProperties
-        }
       >
         <Image
           src={backdropUrl}

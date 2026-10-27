@@ -164,7 +164,7 @@ export function HeaderSearch({
 
       {/* Desktop Live Dropdown Tooltip */}
       {isDropdownOpen && debouncedQuery.length >= 2 && (
-        <div className="absolute inset-x-0 top-12 z-50 hidden overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl md:block">
+        <div className="absolute inset-x-0 top-12 z-50 hidden overflow-hidden rounded-xl bg-popover text-popover-foreground shadow-2xl md:block">
           {isError && searchResults && (
             <QueryFeedback hasData onRetry={() => void refetch()} />
           )}

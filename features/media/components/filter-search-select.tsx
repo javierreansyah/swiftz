@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,6 +35,7 @@ export function FilterSearchSelect({
   minQueryLength = 2,
 }: FilterSearchSelectProps) {
   const [open, setOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const canSearch = query.trim().length >= minQueryLength;
 
   return (
@@ -43,6 +44,7 @@ export function FilterSearchSelect({
         <div className="relative">
           <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
+            ref={inputRef}
             leadingIcon
             type="text"
             value={query}
@@ -59,7 +61,16 @@ export function FilterSearchSelect({
           />
         </div>
       </PopoverAnchor>
-      <PopoverContent surface="command" align="start" aria-label={placeholder}>
+      <PopoverContent
+        surface="command"
+        align="start"
+        aria-label={placeholder}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        onCloseAutoFocus={(event) => event.preventDefault()}
+        onInteractOutside={(event) => {
+          if (event.target === inputRef.current) event.preventDefault();
+        }}
+      >
         <Command shouldFilter={false}>
           <CommandList aria-busy={isLoading}>
             <CommandEmpty>
@@ -71,6 +82,7 @@ export function FilterSearchSelect({
                   <CommandItem
                     key={option.value}
                     value={option.value}
+                    onMouseDown={(event) => event.preventDefault()}
                     onSelect={() => {
                       onSelect(option.value);
                       setOpen(false);

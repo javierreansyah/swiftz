@@ -2,7 +2,7 @@
 import type { Movie } from "@/lib/tmdb/types/movie";
 import type { TVShow } from "@/lib/tmdb/types/tv";
 import { ContentCarousel } from "@/components/common/content-carousel";
-import { MediaCard } from "@/features/media/components/media-card";
+import { CatalogCard } from "@/features/media/components/catalog-card";
 export interface MediaRecommendationsSectionProps {
   items: (Movie | TVShow)[];
   type: "movie" | "tv";
@@ -36,31 +36,9 @@ export function MediaRecommendationsSection({
           : undefined
       }
     >
-      {items.map((item) => {
-        const isMovie = type === "movie";
-        const titleText = isMovie
-          ? (item as Movie).title
-          : (item as TVShow).name;
-        const date = isMovie
-          ? (item as Movie).release_date
-          : (item as TVShow).first_air_date;
-        const year = date ? date.substring(0, 4) : undefined;
-        const href = isMovie ? `/movie/${item.id}` : `/tv/${item.id}`;
-
-        return (
-          <MediaCard
-            key={item.id}
-            type={type}
-            id={item.id}
-            title={titleText}
-            image={item.poster_path}
-            rating={item.vote_average}
-            year={year}
-            href={href}
-            variant="shelf"
-          />
-        );
-      })}
+      {items.map((item) => (
+        <CatalogCard key={item.id} item={item} type={type} />
+      ))}
     </ContentCarousel>
   );
 }

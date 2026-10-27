@@ -2,6 +2,11 @@
 import { useState, useMemo, Fragment } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import {
+  prepareCredits,
+  filterCredits,
+  type UnifiedCreditItem,
+} from "@/features/people/credits";
 import type { PersonCombinedCredits } from "@/lib/tmdb/types/people";
 import { usePersonCombinedCreditsQuery } from "@/features/people/hooks/queries";
 import { useVisible } from "@/hooks/use-visible";
@@ -61,75 +66,14 @@ export function PersonCreditsTimelineLoader({
   );
 }
 
-interface UnifiedCreditItem {
-  id: number;
-  title: string;
-  characterOrJob: string;
-  episodeCount?: number;
-  releaseYear: string | null;
-  releaseYearSortKey: number;
-  mediaType: "movie" | "tv";
-  department: string;
-  rawDate: string;
-}
-
 export function PersonCreditsTimeline({
   credits,
   primaryDepartment = "Acting",
 }: PersonCreditsTimelineProps) {
-  // Normalize Cast and Crew credits into a unified list
-  const allCredits = useMemo<UnifiedCreditItem[]>(() => {
-    const list: UnifiedCreditItem[] = [];
-
-    // Cast entries
-    (credits.cast || []).forEach((c) => {
-      const date = c.release_date || c.first_air_date || "";
-      const year = date ? date.substring(0, 4) : null;
-      const sortKey = year ? parseInt(year, 10) : 9999; // unreleased goes first
-
-      list.push({
-        id: c.id,
-        title: c.title || c.name || "Untitled",
-        characterOrJob: c.character ? `as ${c.character}` : "Cast",
-        episodeCount: c.episode_count,
-        releaseYear: year,
-        releaseYearSortKey: sortKey,
-        mediaType: c.media_type || "movie",
-        department: "Acting",
-        rawDate: date,
-      });
-    });
-
-    // Crew entries
-    (credits.crew || []).forEach((cr) => {
-      const date = cr.release_date || cr.first_air_date || "";
-      const year = date ? date.substring(0, 4) : null;
-      const sortKey = year ? parseInt(year, 10) : 9999;
-
-      list.push({
-        id: cr.id,
-        title: cr.title || cr.name || "Untitled",
-        characterOrJob: cr.job || cr.department || "Crew",
-        episodeCount: cr.episode_count,
-        releaseYear: year,
-        releaseYearSortKey: sortKey,
-        mediaType: cr.media_type || "movie",
-        department: cr.department || "Production",
-        rawDate: date,
-      });
-    });
-
-    return list;
-  }, [credits]);
-
-  // Extract unique departments available for this person
-  const availableDepartments = useMemo(() => {
-    const deps = new Set<string>();
-    allCredits.forEach((c) => {
-      if (c.department) deps.add(c.department);
-    });
-    return Array.from(deps);
-  }, [allCredits]);
+  const { items: allCredits, departments: availableDepartments } = useMemo(
+    () => prepareCredits(credits),
+    [credits],
+  );
 
   // Active filter states
   const [selectedDepartment, setSelectedDepartment] = useState<string>(() => {
@@ -158,42 +102,16 @@ export function PersonCreditsTimeline({
     [availableDepartments],
   );
 
-  // Filter and sort credits
-  const filteredCredits = useMemo(() => {
-    let result = [...allCredits];
-
-    // Department filter
-    if (selectedDepartment && selectedDepartment !== "all") {
-      result = result.filter(
-        (c) => c.department.toLowerCase() === selectedDepartment.toLowerCase(),
-      );
-    }
-
-    // Media type filter
-    if (selectedMediaType !== "all") {
-      result = result.filter((c) => c.mediaType === selectedMediaType);
-    }
-
-    // Search query
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (c) =>
-          c.title.toLowerCase().includes(q) ||
-          c.characterOrJob.toLowerCase().includes(q),
-      );
-    }
-
-    // Sort descending by releaseYearSortKey (unreleased 9999 first, then newest to oldest)
-    result.sort((a, b) => {
-      if (b.releaseYearSortKey !== a.releaseYearSortKey) {
-        return b.releaseYearSortKey - a.releaseYearSortKey;
-      }
-      return b.rawDate.localeCompare(a.rawDate);
-    });
-
-    return result;
-  }, [allCredits, selectedDepartment, selectedMediaType, searchQuery]);
+  const filteredCredits = useMemo(
+    () =>
+      filterCredits(
+        allCredits,
+        selectedDepartment,
+        selectedMediaType,
+        searchQuery,
+      ),
+    [allCredits, selectedDepartment, selectedMediaType, searchQuery],
+  );
 
   // Group sorted credits by release year so the year is only rendered once per group
   interface YearGroup {

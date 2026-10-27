@@ -117,35 +117,20 @@ export function PhotosModal({
     return Object.values(langCounts).sort((a, b) => b.count - a.count);
   }, [allPhotos]);
 
-  const filteredPhotos = useMemo(() => {
-    let list: TypedMovieImage[] = [];
-    if (photoTypeFilter === "all" || photoTypeFilter === "backdrops") {
-      list.push(
-        ...(images?.backdrops || []).map((b) => ({
-          ...b,
-          type: "backdrop" as const,
-        })),
-      );
-    }
-    if (photoTypeFilter === "all" || photoTypeFilter === "posters") {
-      list.push(
-        ...(images?.posters || []).map((p) => ({
-          ...p,
-          type: "poster" as const,
-        })),
-      );
-    }
-
-    if (selectedLanguage !== "all") {
-      if (selectedLanguage === "no_lang") {
-        list = list.filter((p) => !p.iso_639_1);
-      } else {
-        list = list.filter((p) => p.iso_639_1 === selectedLanguage);
-      }
-    }
-
-    return list;
-  }, [images, photoTypeFilter, selectedLanguage]);
+  const filteredPhotos = useMemo(
+    () =>
+      allPhotos.filter(
+        (photo) =>
+          (photoTypeFilter === "all" ||
+            photo.type ===
+              (photoTypeFilter === "backdrops" ? "backdrop" : "poster")) &&
+          (selectedLanguage === "all" ||
+            (selectedLanguage === "no_lang"
+              ? !photo.iso_639_1
+              : photo.iso_639_1 === selectedLanguage)),
+      ),
+    [allPhotos, photoTypeFilter, selectedLanguage],
+  );
 
   const [activePhotoIdx, setActivePhotoIdx] = useState(
     initialPhotoIndex !== undefined ? initialPhotoIndex : 0,

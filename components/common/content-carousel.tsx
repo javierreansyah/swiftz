@@ -55,16 +55,24 @@ export function ContentCarousel({
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
+    let frame: number | undefined;
+    const scheduleUpdate = () => {
+      frame ??= requestAnimationFrame(() => {
+        updateEdges();
+        frame = undefined;
+      });
+    };
     updateEdges();
-    el.addEventListener("scroll", updateEdges, { passive: true });
-    const resizeObserver = new ResizeObserver(updateEdges);
+    el.addEventListener("scroll", scheduleUpdate, { passive: true });
+    const resizeObserver = new ResizeObserver(scheduleUpdate);
     resizeObserver.observe(el);
-    const mutationObserver = new MutationObserver(updateEdges);
+    const mutationObserver = new MutationObserver(scheduleUpdate);
     mutationObserver.observe(el, { childList: true });
     return () => {
-      el.removeEventListener("scroll", updateEdges);
+      el.removeEventListener("scroll", scheduleUpdate);
       resizeObserver.disconnect();
       mutationObserver.disconnect();
+      if (frame !== undefined) cancelAnimationFrame(frame);
     };
   }, [updateEdges]);
 

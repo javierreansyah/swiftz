@@ -22,12 +22,7 @@ export function HomeShelfLoading({
         )
       ) : (
         Array.from({ length: 5 }, (_, index) => (
-          <div
-            key={index}
-            className="h-hero-md w-36 shrink-0 sm:h-hero-xl sm:w-60"
-          >
-            <Skeleton className="size-full" />
-          </div>
+          <Skeleton key={index} variant="shelf" />
         ))
       )}
     </ContentCarousel>

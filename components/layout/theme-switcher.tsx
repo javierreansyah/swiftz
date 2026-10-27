@@ -21,7 +21,7 @@ interface ThemeSwitcherProps {
     | null;
 }
 
-export function ThemeSwitcher({ variant = "ghost" }: ThemeSwitcherProps) {
+export function ThemeSwitcher({ variant = "secondary" }: ThemeSwitcherProps) {
   const { setTheme } = useTheme();
 
   return (

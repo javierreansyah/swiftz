@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import { TrailerModal } from "@/components/common/trailer-modal";
 import { useAuth } from "@/features/auth/auth-provider";
@@ -24,8 +24,6 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
         : [...previous, selectedIndex],
     );
   }, [selectedIndex]);
-  const [offsetY, setOffsetY] = useState(0);
-  const tickingRef = useRef(false);
   const [trailerModal, setTrailerModal] = useState<{
     isOpen: boolean;
     mediaId: number;
@@ -39,26 +37,6 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
   const { isAuthenticated, sessionId, user } = useAuth();
 
   const activeMovie = movies[selectedIndex] || movies[0];
-
-  // Parallax scroll matching Movie detail page
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!tickingRef.current) {
-        window.requestAnimationFrame(() => {
-          setOffsetY(window.scrollY * 0.38);
-          tickingRef.current = false;
-        });
-        tickingRef.current = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   // Watchlist status for active movie
   const { data: accountStates } = useMediaAccountStatesQuery(
@@ -121,7 +99,6 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
         movies={movies}
         selectedIndex={selectedIndex}
         loadedIndices={loadedIndices}
-        offsetY={offsetY}
       />
 
       {/* 2. Main Foreground Banner Grid */}

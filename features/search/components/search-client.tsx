@@ -1,6 +1,5 @@
 "use client";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { useSearchController } from "@/features/search/hooks/use-search-controller";
 import { SearchCategoryNavigation } from "@/features/search/components/search-category-navigation";
@@ -11,10 +10,6 @@ export function SearchClient() {
   const {
     rawQuery,
     typeParam,
-    inputVal,
-    setInputVal,
-    router,
-    handleSearchSubmit,
     handleCategoryChange,
     handlePageChange,
     categories,
@@ -26,29 +21,7 @@ export function SearchClient() {
   } = useSearchController();
   return (
     <main className="container min-h-screen space-y-3 pt-20 pb-12 sm:space-y-6">
-      {/* Top Search Bar */}
-      <form
-        onSubmit={handleSearchSubmit}
-        className="relative flex w-full items-center"
-      >
-        <Search className="pointer-events-none absolute left-3 size-5 text-muted-foreground" />
-        <Input
-          leadingIcon
-          type="search"
-          value={inputVal}
-          onChange={(e) => {
-            setInputVal(e.target.value);
-            if (!e.target.value) {
-              router.push("/search");
-            }
-          }}
-          placeholder="Search movies, TV shows, people, collections..."
-        />
-      </form>
-
-      {/* Main Two-Column Layout matching Reference 3 */}
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-10">
-        {/* Left Sidebar (Desktop 4 cols) / Top Pills (Mobile) */}
+      <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:gap-10">
         <SearchCategoryNavigation
           categories={categories}
           typeParam={typeParam}
@@ -56,7 +29,7 @@ export function SearchClient() {
         />
 
         {/* Right Content Column */}
-        <section className="min-w-0 flex-1 space-y-6 lg:col-span-8 xl:col-span-9">
+        <section className="min-w-0 flex-1 space-y-6">
           {activeQuery?.isError && (
             <QueryFeedback
               hasData={Boolean(activeQuery.data)}
@@ -68,7 +41,7 @@ export function SearchClient() {
               <Search className="size-10 text-muted-foreground" />
               <h2 className="heading-section">Search Swiftz</h2>
               <p className="text-xs text-muted-foreground">
-                Enter a title, actor, or keyword in the box above to explore
+                Enter a title, actor, or keyword in the header search to explore
                 movies, TV shows, and celebrities.
               </p>
             </div>

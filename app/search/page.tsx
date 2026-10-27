@@ -14,10 +14,9 @@ export default function SearchPage() {
     <Suspense
       fallback={
         <main className="container min-h-screen space-y-8 py-20">
-          <div className="h-12 w-full animate-pulse rounded-xl bg-secondary" />
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div className="h-72 w-full animate-pulse rounded-xl bg-secondary lg:col-span-4" />
-            <div className="h-72 w-full animate-pulse rounded-xl bg-secondary lg:col-span-8" />
+          <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:gap-10">
+            <div className="h-72 w-full animate-pulse rounded-xl bg-secondary lg:w-60 lg:shrink-0" />
+            <div className="h-72 min-w-0 animate-pulse rounded-xl bg-secondary lg:flex-1" />
           </div>
         </main>
       }

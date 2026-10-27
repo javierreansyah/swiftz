@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { usePathname } from "next/navigation";
 interface MovieNavContextType {
   isOpen: boolean;
@@ -27,20 +34,23 @@ export function MovieNavProvider({ children }: { children: React.ReactNode }) {
     }
   }, [pathname]);
 
-  const toggle = () => setIsOpen((prev) => !prev);
-  const close = () => setIsOpen(false);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  const value = useMemo(
+    () => ({
+      isOpen,
+      setIsOpen,
+      toggle,
+      close,
+      isAvailable,
+      setIsAvailable,
+    }),
+    [isOpen, toggle, close, isAvailable],
+  );
 
   return (
-    <MovieNavContext.Provider
-      value={{
-        isOpen,
-        setIsOpen,
-        toggle,
-        close,
-        isAvailable,
-        setIsAvailable,
-      }}
-    >
+    <MovieNavContext.Provider value={value}>
       {children}
     </MovieNavContext.Provider>
   );

@@ -1,21 +1,20 @@
 "use client";
-import React from "react";
 import Image from "@/components/ui/image";
+import { useParallax } from "@/hooks/use-parallax";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import { cn } from "@/lib/utils";
 export interface FeaturedHeroBackdropProps {
   movies: Movie[];
   selectedIndex: number;
   loadedIndices: number[];
-  offsetY: number;
 }
 
 export function FeaturedHeroBackdrop({
   movies,
   selectedIndex,
   loadedIndices,
-  offsetY,
 }: FeaturedHeroBackdropProps) {
+  const parallaxRef = useParallax();
   return (
     <div
       aria-hidden="true"
@@ -23,12 +22,8 @@ export function FeaturedHeroBackdrop({
     >
       {/* Parallax Image Wrapper with generous bleed for continuous motion */}
       <div
+        ref={parallaxRef}
         className="absolute -inset-x-12 -top-40 h-362.5 parallax-backdrop will-change-transform"
-        style={
-          {
-            "--parallax-offset": `${offsetY}px`,
-          } as React.CSSProperties
-        }
       >
         {movies.slice(0, 8).map((movie, index) => {
           const isSelected = index === selectedIndex;
