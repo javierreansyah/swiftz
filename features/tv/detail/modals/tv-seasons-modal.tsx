@@ -18,6 +18,7 @@ import { FilterSelect } from "@/features/media/components/filter-sidebar-primiti
 import type { TVShowDetailsData, TVSeason } from "@/lib/tmdb/types/tv";
 import { useTVSeasonQuery } from "@/features/tv/hooks/queries";
 import { cn } from "@/lib/utils";
+import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVSeasonsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -53,11 +54,12 @@ export function TVSeasonsModal({
     }
   }, [initialSeasonNumber]);
 
-  const { data: seasonDetails, isLoading } = useTVSeasonQuery(
-    show.id,
-    activeSeasonNumber,
-    isOpen,
-  );
+  const {
+    data: seasonDetails,
+    isLoading,
+    isError,
+    refetch,
+  } = useTVSeasonQuery(show.id, activeSeasonNumber, isOpen);
 
   const toggleEpisodeExpand = (episodeId: number) => {
     setExpandedEpisodes((prev) => ({
@@ -184,6 +186,12 @@ export function TVSeasonsModal({
             Episodes ({isLoading ? "Loading..." : episodes.length})
           </h3>
 
+          {isError && (
+            <QueryFeedback
+              hasData={Boolean(seasonDetails)}
+              onRetry={() => void refetch()}
+            />
+          )}
           {isLoading ? (
             <div className="space-y-4">
               {Array.from({ length: 5 }, (_, i) => (
@@ -200,7 +208,7 @@ export function TVSeasonsModal({
                 </div>
               ))}
             </div>
-          ) : episodes.length === 0 ? (
+          ) : isError && !seasonDetails ? null : episodes.length === 0 ? (
             <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground">
               No episode data available for this season.
             </div>

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { type ReactNode, useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
 import {
   Share2,
@@ -16,6 +16,7 @@ import { DetailBottomSheet } from "@/features/media/components/detail-bottom-she
 import { MediaCard } from "@/features/media/components/media-card";
 import { cn } from "@/lib/utils";
 export interface VideosModalProps {
+  loadError?: ReactNode;
   isOpen: boolean;
   onClose: () => void;
   movie?: {
@@ -35,6 +36,7 @@ export interface VideosModalProps {
 }
 
 export function VideosModal({
+  loadError,
   isOpen,
   onClose,
   movie,
@@ -319,7 +321,9 @@ export function VideosModal({
       mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >
-      {viewMode === "showcase" && selectedVideoModal ? (
+      {loadError}
+      {loadError && videos.length === 0 ? null : viewMode === "showcase" &&
+        selectedVideoModal ? (
         /* Showcase Player View: Stage + Identical Height Bottom Filmstrip */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Video Player Stage */}

@@ -21,7 +21,7 @@ export function useMediaActions({
   onRate?: () => void;
   authMode?: "prompt" | "login";
 }) {
-  const { user, sessionId, isAuthenticated, login, loginDemo } = useAuth();
+  const { user, sessionId, isAuthenticated, login } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const toggleFavorite = useFavoriteMutation(type);
   const toggleWatchlist = useWatchlistMutation(type);
@@ -36,12 +36,13 @@ export function useMediaActions({
 
   function handleWatchlistClick() {
     const session = authorize();
-    if (session)
+    if (session && !toggleWatchlist.isPending)
       toggleWatchlist.mutate({ ...session, watchlist: !isWatchlist });
   }
   function handleFavoriteClick() {
     const session = authorize();
-    if (session) toggleFavorite.mutate({ ...session, favorite: !isFavorite });
+    if (session && !toggleFavorite.isPending)
+      toggleFavorite.mutate({ ...session, favorite: !isFavorite });
   }
   function handleRateClick() {
     if (authorize()) onRate?.();
@@ -56,6 +57,5 @@ export function useMediaActions({
     showAuthModal,
     setShowAuthModal,
     login,
-    loginDemo,
   };
 }

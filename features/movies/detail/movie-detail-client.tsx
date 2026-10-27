@@ -13,7 +13,8 @@ import { useVisible } from "@/hooks/use-visible";
 import { useAuth } from "@/features/auth/auth-provider";
 import { MovieHero } from "@/features/movies/detail/hero/movie-hero";
 import { MovieHeroBackdrop } from "@/features/movies/detail/hero/movie-hero-backdrop";
-import { MovieRatingDialog } from "@/features/movies/detail/hero/movie-rating-dialog";
+import { QueryFeedback } from "@/features/media/components/query-feedback";
+import { MediaRatingDialog } from "@/features/media/components/media-rating-dialog";
 import {
   type ModalType,
   MovieBottomModals,
@@ -50,17 +51,21 @@ export function MovieDetailClient({
   const recommendationsSection = useVisible();
 
   // Hero resources are client-fetched; heavier galleries are fetched on visibility/open.
-  const { data: creditsData } = useMovieCastQuery(String(movie.id));
-  const { data: videoData } = useMovieVideosQuery(movie.id);
-  const { data: imagesData } = useMovieImagesQuery(
+  const creditsQuery = useMovieCastQuery(String(movie.id));
+  const videoQuery = useMovieVideosQuery(movie.id);
+  const imagesQuery = useMovieImagesQuery(
     movie.id,
     photosSection.visible || activeModal === "photos",
   );
-  const { data: recommendationsData } = useMovieRecommendationsQuery(
+  const recommendationsQuery = useMovieRecommendationsQuery(
     String(movie.id),
     1,
     recommendationsSection.visible || activeModal === "recommendations",
   );
+  const creditsData = creditsQuery.data;
+  const videoData = videoQuery.data;
+  const recommendationsData = recommendationsQuery.data;
+  const imagesData = imagesQuery.data;
   const cast = creditsData?.cast || [];
   const crew = creditsData?.crew || [];
   const videos = videoData?.results || [];
@@ -72,9 +77,16 @@ export function MovieDetailClient({
   };
   const recommendations = recommendationsData?.results || [];
 
-  const { sessionId } = useAuth();
-  const { data: accountStates, refetch: refetchStates } =
-    useMediaAccountStatesQuery("movie", movie.id, sessionId);
+  const { sessionId, isAuthenticated, login } = useAuth();
+  function handleOpenRating() {
+    if (isAuthenticated) setShowRatingModal(true);
+    else void login();
+  }
+  const { data: accountStates } = useMediaAccountStatesQuery(
+    "movie",
+    movie.id,
+    sessionId,
+  );
 
   const userRating =
     typeof accountStates?.rated === "object" && accountStates?.rated !== null
@@ -84,13 +96,33 @@ export function MovieDetailClient({
         : null;
 
   // Client query for reviews count & sample
-  const { data: reviewsData } = useMovieReviewsQuery(
+  const reviewsQuery = useMovieReviewsQuery(
     movie.id,
     1,
     reviewsSection.visible || activeModal === "reviews",
   );
+  const reviewsData = reviewsQuery.data;
   const reviews = reviewsData?.results || [];
   const totalReviews = reviewsData?.total_results || reviews.length;
+
+  const castError = creditsQuery.isError && (
+    <QueryFeedback
+      hasData={Boolean(creditsQuery.data)}
+      onRetry={() => void creditsQuery.refetch()}
+    />
+  );
+  const videosError = videoQuery.isError && (
+    <QueryFeedback
+      hasData={Boolean(videoQuery.data)}
+      onRetry={() => void videoQuery.refetch()}
+    />
+  );
+  const photosError = imagesQuery.isError && (
+    <QueryFeedback
+      hasData={Boolean(imagesQuery.data)}
+      onRetry={() => void imagesQuery.refetch()}
+    />
+  );
 
   const handleOpenPhoto = (index?: number) => {
     setInitialPhotoIndex(index);
@@ -143,7 +175,7 @@ export function MovieDetailClient({
                 reviewCount={totalReviews}
                 onOpenModal={handleOpenModal}
                 onOpenPerson={handleOpenPerson}
-                onOpenRating={() => setShowRatingModal(true)}
+                onOpenRating={handleOpenRating}
               />
             </div>
 
@@ -154,11 +186,11 @@ export function MovieDetailClient({
                 movieId={movie.id}
                 movieTitle={movie.title}
                 hasCollection={Boolean(movie.belongs_to_collection)}
-                onOpenModal={handleOpenModal}
-                onOpenRating={() => setShowRatingModal(true)}
+                onOpenRating={handleOpenRating}
               />
             </div>
 
+            {castError}
             {/* 2. Cast Excerpt */}
             <MovieCastSection
               cast={cast}
@@ -166,6 +198,7 @@ export function MovieDetailClient({
               onSelectPerson={handleOpenPerson}
             />
 
+            {videosError}
             {/* 3. Videos Excerpt */}
             <MovieVideosSection
               videos={videos}
@@ -174,6 +207,7 @@ export function MovieDetailClient({
 
             {/* 4. Photos Excerpt */}
             <div ref={photosSection.ref}>
+              {photosError}
               <MoviePhotosSection
                 movieTitle={movie.title}
                 images={images}
@@ -183,6 +217,12 @@ export function MovieDetailClient({
 
             {/* 5. Reviews Excerpt */}
             <div ref={reviewsSection.ref}>
+              {reviewsQuery.isError && (
+                <QueryFeedback
+                  hasData={Boolean(reviewsQuery.data)}
+                  onRetry={() => void reviewsQuery.refetch()}
+                />
+              )}
               <MovieReviewsSection
                 reviews={reviews}
                 totalReviews={totalReviews}
@@ -200,6 +240,12 @@ export function MovieDetailClient({
 
             {/* 7. Recommendations / Related */}
             <div ref={recommendationsSection.ref}>
+              {recommendationsQuery.isError && (
+                <QueryFeedback
+                  hasData={Boolean(recommendationsQuery.data)}
+                  onRetry={() => void recommendationsQuery.refetch()}
+                />
+              )}
               {recommendations.length > 0 ? (
                 <MovieRecommendationsSection
                   movies={recommendations}
@@ -225,8 +271,7 @@ export function MovieDetailClient({
               movieId={movie.id}
               movieTitle={movie.title}
               hasCollection={Boolean(movie.belongs_to_collection)}
-              onOpenModal={handleOpenModal}
-              onOpenRating={() => setShowRatingModal(true)}
+              onOpenRating={handleOpenRating}
             />
           </aside>
         </div>
@@ -234,6 +279,9 @@ export function MovieDetailClient({
 
       {/* Bottom Modals (Reviews, Videos, Photos, Cast) */}
       <MovieBottomModals
+        castError={castError}
+        videosError={videosError}
+        photosError={photosError}
         activeModal={activeModal}
         onClose={() => setActiveModal(null)}
         movie={movie}
@@ -247,18 +295,15 @@ export function MovieDetailClient({
       />
 
       {/* Unified Rating Dialog */}
-      <MovieRatingDialog
+      <MediaRatingDialog
+        mediaType="movie"
         isOpen={showRatingModal}
         onClose={() => setShowRatingModal(false)}
-        movieId={movie.id}
-        movieTitle={movie.title}
+        mediaId={movie.id}
+        title={movie.title}
         sessionId={sessionId}
         currentRating={userRating}
-        onSuccess={() => refetchStates()}
       />
     </div>
   );
 }
-
-// Backward-compatible alias
-export const MoviePageClient = MovieDetailClient;

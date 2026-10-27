@@ -7,7 +7,6 @@ import { useMediaAccountStatesQuery } from "@/features/auth/hooks/queries";
 import { MovieHeroHeader } from "@/features/movies/detail/hero/movie-hero-header";
 import { MovieHeroMedia } from "@/features/movies/detail/hero/movie-hero-media";
 import { MovieHeroActions } from "@/features/movies/detail/hero/movie-hero-actions";
-import { MovieRatingDialog } from "@/features/movies/detail/hero/movie-rating-dialog";
 export interface MovieHeroProps {
   movie: MovieDetailsData;
   certification?: string;
@@ -17,7 +16,7 @@ export interface MovieHeroProps {
   reviewCount?: number;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
   onOpenPerson: (personId: number) => void;
-  onOpenRating?: () => void;
+  onOpenRating: () => void;
 }
 
 export function MovieHero({
@@ -32,18 +31,9 @@ export function MovieHero({
   onOpenRating,
 }: MovieHeroProps) {
   const { sessionId } = useAuth();
-  const [showRatingModal, setShowRatingModal] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
 
-  const handleRateOpen = () => {
-    if (onOpenRating) {
-      onOpenRating();
-    } else {
-      setShowRatingModal(true);
-    }
-  };
-
-  const { data: states, refetch: refetchStates } = useMediaAccountStatesQuery(
+  const { data: states } = useMediaAccountStatesQuery(
     "movie",
     movie.id,
     sessionId,
@@ -113,7 +103,7 @@ export function MovieHero({
         releaseYear={releaseYear}
         runtimeFormatted={runtimeFormatted}
         userRating={userRating}
-        onRateClick={handleRateOpen}
+        onRateClick={onOpenRating}
         onShareClick={handleShareClick}
         copiedShare={copiedShare}
       />
@@ -136,19 +126,9 @@ export function MovieHero({
         userRating={userRating}
         onOpenModal={onOpenModal}
         onOpenPerson={onOpenPerson}
-        onOpenRating={handleRateOpen}
+        onOpenRating={onOpenRating}
         onShareClick={handleShareClick}
         copiedShare={copiedShare}
-      />
-
-      <MovieRatingDialog
-        isOpen={showRatingModal}
-        onClose={() => setShowRatingModal(false)}
-        movieId={movie.id}
-        movieTitle={movie.title}
-        sessionId={sessionId}
-        currentRating={userRating}
-        onSuccess={() => refetchStates()}
       />
     </div>
   );

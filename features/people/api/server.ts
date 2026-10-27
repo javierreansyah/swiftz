@@ -8,8 +8,6 @@ import type {
   PersonExternalIds,
 } from "@/lib/tmdb/types/people";
 import { fetchTMDB } from "@/lib/tmdb/server";
-import "server-only";
-
 export async function getPopularPeople(
   page: number = 1,
 ): Promise<PopularPeopleData> {
@@ -33,19 +31,3 @@ export const getPersonDetails = cache(
     );
   },
 );
-
-export async function getPersonCombinedCredits(
-  id: string,
-): Promise<PersonCombinedCredits> {
-  return fetchTMDB<PersonCombinedCredits>(
-    `/person/${id}/combined_credits`,
-    {},
-    604800,
-  );
-}
-
-export async function getPersonExternalIds(
-  id: string,
-): Promise<PersonExternalIds> {
-  return fetchTMDB<PersonExternalIds>(`/person/${id}/external_ids`, {}, 604800);
-}

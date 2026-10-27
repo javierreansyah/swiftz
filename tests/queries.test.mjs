@@ -109,6 +109,52 @@ test("search counts reuse first-page results instead of refetching them", async 
   assert.equal(endpoints.length, 6);
 });
 
+test("movie year searches filter at TMDB and isolate pages and count caches", async (t) => {
+  const cache = client(t);
+  const requests = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    const request = new URL(url);
+    requests.push(request);
+    const year = request.searchParams.get("primary_release_year");
+    return Response.json({
+      page: Number(request.searchParams.get("page") || 1),
+      results: [{ id: 42, release_date: `${year || "2026"}-01-01` }],
+      total_pages: year ? 2 : 10,
+      total_results: year ? 21 : 200,
+    });
+  });
+  await cache.fetchQuery(searchMoviesOptions("spider man", 1));
+  const filtered = await cache.fetchQuery(
+    searchMoviesOptions("spider man", 1, "2002"),
+  );
+  const second = await cache.fetchQuery(
+    searchMoviesOptions("spider man", 2, "2002"),
+  );
+  const counts = await cache.fetchQuery(
+    searchTypeCountsOptions(cache, "spider man", "2002"),
+  );
+  assert.equal(filtered.results[0].release_date, "2002-01-01");
+  assert.equal(second.page, 2);
+  assert.equal(counts.movies, 21);
+  const movies = requests.filter((url) =>
+    url.pathname.endsWith("/search/movie"),
+  );
+  assert.equal(movies.length, 3);
+  assert.deepEqual(
+    movies.map((url) => url.searchParams.get("primary_release_year")),
+    [null, "2002", "2002"],
+  );
+  assert.deepEqual(queryKeys.searchMovies("spider man", 1), [
+    "search-movies",
+    "spider man",
+    1,
+  ]);
+  assert.notDeepEqual(
+    queryKeys.searchCounts("spider man"),
+    queryKeys.searchCounts("spider man", "2002"),
+  );
+});
+
 test("query cancellation reaches detail fetches", async (t) => {
   const cache = client(t);
   let receivedSignal;

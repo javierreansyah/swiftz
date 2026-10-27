@@ -1,5 +1,5 @@
 "use client";
-import { LogIn, Sparkles } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,6 @@ export interface AuthPromptModalProps {
   onClose: () => void;
   title: string;
   onLogin: () => void;
-  onLoginDemo: () => void;
 }
 
 export function AuthPromptModal({
@@ -20,7 +19,6 @@ export function AuthPromptModal({
   onClose,
   title,
   onLogin,
-  onLoginDemo,
 }: AuthPromptModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -45,17 +43,6 @@ export function AuthPromptModal({
           >
             <LogIn className="size-4" />
             <span>Connect TMDB Account</span>
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              onClose();
-              onLoginDemo();
-            }}
-            className="w-full"
-          >
-            <Sparkles className="size-3.5 text-primary" />
-            <span>Try Demo Account (Instant Preview)</span>
           </Button>
         </div>
       </DialogContent>

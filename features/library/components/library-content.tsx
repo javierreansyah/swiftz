@@ -32,7 +32,6 @@ export function LibraryContent() {
     isAuthenticated,
     isLoading: isLoadingAuth,
     login,
-    loginDemo,
     logout,
   } = useAuth();
 
@@ -95,7 +94,7 @@ export function LibraryContent() {
   }
 
   if (!isAuthenticated || !user) {
-    return <LibraryUnauthenticated onLogin={login} onLoginDemo={loginDemo} />;
+    return <LibraryUnauthenticated onLogin={login} />;
   }
 
   let avatarUrl: string | null = null;

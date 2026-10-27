@@ -1,3 +1,6 @@
+"use client";
+import { useState } from "react";
+import { CollectionModal } from "@/features/movies/detail/modals/collection-modal";
 import Image from "@/components/ui/image";
 import Link from "next/link";
 import { Tag, Building } from "lucide-react";
@@ -60,20 +63,38 @@ function CollectionSearchResults({
 }: {
   items: SearchCollectionItem[];
 }) {
+  const [selectedCollection, setSelectedCollection] =
+    useState<SearchCollectionItem | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-      {collections.map((col) => (
-        <MediaCard
-          key={col.id}
-          type="movie"
-          id={col.id}
-          title={col.name}
-          image={col.poster_path}
-          subtitle="Collection"
-          variant="grid"
+    <>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+        {collections.map((col) => (
+          <MediaCard
+            key={col.id}
+            type="movie"
+            id={col.id}
+            title={col.name}
+            image={col.poster_path}
+            subtitle="Collection"
+            onClick={() => {
+              setSelectedCollection(col);
+              setIsOpen(true);
+            }}
+            variant="grid"
+          />
+        ))}
+      </div>
+      {selectedCollection && (
+        <CollectionModal
+          key={selectedCollection.id}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          collectionId={selectedCollection.id}
+          collectionName={selectedCollection.name}
         />
-      ))}
-    </div>
+      )}
+    </>
   );
 }
 

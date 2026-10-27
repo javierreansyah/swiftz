@@ -11,10 +11,7 @@ export interface TVQuickRailProps {
   tvId: number;
   showTitle?: string;
   showName?: string;
-  onOpenModal: (
-    modal: "reviews" | "videos" | "photos" | "cast" | "seasons",
-  ) => void;
-  onOpenRating?: () => void;
+  onOpenRating: () => void;
   mode?: "all" | "desktop" | "mobile";
   className?: string;
 }
@@ -23,7 +20,6 @@ export function TVQuickRail({
   tvId,
   showTitle,
   showName,
-  onOpenModal,
   onOpenRating,
   mode = "all",
   className,
@@ -50,21 +46,15 @@ export function TVQuickRail({
     toggleWatchlist,
     handleWatchlistClick: handleWatchlist,
     handleFavoriteClick: handleFavorite,
+    handleRateClick,
   } = useMediaActions({
     type: "tv",
     mediaId: tvId,
     isFavorite,
     isWatchlist,
     authMode: "login",
+    onRate: onOpenRating,
   });
-
-  const handleRateClick = () => {
-    if (onOpenRating) {
-      onOpenRating();
-    } else {
-      onOpenModal("reviews");
-    }
-  };
 
   const sections: QuickRailSectionItem[] = [
     { id: "section-overview", label: "Overview", icon: Tv },
@@ -82,6 +72,7 @@ export function TVQuickRail({
       isWatchlist={isWatchlist}
       isFavorite={isFavorite}
       userRating={userRating}
+      actionError={toggleFavorite.isError || toggleWatchlist.isError}
       isWatchlistPending={toggleWatchlist.isPending}
       isFavoritePending={toggleFavorite.isPending}
       onToggleWatchlist={handleWatchlist}

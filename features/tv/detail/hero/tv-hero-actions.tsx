@@ -17,6 +17,7 @@ import { WatchlistDropdown } from "@/features/auth/components/watchlist-dropdown
 import { AuthPromptModal } from "@/features/auth/components/auth-prompt-modal";
 import { formatNumberShort } from "@/lib/format";
 import { useMediaActions } from "@/features/auth/hooks/use-media-actions";
+import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { cn } from "@/lib/utils";
 
 export interface TVHeroActionsProps {
@@ -48,13 +49,13 @@ export function TVHeroActions({
 }: TVHeroActionsProps) {
   const {
     toggleWatchlist,
+    toggleFavorite,
     handleWatchlistClick,
     handleFavoriteClick,
     handleRateClick,
     showAuthModal,
     setShowAuthModal,
     login,
-    loginDemo,
   } = useMediaActions({
     type: "tv",
     mediaId: show.id,
@@ -88,10 +89,7 @@ export function TVHeroActions({
             ) : (
               <Bookmark className="size-3.5 fill-current" />
             )}
-            <span>
-              {formatNumberShort(show.vote_count * 2)} ·{" "}
-              {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
-            </span>
+            <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
           </Button>
 
           {/* Favorite Button */}
@@ -99,6 +97,7 @@ export function TVHeroActions({
             size="sm"
             variant={isFavorite ? "default" : "secondary"}
             onClick={handleFavoriteClick}
+            disabled={toggleFavorite.isPending}
             className="shrink-0 snap-start"
           >
             <Heart
@@ -116,7 +115,7 @@ export function TVHeroActions({
           <Button
             variant="secondary"
             size="sm"
-            onClick={onOpenRating}
+            onClick={handleRateClick}
             className="shrink-0 snap-start"
           >
             <Star
@@ -388,7 +387,6 @@ export function TVHeroActions({
               isFavorite={isFavorite}
               userRating={userRating}
               isPendingWatchlist={toggleWatchlist.isPending}
-              voteCountFormatted={formatNumberShort(show.vote_count * 2)}
               mediaTypeLabel="Series"
               onWatchlistClick={handleWatchlistClick}
               onFavoriteClick={handleFavoriteClick}
@@ -399,13 +397,16 @@ export function TVHeroActions({
         </div>
       </div>
 
+      <SaveFeedback
+        isError={toggleFavorite.isError || toggleWatchlist.isError}
+      />
+
       {/* AUTH PROMPT MODAL */}
       <AuthPromptModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         title={show.name}
         onLogin={login}
-        onLoginDemo={loginDemo}
       />
     </>
   );

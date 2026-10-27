@@ -56,11 +56,18 @@ export function hasTVFilters(
   filters: TVFilterState,
   defaults = DEFAULT_TV_FILTERS,
 ) {
+  return countTVFilters(filters, defaults) > 0;
+}
+
+export function countTVFilters(
+  filters: TVFilterState,
+  defaults = DEFAULT_TV_FILTERS,
+) {
   return (
-    filters.sort_by !== defaults.sort_by ||
-    filters.with_genres.length > 0 ||
-    Boolean(filters.first_air_date_year) ||
-    filters.vote_average_gte > 0
+    Number(filters.sort_by !== defaults.sort_by) +
+    filters.with_genres.length +
+    Number(Boolean(filters.first_air_date_year)) +
+    Number(filters.vote_average_gte > 0)
   );
 }
 

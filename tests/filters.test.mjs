@@ -11,6 +11,8 @@ import { DEFAULT_TV_FILTERS } from "../features/tv/discovery/types.ts";
 import {
   parseTVFilters,
   serializeTVFilters,
+  countTVFilters,
+  hasTVFilters,
 } from "../features/tv/discovery/filter-utils.ts";
 
 test("movie filter URLs round trip existing keys and encoded keyword names", () => {
@@ -98,4 +100,36 @@ test("TV URLs preserve their domain keys, defaults, and rating bounds", () => {
     parseTVFilters(new URLSearchParams("rating=100")).vote_average_gte,
     10,
   );
+});
+
+test("availability restrictions work without selecting a provider", () => {
+  const filters = parseFiltersFromParams(
+    new URLSearchParams("monetization=free&region=ID"),
+  );
+  assert.equal(isDefaultFilterState(filters), false);
+  const api = buildTMDBFilters(filters);
+  assert.equal(api.with_watch_monetization_types, "free");
+  assert.equal(api.watch_region, "ID");
+  assert.equal(api.with_watch_providers, undefined);
+  assert.deepEqual(
+    parseFiltersFromParams(
+      new URLSearchParams(serializeFiltersToParams(filters)),
+    ),
+    filters,
+  );
+});
+
+test("TV filter counts and default detection use the category's sort", () => {
+  const defaults = { ...DEFAULT_TV_FILTERS, sort_by: "vote_average.desc" };
+  assert.equal(countTVFilters(defaults, defaults), 0);
+  assert.equal(hasTVFilters(defaults, defaults), false);
+  const filters = {
+    ...defaults,
+    with_genres: ["18"],
+    vote_average_gte: 7,
+    sort_by: "popularity.desc",
+  };
+  assert.equal(countTVFilters(filters, defaults), 3);
+  assert.equal(hasTVFilters(filters, defaults), true);
+  assert.deepEqual(parseTVFilters(new URLSearchParams(), defaults), defaults);
 });

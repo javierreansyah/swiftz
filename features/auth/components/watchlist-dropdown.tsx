@@ -22,7 +22,6 @@ export interface WatchlistDropdownProps {
   isFavorite: boolean;
   userRating: number | null;
   isPendingWatchlist: boolean;
-  voteCountFormatted: string;
   mediaTypeLabel?: string;
   onWatchlistClick: () => void;
   onFavoriteClick: () => void;
@@ -37,7 +36,6 @@ export function WatchlistDropdown({
   isFavorite,
   userRating,
   isPendingWatchlist,
-  voteCountFormatted,
   mediaTypeLabel = "Title",
   onWatchlistClick,
   onFavoriteClick,
@@ -74,10 +72,7 @@ export function WatchlistDropdown({
                 className={cn("fill-current", isSm ? "size-3.5" : "size-4")}
               />
             )}
-            <span>
-              {voteCountFormatted} ·{" "}
-              {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
-            </span>
+            <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
           </Button>
           <DropdownMenuTrigger asChild>
             <Button

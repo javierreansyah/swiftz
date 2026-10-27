@@ -18,16 +18,7 @@ import { useMediaActions } from "@/features/auth/hooks/use-media-actions";
 export interface MovieQuickRailProps {
   movieId: number;
   movieTitle: string;
-  onOpenModal: (
-    modal:
-      | "reviews"
-      | "videos"
-      | "photos"
-      | "cast"
-      | "recommendations"
-      | "collection",
-  ) => void;
-  onOpenRating?: () => void;
+  onOpenRating: () => void;
   hasCollection?: boolean;
   mode?: "all" | "desktop" | "mobile";
   className?: string;
@@ -36,7 +27,6 @@ export interface MovieQuickRailProps {
 export function MovieQuickRail({
   movieId,
   movieTitle,
-  onOpenModal,
   onOpenRating,
   hasCollection = false,
   mode = "all",
@@ -63,21 +53,15 @@ export function MovieQuickRail({
     toggleWatchlist,
     handleWatchlistClick: handleWatchlist,
     handleFavoriteClick: handleFavorite,
+    handleRateClick,
   } = useMediaActions({
     type: "movie",
     mediaId: movieId,
     isFavorite,
     isWatchlist,
     authMode: "login",
+    onRate: onOpenRating,
   });
-
-  const handleRateClick = () => {
-    if (onOpenRating) {
-      onOpenRating();
-    } else {
-      onOpenModal("reviews");
-    }
-  };
 
   const sections: QuickRailSectionItem[] = [
     { id: "section-overview", label: "Overview", icon: Film },
@@ -109,6 +93,7 @@ export function MovieQuickRail({
       isWatchlist={isWatchlist}
       isFavorite={isFavorite}
       userRating={userRating}
+      actionError={toggleFavorite.isError || toggleWatchlist.isError}
       isWatchlistPending={toggleWatchlist.isPending}
       isFavoritePending={toggleFavorite.isPending}
       onToggleWatchlist={handleWatchlist}

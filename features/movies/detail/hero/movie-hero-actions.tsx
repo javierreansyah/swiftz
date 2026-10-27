@@ -17,6 +17,7 @@ import { WatchlistDropdown } from "@/features/auth/components/watchlist-dropdown
 import { AuthPromptModal } from "@/features/auth/components/auth-prompt-modal";
 import { formatNumberShort, formatCurrency } from "@/lib/format";
 import { useMediaActions } from "@/features/auth/hooks/use-media-actions";
+import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { cn } from "@/lib/utils";
 
 export interface MovieHeroActionsProps {
@@ -52,13 +53,13 @@ export function MovieHeroActions({
 }: MovieHeroActionsProps) {
   const {
     toggleWatchlist,
+    toggleFavorite,
     handleWatchlistClick,
     handleFavoriteClick,
     handleRateClick,
     showAuthModal,
     setShowAuthModal,
     login,
-    loginDemo,
   } = useMediaActions({
     type: "movie",
     mediaId: movie.id,
@@ -99,10 +100,7 @@ export function MovieHeroActions({
             ) : (
               <Bookmark className="size-3.5 fill-current" />
             )}
-            <span>
-              {formatNumberShort(movie.vote_count * 3)} ·{" "}
-              {isWatchlist ? "In Watchlist" : "Add to Watchlist"}
-            </span>
+            <span>{isWatchlist ? "In Watchlist" : "Add to Watchlist"}</span>
           </Button>
 
           {/* Favorite Button */}
@@ -110,6 +108,7 @@ export function MovieHeroActions({
             size="sm"
             variant={isFavorite ? "default" : "secondary"}
             onClick={handleFavoriteClick}
+            disabled={toggleFavorite.isPending}
             className="shrink-0 snap-start"
           >
             <Heart
@@ -127,7 +126,7 @@ export function MovieHeroActions({
           <Button
             variant="secondary"
             size="sm"
-            onClick={onOpenRating}
+            onClick={handleRateClick}
             className="shrink-0 snap-start"
           >
             <Star
@@ -438,7 +437,6 @@ export function MovieHeroActions({
               isFavorite={isFavorite}
               userRating={userRating}
               isPendingWatchlist={toggleWatchlist.isPending}
-              voteCountFormatted={formatNumberShort(movie.vote_count * 3)}
               mediaTypeLabel="Movie"
               onWatchlistClick={handleWatchlistClick}
               onFavoriteClick={handleFavoriteClick}
@@ -449,13 +447,16 @@ export function MovieHeroActions({
         </div>
       </div>
 
+      <SaveFeedback
+        isError={toggleFavorite.isError || toggleWatchlist.isError}
+      />
+
       {/* AUTH PROMPT MODAL */}
       <AuthPromptModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         title={movie.title}
         onLogin={login}
-        onLoginDemo={loginDemo}
       />
     </>
   );

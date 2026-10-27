@@ -22,7 +22,7 @@ export interface CollectionModalProps {
   onClose: () => void;
   collectionId: number;
   collectionName?: string;
-  currentMovieId: number;
+  currentMovieId?: number;
 }
 
 export function CollectionModal({

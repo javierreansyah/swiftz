@@ -9,13 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { LibraryTab } from "@/features/library/components/library-tabs";
-export function LibraryUnauthenticated({
-  onLogin,
-  onLoginDemo,
-}: {
-  onLogin: () => void;
-  onLoginDemo: () => void;
-}) {
+export function LibraryUnauthenticated({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="container min-h-screen pt-28 pb-16">
       <div className="mx-auto max-w-3xl space-y-10">
@@ -41,15 +35,6 @@ export function LibraryUnauthenticated({
             <Button size="lg" onClick={onLogin} className="w-full sm:w-auto">
               <LogIn className="size-5" />
               <span>Connect with TMDB</span>
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={onLoginDemo}
-              className="w-full sm:w-auto"
-            >
-              <Sparkles className="size-4 text-primary" />
-              <span>Try Demo Account</span>
             </Button>
             <Button
               asChild

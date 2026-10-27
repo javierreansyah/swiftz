@@ -10,8 +10,12 @@ import {
   searchKeywordsOptions,
   searchTypeCountsOptions,
 } from "@/features/search/query-options";
-export function useSearchMoviesQuery(query: string, page: number = 1) {
-  return useQuery(searchMoviesOptions(query, page));
+export function useSearchMoviesQuery(
+  query: string,
+  page: number = 1,
+  year?: string | null,
+) {
+  return useQuery(searchMoviesOptions(query, page, year));
 }
 
 export function useKeywordSearchQuery(query: string) {
@@ -42,6 +46,6 @@ export function useSearchKeywordsQuery(query: string) {
   return useQuery(searchKeywordsOptions(query));
 }
 
-export function useSearchTypeCountsQuery(query: string) {
-  return useQuery(searchTypeCountsOptions(useQueryClient(), query));
+export function useSearchTypeCountsQuery(query: string, year?: string | null) {
+  return useQuery(searchTypeCountsOptions(useQueryClient(), query, year));
 }

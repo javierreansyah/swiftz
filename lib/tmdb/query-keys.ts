@@ -1,7 +1,10 @@
 import type { DiscoverMovieFilters } from "@/lib/tmdb/types/movie";
 import type { DiscoverTVFilters } from "@/lib/tmdb/types/tv";
 export const queryKeys = {
-  searchCounts: (query: string) => ["search-counts", query] as const,
+  searchCounts: (query: string, year?: string | null) =>
+    year
+      ? (["search-counts", query, year] as const)
+      : (["search-counts", query] as const),
   movieAccountStates: (movieId: string | number, sessionId: string | null) =>
     ["movie-account-states", String(movieId), sessionId] as const,
   accountFavorites: (
@@ -47,8 +50,10 @@ export const queryKeys = {
     ["person-credits", String(id)] as const,
   personExternalIds: (id: string | number) =>
     ["person-external-ids", String(id)] as const,
-  searchMovies: (query: string, page: number) =>
-    ["search-movies", query, page] as const,
+  searchMovies: (query: string, page: number, year?: string | null) =>
+    year
+      ? (["search-movies", query, page, year] as const)
+      : (["search-movies", query, page] as const),
   searchKeywords: (query: string) => ["search-keywords", query] as const,
   searchMulti: (query: string, page: number) =>
     ["search-multi", query, page] as const,

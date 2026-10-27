@@ -28,7 +28,6 @@
 - **UI Components:** [Shadcn](https://ui.shadcn.com/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **Data Fetching:** Native fetch, cached RSC/ISR, and [TanStack Query](https://tanstack.com/query)
-- **Forms:** [React Hook Form](https://react-hook-form.com/)
 - **Images:** Responsive native images delivered directly by the TMDB CDN
 
 See [deployment and data-delivery guidance](docs/DEPLOYMENT.md) for Vercel setup,

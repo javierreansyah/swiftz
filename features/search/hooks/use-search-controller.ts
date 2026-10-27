@@ -52,7 +52,7 @@ export function useSearchController() {
   }, [rawQuery]);
 
   // Live Counts for each Category
-  const { data: counts } = useSearchTypeCountsQuery(cleanQuery);
+  const { data: counts } = useSearchTypeCountsQuery(cleanQuery, yearFilter);
 
   // Queries for each Category
   const isMovies = typeParam === "movies";
@@ -65,6 +65,7 @@ export function useSearchController() {
   const movieQuery = useSearchMoviesQuery(
     isMovies ? cleanQuery : "",
     currentPage,
+    yearFilter,
   );
   const tvQuery = useSearchTVQuery(isTV ? cleanQuery : "", currentPage);
   const peopleQuery = useSearchPeopleQuery(
@@ -163,9 +164,7 @@ export function useSearchController() {
     case "movies":
       dataset = {
         category: "movies",
-        items: (movieQuery.data?.results || []).filter(
-          (movie) => !yearFilter || movie.release_date?.startsWith(yearFilter),
-        ),
+        items: movieQuery.data?.results || [],
       };
       break;
     case "tv":

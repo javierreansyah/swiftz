@@ -164,7 +164,12 @@ export function PersonOverview({
                   Day of Death
                 </span>
                 <span className="font-semibold text-foreground">
-                  {formatBirthDate(person.deathday)}
+                  {new Date(person.deathday).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                    timeZone: "UTC",
+                  })}
                 </span>
               </div>
             )}

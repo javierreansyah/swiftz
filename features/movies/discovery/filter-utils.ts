@@ -285,11 +285,13 @@ export function buildTMDBFilters(
 
   // Watch providers
   if (filters.watch_providers.length > 0) {
-    result.watch_region = filters.watch_region || "US";
     result.with_watch_providers = filters.watch_providers.join("|");
-    if (filters.monetization_type && filters.monetization_type !== "all") {
-      result.with_watch_monetization_types = filters.monetization_type;
-    }
+  }
+  if (filters.monetization_type && filters.monetization_type !== "all") {
+    result.with_watch_monetization_types = filters.monetization_type;
+  }
+  if (result.with_watch_providers || result.with_watch_monetization_types) {
+    result.watch_region = filters.watch_region || "US";
   }
 
   return result;
@@ -316,6 +318,7 @@ export function countActiveFilters(
   if (filters.with_runtime_gte > 0 || filters.with_runtime_lte < 360) count++;
   if (filters.watch_providers.length > 0)
     count += filters.watch_providers.length;
+  if (filters.monetization_type && filters.monetization_type !== "all") count++;
   return count;
 }
 

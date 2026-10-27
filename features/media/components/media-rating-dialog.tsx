@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star, Trash2, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,6 @@ export interface MediaRatingDialogProps {
   title: string;
   sessionId?: string | null;
   currentRating?: number | null;
-  onSuccess?: () => void;
 }
 
 export function MediaRatingDialog({
@@ -28,40 +27,23 @@ export function MediaRatingDialog({
   title,
   sessionId,
   currentRating,
-  onSuccess,
 }: MediaRatingDialogProps) {
   const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [selectedRating, setSelectedRating] = useState<number>(
-    currentRating || 8,
-  );
-
-  const rateMutation = useRatingMutation(mediaType);
-  const deleteMutation = useRatingMutation(mediaType);
-  const isPendingRate = rateMutation.isPending;
-  const isPendingDelete = deleteMutation.isPending;
+  const [draftRating, setSelectedRating] = useState<number | null>(null);
+  const selectedRating = draftRating ?? currentRating ?? 8;
+  const mutation = useRatingMutation(mediaType);
+  const { reset } = mutation;
+  useEffect(() => {
+    setSelectedRating(null);
+    setHoverRating(null);
+    reset();
+  }, [isOpen, mediaId, sessionId, reset]);
 
   const displayRating = hoverRating !== null ? hoverRating : selectedRating;
 
-  const handleRate = async (ratingVal: number) => {
+  const handleSave = (rating?: number) => {
     if (!sessionId) return;
-    try {
-      await rateMutation.mutateAsync({ mediaId, rating: ratingVal, sessionId });
-      onSuccess?.();
-      onClose();
-    } catch {
-      // Error handled in mutation
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!sessionId) return;
-    try {
-      await deleteMutation.mutateAsync({ mediaId, sessionId });
-      onSuccess?.();
-      onClose();
-    } catch {
-      // Error handled in mutation
-    }
+    mutation.mutate({ mediaId, rating, sessionId }, { onSuccess: onClose });
   };
 
   return (
@@ -90,6 +72,7 @@ export function MediaRatingDialog({
                 <button
                   key={val}
                   type="button"
+                  disabled={mutation.isPending}
                   onMouseEnter={() => setHoverRating(val)}
                   onMouseLeave={() => setHoverRating(null)}
                   onClick={() => setSelectedRating(val)}
@@ -117,16 +100,27 @@ export function MediaRatingDialog({
           </span>
         </div>
 
+        {mutation.isError && (
+          <p role="alert" className="text-sm text-destructive">
+            Could not save your rating. Please try again.
+          </p>
+        )}
+        {!sessionId && (
+          <p role="alert" className="text-sm text-destructive">
+            Sign in to save a rating.
+          </p>
+        )}
         {/* Action Buttons */}
         <div className="flex items-center gap-2 pt-2">
           {currentRating && (
             <Button
               variant="destructive"
               size="sm"
-              onClick={handleDelete}
-              disabled={isPendingDelete}
+              onClick={() => handleSave()}
+              disabled={mutation.isPending || !sessionId}
             >
-              {isPendingDelete ? (
+              {mutation.isPending &&
+              mutation.variables?.rating === undefined ? (
                 <Loader2 className="size-3.5 animate-spin" />
               ) : (
                 <Trash2 className="size-3.5" />
@@ -136,11 +130,11 @@ export function MediaRatingDialog({
           )}
 
           <Button
-            onClick={() => handleRate(selectedRating)}
-            disabled={isPendingRate}
+            onClick={() => handleSave(selectedRating)}
+            disabled={mutation.isPending || !sessionId}
             className="flex-1"
           >
-            {isPendingRate ? (
+            {mutation.isPending && mutation.variables?.rating !== undefined ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
               <Sparkles className="size-4" />

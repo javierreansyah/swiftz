@@ -21,7 +21,6 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (returnUrl?: string) => Promise<void>;
-  loginDemo: (returnUrl?: string) => void;
   logout: () => Promise<void>;
   setSessionAndUser: (sessionId: string, user: TMDBAccount) => void;
 }
@@ -43,32 +42,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedSession = localStorage.getItem(SESSION_STORAGE_KEY);
       const storedUser = localStorage.getItem(USER_STORAGE_KEY);
 
+      if (storedSession?.startsWith("swiftz_demo_")) {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+        localStorage.removeItem(USER_STORAGE_KEY);
+        return;
+      }
+
       if (storedSession && storedUser) {
         const parsedUser = JSON.parse(storedUser);
         setSessionId(storedSession);
         setUser(parsedUser);
 
-        // Background check session validity for non-demo sessions
-        if (!storedSession.startsWith("swiftz_demo_")) {
-          getAccountDetails(storedSession)
-            .then((freshUser) => {
-              setUser(freshUser);
-              localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(freshUser));
-            })
-            .catch((error: unknown) => {
-              // A timeout, rate limit, or service outage must not log the user out.
-              if (
-                !(error instanceof TMDBError) ||
-                ![401, 403].includes(error.status)
-              )
-                return;
-              // If session is revoked on TMDB, clear local state
-              localStorage.removeItem(SESSION_STORAGE_KEY);
-              localStorage.removeItem(USER_STORAGE_KEY);
-              setSessionId(null);
-              setUser(null);
-            });
-        }
+        getAccountDetails(storedSession)
+          .then((freshUser) => {
+            setUser(freshUser);
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(freshUser));
+          })
+          .catch((error: unknown) => {
+            // A timeout, rate limit, or service outage must not log the user out.
+            if (
+              !(error instanceof TMDBError) ||
+              ![401, 403].includes(error.status)
+            )
+              return;
+            // If session is revoked on TMDB, clear local state
+            localStorage.removeItem(SESSION_STORAGE_KEY);
+            localStorage.removeItem(USER_STORAGE_KEY);
+            setSessionId(null);
+            setUser(null);
+          });
       }
     } catch {
       // Ignore localStorage errors
@@ -102,35 +104,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const loginDemo = useCallback((returnUrl?: string) => {
-    const demoUser: TMDBAccount = {
-      id: 999999,
-      name: "Alex Rivera",
-      username: "cinephile_alex",
-      include_adult: false,
-      iso_639_1: "en",
-      iso_3166_1: "US",
-      avatar: {
-        gravatar: { hash: "" },
-        tmdb: { avatar_path: null },
-      },
-    };
-    const demoSession = "swiftz_demo_session_active";
-    setSessionId(demoSession);
-    setUser(demoUser);
-    try {
-      localStorage.setItem(SESSION_STORAGE_KEY, demoSession);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(demoUser));
-    } catch {
-      // Ignore
-    }
-    if (returnUrl && typeof window !== "undefined") {
-      window.location.href = returnUrl;
-    }
-  }, []);
-
   const logout = useCallback(async () => {
-    if (sessionId && !sessionId.startsWith("swiftz_demo_")) {
+    if (sessionId) {
       try {
         await deleteSession(sessionId);
       } catch {
@@ -161,11 +136,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       isAuthenticated: Boolean(user && sessionId),
       login,
-      loginDemo,
       logout,
       setSessionAndUser,
     }),
-    [user, sessionId, isLoading, login, loginDemo, logout, setSessionAndUser],
+    [user, sessionId, isLoading, login, logout, setSessionAndUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

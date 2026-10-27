@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { Movie } from "@/lib/tmdb/types/movie";
+import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { TrailerModal } from "@/components/common/trailer-modal";
 import { useAuth } from "@/features/auth/auth-provider";
 import {
@@ -127,6 +128,10 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
             }
           />
         </div>
+      </div>
+
+      <div className="relative container">
+        <SaveFeedback isError={toggleWatchlistMutation.isError} />
       </div>
 
       {/* Shared Trailer Modal */}

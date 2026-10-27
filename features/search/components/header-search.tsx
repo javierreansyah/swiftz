@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Search, Film, Tv, User, Loader2, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,8 @@ export function HeaderSearch({
 }: HeaderSearchProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const urlQuery = pathname === "/search" ? searchParams.get("q") || "" : "";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -50,15 +52,9 @@ export function HeaderSearch({
 
   // Sync with current query if on /search page
   useEffect(() => {
-    if (pathname === "/search") {
-      const params = new URLSearchParams(window.location.search);
-      const q = params.get("q") || "";
-      setSearchQuery(q);
-    } else {
-      setSearchQuery("");
-    }
+    setSearchQuery(urlQuery);
     setIsDropdownOpen(false);
-  }, [pathname]);
+  }, [pathname, urlQuery]);
 
   // Open dropdown when query has length
   useEffect(() => {

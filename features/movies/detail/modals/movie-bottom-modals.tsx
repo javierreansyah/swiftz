@@ -1,4 +1,5 @@
 "use client";
+import type { ReactNode } from "react";
 import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
 import type {
   Cast,
@@ -22,6 +23,9 @@ export type ModalType =
   | null;
 
 export interface MovieBottomModalsProps {
+  castError?: ReactNode;
+  videosError?: ReactNode;
+  photosError?: ReactNode;
   activeModal: ModalType;
   onClose: () => void;
   movie: MovieDetailsData;
@@ -37,6 +41,9 @@ export interface MovieBottomModalsProps {
 }
 
 export function MovieBottomModals({
+  castError,
+  videosError,
+  photosError,
   activeModal,
   onClose,
   movie,
@@ -59,6 +66,7 @@ export function MovieBottomModals({
       />
 
       <VideosModal
+        loadError={videosError}
         isOpen={activeModal === "videos"}
         onClose={onClose}
         movie={movie}
@@ -69,6 +77,7 @@ export function MovieBottomModals({
       />
 
       <PhotosModal
+        loadError={photosError}
         isOpen={activeModal === "photos"}
         onClose={onClose}
         movie={movie}
@@ -77,6 +86,7 @@ export function MovieBottomModals({
       />
 
       <CastModal
+        loadError={castError}
         isOpen={activeModal === "cast"}
         onClose={onClose}
         movie={movie}

@@ -13,6 +13,7 @@ export async function searchMoviesClient(
   query: string,
   page: number = 1,
   signal?: AbortSignal,
+  year?: string | null,
 ): Promise<SearchData> {
   if (!query.trim()) {
     return {
@@ -24,7 +25,11 @@ export async function searchMoviesClient(
   }
   return fetchTMDBClient<SearchData>(
     "/search/movie",
-    { query: query.trim(), page },
+    {
+      query: query.trim(),
+      page,
+      ...(year ? { primary_release_year: year } : {}),
+    },
     { signal },
   );
 }

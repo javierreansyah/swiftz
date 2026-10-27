@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createSession, getAccountDetails } from "@/features/auth/api/browser";
 import { useAuth } from "@/features/auth/auth-provider";
+import { getApprovedRequestToken } from "@/features/auth/callback";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -17,15 +18,15 @@ export function AuthCallbackClient() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const approved = searchParams.get("approved");
-    const requestToken =
-      searchParams.get("request_token") ||
-      sessionStorage.getItem("swiftz_request_token");
+    const requestToken = getApprovedRequestToken(
+      searchParams,
+      sessionStorage.getItem("swiftz_request_token"),
+    );
 
-    if (approved !== "true" || !requestToken) {
+    if (!requestToken) {
       setStatus("error");
       setErrorMessage(
-        "Authentication was cancelled or the request token was missing.",
+        "Authentication was cancelled or did not match this browser's sign-in request.",
       );
       return;
     }

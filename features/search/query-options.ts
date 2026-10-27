@@ -13,10 +13,14 @@ import {
   searchCollectionsClient,
   searchCompaniesClient,
 } from "@/features/search/api/browser";
-export function searchMoviesOptions(query: string, page: number = 1) {
+export function searchMoviesOptions(
+  query: string,
+  page: number = 1,
+  year?: string | null,
+) {
   return queryOptions({
-    queryKey: queryKeys.searchMovies(query, page),
-    queryFn: ({ signal }) => searchMoviesClient(query, page, signal),
+    queryKey: queryKeys.searchMovies(query, page, year),
+    queryFn: ({ signal }) => searchMoviesClient(query, page, signal, year),
     enabled: Boolean(query && query.trim().length > 0),
     placeholderData: keepPreviousData,
   });
@@ -78,15 +82,19 @@ export function searchKeywordsOptions(query: string, autocomplete = false) {
   });
 }
 
-export function searchTypeCountsOptions(client: QueryClient, query: string) {
+export function searchTypeCountsOptions(
+  client: QueryClient,
+  query: string,
+  year?: string | null,
+) {
   return queryOptions({
-    queryKey: queryKeys.searchCounts(query),
+    queryKey: queryKeys.searchCounts(query, year),
     enabled: query.trim().length > 0,
     staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const [movies, tv, people, collections, keywords, companies] =
         await Promise.all([
-          client.fetchQuery(searchMoviesOptions(query, 1)),
+          client.fetchQuery(searchMoviesOptions(query, 1, year)),
           client.fetchQuery(searchTVOptions(query, 1)),
           client.fetchQuery(searchPeopleOptions(query, 1)),
           client.fetchQuery(searchCollectionsOptions(query, 1)),

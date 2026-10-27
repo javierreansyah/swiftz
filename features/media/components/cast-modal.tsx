@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { type ReactNode, useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { usePersonDetailsQuery } from "@/features/people/hooks/queries";
 import { PersonDetailContent } from "@/features/people/components/person-detail-content";
 import { cn } from "@/lib/utils";
 export interface CastModalProps {
+  loadError?: ReactNode;
   isOpen: boolean;
   onClose: () => void;
   movie?: {
@@ -28,6 +29,7 @@ export interface CastModalProps {
 }
 
 export function CastModal({
+  loadError,
   isOpen,
   onClose,
   movie,
@@ -314,7 +316,10 @@ export function CastModal({
       sidebar={showPerson ? undefined : desktopSidebar}
       mobileControls={showPerson ? personMobileControls : mobileControls}
     >
-      {showPerson ? (
+      {loadError}
+      {loadError &&
+      cast.length === 0 &&
+      crew.length === 0 ? null : showPerson ? (
         <PersonDetailContent
           personId={selectedPersonId}
           enabled={isOpen}

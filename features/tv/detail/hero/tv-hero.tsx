@@ -7,7 +7,6 @@ import { useMediaAccountStatesQuery } from "@/features/auth/hooks/queries";
 import { TVHeroHeader } from "@/features/tv/detail/hero/tv-hero-header";
 import { TVHeroMedia } from "@/features/tv/detail/hero/tv-hero-media";
 import { TVHeroActions } from "@/features/tv/detail/hero/tv-hero-actions";
-import { TVRatingDialog } from "@/features/tv/detail/hero/tv-rating-dialog";
 export interface TVHeroProps {
   show: TVShowDetailsData;
   certification?: string;
@@ -16,7 +15,7 @@ export interface TVHeroProps {
   crew: Crew[];
   reviewCount?: number;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
-  onOpenRating?: () => void;
+  onOpenRating: () => void;
 }
 
 export function TVHero({
@@ -29,22 +28,9 @@ export function TVHero({
   onOpenRating,
 }: TVHeroProps) {
   const { sessionId } = useAuth();
-  const [showRatingModal, setShowRatingModal] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
 
-  const handleRateOpen = () => {
-    if (onOpenRating) {
-      onOpenRating();
-    } else {
-      setShowRatingModal(true);
-    }
-  };
-
-  const { data: states, refetch: refetchStates } = useMediaAccountStatesQuery(
-    "tv",
-    show.id,
-    sessionId,
-  );
+  const { data: states } = useMediaAccountStatesQuery("tv", show.id, sessionId);
 
   const isFavorite = Boolean(states?.favorite);
   const isWatchlist = Boolean(states?.watchlist);
@@ -114,7 +100,7 @@ export function TVHero({
         seasonsCount={show.number_of_seasons || show.seasons?.length || 1}
         episodesCount={show.number_of_episodes || 0}
         userRating={userRating}
-        onRateClick={handleRateOpen}
+        onRateClick={onOpenRating}
         onShareClick={handleShareClick}
         copiedShare={copiedShare}
       />
@@ -135,19 +121,9 @@ export function TVHero({
         isFavorite={isFavorite}
         userRating={userRating}
         onOpenModal={onOpenModal}
-        onOpenRating={handleRateOpen}
+        onOpenRating={onOpenRating}
         onShareClick={handleShareClick}
         copiedShare={copiedShare}
-      />
-
-      <TVRatingDialog
-        isOpen={showRatingModal}
-        onClose={() => setShowRatingModal(false)}
-        tvId={show.id}
-        showTitle={show.name}
-        sessionId={sessionId}
-        currentRating={userRating}
-        onSuccess={() => refetchStates()}
       />
     </div>
   );

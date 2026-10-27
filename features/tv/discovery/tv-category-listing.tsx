@@ -70,6 +70,7 @@ export function TVCategoryListing({
     <MediaListingLayout
       mobileFilters={
         <TVMobileFilterDrawer
+          defaultFilters={defaults}
           activeFilters={activeFilters}
           onApplyFilters={handleApplyFilters}
           onResetFilters={handleResetFilters}
@@ -77,6 +78,7 @@ export function TVCategoryListing({
       }
       sidebar={
         <TVSidebar
+          defaultFilters={defaults}
           activeFilters={activeFilters}
           onApplyFilters={handleApplyFilters}
           onResetFilters={handleResetFilters}

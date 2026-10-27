@@ -1,4 +1,5 @@
 "use client";
+import type { ReactNode } from "react";
 import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
 import type { Cast, Crew, Video } from "@/lib/tmdb/types/common";
 import { TVCastModal } from "@/features/tv/detail/modals/tv-cast-modal";
@@ -16,6 +17,8 @@ export type TVModalType =
   | null;
 
 export interface TVBottomModalsProps {
+  castError?: ReactNode;
+  videosError?: ReactNode;
   activeModal: TVModalType;
   onClose: () => void;
   show: TVShowDetailsData;
@@ -27,6 +30,8 @@ export interface TVBottomModalsProps {
 }
 
 export function TVBottomModals({
+  castError,
+  videosError,
   activeModal,
   onClose,
   show,
@@ -48,6 +53,7 @@ export function TVBottomModals({
 
       {/* Full Cast & Crew Sheet Modal */}
       <TVCastModal
+        loadError={castError}
         isOpen={activeModal === "cast"}
         onClose={onClose}
         show={show}
@@ -57,6 +63,7 @@ export function TVBottomModals({
 
       {/* Videos Bottom Sheet Modal */}
       <VideosModal
+        loadError={videosError}
         isOpen={activeModal === "videos"}
         onClose={onClose}
         videos={videos}

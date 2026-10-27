@@ -12,7 +12,8 @@ import {
 import { useVisible } from "@/hooks/use-visible";
 import { MovieHeroBackdrop } from "@/features/movies/detail/hero/movie-hero-backdrop";
 import { TVHero } from "@/features/tv/detail/hero/tv-hero";
-import { TVRatingDialog } from "@/features/tv/detail/hero/tv-rating-dialog";
+import { QueryFeedback } from "@/features/media/components/query-feedback";
+import { MediaRatingDialog } from "@/features/media/components/media-rating-dialog";
 import { TVQuickRail } from "@/features/tv/detail/tv-quick-rail";
 import { TVSeasonsSection } from "@/features/tv/detail/sections/tv-seasons-section";
 import { TVCastSection } from "@/features/tv/detail/sections/tv-cast-section";
@@ -40,21 +41,31 @@ export function TVDetailClient({
     number | undefined
   >(undefined);
   const recommendationsSection = useVisible();
-  const { data: creditsData } = useTVCreditsQuery(show.id);
-  const { data: videoData } = useTVVideosQuery(show.id);
-  const { data: recommendationsData } = useTVRecommendationsQuery(
+  const creditsQuery = useTVCreditsQuery(show.id);
+  const videoQuery = useTVVideosQuery(show.id);
+  const recommendationsQuery = useTVRecommendationsQuery(
     show.id,
     1,
     recommendationsSection.visible || activeModal === "recommendations",
   );
+  const creditsData = creditsQuery.data;
+  const videoData = videoQuery.data;
+  const recommendationsData = recommendationsQuery.data;
   const cast = creditsData?.cast || [];
   const crew = creditsData?.crew || [];
   const videos = videoData?.results || [];
   const recommendations = recommendationsData?.results || [];
 
-  const { sessionId } = useAuth();
-  const { data: accountStates, refetch: refetchStates } =
-    useMediaAccountStatesQuery("tv", show.id, sessionId);
+  const { sessionId, isAuthenticated, login } = useAuth();
+  function handleOpenRating() {
+    if (isAuthenticated) setShowRatingModal(true);
+    else void login();
+  }
+  const { data: accountStates } = useMediaAccountStatesQuery(
+    "tv",
+    show.id,
+    sessionId,
+  );
 
   const userRating =
     typeof accountStates?.rated === "object" && accountStates?.rated !== null
@@ -63,13 +74,23 @@ export function TVDetailClient({
         ? 10
         : null;
 
-  const { data: reviewsData } = useTVReviewsQuery(
-    show.id,
-    1,
-    activeModal === "reviews",
-  );
+  const reviewsQuery = useTVReviewsQuery(show.id, 1, activeModal === "reviews");
+  const reviewsData = reviewsQuery.data;
   const reviews = reviewsData?.results || [];
   const totalReviews = reviewsData?.total_results || reviews.length;
+
+  const castError = creditsQuery.isError && (
+    <QueryFeedback
+      hasData={Boolean(creditsQuery.data)}
+      onRetry={() => void creditsQuery.refetch()}
+    />
+  );
+  const videosError = videoQuery.isError && (
+    <QueryFeedback
+      hasData={Boolean(videoQuery.data)}
+      onRetry={() => void videoQuery.refetch()}
+    />
+  );
 
   const handleOpenVideo = (index?: number) => {
     setInitialVideoIndex(index);
@@ -120,7 +141,7 @@ export function TVDetailClient({
                 crew={crew}
                 reviewCount={totalReviews}
                 onOpenModal={handleModalOpen}
-                onOpenRating={() => setShowRatingModal(true)}
+                onOpenRating={handleOpenRating}
               />
             </div>
 
@@ -130,8 +151,7 @@ export function TVDetailClient({
                 mode="mobile"
                 tvId={show.id}
                 showTitle={show.name}
-                onOpenModal={handleModalOpen}
-                onOpenRating={() => setShowRatingModal(true)}
+                onOpenRating={handleOpenRating}
               />
             </div>
 
@@ -143,12 +163,14 @@ export function TVDetailClient({
               />
             )}
 
+            {castError}
             {/* 3. Cast Excerpt */}
             <TVCastSection
               cast={cast}
               onOpenCastModal={() => setActiveModal("cast")}
             />
 
+            {videosError}
             {/* 4. Videos Excerpt */}
             <TVVideosSection
               videos={videos}
@@ -157,6 +179,12 @@ export function TVDetailClient({
 
             {/* 5. Recommendations / Related */}
             <div ref={recommendationsSection.ref}>
+              {recommendationsQuery.isError && (
+                <QueryFeedback
+                  hasData={Boolean(recommendationsQuery.data)}
+                  onRetry={() => void recommendationsQuery.refetch()}
+                />
+              )}
               {recommendations.length > 0 && (
                 <TVRecommendationsSection
                   shows={recommendations}
@@ -175,8 +203,7 @@ export function TVDetailClient({
               mode="desktop"
               tvId={show.id}
               showTitle={show.name}
-              onOpenModal={handleModalOpen}
-              onOpenRating={() => setShowRatingModal(true)}
+              onOpenRating={handleOpenRating}
             />
           </aside>
         </div>
@@ -184,6 +211,8 @@ export function TVDetailClient({
 
       {/* Bottom Modals */}
       <TVBottomModals
+        castError={castError}
+        videosError={videosError}
         activeModal={activeModal}
         onClose={() => setActiveModal(null)}
         show={show}
@@ -195,14 +224,14 @@ export function TVDetailClient({
       />
 
       {/* Unified Rating Dialog */}
-      <TVRatingDialog
+      <MediaRatingDialog
+        mediaType="tv"
         isOpen={showRatingModal}
         onClose={() => setShowRatingModal(false)}
-        tvId={show.id}
-        showTitle={show.name}
+        mediaId={show.id}
+        title={show.name}
         sessionId={sessionId}
         currentRating={userRating}
-        onSuccess={() => refetchStates()}
       />
     </div>
   );

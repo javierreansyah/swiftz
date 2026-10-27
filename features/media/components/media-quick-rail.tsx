@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MenuList } from "@/components/common/menu-list";
 import { cn } from "@/lib/utils";
+import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
 import {
   Drawer,
@@ -35,6 +36,7 @@ export interface MediaQuickRailProps {
   userRating: number | null;
   isWatchlistPending?: boolean;
   isFavoritePending?: boolean;
+  actionError?: boolean;
   onToggleWatchlist: () => void;
   onToggleFavorite: () => void;
   onOpenRating: () => void;
@@ -51,6 +53,7 @@ export function MediaQuickRail({
   userRating,
   isWatchlistPending = false,
   isFavoritePending = false,
+  actionError = false,
   onToggleWatchlist,
   onToggleFavorite,
   onOpenRating,
@@ -149,10 +152,14 @@ export function MediaQuickRail({
           const isActive = activeSection === item.id;
           const Icon = item.icon;
           return (
-            <div
+            <Button
               key={item.id}
+              type="button"
+              variant={isActive ? "secondary" : "ghost"}
+              size="sm"
+              aria-current={isActive ? "location" : undefined}
               onClick={() => scrollToSection(item.id)}
-              className="group relative flex w-full cursor-pointer items-center gap-2.5 py-1.5 text-xs font-semibold select-none"
+              className="group relative w-full justify-start"
             >
               {/* Primary colored bar on the activated section */}
               {isActive && (
@@ -177,7 +184,7 @@ export function MediaQuickRail({
               >
                 {item.label}
               </span>
-            </div>
+            </Button>
           );
         })}
       </nav>
@@ -371,6 +378,7 @@ export function MediaQuickRail({
       {(mode === "desktop" || mode === "all") && (
         <div className={cn("flex flex-col space-y-4", className)}>
           {renderDesktopSidebar()}
+          <SaveFeedback isError={actionError} />
         </div>
       )}
 
@@ -390,9 +398,15 @@ export function MediaQuickRail({
               Browse sections for {title}
             </DrawerDescription>
 
-            <div className="px-4 pt-5 pb-8">{renderMobileContent()}</div>
+            <div className="space-y-4 px-4 pt-5 pb-8">
+              {renderMobileContent()}
+              <SaveFeedback isError={actionError} />
+            </div>
           </DrawerContent>
         </Drawer>
+      )}
+      {mode !== "desktop" && !isMobileNavOpen && (
+        <SaveFeedback isError={actionError} />
       )}
     </>
   );

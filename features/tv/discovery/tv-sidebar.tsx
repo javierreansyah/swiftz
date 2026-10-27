@@ -16,7 +16,9 @@ import {
   FilterStickyActionBar,
 } from "@/features/media/components/filter-sidebar-primitives";
 import { cn } from "@/lib/utils";
+import { countTVFilters } from "@/features/tv/discovery/filter-utils";
 export interface TVSidebarProps {
+  defaultFilters?: TVFilterState;
   activeFilters: TVFilterState;
   onApplyFilters: (filters: TVFilterState) => void;
   onResetFilters: () => void;
@@ -39,6 +41,7 @@ const TV_YEAR_PRESET_ITEMS = [
 ];
 
 export function TVSidebar({
+  defaultFilters = DEFAULT_TV_FILTERS,
   activeFilters,
   onApplyFilters,
   onResetFilters,
@@ -52,23 +55,14 @@ export function TVSidebar({
     setPendingFilters(activeFilters);
   }, [activeFilters]);
 
-  const countActiveFilters = (filters: TVFilterState) => {
-    let count = 0;
-    if (filters.sort_by !== DEFAULT_TV_FILTERS.sort_by) count++;
-    if (filters.with_genres.length > 0) count += filters.with_genres.length;
-    if (filters.first_air_date_year) count++;
-    if (filters.vote_average_gte > 0) count++;
-    return count;
-  };
-
-  const pendingActiveCount = countActiveFilters(pendingFilters);
+  const pendingActiveCount = countTVFilters(pendingFilters, defaultFilters);
 
   const handleApply = () => {
     onApplyFilters(pendingFilters);
   };
 
   const handleReset = () => {
-    setPendingFilters(DEFAULT_TV_FILTERS);
+    setPendingFilters(defaultFilters);
     onResetFilters();
   };
 

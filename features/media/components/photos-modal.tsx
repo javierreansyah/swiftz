@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { type ReactNode, useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
 import {
   Share2,
@@ -20,6 +20,7 @@ interface TypedMovieImage extends MovieImageItem {
 }
 
 export interface PhotosModalProps {
+  loadError?: ReactNode;
   isOpen: boolean;
   onClose: () => void;
   movie?: {
@@ -37,6 +38,7 @@ export interface PhotosModalProps {
 }
 
 export function PhotosModal({
+  loadError,
   isOpen,
   onClose,
   movie,
@@ -359,7 +361,9 @@ export function PhotosModal({
       mobileControls={viewMode === "gallery" ? mobileControls : undefined}
       disableDefaultScroll={viewMode === "showcase"}
     >
-      {viewMode === "showcase" && activePhoto ? (
+      {loadError}
+      {loadError && allPhotos.length === 0 ? null : viewMode === "showcase" &&
+        activePhoto ? (
         /* Showcase View: Stage + Carousel */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Photo Stage */}

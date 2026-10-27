@@ -1,12 +1,13 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "@/components/ui/image";
-import { Share2, Star, ThumbsUp, ThumbsDown, User, Check } from "lucide-react";
+import { Share2, Star, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
 import { useMovieReviewsQuery } from "@/features/movies/hooks/queries";
 import { useTVReviewsQuery } from "@/features/tv/hooks/queries";
+import { PaginationSystem } from "@/components/common/pagination-system";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface ReviewsModalProps {
   isOpen: boolean;
@@ -61,15 +62,18 @@ export function ReviewsModal({
     }
   };
 
+  const [page, setPage] = useState(1);
+  useEffect(() => setPage(1), [targetId, mediaType]);
+
   // Movie or TV Reviews Query
   const movieReviews = useMovieReviewsQuery(
     mediaType === "movie" ? targetId : 0,
-    1,
+    page,
     isOpen,
   );
   const tvReviews = useTVReviewsQuery(
     mediaType === "tv" ? targetId : 0,
-    1,
+    page,
     isOpen,
   );
 
@@ -84,9 +88,6 @@ export function ReviewsModal({
   >("featured");
   const [ratingFilter, setRatingFilter] = useState<string>("all");
   const [hideSpoilers, setHideSpoilers] = useState(false);
-  const [helpfulVotes, setHelpfulVotes] = useState<
-    Record<string, { up: number; down: number; voted?: "up" | "down" }>
-  >({});
 
   const filteredReviews = useMemo(() => {
     let list = [...rawReviews];
@@ -125,34 +126,6 @@ export function ReviewsModal({
     return list;
   }, [rawReviews, ratingFilter, hideSpoilers, reviewSort]);
 
-  const handleHelpfulVote = (reviewId: string, type: "up" | "down") => {
-    setHelpfulVotes((prev) => {
-      const current = prev[reviewId] || {
-        up: 180 + (reviewId.charCodeAt(0) % 50),
-        down: 12,
-      };
-      if (current.voted === type) return prev;
-      return {
-        ...prev,
-        [reviewId]: {
-          up:
-            type === "up"
-              ? current.up + 1
-              : current.voted === "up"
-                ? current.up - 1
-                : current.up,
-          down:
-            type === "down"
-              ? current.down + 1
-              : current.voted === "down"
-                ? current.down - 1
-                : current.down,
-          voted: type,
-        },
-      };
-    });
-  };
-
   const headerActions = (
     <div className="flex items-center gap-2">
       <Button variant="secondary" size="sm" onClick={handleShare}>
@@ -171,7 +144,7 @@ export function ReviewsModal({
       <FilterSelect
         value={reviewSort}
         onChange={(value) => setReviewSort(value as typeof reviewSort)}
-        ariaLabel="Sort reviews"
+        ariaLabel="Sort reviews on this page"
         placeholder="Sort by"
         options={[
           { value: "featured", label: "Featured" },
@@ -202,7 +175,7 @@ export function ReviewsModal({
         <FilterSelect
           value={reviewSort}
           onChange={(value) => setReviewSort(value as typeof reviewSort)}
-          ariaLabel="Sort reviews"
+          ariaLabel="Sort reviews on this page"
           fullWidth={false}
           options={[
             { value: "featured", label: "Featured" },
@@ -255,6 +228,10 @@ export function ReviewsModal({
       subHeader={subHeader}
       mobileControls={mobileControls}
     >
+      <p className="mb-4 text-xs text-muted-foreground">
+        Sorting and filters apply to this page.{" "}
+        {reviewsData?.total_results ?? 0} reviews total.
+      </p>
       {activeReviews.isError && (
         <QueryFeedback
           hasData={Boolean(activeReviews.data)}
@@ -306,11 +283,6 @@ export function ReviewsModal({
                 : `https://image.tmdb.org/t/p/w185${author.avatar_path}`
               : null;
 
-            const votes = helpfulVotes[review.id] || {
-              up: 180 + (review.id.charCodeAt(0) % 50),
-              down: 12,
-            };
-
             return (
               <article
                 key={review.id}
@@ -354,33 +326,18 @@ export function ReviewsModal({
                 <div className="pt-4 text-xs leading-relaxed whitespace-pre-line text-foreground/90 sm:text-sm">
                   {review.content}
                 </div>
-
-                {/* Helpful voting row */}
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-3 text-xs text-muted-foreground">
-                  <span className="font-medium">
-                    {votes.up} out of {votes.up + votes.down} found this helpful
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant={votes.voted === "up" ? "default" : "secondary"}
-                      size="sm"
-                      onClick={() => handleHelpfulVote(review.id, "up")}
-                    >
-                      <ThumbsUp className="size-3" />
-                      <span>Helpful ({votes.up})</span>
-                    </Button>
-                    <Button
-                      variant={votes.voted === "down" ? "default" : "secondary"}
-                      size="sm"
-                      onClick={() => handleHelpfulVote(review.id, "down")}
-                    >
-                      <ThumbsDown className="size-3" />
-                    </Button>
-                  </div>
-                </div>
               </article>
             );
           })}
+        </div>
+      )}
+      {(reviewsData?.total_pages ?? 0) > 1 && (
+        <div className="pt-6">
+          <PaginationSystem
+            currentPage={page}
+            totalPage={reviewsData!.total_pages}
+            onPageChange={setPage}
+          />
         </div>
       )}
     </DetailBottomSheet>
