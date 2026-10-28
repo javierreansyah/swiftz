@@ -75,21 +75,19 @@ export function TVSeasonsModal({
   const episodes = seasonDetails?.episodes || [];
 
   const mobileSeasonSelector = (
-    <div className="p-3">
-      <FilterSelect
-        value={String(activeSeasonNumber)}
-        onChange={(val) => setActiveSeasonNumber(Number(val))}
-        placeholder="Select Season"
-        options={seasons.map((s) => ({
-          value: String(s.season_number),
-          label: `${s.name} (${s.episode_count} Episodes)`,
-        }))}
-      />
-    </div>
+    <FilterSelect
+      value={String(activeSeasonNumber)}
+      onChange={(val) => setActiveSeasonNumber(Number(val))}
+      placeholder="Select Season"
+      options={seasons.map((s) => ({
+        value: String(s.season_number),
+        label: `${s.name} (${s.episode_count} Episodes)`,
+      }))}
+    />
   );
 
   const desktopSidebar = (
-    <aside className="p-4">
+    <div>
       <h4 className="mb-3 text-xs font-bold tracking-wider text-muted-foreground uppercase">
         Seasons
       </h4>
@@ -120,7 +118,7 @@ export function TVSeasonsModal({
           );
         })}
       </div>
-    </aside>
+    </div>
   );
 
   return (
@@ -132,14 +130,13 @@ export function TVSeasonsModal({
       sidebar={desktopSidebar}
       sidebarWidth="w-64"
       mobileControls={mobileSeasonSelector}
-      contentClassName=""
     >
-      <div className="mx-auto max-w-4xl space-y-8">
+      <div className="space-y-8">
         {/* Season Banner Card */}
         {currentSeasonSummary && (
           <div className="flex flex-col gap-4 rounded-3xl bg-card/60 p-4 shadow-xs sm:flex-row sm:items-start sm:p-5">
             {/* Season Poster */}
-            <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden bg-muted sm:w-32">
+            <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-32">
               {currentSeasonSummary.poster_path ? (
                 <Image
                   src={`https://image.tmdb.org/t/p/w342${currentSeasonSummary.poster_path}`}
@@ -199,7 +196,7 @@ export function TVSeasonsModal({
                   key={i}
                   className="flex flex-col gap-4 rounded-3xl bg-card/40 p-4 shadow-xs sm:flex-row"
                 >
-                  <Skeleton className="aspect-video w-full sm:w-48" />
+                  <Skeleton className="aspect-video w-full sm:w-56" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-5 w-48" />
                     <Skeleton className="h-4 w-32" />
@@ -235,7 +232,7 @@ export function TVSeasonsModal({
                   >
                     <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
                       {/* 16:9 Episode Still Image */}
-                      <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-muted sm:w-56">
+                      <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-56">
                         {stillUrl ? (
                           <Image
                             src={stillUrl}

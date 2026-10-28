@@ -18,6 +18,15 @@ Component ownership
   compact icons. `inline` is for text links. `media` and `media-ghost` maintain
   contrast on imagery. Keep selected states in `variant` and accessible state props.
 - `Input`: 40px, with `leadingIcon` / `trailingIcon` reserving space for adornments.
+  All inputs use a subtle recessed bevel and neutral surface brightening on focus,
+  with an inset destructive underline for invalid values. Keep these effects inside the
+  field so scroll containers cannot clip them; do not add borders or outer rings.
+- Tactile controls default to the strong bevel. `Button` supports `bevel="weak"`
+  for lower contrast; selects and multi-select filters use the weak treatment.
+  Native provider tiles reuse `bevel-weak` and tactile shadows, with inset outlines
+  for keyboard focus. Selected provider tiles use the primary filter-chip fill.
+- `Button`'s `navigation` variant keeps section links flat, with bold active
+  foreground text and a primary icon.
 - `Badge`: default for metadata, `filter` for removable filters; `soft` is the
   subtle primary treatment. Interactive multi-select filters use buttons.
 - `Card`: 24px padding/gap, or 16px with `size="sm"`; `interactive` adds hover.

@@ -3,6 +3,8 @@ import Image from "@/components/ui/image";
 import { Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/common/section-header";
+import { useMovieCollectionQuery } from "@/features/movies/hooks/queries";
+import { useVisible } from "@/hooks/use-visible";
 export interface MovieCollectionSectionProps {
   collection: {
     id: number;
@@ -17,6 +19,9 @@ export function MovieCollectionSection({
   collection,
   onOpenCollectionModal,
 }: MovieCollectionSectionProps) {
+  const { ref, visible } = useVisible();
+  const { data: details } = useMovieCollectionQuery(collection?.id, visible);
+
   if (!collection) return null;
 
   const backdropUrl = collection.backdrop_path
@@ -32,16 +37,11 @@ export function MovieCollectionSection({
   return (
     <section id="section-collection" className="scroll-mt-24 space-y-4 pt-4">
       {/* Standardized Serif Section Header */}
-      <SectionHeader
-        title="Franchise"
-        action={{
-          label: "Explore Collection",
-          onClick: onOpenCollectionModal,
-        }}
-      />
+      <SectionHeader title="Collection" />
 
       {/* Cinematic Banner Card */}
       <div
+        ref={ref}
         onClick={onOpenCollectionModal}
         className="group relative cursor-pointer overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-all hover:shadow-xl"
       >
@@ -74,17 +74,14 @@ export function MovieCollectionSection({
 
           {/* Details */}
           <div className="flex-1 space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-primary uppercase">
-              <Layers className="size-3.5" />
-              <span>Part of the Franchise</span>
-            </div>
             <h3 className="heading-card text-foreground group-hover:text-primary">
               {collection.name}
             </h3>
-            <p className="max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              This movie belongs to a larger cinematic collection. Explore all
-              parts, chronological release order, and ratings.
-            </p>
+            {details?.overview && (
+              <p className="max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                {details.overview}
+              </p>
+            )}
           </div>
 
           {/* Action CTA Button */}

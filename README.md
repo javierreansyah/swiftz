@@ -1,39 +1,111 @@
 <div align="center">
-  <img src="docs/assets/swiftz_logo.jpg" width="160" alt="Swiftz Icon" />
+  <img src="public/images/icon.png" width="100" alt="Swiftz icon" />
   <h1>Swiftz</h1>
-  <p>
-    Swiftz is a modern, sleek web application for movie discovery that combines a stunning UI with powerful features for a deeply immersive and smooth browsing experience.
-  </p>
+  <p>Discover your next favorite movie or TV show.</p>
 </div>
 
-## Screenshots
+Swiftz brings movies, TV shows, and the people behind them together in a
+responsive discovery experience powered by [The Movie Database (TMDB)](https://www.themoviedb.org/).
+Browse what's popular, explore the details, and keep track of your favorites.
 
-<div align="center">
-  <img src="docs/assets/homescreen.jpg" width="48%" alt="Home screen" />
-  <img src="docs/assets/discover.jpg" width="48%" alt="Discover screen" />
-  <img src="docs/assets/movie_details.jpg" width="48%" alt="Movie details screen" />
-  <img src="docs/assets/related_movies.jpg" width="48%" alt="Related movies screen" />
-</div>
+## ✨ Features
 
-## Features
+- **Discover movies and TV:** Browse trending, popular, and top-rated titles, or
+  narrow your search with filters.
+- **Explore the details:** Find cast and crew, reviews, recommendations, photos,
+  videos, and TV season and episode information.
+- **Get to know the people:** Explore biographies, known-for titles, and credits.
+- **Make it yours:** Sign in with TMDB to manage favorites, watchlists, and
+  ratings. Your library brings your saved movies together.
+- **Browse comfortably:** Enjoy responsive layouts and light and dark themes.
 
-- **Movie Discovery:** Explore diverse catalogs featuring trending, popular, and highly-rated movies. Find your next favorite film effortlessly.
-- **Detailed Movie Insights:** Dive deep into detailed movie profiles, complete with high-quality hero backdrops, comprehensive cast lists, and star ratings.
-- **Video Trailers:** Watch movie trailers directly within the app.
+## 📸 Explore Swiftz
 
-## Tech Stack
+### Home and discovery
 
-- **Framework:** [Next.js 16](https://nextjs.org/) & [React 19](https://react.dev/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components:** [Shadcn](https://ui.shadcn.com/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Data Fetching:** Native fetch, cached RSC/ISR, and [TanStack Query](https://tanstack.com/query)
-- **Images:** Responsive native images delivered directly by the TMDB CDN
+![Swiftz home screen](docs/images/hero.png)
 
-See [deployment and data-delivery guidance](docs/DEPLOYMENT.md) for Vercel setup,
-environment variables, caching, SEO, and validation commands.
+| Browse movies                                     | Browse TV shows                                  |
+| ------------------------------------------------- | ------------------------------------------------ |
+| ![Movie discovery](docs/images/browse-movies.png) | ![TV discovery](docs/images/browse-tv-shows.png) |
 
-See [application architecture](docs/ARCHITECTURE.md) for feature ownership,
-server/client boundaries, shared query options, and coding conventions. Use pnpm
-with the pinned package-manager version; `pnpm format:check`, `pnpm lint`, and
-`pnpm test` verify formatting, conventions, and data behavior.
+### Details and people
+
+| Movie details                                   | TV show details                                     |
+| ----------------------------------------------- | --------------------------------------------------- |
+| ![Movie details](docs/images/movie-details.png) | ![TV show details](docs/images/tv-show-details.png) |
+
+| Cast                                       | Person details                                    |
+| ------------------------------------------ | ------------------------------------------------- |
+| ![Movie cast](docs/images/movie-casts.png) | ![Person details](docs/images/person-details.png) |
+
+![TV episode guide](docs/images/tv-show-episodes-guide.png)
+
+### More to explore
+
+| Recommendations                                                 | Reviews                                         |
+| --------------------------------------------------------------- | ----------------------------------------------- |
+| ![Movie recommendations](docs/images/movie-recommendations.png) | ![Movie reviews](docs/images/movie-reviews.png) |
+
+| Photo gallery                                               | Full photo view                                           |
+| ----------------------------------------------------------- | --------------------------------------------------------- |
+| ![Movie photo gallery](docs/images/movie-image-gallery.png) | ![Full photo view](docs/images/movie-image-full-view.png) |
+
+![Movie video gallery](docs/images/movie-video-gallery.png)
+
+## 🚀 Get started
+
+You'll need Node.js, [pnpm](https://pnpm.io/), and a TMDB v3 API key. The
+repository pins pnpm in `package.json`; Corepack can select that version for you.
+
+1. Install dependencies:
+
+   ```sh
+   pnpm install --frozen-lockfile
+   ```
+
+2. Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_TMDB_API_KEY` to
+   your TMDB v3 API key. This value is exposed to the browser. An optional
+   `TMDB_API_KEY` can provide a separate server-side key.
+3. Start the development server:
+
+   ```sh
+   pnpm dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000).
+
+For production, set `NEXT_PUBLIC_SITE_URL` to your deployment's canonical
+origin. See the [deployment guide](docs/DEPLOYMENT.md) for environment variables,
+Vercel setup, caching, and data delivery.
+
+## 🛠️ Built with
+
+- [Next.js](https://nextjs.org/) and [React](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/)
+- [TanStack Query](https://tanstack.com/query) and native fetch
+- [Lucide](https://lucide.dev/) icons and responsive images served by TMDB
+
+## ✅ Development checks
+
+```sh
+pnpm format:check
+pnpm exec tsc --noEmit
+pnpm lint
+pnpm test
+pnpm build
+```
+
+The production build requires a working TMDB key and access to its resources.
+See the [architecture guide](docs/ARCHITECTURE.md) for project structure and
+conventions.
+
+## 📄 License
+
+Swiftz is available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+Movie and television data and images are provided by
+[TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not
+endorsed or certified by TMDB.

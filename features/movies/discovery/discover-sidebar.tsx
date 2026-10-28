@@ -336,7 +336,7 @@ export function DiscoverSidebar({
           placeholder="Select Region"
         />
 
-        <div className="grid grid-cols-4 gap-2 pt-1">
+        <div className="grid grid-cols-3 gap-2 pt-1">
           {activeProviders.map((provider) => {
             const isSelected = pendingFilters.watch_providers.includes(
               provider.id,
@@ -347,11 +347,12 @@ export function DiscoverSidebar({
                 type="button"
                 onClick={() => toggleProvider(provider.id)}
                 title={provider.name}
+                aria-pressed={isSelected}
                 className={cn(
-                  "group relative flex aspect-square flex-col items-center justify-center rounded-xl p-1 shadow-xs transition-all",
+                  "group relative flex aspect-square flex-col items-center justify-center rounded-xl p-1 outline-2 -outline-offset-2 outline-transparent transition-all bevel-weak focus-visible:outline-ring",
                   isSelected
-                    ? "bg-primary/10 shadow-sm ring-2 ring-primary"
-                    : "bg-card hover:bg-muted/50",
+                    ? "bg-primary text-primary-foreground shadow-tactile-primary hover:bg-primary/90"
+                    : "bg-secondary text-secondary-foreground shadow-tactile-secondary hover:bg-muted/50",
                 )}
               >
                 <div className="relative size-8 overflow-clip rounded-xl">
@@ -363,7 +364,7 @@ export function DiscoverSidebar({
                     className="object-cover"
                   />
                 </div>
-                <span className="mt-1 line-clamp-1 text-xs font-medium text-muted-foreground group-hover:text-foreground">
+                <span className="mt-1 line-clamp-1 text-xs font-medium">
                   {provider.name}
                 </span>
               </button>

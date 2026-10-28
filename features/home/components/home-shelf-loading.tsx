@@ -11,20 +11,22 @@ export function HomeShelfLoading({
   onRetry?: () => void;
 }) {
   return (
-    <ContentCarousel title={title}>
-      {isError ? (
-        onRetry ? (
-          <QueryFeedback hasData={false} onRetry={onRetry} />
+    <div className="container">
+      <ContentCarousel title={title}>
+        {isError ? (
+          onRetry ? (
+            <QueryFeedback hasData={false} onRetry={onRetry} />
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Unable to load this section. Please try again later.
+            </p>
+          )
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Unable to load this section. Please try again later.
-          </p>
-        )
-      ) : (
-        Array.from({ length: 5 }, (_, index) => (
-          <Skeleton key={index} variant="shelf" />
-        ))
-      )}
-    </ContentCarousel>
+          Array.from({ length: 5 }, (_, index) => (
+            <Skeleton key={index} variant="shelf" />
+          ))
+        )}
+      </ContentCarousel>
+    </div>
   );
 }

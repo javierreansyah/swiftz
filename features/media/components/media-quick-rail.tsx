@@ -155,7 +155,7 @@ export function MediaQuickRail({
             <Button
               key={item.id}
               type="button"
-              variant={isActive ? "secondary" : "ghost"}
+              variant="navigation"
               size="sm"
               aria-current={isActive ? "location" : undefined}
               onClick={() => scrollToSection(item.id)}

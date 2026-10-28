@@ -102,40 +102,6 @@ export function PaginationSystem({
       <div className="block sm:hidden">
         <Pagination>
           <PaginationContent>
-            {Array.from({ length: safeTotalPage }, (_, index) => {
-              const pageNumber = index + 1;
-              const isInRange = Math.abs(pageNumber - currentPage) <= 1;
-
-              if (
-                pageNumber === 1 ||
-                pageNumber === safeTotalPage ||
-                isInRange
-              ) {
-                return (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      href={getPageUrl(pageNumber)}
-                      isActive={pageNumber === currentPage}
-                      onClick={(e) => handlePageClick(e, pageNumber)}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              } else if (pageNumber === 2 || pageNumber === safeTotalPage - 1) {
-                return (
-                  <PaginationItem key={index}>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                );
-              } else {
-                return null;
-              }
-            })}
-          </PaginationContent>
-        </Pagination>
-        <Pagination>
-          <PaginationContent>
             {currentPage > 1 && (
               <PaginationItem>
                 <PaginationPrevious
@@ -144,6 +110,14 @@ export function PaginationSystem({
                 />
               </PaginationItem>
             )}
+            <PaginationItem>
+              <span
+                aria-live="polite"
+                className="text-sm text-muted-foreground"
+              >
+                {currentPage} / {safeTotalPage}
+              </span>
+            </PaginationItem>
             {currentPage < safeTotalPage && (
               <PaginationItem>
                 <PaginationNext

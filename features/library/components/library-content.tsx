@@ -124,7 +124,7 @@ export function LibraryContent() {
       <section className="space-y-8">
         {/* Loading State */}
         {currentQuery.isLoading && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 10 }, (_, i) => (
               <MovieCardSkeleton key={i} />
             ))}
@@ -153,7 +153,7 @@ export function LibraryContent() {
               </p>
             </div>
 
-            <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <ul className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {movies.map((movie) => {
                 const personalRating =
                   "rating" in movie ? movie.rating : undefined;

@@ -72,6 +72,7 @@ export function MultiSelectBadges({
           <Button
             key={item.id}
             variant={isSelected ? "default" : "secondary"}
+            bevel="weak"
             size="sm"
             aria-pressed={isSelected}
             onClick={() => onToggle(item.id)}

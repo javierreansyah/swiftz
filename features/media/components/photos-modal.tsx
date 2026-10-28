@@ -461,7 +461,7 @@ export function PhotosModal({
               No photos found matching the filter.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
               {filteredPhotos.map((photo, idx) => {
                 const isBackdrop = photo.type === "backdrop";
                 return (
@@ -477,8 +477,8 @@ export function PhotosModal({
                       variant="image"
                       sizes={
                         isBackdrop
-                          ? "(max-width: 640px) 100vw, (max-width: 768px) 66vw, (max-width: 1024px) 50vw, 40vw"
-                          : "(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                          ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          : "(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 17vw"
                       }
                       onClick={() => handleSelectPhoto(idx)}
                     />

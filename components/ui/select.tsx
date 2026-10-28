@@ -45,7 +45,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        buttonVariants({ variant: "secondary", size }),
+        buttonVariants({ variant: "secondary", size, bevel: "weak" }),
         "w-fit justify-between disabled:cursor-not-allowed data-placeholder:text-muted-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
         className,
       )}

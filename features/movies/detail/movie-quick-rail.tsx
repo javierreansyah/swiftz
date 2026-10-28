@@ -73,7 +73,7 @@ export function MovieQuickRail({
       ? [
           {
             id: "section-collection",
-            label: "Franchise",
+            label: "Collection",
             icon: Layers,
           },
         ]

@@ -230,7 +230,7 @@ export function MovieDetailClient({
               />
             </div>
 
-            {/* 6. Franchise / Collection Excerpt */}
+            {/* 6. Collection */}
             {movie.belongs_to_collection && (
               <MovieCollectionSection
                 collection={movie.belongs_to_collection}

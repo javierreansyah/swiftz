@@ -66,7 +66,7 @@ export function Footer() {
               <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
                 Discover movies and tv series in the speed of light.
               </p>
-              <p className="pt-2 text-xs leading-relaxed text-muted-foreground">
+              <p className="hidden pt-2 text-xs leading-relaxed text-muted-foreground lg:block">
                 © {new Date().getFullYear()} Swiftz. Film and television data
                 provided by TMDB.
               </p>
@@ -98,6 +98,10 @@ export function Footer() {
               ))}
             </div>
           </div>
+          <p className="pt-2 text-xs leading-relaxed text-muted-foreground lg:hidden">
+            © {new Date().getFullYear()} Swiftz. Film and television data
+            provided by TMDB.
+          </p>
         </div>
       </div>
     </footer>

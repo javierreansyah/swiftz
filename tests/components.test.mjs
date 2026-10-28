@@ -287,6 +287,93 @@ test("collection results open the existing sheet and keep it mounted when closed
   assert.equal(sheet.props.isOpen, false);
 });
 
+test("collections use API text and numbered media cards that retain release order when searched", () => {
+  let closes = 0;
+  const part = (id, title, release_date) => ({
+    id,
+    title,
+    release_date,
+    overview: "",
+    poster_path: null,
+    vote_average: 7,
+  });
+  const collection = {
+    name: "API Collection Name",
+    overview: "API collection overview",
+    backdrop_path: null,
+    parts: [part(2, "Second", "2022-01-01"), part(1, "First", "2020-01-01")],
+  };
+  const render = component(
+    "features/movies/detail/modals/collection-modal.tsx",
+    "CollectionModal",
+    {
+      "@/features/movies/hooks/queries": {
+        useMovieCollectionQuery: () => ({ data: collection }),
+      },
+    },
+  );
+  const props = {
+    isOpen: true,
+    collectionId: 42,
+    currentMovieId: 2,
+    onClose: () => closes++,
+  };
+  const tree = render(props);
+  assert.equal(tree.props.title, collection.name);
+  assert.ok(
+    nodes(tree).some(
+      (node) => node.type === "h2" && text(node) === collection.name,
+    ),
+  );
+  assert.match(text(tree), /API collection overview/);
+  assert.doesNotMatch(text(tree), /Franchise|Complete Saga/i);
+  const cards = nodes(tree).filter((node) => node.type === "MediaCard");
+  assert.deepEqual(
+    cards.map((card) => card.props.title),
+    ["First", "Second"],
+  );
+  assert.equal(cards[0].props.badge, "1");
+  assert.equal(cards[1].props.badge, "2 · Currently viewing");
+  tree.props.search.onChange("Second");
+  const card = nodes(render(props)).find((node) => node.type === "MediaCard");
+  assert.equal(card.props.badge, "2 · Currently viewing");
+  assert.equal(card.props.href, "/movie/2");
+  card.props.onClick();
+  assert.equal(closes, 1);
+  assert.equal(collection.parts[0].id, 2);
+});
+
+test("the collection card loads its API description when approaching the viewport", () => {
+  let visible = false;
+  const requests = [];
+  const render = component(
+    "features/movies/detail/sections/movie-collection-section.tsx",
+    "MovieCollectionSection",
+    {
+      "@/hooks/use-visible": { useVisible: () => ({ ref: null, visible }) },
+      "@/features/movies/hooks/queries": {
+        useMovieCollectionQuery: (id, enabled) => {
+          requests.push([id, enabled]);
+          return {
+            data: enabled ? { overview: "API description" } : undefined,
+          };
+        },
+      },
+    },
+  );
+  const props = {
+    collection: { id: 42, name: "Collection name" },
+    onOpenCollectionModal() {},
+  };
+  assert.doesNotMatch(text(render(props)), /API description/);
+  visible = true;
+  assert.match(text(render(props)), /API description/);
+  assert.deepEqual(requests, [
+    [42, false],
+    [42, true],
+  ]);
+});
+
 test("header search follows query-only URL changes", () => {
   let query = "first";
   const render = component(

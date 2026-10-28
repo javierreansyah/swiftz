@@ -1,5 +1,6 @@
 "use client";
 import { useMemo } from "react";
+import { prioritizePlayableVideos } from "@/features/media/videos";
 import {
   Dialog,
   DialogContent,
@@ -40,37 +41,7 @@ export function TrailerModal({
   const activeVideoKey = useMemo(() => {
     if (directVideoKey) return directVideoKey;
     const vList = isMovie ? movieVideos?.results : tvVideos?.results;
-    if (!vList || vList.length === 0) return null;
-
-    // Look for official trailer first
-    const officialTrailer = vList.find(
-      (v) =>
-        v.site?.toLowerCase() === "youtube" &&
-        v.type?.toLowerCase() === "trailer" &&
-        v.official,
-    );
-    if (officialTrailer) return officialTrailer.key;
-
-    // Any trailer
-    const trailer = vList.find(
-      (v) =>
-        v.site?.toLowerCase() === "youtube" &&
-        v.type?.toLowerCase() === "trailer",
-    );
-    if (trailer) return trailer.key;
-
-    // Any teaser or clip
-    const teaserOrClip = vList.find(
-      (v) =>
-        v.site?.toLowerCase() === "youtube" &&
-        (v.type?.toLowerCase() === "teaser" ||
-          v.type?.toLowerCase() === "clip"),
-    );
-    if (teaserOrClip) return teaserOrClip.key;
-
-    // Any YouTube video
-    const anyYt = vList.find((v) => v.site?.toLowerCase() === "youtube");
-    return anyYt ? anyYt.key : null;
+    return prioritizePlayableVideos(vList ?? [])[0]?.key ?? null;
   }, [directVideoKey, isMovie, movieVideos, tvVideos]);
 
   const isLoading =

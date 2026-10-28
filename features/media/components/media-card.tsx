@@ -174,9 +174,9 @@ export function MediaCard({
             {title}
           </h3>
 
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
             {rating !== undefined && rating > 0 ? (
-              <div className="flex items-center gap-1 font-semibold text-primary">
+              <div className="flex shrink-0 items-center gap-1 font-semibold text-primary">
                 <Star className="size-3 fill-primary text-primary" />
                 <span>{rating.toFixed(1)}</span>
               </div>

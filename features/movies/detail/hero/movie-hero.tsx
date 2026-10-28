@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { prioritizePlayableVideos } from "@/features/media/videos";
 import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
 import type { Cast, Crew, Video } from "@/lib/tmdb/types/common";
 import { useAuth } from "@/features/auth/auth-provider";
@@ -65,15 +66,10 @@ export function MovieHero({
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : posterUrl;
 
-  // Prioritize trailers, then teasers, then others
-  const playableVideos = useMemo(() => {
-    if (!videos || videos.length === 0) return [];
-    return [...videos].sort((a, b) => {
-      const aScore = a.type === "Trailer" ? 2 : a.type === "Teaser" ? 1 : 0;
-      const bScore = b.type === "Trailer" ? 2 : b.type === "Teaser" ? 1 : 0;
-      return bScore - aScore;
-    });
-  }, [videos]);
+  const playableVideos = useMemo(
+    () => prioritizePlayableVideos(videos),
+    [videos],
+  );
 
   const handleShareClick = async () => {
     if (navigator.share) {

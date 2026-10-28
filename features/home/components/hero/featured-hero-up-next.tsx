@@ -1,6 +1,6 @@
 "use client";
 import Image from "@/components/ui/image";
-import { Play } from "lucide-react";
+
 import type { Movie } from "@/lib/tmdb/types/movie";
 export interface FeaturedHeroUpNextProps {
   upNextMovies: Movie[];
@@ -57,7 +57,7 @@ export function FeaturedHeroUpNext({
 
             {/* Card Content */}
             <div className="relative z-1 flex size-full items-start gap-3.5 sm:gap-4">
-              {/* 2x Enlarged Thumbnail with play overlay */}
+              {/* Poster thumbnail */}
               <div className="relative aspect-2/3 h-full shrink-0 overflow-hidden rounded-xl bg-media/80 shadow-lg">
                 {itemPoster && (
                   <Image
@@ -68,17 +68,10 @@ export function FeaturedHeroUpNext({
                     variant="card"
                   />
                 )}
-                <div className="absolute inset-0 flex items-center justify-center bg-scrim/40 opacity-0 transition-opacity duration-300 group-hover/item:opacity-100">
-                  <Play className="size-6 fill-current text-media-foreground drop-shadow-md" />
-                </div>
               </div>
 
               {/* Top-aligned Info Column */}
               <div className="flex min-w-0 flex-1 flex-col justify-start space-y-1.5 pt-0.5">
-                <div className="flex items-center gap-1.5 text-xs text-primary">
-                  <Play className="size-3 fill-current" />
-                  <span className="font-semibold">Watch Trailer</span>
-                </div>
                 <h3 className="line-clamp-2 heading-card text-media-foreground transition-colors group-hover/item:text-primary">
                   {movie.title}
                 </h3>
