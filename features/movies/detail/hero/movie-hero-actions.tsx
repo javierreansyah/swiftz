@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { Button } from "@/components/ui/button";
-import Image from "@/components/ui/image";
 import {
   Star,
   TrendingUp,
@@ -11,18 +10,18 @@ import {
   Loader2,
   Heart,
 } from "lucide-react";
-import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
+import type { MovieDetailView } from "@/features/movies/detail/payload";
 import type { Cast, Crew } from "@/lib/tmdb/types/common";
 import { WatchlistDropdown } from "@/features/auth/components/watchlist-dropdown";
 import { AuthPromptModal } from "@/features/auth/components/auth-prompt-modal";
-import { formatNumberShort, formatCurrency } from "@/lib/format";
+import { formatNumberShort } from "@/lib/format";
 import { useMediaActions } from "@/features/auth/hooks/use-media-actions";
 import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { cn } from "@/lib/utils";
 
 export interface MovieHeroActionsProps {
-  movie: MovieDetailsData;
-  posterUrl: string;
+  staticContent: DetailStaticContent;
+  movie: MovieDetailView;
   cast: Cast[];
   crew: Crew[];
   reviewCount: number;
@@ -37,8 +36,8 @@ export interface MovieHeroActionsProps {
 }
 
 export function MovieHeroActions({
+  staticContent,
   movie,
-  posterUrl,
   cast,
   crew,
   reviewCount,
@@ -78,7 +77,7 @@ export function MovieHeroActions({
   const stars = cast
     .slice(0, 4)
     .map((member) => ({ id: member.id, name: member.name }));
-  const metascore = Math.round(movie.vote_average * 10);
+  const tmdbScore = Math.round(movie.vote_average * 10);
 
   return (
     <>
@@ -179,97 +178,12 @@ export function MovieHeroActions({
           </Button>
         </div>
 
-        {/* MOBILE ONLY: Poster (1:3) + Genres & Plot (2:3) */}
-        <div className="grid grid-cols-3 items-start gap-3.5 lg:hidden">
-          <div className="relative col-span-1 aspect-2/3 w-full overflow-hidden rounded-2xl bg-card shadow-lg">
-            <Image
-              src={posterUrl}
-              alt={movie.title}
-              fill
-              sizes="(max-width: 640px) 33vw, 160px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="col-span-2 min-w-0 space-y-2">
-            {/* Genres scrollable carousel */}
-            {movie.genres && movie.genres.length > 0 && (
-              <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto">
-                {movie.genres.map((genre) => (
-                  <Button
-                    key={genre.id}
-                    asChild
-                    variant="secondary"
-                    size="sm"
-                    className="shrink-0"
-                  >
-                    <Link
-                      href={`/movie?with_genres=${genre.id}`}
-                      prefetch={false}
-                    >
-                      {genre.name}
-                    </Link>
-                  </Button>
-                ))}
-              </div>
-            )}
-
-            {/* Plot overview without label */}
-            {movie.overview && (
-              <p className="text-sm leading-relaxed text-foreground">
-                {movie.overview}
-              </p>
-            )}
-          </div>
-        </div>
-
+        {staticContent.mobileOverview}
         {/* INFO SECTION: Metadata on Left, Watchlist on Right in desktop flex row; stacked on mobile */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           {/* METADATA GRID */}
           <div className="min-w-0 flex-1 space-y-4">
-            {/* DESKTOP ONLY: Genres and Plot */}
-            <div className="hidden space-y-4 lg:block">
-              {movie.genres && movie.genres.length > 0 && (
-                <div className="grid grid-cols-12 gap-4">
-                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
-                    {movie.genres.length > 1 ? "Genres" : "Genre"}
-                  </span>
-                  <div className="col-span-10 flex flex-wrap items-center gap-2">
-                    {movie.genres.map((genre) => (
-                      <Button
-                        key={genre.id}
-                        asChild
-                        variant="secondary"
-                        size="sm"
-                      >
-                        <Link
-                          href={`/movie?with_genres=${genre.id}`}
-                          prefetch={false}
-                        >
-                          {genre.name}
-                        </Link>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="h-px bg-border/50" />
-
-              {movie.overview && (
-                <div className="grid grid-cols-12 gap-4">
-                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
-                    Plot
-                  </span>
-                  <p className="col-span-10 text-sm leading-relaxed text-foreground sm:text-base">
-                    {movie.overview}
-                  </p>
-                </div>
-              )}
-
-              <div className="h-px bg-border/50" />
-            </div>
-
+            {staticContent.desktopOverview}
             {/* Mobile divider before remaining info */}
             <div className="h-px bg-border/50 lg:hidden" />
 
@@ -359,36 +273,8 @@ export function MovieHeroActions({
 
             <div className="h-px bg-border/50" />
 
-            {/* Box Office / Details */}
-            {(movie.budget > 0 || movie.revenue > 0) && (
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
-                <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
-                  Box Office
-                </span>
-                <div className="flex flex-wrap items-center gap-4 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {movie.budget > 0 && (
-                    <span>
-                      <strong className="text-muted-foreground">Budget:</strong>{" "}
-                      <span className="font-medium text-foreground">
-                        {formatCurrency(movie.budget)}
-                      </span>
-                    </span>
-                  )}
-                  {movie.revenue > 0 && (
-                    <span>
-                      <strong className="text-muted-foreground">
-                        Worldwide:
-                      </strong>{" "}
-                      <span className="font-medium text-foreground">
-                        {formatCurrency(movie.revenue)}
-                      </span>
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Reviews Row with Metascore and modal trigger */}
+            {staticContent.facts}
+            {/* Reviews and TMDB score */}
             <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
               <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
                 Reviews
@@ -413,17 +299,17 @@ export function MovieHeroActions({
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`flex size-6 items-center justify-center rounded-xl text-xs font-bold text-media-foreground ${
-                      metascore >= 70
+                      tmdbScore >= 70
                         ? "bg-success"
-                        : metascore >= 50
+                        : tmdbScore >= 50
                           ? "bg-rating"
                           : "bg-destructive"
                     }`}
                   >
-                    {metascore}
+                    {tmdbScore}
                   </span>
                   <span className="text-xs font-semibold text-muted-foreground">
-                    Metascore
+                    TMDB / 100
                   </span>
                 </div>
               </div>

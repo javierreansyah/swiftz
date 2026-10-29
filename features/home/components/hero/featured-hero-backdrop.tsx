@@ -1,10 +1,10 @@
 "use client";
 import Image from "@/components/ui/image";
 import { useParallax } from "@/hooks/use-parallax";
-import type { Movie } from "@/lib/tmdb/types/movie";
+import type { HeroMovie } from "@/features/home/hero-payload";
 import { cn } from "@/lib/utils";
 export interface FeaturedHeroBackdropProps {
-  movies: Movie[];
+  movies: HeroMovie[];
   selectedIndex: number;
   loadedIndices: number[];
 }

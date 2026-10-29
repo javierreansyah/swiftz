@@ -97,6 +97,37 @@ without accepting the resulting function and bandwidth costs.
 
 ## Checks
 
+### Transfer budget and server boundaries
+
+Movie and TV routes compose static headings, plots, genres, and facts on the
+server and pass rendered content slots into the interactive detail screen. The
+client screen receives an explicit small payload, not a full TMDB response.
+Homepage shelf mapping also runs on the server. These changes add no API requests.
+Keep the seven-day movie/person and daily TV/homepage intervals aligned between
+route declarations and fetches. Do not add short-lived fetches to these routes.
+
+After deployment, verify repeated requests to the same public detail URL hit the
+cache. Record HTML/RSC sizes and the highest-traffic paths in Vercel. Compare a
+representative week of daily usage deltas and visits before expanding server
+fetching. Initial planning ceilings are 7 GB Fast Origin Transfer and 700,000 CDN
+(formerly Edge) Requests per 30 days. Project each metric as measured usage divided
+by days measured, multiplied by 30; also monitor function invocations and ISR units.
+These are operating targets, not guarantees under unknown traffic. Cache hits
+still count as CDN requests. Bot protection must be checked in the dashboard.
+
+Payload selection reduces serialization; it does not shrink the original TMDB
+response stored in the fetch cache. Keep galleries, full credits, reviews, and
+episode details on the existing direct browser paths.
+
+Local production verification on October 29, 2026 returned `MISS` then `HIT`
+for `/movie/550`, `/tv/1399`, and `/person/287`, with cache headers of seven days,
+one day, and seven days respectively. Uncompressed HTML/RSC sizes were approximately
+100/33 KB, 125/37 KB, and 89/35 KB. These are local observations, not Vercel billing
+measurements or a before/after comparison of complete responses. For representative
+live TMDB responses, selected JSON was 560 vs 1702 bytes for the movie, 5007 vs
+7164 bytes for the TV show, and 4033 vs 5370 bytes for the eight homepage hero
+items. Static markup is still delivered alongside these smaller client inputs.
+
 - `pnpm format:check`
 - `pnpm exec tsc --noEmit`
 - `pnpm lint`

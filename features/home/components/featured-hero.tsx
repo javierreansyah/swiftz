@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import type { Movie } from "@/lib/tmdb/types/movie";
+import type { HeroMovie } from "@/features/home/hero-payload";
 import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { TrailerModal } from "@/components/common/trailer-modal";
 import { useAuth } from "@/features/auth/auth-provider";
@@ -12,7 +12,7 @@ import { FeaturedHeroBackdrop } from "@/features/home/components/hero/featured-h
 import { FeaturedHeroSpotlight } from "@/features/home/components/hero/featured-hero-spotlight";
 import { FeaturedHeroUpNext } from "@/features/home/components/hero/featured-hero-up-next";
 export interface FeaturedHeroProps {
-  movies: Movie[];
+  movies: HeroMovie[];
 }
 
 export function FeaturedHero({ movies }: FeaturedHeroProps) {

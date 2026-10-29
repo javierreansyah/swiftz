@@ -1,4 +1,3 @@
-"use client";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import {
   type MediaItem,

@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { searchResultSummary } from "@/features/search/result-summary";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 import { SearchResultImage } from "@/features/search/components/search-result-image";
+import { useClientQueryRouter } from "@/hooks/use-client-query-router";
 export interface HeaderSearchProps {
   className?: string;
   isScrolled?: boolean;
@@ -30,6 +31,7 @@ export function HeaderSearch({
   isMovieDetailPage = false,
 }: HeaderSearchProps) {
   const router = useRouter();
+  const queryRouter = useClientQueryRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const urlQuery = pathname === "/search" ? searchParams.get("q") || "" : "";
@@ -100,7 +102,9 @@ export function HeaderSearch({
 
     setIsDropdownOpen(false);
     setIsMobileOpen(false);
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    const href = `/search?q=${encodeURIComponent(trimmed)}`;
+    if (pathname === "/search") queryRouter.push(href);
+    else router.push(href);
   };
 
   const handleSelectResult = (item: MultiSearchResultItem) => {
@@ -261,7 +265,7 @@ export function HeaderSearch({
       {/* Mobile Search Bottom Sheet */}
       <Drawer open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <DrawerContent
-          surface="detail"
+          surface="search"
           className="inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
         >
           <DrawerHandle className="md:hidden" />

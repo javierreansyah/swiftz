@@ -1,3 +1,5 @@
+import { getMovieStaticContent } from "@/features/movies/detail/static-content";
+import { toMovieDetailView } from "@/features/movies/detail/payload";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MovieDetailClient } from "@/features/movies/detail/movie-detail-client";
@@ -82,9 +84,9 @@ export default async function MovieDetailsPage({ params }: MovieDetailsProps) {
         }}
       />
       <MovieDetailClient
+        staticContent={getMovieStaticContent(movie, certification)}
         key={movie.id}
-        movie={movie}
-        certification={certification}
+        movie={toMovieDetailView(movie)}
       />
     </main>
   );

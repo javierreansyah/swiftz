@@ -7,13 +7,23 @@ import {
   HomeMediaCarousel,
 } from "@/features/home/components/home-media-carousel";
 import { HomeShelfLoading } from "@/features/home/components/home-shelf-loading";
-export function TrendingSection() {
+const tabs = [
+  { id: "movies", label: "Movies" },
+  { id: "tv", label: "TV Shows" },
+];
+
+export function TrendingSection({ enabled = true }: { enabled?: boolean }) {
   const [activeTab, setActiveTab] = useState<string>("movies");
-  const movieQuery = useTrendingMoviesQuery(1, activeTab === "movies");
-  const tvQuery = useTrendingTVShowsQuery(1, activeTab === "tv");
+  const movieQuery = useTrendingMoviesQuery(
+    1,
+    enabled && activeTab === "movies",
+  );
+  const tvQuery = useTrendingTVShowsQuery(1, enabled && activeTab === "tv");
   const movies = movieQuery.data?.results || [];
   const tvShows = tvQuery.data?.results || [];
   const activeQuery = activeTab === "movies" ? movieQuery : tvQuery;
+  const viewAllHref =
+    activeTab === "movies" ? "/movie/trending-today" : "/tv/trending-today";
 
   const movieItems: MediaItem[] = movies.map((m) => ({
     id: m.id,
@@ -39,6 +49,10 @@ export function TrendingSection() {
     return (
       <HomeShelfLoading
         title="Trending"
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        action={{ label: "View all", href: viewAllHref }}
         isError={activeQuery.isError}
         onRetry={() => void activeQuery.refetch()}
       />
@@ -48,15 +62,10 @@ export function TrendingSection() {
     <HomeMediaCarousel
       title="Trending"
       items={activeTab === "movies" ? movieItems : tvItems}
-      tabs={[
-        { id: "movies", label: "Movies" },
-        { id: "tv", label: "TV Shows" },
-      ]}
+      tabs={tabs}
       activeTab={activeTab}
       onTabChange={setActiveTab}
-      viewAllHref={
-        activeTab === "movies" ? "/movie/trending-today" : "/tv/trending-today"
-      }
+      viewAllHref={viewAllHref}
     />
   );
 }

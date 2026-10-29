@@ -1,6 +1,7 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import React, { useState } from "react";
-import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
+import type { MovieDetailView } from "@/features/movies/detail/payload";
 import {
   useMovieReviewsQuery,
   useMovieCastQuery,
@@ -27,14 +28,14 @@ import { MovieReviewsSection } from "@/features/movies/detail/sections/movie-rev
 import { MovieCollectionSection } from "@/features/movies/detail/sections/movie-collection-section";
 import { MovieRecommendationsSection } from "@/features/movies/detail/sections/movie-recommendations-section";
 export interface MovieDetailClientProps {
-  movie: MovieDetailsData;
-  certification?: string;
+  staticContent: DetailStaticContent;
+  movie: MovieDetailView;
   children?: React.ReactNode;
 }
 
 export function MovieDetailClient({
+  staticContent,
   movie,
-  certification = "NR",
   children,
 }: MovieDetailClientProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
@@ -167,8 +168,8 @@ export function MovieDetailClient({
             {/* 1. Hero Showcase (Overview) */}
             <div id="section-overview" className="scroll-mt-24">
               <MovieHero
+                staticContent={staticContent}
                 movie={movie}
-                certification={certification}
                 videos={videos}
                 cast={cast}
                 crew={crew}

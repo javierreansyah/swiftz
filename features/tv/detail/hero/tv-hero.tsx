@@ -1,7 +1,8 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { useState, useMemo } from "react";
 import { prioritizePlayableVideos } from "@/features/media/videos";
-import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import type { Cast, Crew, Video } from "@/lib/tmdb/types/common";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useMediaAccountStatesQuery } from "@/features/auth/hooks/queries";
@@ -9,8 +10,8 @@ import { TVHeroHeader } from "@/features/tv/detail/hero/tv-hero-header";
 import { TVHeroMedia } from "@/features/tv/detail/hero/tv-hero-media";
 import { TVHeroActions } from "@/features/tv/detail/hero/tv-hero-actions";
 export interface TVHeroProps {
-  show: TVShowDetailsData;
-  certification?: string;
+  staticContent: DetailStaticContent;
+  show: TVDetailView;
   videos: Video[];
   cast: Cast[];
   crew: Crew[];
@@ -20,8 +21,8 @@ export interface TVHeroProps {
 }
 
 export function TVHero({
+  staticContent,
   show,
-  certification = "NR",
   videos,
   cast,
   reviewCount = 0,
@@ -41,19 +42,6 @@ export function TVHero({
       : states?.rated === true
         ? 10
         : null;
-
-  // Air years calculation: e.g. 2011–2019 or 2024–
-  const startYear = show.first_air_date
-    ? show.first_air_date.substring(0, 4)
-    : "";
-  const endYear = show.last_air_date ? show.last_air_date.substring(0, 4) : "";
-  const airYears = startYear
-    ? show.in_production
-      ? `${startYear}–`
-      : startYear === endYear
-        ? startYear
-        : `${startYear}–${endYear}`
-    : "";
 
   const posterUrl = show.poster_path
     ? `https://image.tmdb.org/t/p/w780${show.poster_path}`
@@ -91,11 +79,8 @@ export function TVHero({
   return (
     <div className="space-y-6">
       <TVHeroHeader
+        staticContent={staticContent}
         show={show}
-        certification={certification}
-        airYears={airYears}
-        seasonsCount={show.number_of_seasons || show.seasons?.length || 1}
-        episodesCount={show.number_of_episodes || 0}
         userRating={userRating}
         onRateClick={onOpenRating}
         onShareClick={handleShareClick}
@@ -110,8 +95,8 @@ export function TVHero({
       />
 
       <TVHeroActions
+        staticContent={staticContent}
         show={show}
-        posterUrl={posterUrl}
         cast={cast}
         reviewCount={reviewCount}
         isWatchlist={isWatchlist}

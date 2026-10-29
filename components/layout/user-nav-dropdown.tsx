@@ -15,13 +15,15 @@ import {
 export function UserNavDropdown() {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
 
-  if (isLoading) {
-    return <div className="size-9 animate-pulse rounded-xl bg-muted" />;
-  }
-
-  if (!isAuthenticated || !user) {
+  if (isLoading || !isAuthenticated || !user) {
     return (
-      <Button variant="outline" size="default" onClick={() => login()}>
+      <Button
+        variant="outline"
+        size="default"
+        disabled={isLoading}
+        aria-busy={isLoading}
+        onClick={() => login()}
+      >
         <LogIn className="size-4" />
         <span>Sign In</span>
       </Button>

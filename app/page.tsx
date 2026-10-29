@@ -1,3 +1,4 @@
+import { toHeroMovie } from "@/features/home/hero-payload";
 import { getPopularMovies } from "@/features/movies/api/server";
 import { FeaturedHero } from "@/features/home/components/featured-hero";
 import { PopularMoviesShelf } from "@/features/home/components/popular-movies-shelf";
@@ -33,7 +34,7 @@ export default async function HomePage() {
         }}
       />
       {/* 1. IMDb-style Featured Spotlight Banner with Trailer Dialog */}
-      <FeaturedHero movies={heroMovies} />
+      <FeaturedHero movies={heroMovies.map(toHeroMovie)} />
 
       {/* 2. Rest of the Popular Movies Shelf */}
       {remainingPopular.length > 0 && (

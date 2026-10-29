@@ -1,4 +1,5 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { Star, TrendingUp, Share2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,14 +7,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import { formatNumberShort } from "@/lib/format";
 export interface TVHeroHeaderProps {
-  show: TVShowDetailsData;
-  certification: string;
-  airYears: string;
-  seasonsCount: number;
-  episodesCount: number;
+  staticContent: DetailStaticContent;
+  show: TVDetailView;
   userRating: number | null;
   onRateClick: () => void;
   onShareClick: () => void;
@@ -21,11 +19,8 @@ export interface TVHeroHeaderProps {
 }
 
 export function TVHeroHeader({
+  staticContent,
   show,
-  certification,
-  airYears,
-  seasonsCount,
-  episodesCount,
   userRating,
   onRateClick,
   onShareClick,
@@ -33,29 +28,7 @@ export function TVHeroHeader({
 }: TVHeroHeaderProps) {
   return (
     <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-      <div className="space-y-1.5">
-        <h1 className="heading-hero text-foreground">{show.name}</h1>
-        <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-muted-foreground sm:text-base">
-          {airYears && <span>{airYears}</span>}
-          {airYears && <span>·</span>}
-          {certification && (
-            <>
-              <span>{certification}</span>
-              <span>·</span>
-            </>
-          )}
-          <span>
-            {seasonsCount} {seasonsCount === 1 ? "Season" : "Seasons"}
-          </span>
-          {episodesCount > 0 && (
-            <>
-              <span>·</span>
-              <span>{episodesCount} Episodes</span>
-            </>
-          )}
-        </div>
-      </div>
-
+      {staticContent.heading}
       {/* Right side header badges & rate action (Desktop only) */}
       <div className="hidden flex-wrap items-center gap-3 lg:flex">
         {/* Rate button */}

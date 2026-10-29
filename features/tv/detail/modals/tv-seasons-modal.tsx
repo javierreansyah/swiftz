@@ -15,14 +15,15 @@ import {
 import { DetailBottomSheet } from "@/features/media/components/detail-bottom-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
-import type { TVShowDetailsData, TVSeason } from "@/lib/tmdb/types/tv";
+import type { TVSeason } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import { useTVSeasonQuery } from "@/features/tv/hooks/queries";
 import { cn } from "@/lib/utils";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVSeasonsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  show: TVShowDetailsData;
+  show: TVDetailView;
   initialSeasonNumber?: number;
 }
 
@@ -49,10 +50,10 @@ export function TVSeasonsModal({
   >({});
 
   useEffect(() => {
-    if (initialSeasonNumber !== undefined) {
-      setActiveSeasonNumber(initialSeasonNumber);
-    }
-  }, [initialSeasonNumber]);
+    if (!isOpen) return;
+    setActiveSeasonNumber(defaultSeason);
+    setExpandedEpisodes({});
+  }, [isOpen, defaultSeason]);
 
   const {
     data: seasonDetails,

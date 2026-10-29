@@ -1,4 +1,5 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { Star, TrendingUp, Share2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,13 +7,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
+import type { MovieDetailView } from "@/features/movies/detail/payload";
 import { formatNumberShort } from "@/lib/format";
 export interface MovieHeroHeaderProps {
-  movie: MovieDetailsData;
-  certification: string;
-  releaseYear: string;
-  runtimeFormatted: string;
+  staticContent: DetailStaticContent;
+  movie: MovieDetailView;
   userRating: number | null;
   onRateClick: () => void;
   onShareClick: () => void;
@@ -20,10 +19,8 @@ export interface MovieHeroHeaderProps {
 }
 
 export function MovieHeroHeader({
+  staticContent,
   movie,
-  certification,
-  releaseYear,
-  runtimeFormatted,
   userRating,
   onRateClick,
   onShareClick,
@@ -31,21 +28,7 @@ export function MovieHeroHeader({
 }: MovieHeroHeaderProps) {
   return (
     <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-      <div className="space-y-1.5">
-        <h1 className="heading-hero text-foreground">{movie.title}</h1>
-        <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-muted-foreground sm:text-base">
-          {releaseYear && <span>{releaseYear}</span>}
-          {releaseYear && <span>·</span>}
-          {certification && (
-            <>
-              <span>{certification}</span>
-              <span>·</span>
-            </>
-          )}
-          <span>{runtimeFormatted}</span>
-        </div>
-      </div>
-
+      {staticContent.heading}
       {/* Right side header badges & rate action (Desktop only) */}
       <div className="hidden flex-wrap items-center gap-3 lg:flex">
         {/* Rate button */}

@@ -45,6 +45,13 @@ local when they serve a separate loading state.
 The person overview stays a Server Component. Its appended credits are processed
 there; only the small known-for shelf and primitive props reach client components.
 
+Movie and TV pages compose static headings, overview/genres, and facts through
+feature-owned server content functions. Rendered slots cross into the client
+controller; authentication, playback, scrolling, and sheets stay client-owned.
+Detail payload selectors explicitly construct only consumed fields, including
+nested objects. Homepage popular shelf mapping stays on the server; the hero
+receives a selected interactive payload. These boundaries add no server fetches.
+
 ## Data and URL state
 
 - `lib/tmdb/server.ts` is guarded by `server-only`; feature server API modules

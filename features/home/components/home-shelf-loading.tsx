@@ -1,18 +1,35 @@
-import { ContentCarousel } from "@/components/common/content-carousel";
+import {
+  ContentCarousel,
+  type ContentCarouselProps,
+} from "@/components/common/content-carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export function HomeShelfLoading({
   title,
+  action,
+  tabs,
+  activeTab,
+  onTabChange,
+  variant = "shelf",
   isError = false,
   onRetry,
-}: {
-  title: string;
+}: Pick<
+  ContentCarouselProps,
+  "title" | "action" | "tabs" | "activeTab" | "onTabChange"
+> & {
+  variant?: "shelf" | "person-shelf";
   isError?: boolean;
   onRetry?: () => void;
 }) {
   return (
     <div className="container">
-      <ContentCarousel title={title}>
+      <ContentCarousel
+        title={title}
+        action={action}
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
+      >
         {isError ? (
           onRetry ? (
             <QueryFeedback hasData={false} onRetry={onRetry} />
@@ -23,7 +40,7 @@ export function HomeShelfLoading({
           )
         ) : (
           Array.from({ length: 5 }, (_, index) => (
-            <Skeleton key={index} variant="shelf" />
+            <Skeleton key={index} variant={variant} />
           ))
         )}
       </ContentCarousel>

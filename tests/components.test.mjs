@@ -120,6 +120,175 @@ test("legacy demo sessions are cleared before account requests are enabled", () 
   assert.equal("loginDemo" in tree.props.value, false);
 });
 
+test("reopening a season card restores that season after changing seasons inside the sheet", () => {
+  let requested;
+  const render = component(
+    "features/tv/detail/modals/tv-seasons-modal.tsx",
+    "TVSeasonsModal",
+    {
+      "@/lib/utils": { cn: () => "" },
+      "@/features/tv/hooks/queries": {
+        useTVSeasonQuery: (_id, season) => {
+          requested = season;
+          return { data: { episodes: [] } };
+        },
+      },
+    },
+  );
+  const props = {
+    isOpen: true,
+    initialSeasonNumber: 1,
+    onClose() {},
+    show: {
+      id: 42,
+      name: "Show",
+      seasons: [
+        { id: 1, name: "Season 1", season_number: 1 },
+        { id: 2, name: "Season 2", season_number: 2 },
+      ],
+    },
+  };
+  render(props).props.mobileControls.props.onChange("2");
+  render(props);
+  assert.equal(requested, 2);
+  render({ ...props, isOpen: false });
+  render(props);
+  assert.equal(requested, 1);
+});
+
+test("an external photo thumbnail clears old filters so its index identifies the clicked image", () => {
+  const render = component(
+    "features/media/components/photos-modal.tsx",
+    "PhotosModal",
+    {
+      "@/lib/utils": { cn: () => "" },
+    },
+    { requestAnimationFrame: () => 0, cancelAnimationFrame() {} },
+  );
+  const props = {
+    isOpen: true,
+    onClose() {},
+    images: {
+      backdrops: [{ file_path: "/backdrop.jpg", width: 100, height: 50 }],
+      posters: [{ file_path: "/poster.jpg", width: 50, height: 100 }],
+    },
+  };
+  let tree = render(props);
+  nodes(tree.props.sidebar)
+    .find((n) => n.type === "Button" && text(n).includes("Posters (2:3)"))
+    .props.onClick();
+  render(props);
+  render({ ...props, isOpen: false });
+  tree = render({ ...props, initialPhotoIndex: 0 });
+  assert.ok(
+    nodes(tree).some(
+      (n) =>
+        n.props?.src === "https://image.tmdb.org/t/p/original/backdrop.jpg",
+    ),
+  );
+  assert.ok(
+    !nodes(tree).some(
+      (n) => n.props?.src === "https://image.tmdb.org/t/p/original/poster.jpg",
+    ),
+  );
+});
+
+test("header searches use local navigation on search and route navigation from other pages", () => {
+  let pathname = "/search";
+  const local = [],
+    routes = [];
+  const render = component(
+    "features/search/components/header-search.tsx",
+    "HeaderSearch",
+    {
+      "next/navigation": {
+        useRouter: () => ({ push: (href) => routes.push(href) }),
+        usePathname: () => pathname,
+        useSearchParams: () => new URLSearchParams({ q: "first" }),
+      },
+      "@/hooks/use-client-query-router": {
+        useClientQueryRouter: () => ({ push: (href) => local.push(href) }),
+      },
+      "@/features/search/hooks/queries": {
+        useMultiSearchQuery: () => ({ data: { results: [] } }),
+      },
+      "@/lib/utils": { cn: () => "" },
+    },
+  );
+  let tree = render({});
+  nodes(tree)
+    .find((n) => n.type === "Input")
+    .props.onChange({ target: { value: "new query" } });
+  tree = render({});
+  nodes(tree)
+    .find((n) => n.type === "form")
+    .props.onSubmit({ preventDefault() {} });
+  assert.deepEqual(local, ["/search?q=new%20query"]);
+  assert.equal(routes.length, 0);
+  pathname = "/movie/42";
+  tree = render({});
+  nodes(tree)
+    .find((n) => n.type === "Input")
+    .props.onChange({ target: { value: "other" } });
+  tree = render({});
+  nodes(tree)
+    .find((n) => n.type === "form")
+    .props.onSubmit({ preventDefault() {} });
+  assert.deepEqual(routes, ["/search?q=other"]);
+  const drawer = nodes(tree).find((n) => n.type === "DrawerContent");
+  assert.equal(drawer.props.surface, "search");
+});
+
+test("search drawers can shrink for the keyboard while detail drawers retain their minimum height", () => {
+  const render = component("components/ui/drawer.tsx", "DrawerContent", {
+    vaul: {
+      Drawer: { Content: "Content", Portal: "Portal", Overlay: "Overlay" },
+    },
+    "@/lib/utils": { cn: (...classes) => classes.filter(Boolean).join(" ") },
+  });
+  const content = (surface) =>
+    nodes(render({ surface })).find((n) => n.type === "Content").props
+      .className;
+  assert.match(content("search"), /\bmin-h-0\b/);
+  assert.doesNotMatch(content("search"), /\bmin-h-detail-sheet\b/);
+  assert.match(content("detail"), /\bmin-h-detail-sheet\b/);
+});
+
+test("birthdays and age calculations use UTC calendar dates in western time zones", () => {
+  class WesternDate extends Date {
+    constructor(value) {
+      super(value ?? "2020-12-18T12:00:00Z");
+    }
+    toLocaleDateString(locale, options) {
+      return super.toLocaleDateString(locale, {
+        timeZone: "America/Los_Angeles",
+        ...options,
+      });
+    }
+    getFullYear() {
+      return 2020;
+    }
+    getMonth() {
+      return 11;
+    }
+    getDate() {
+      return 17;
+    }
+  }
+  const render = component(
+    "features/people/components/person-overview.tsx",
+    "PersonOverview",
+    {},
+    { Date: WesternDate },
+  );
+  const tree = render({
+    person: { id: 42, name: "Person", birthday: "1963-12-18" },
+    credits: { cast: [], crew: [] },
+    externalIds: {},
+  });
+  assert.match(text(tree), /December 18, 1963 \(57 years old\)/);
+});
+
 function nodes(tree) {
   if (Array.isArray(tree)) return tree.flatMap(nodes);
   if (!tree || typeof tree !== "object") return [];
@@ -131,6 +300,107 @@ function text(tree) {
   if (!tree || typeof tree === "boolean") return "";
   return typeof tree === "object" ? text(tree.props?.children) : String(tree);
 }
+
+test("discovery shelves keep their carousel shell while results load", () => {
+  const render = component(
+    "features/media/components/media-carousel-row.tsx",
+    "MediaCarouselRow",
+  );
+  const props = {
+    title: "Popular Movies",
+    viewAllHref: "/movie/popular",
+    type: "movie",
+  };
+  const loading = render({ ...props, isLoading: true });
+  const loaded = render({
+    ...props,
+    isLoading: false,
+    items: [{ id: 42 }],
+  });
+  assert.equal(loading.type, "ContentCarousel");
+  assert.equal(loading.type, loaded.type);
+  assert.deepEqual(loading.props.action, loaded.props.action);
+  assert.equal(
+    nodes(loading).filter((node) => node.type === "Skeleton").length,
+    6,
+  );
+  assert.equal(
+    nodes(loaded).filter((node) => node.type === "CatalogCard").length,
+    1,
+  );
+  assert.equal(render({ ...props, isLoading: false, items: [] }), null);
+});
+
+test("sign-in reserves its final button geometry while authentication loads", () => {
+  let logins = 0;
+  const auth = {
+    isLoading: true,
+    isAuthenticated: false,
+    user: null,
+    login: () => logins++,
+  };
+  const render = component(
+    "components/layout/user-nav-dropdown.tsx",
+    "UserNavDropdown",
+    { "@/features/auth/auth-provider": { useAuth: () => auth } },
+  );
+  const loading = render({});
+  assert.equal(loading.type, "Button");
+  assert.equal(loading.props.disabled, true);
+  auth.isLoading = false;
+  const loaded = render({});
+  assert.equal(loaded.props.disabled, false);
+  assert.equal(loading.props.size, loaded.props.size);
+  assert.equal(text(loading), text(loaded));
+  loaded.props.onClick();
+  assert.equal(logins, 1);
+});
+
+test("trending keeps its header and selection while preserving visibility gating", () => {
+  const enabled = [];
+  const movieQuery = { data: undefined };
+  const tvQuery = { data: undefined };
+  const render = component(
+    "features/home/components/trending-section.tsx",
+    "TrendingSection",
+    {
+      "@/features/movies/hooks/queries": {
+        useTrendingMoviesQuery: (_page, value) => {
+          enabled.push(["movie", value]);
+          return movieQuery;
+        },
+      },
+      "@/features/tv/hooks/queries": {
+        useTrendingTVShowsQuery: (_page, value) => {
+          enabled.push(["tv", value]);
+          return tvQuery;
+        },
+      },
+    },
+  );
+  const hidden = render({ enabled: false });
+  assert.deepEqual(enabled.slice(-2), [
+    ["movie", false],
+    ["tv", false],
+  ]);
+  const loading = render({ enabled: true });
+  assert.deepEqual(enabled.slice(-2), [
+    ["movie", true],
+    ["tv", false],
+  ]);
+  assert.deepEqual(hidden.props.tabs, loading.props.tabs);
+  loading.props.onTabChange("tv");
+  const loadingTV = render({ enabled: true });
+  assert.deepEqual(enabled.slice(-2), [
+    ["movie", false],
+    ["tv", true],
+  ]);
+  tvQuery.data = { results: [{ id: 42, name: "Series" }] };
+  const loaded = render({ enabled: true });
+  assert.deepEqual(loadingTV.props.tabs, loaded.props.tabs);
+  assert.equal(loadingTV.props.activeTab, loaded.props.activeTab);
+  assert.equal(loadingTV.props.action.href, loaded.props.viewAllHref);
+});
 
 test("ratings follow late account data, discard cancelled edits, and expose save failures", () => {
   const writes = [];
@@ -387,6 +657,9 @@ test("header search follows query-only URL changes", () => {
       },
       "@/features/search/hooks/queries": {
         useMultiSearchQuery: () => ({ data: { results: [] } }),
+      },
+      "@/hooks/use-client-query-router": {
+        useClientQueryRouter: () => ({ push() {} }),
       },
       "@/lib/utils": { cn: () => "" },
     },

@@ -1,9 +1,9 @@
 "use client";
 import Image from "@/components/ui/image";
 
-import type { Movie } from "@/lib/tmdb/types/movie";
+import type { HeroMovie } from "@/features/home/hero-payload";
 export interface FeaturedHeroUpNextProps {
-  upNextMovies: Movie[];
+  upNextMovies: HeroMovie[];
   onSelectMovie: (offset: number) => void;
 }
 

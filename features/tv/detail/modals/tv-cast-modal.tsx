@@ -1,13 +1,13 @@
 "use client";
 import type { ReactNode } from "react";
-import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import type { Cast, Crew } from "@/lib/tmdb/types/common";
 import { CastModal } from "@/features/media/components/cast-modal";
 export interface TVCastModalProps {
   loadError?: ReactNode;
   isOpen: boolean;
   onClose: () => void;
-  show: TVShowDetailsData;
+  show: TVDetailView;
   cast: Cast[];
   crew: Crew[];
 }

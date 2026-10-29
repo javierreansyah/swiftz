@@ -51,7 +51,7 @@ function DrawerContent({
   surface = "default",
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
-  surface?: "default" | "filter" | "detail" | "fit";
+  surface?: "default" | "filter" | "detail" | "search" | "fit";
 }) {
   return (
     <DrawerPortal>
@@ -64,6 +64,7 @@ function DrawerContent({
             "h-filter-sheet max-h-filter-sheet",
           surface === "detail" &&
             "h-detail-sheet max-h-detail-sheet min-h-detail-sheet",
+          surface === "search" && "h-detail-sheet max-h-detail-sheet min-h-0",
           surface === "fit" && "h-auto max-h-dialog",
           className,
         )}

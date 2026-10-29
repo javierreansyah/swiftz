@@ -9,14 +9,14 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import type { Movie } from "@/lib/tmdb/types/movie";
+import type { HeroMovie } from "@/features/home/hero-payload";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 export interface FeaturedHeroSpotlightProps {
-  movies: Movie[];
+  movies: HeroMovie[];
   selectedIndex: number;
   loadedIndices: number[];
-  activeMovie: Movie;
+  activeMovie: HeroMovie;
   isAuthenticated: boolean;
   isWatchlist: boolean;
   isWatchlistPending: boolean;

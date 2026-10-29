@@ -1,3 +1,5 @@
+import { getTVStaticContent } from "@/features/tv/detail/static-content";
+import { toTVDetailView } from "@/features/tv/detail/payload";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TVDetailClient } from "@/features/tv/detail/tv-detail-client";
@@ -81,7 +83,11 @@ export default async function TVDetailsPage({ params }: TVDetailsPageProps) {
             : {}),
         }}
       />
-      <TVDetailClient key={show.id} show={show} certification={usRating} />
+      <TVDetailClient
+        staticContent={getTVStaticContent(show, usRating)}
+        key={show.id}
+        show={toTVDetailView(show)}
+      />
     </main>
   );
 }

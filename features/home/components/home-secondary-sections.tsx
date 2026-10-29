@@ -40,11 +40,7 @@ export function HomeSecondarySections() {
   return (
     <div className="space-y-12">
       <div ref={trending.ref}>
-        {trending.visible ? (
-          <TrendingSection />
-        ) : (
-          <HomeShelfLoading title="Trending" />
-        )}
+        <TrendingSection enabled={trending.visible} />
       </div>
       <div ref={topRated.ref}>
         {moviesQuery.data ? (
@@ -56,6 +52,7 @@ export function HomeSecondarySections() {
         ) : (
           <HomeShelfLoading
             title="Top Rated"
+            action={{ label: "View all", href: "/movie/top-rated" }}
             isError={moviesQuery.isError}
             onRetry={() => void moviesQuery.refetch()}
           />
@@ -71,6 +68,7 @@ export function HomeSecondarySections() {
         ) : (
           <HomeShelfLoading
             title="Popular TV Series"
+            action={{ label: "View all", href: "/tv/popular" }}
             isError={tvQuery.isError}
             onRetry={() => void tvQuery.refetch()}
           />
@@ -82,6 +80,8 @@ export function HomeSecondarySections() {
         ) : (
           <HomeShelfLoading
             title="Popular Stars"
+            action={{ label: "Explore People", href: "/person" }}
+            variant="person-shelf"
             isError={peopleQuery.isError}
             onRetry={() => void peopleQuery.refetch()}
           />

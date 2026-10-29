@@ -1,6 +1,7 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { useState } from "react";
-import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useMediaAccountStatesQuery } from "@/features/auth/hooks/queries";
 import {
@@ -24,14 +25,11 @@ import {
   TVBottomModals,
 } from "@/features/tv/detail/modals/tv-bottom-modals";
 export interface TVDetailClientProps {
-  show: TVShowDetailsData;
-  certification?: string;
+  staticContent: DetailStaticContent;
+  show: TVDetailView;
 }
 
-export function TVDetailClient({
-  show,
-  certification = "NR",
-}: TVDetailClientProps) {
+export function TVDetailClient({ staticContent, show }: TVDetailClientProps) {
   const [activeModal, setActiveModal] = useState<TVModalType>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [initialVideoIndex, setInitialVideoIndex] = useState<
@@ -134,8 +132,8 @@ export function TVDetailClient({
             {/* 1. Hero Showcase (Overview) */}
             <div id="section-overview" className="scroll-mt-24">
               <TVHero
+                staticContent={staticContent}
                 show={show}
-                certification={certification}
                 videos={videos}
                 cast={cast}
                 crew={crew}

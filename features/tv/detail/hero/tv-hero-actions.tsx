@@ -1,7 +1,6 @@
 "use client";
+import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import Image from "@/components/ui/image";
 import {
   Star,
   TrendingUp,
@@ -11,7 +10,7 @@ import {
   Loader2,
   Heart,
 } from "lucide-react";
-import type { TVShowDetailsData } from "@/lib/tmdb/types/tv";
+import type { TVDetailView } from "@/features/tv/detail/payload";
 import type { Cast } from "@/lib/tmdb/types/common";
 import { WatchlistDropdown } from "@/features/auth/components/watchlist-dropdown";
 import { AuthPromptModal } from "@/features/auth/components/auth-prompt-modal";
@@ -21,8 +20,8 @@ import { SaveFeedback } from "@/features/media/components/save-feedback";
 import { cn } from "@/lib/utils";
 
 export interface TVHeroActionsProps {
-  show: TVShowDetailsData;
-  posterUrl: string;
+  staticContent: DetailStaticContent;
+  show: TVDetailView;
   cast: Cast[];
   reviewCount: number;
   isWatchlist: boolean;
@@ -35,8 +34,8 @@ export interface TVHeroActionsProps {
 }
 
 export function TVHeroActions({
+  staticContent,
   show,
-  posterUrl,
   cast,
   reviewCount,
   isWatchlist,
@@ -67,7 +66,7 @@ export function TVHeroActions({
   const creators = show.created_by?.map((c) => c.name) || [];
   const networks = show.networks?.map((n) => n.name) || [];
   const stars = cast.slice(0, 4).map((c) => c.name);
-  const metascore = Math.round(show.vote_average * 10);
+  const tmdbScore = Math.round(show.vote_average * 10);
 
   return (
     <>
@@ -168,80 +167,12 @@ export function TVHeroActions({
           </Button>
         </div>
 
-        {/* MOBILE ONLY: Poster (1:3) + Genres & Plot (2:3) */}
-        <div className="grid grid-cols-3 items-start gap-3.5 lg:hidden">
-          <div className="relative col-span-1 aspect-2/3 w-full overflow-hidden rounded-2xl bg-card shadow-lg">
-            <Image
-              src={posterUrl}
-              alt={show.name}
-              fill
-              sizes="(max-width: 640px) 33vw, 160px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="col-span-2 min-w-0 space-y-2">
-            {/* Genres scrollable carousel */}
-            {show.genres && show.genres.length > 0 && (
-              <div className="flex scrollbar-none items-center gap-1.5 overflow-x-auto">
-                {show.genres.map((genre) => (
-                  <Badge
-                    key={genre.id}
-                    variant="secondary"
-                    className="shrink-0"
-                  >
-                    {genre.name}
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            {/* Plot overview without label */}
-            {show.overview && (
-              <p className="text-sm leading-relaxed text-foreground">
-                {show.overview}
-              </p>
-            )}
-          </div>
-        </div>
-
+        {staticContent.mobileOverview}
         {/* INFO SECTION: Metadata on Left, Watchlist on Right in desktop flex row; stacked on mobile */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           {/* METADATA GRID */}
           <div className="min-w-0 flex-1 space-y-4">
-            {/* DESKTOP ONLY: Genres and Plot */}
-            <div className="hidden space-y-4 lg:block">
-              {show.genres && show.genres.length > 0 && (
-                <div className="grid grid-cols-12 gap-4">
-                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
-                    {show.genres.length > 1 ? "Genres" : "Genre"}
-                  </span>
-                  <div className="col-span-10 flex flex-wrap items-center gap-2">
-                    {show.genres.map((genre) => (
-                      <Badge key={genre.id} variant="secondary">
-                        {genre.name}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="h-px bg-border/50" />
-
-              {show.overview && (
-                <div className="grid grid-cols-12 gap-4">
-                  <span className="col-span-2 text-sm font-bold text-muted-foreground">
-                    Plot
-                  </span>
-                  <p className="col-span-10 text-sm leading-relaxed text-foreground sm:text-base">
-                    {show.overview}
-                  </p>
-                </div>
-              )}
-
-              <div className="h-px bg-border/50" />
-            </div>
-
+            {staticContent.desktopOverview}
             {/* Mobile divider before remaining info */}
             <div className="h-px bg-border/50 lg:hidden" />
 
@@ -313,32 +244,8 @@ export function TVHeroActions({
 
             <div className="h-px bg-border/50" />
 
-            {/* Status & Type */}
-            <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
-              <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
-                Status
-              </span>
-              <div className="flex flex-wrap items-center gap-4 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                {show.status && (
-                  <span>
-                    <strong className="text-muted-foreground">Status:</strong>{" "}
-                    <span className="font-medium text-foreground">
-                      {show.status}
-                    </span>
-                  </span>
-                )}
-                {show.type && (
-                  <span>
-                    <strong className="text-muted-foreground">Type:</strong>{" "}
-                    <span className="font-medium text-foreground">
-                      {show.type}
-                    </span>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Reviews Row with Metascore */}
+            {staticContent.facts}
+            {/* Reviews and TMDB score */}
             <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
               <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
                 Reviews
@@ -363,17 +270,17 @@ export function TVHeroActions({
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`flex size-6 items-center justify-center rounded-xl text-xs font-bold text-media-foreground ${
-                      metascore >= 70
+                      tmdbScore >= 70
                         ? "bg-success"
-                        : metascore >= 50
+                        : tmdbScore >= 50
                           ? "bg-primary"
                           : "bg-destructive"
                     }`}
                   >
-                    {metascore}
+                    {tmdbScore}
                   </span>
                   <span className="text-xs font-semibold text-muted-foreground">
-                    Score
+                    TMDB / 100
                   </span>
                 </div>
               </div>

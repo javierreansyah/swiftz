@@ -35,13 +35,14 @@ function formatBirthDate(birthDate: string, deathDate?: string | null): string {
       month: "long",
       day: "numeric",
       year: "numeric",
+      timeZone: "UTC",
     });
 
     const start = new Date(birthDate);
     const end = deathDate ? new Date(deathDate) : new Date();
-    let age = end.getFullYear() - start.getFullYear();
-    const m = end.getMonth() - start.getMonth();
-    if (m < 0 || (m === 0 && end.getDate() < start.getDate())) {
+    let age = end.getUTCFullYear() - start.getUTCFullYear();
+    const m = end.getUTCMonth() - start.getUTCMonth();
+    if (m < 0 || (m === 0 && end.getUTCDate() < start.getUTCDate())) {
       age--;
     }
 

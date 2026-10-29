@@ -1,6 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
-import type { MovieDetailsData } from "@/lib/tmdb/types/movie";
+import type { MovieDetailView } from "@/features/movies/detail/payload";
 import type {
   Cast,
   Crew,
@@ -28,7 +28,7 @@ export interface MovieBottomModalsProps {
   photosError?: ReactNode;
   activeModal: ModalType;
   onClose: () => void;
-  movie: MovieDetailsData;
+  movie: MovieDetailView;
   cast: Cast[];
   crew: Crew[];
   videos: Video[];

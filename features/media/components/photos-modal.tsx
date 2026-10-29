@@ -141,6 +141,8 @@ export function PhotosModal({
   useEffect(() => {
     if (!isOpen) return;
     if (initialPhotoIndex !== undefined) {
+      setPhotoTypeFilter("all");
+      setSelectedLanguage("all");
       setActivePhotoIdx(initialPhotoIndex);
       setViewMode("showcase");
     } else {
