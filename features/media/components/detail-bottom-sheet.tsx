@@ -144,7 +144,7 @@ export function DetailBottomSheet({
 
           {/* Mobile Top Controls (Minimal, directly on background, no border container) */}
           {(search || mobileControls) && (
-            <div className="flex shrink-0 flex-col gap-2 px-4 pt-3 pb-1 md:hidden">
+            <div className="flex shrink-0 flex-col gap-2 px-4 pt-3 pb-2 md:hidden">
               {search && (
                 <div className="relative w-full">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />

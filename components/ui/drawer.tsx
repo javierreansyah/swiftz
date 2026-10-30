@@ -59,13 +59,15 @@ function DrawerContent({
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-4xl bg-background shadow-2xl",
+          "fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col overscroll-contain rounded-t-4xl bg-background shadow-2xl",
           (surface === "default" || surface === "filter") &&
-            "h-filter-sheet max-h-filter-sheet",
+            "h-filter-sheet max-h-mobile-sheet md:max-h-filter-sheet",
           surface === "detail" &&
-            "h-detail-sheet max-h-detail-sheet min-h-detail-sheet",
-          surface === "search" && "h-detail-sheet max-h-detail-sheet min-h-0",
-          surface === "fit" && "h-auto max-h-dialog",
+            "h-mobile-sheet max-h-mobile-sheet min-h-0 md:h-detail-sheet md:max-h-detail-sheet md:min-h-detail-sheet",
+          surface === "search" &&
+            "bottom-(--search-keyboard-inset,0px) h-(--search-visible-height,90dvh) max-h-(--search-visible-height,90dvh) min-h-0",
+          surface === "fit" &&
+            "h-auto max-h-mobile-sheet overflow-y-auto md:max-h-dialog",
           className,
         )}
         {...props}

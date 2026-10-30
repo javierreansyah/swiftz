@@ -1,13 +1,27 @@
 "use client";
 import React from "react";
 import Image from "@/components/ui/image";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { Film, Tv, User, Play, Camera, Star, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 export type MediaCardType =
   "movie" | "tv" | "person" | "video" | "photo" | "season";
 
 export type MediaCardAspectRatio = "poster" | "portrait" | "video" | "square";
+
+function MediaCardNavigationFeedback() {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+
+  return (
+    <div
+      role="status"
+      className="pointer-events-none absolute inset-0 z-10 rounded-3xl bg-scrim/20"
+    >
+      <span className="sr-only">Loading details</span>
+    </div>
+  );
+}
 
 const SHELF_IMAGE_SIZES = {
   sm: { poster: "8rem", portrait: "9rem", video: "16rem", square: "8rem" },
@@ -199,12 +213,14 @@ export function MediaCard({
   if (href) {
     return (
       <Link
+        data-slot="media-card-link"
         href={href}
         prefetch={false}
         onClick={onClick}
-        className="block shrink-0 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        className="relative block shrink-0 transition-opacity focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:opacity-85"
       >
         {cardContent}
+        <MediaCardNavigationFeedback />
       </Link>
     );
   }
@@ -221,7 +237,7 @@ export function MediaCard({
             onClick();
           }
         }}
-        className="block shrink-0 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        className="block shrink-0 transition-opacity focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:opacity-85"
       >
         {cardContent}
       </div>

@@ -40,7 +40,7 @@ export function FeaturedHeroSpotlight({
   onNext,
 }: FeaturedHeroSpotlightProps) {
   return (
-    <div className="relative h-136 w-full overflow-hidden rounded-2xl bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-8 lg:aspect-auto lg:h-158 xl:h-176">
+    <div className="relative h-136 w-full overflow-hidden rounded-2xl bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-17 lg:aspect-auto lg:h-158 xl:h-176">
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
@@ -55,7 +55,8 @@ export function FeaturedHeroSpotlight({
           <div
             key={movie.id}
             className={cn(
-              "absolute inset-x-0 top-0 h-3/5 overflow-hidden transition-opacity duration-1000 ease-in-out sm:inset-0 sm:h-full",
+              "absolute inset-x-0 top-0 h-3/5 overflow-hidden transition-opacity duration-1000 ease-in-out motion-reduce:transition-none sm:inset-0 sm:h-full",
+              index !== 0 && "starting:opacity-0",
               isSelected
                 ? "z-1 opacity-100"
                 : "pointer-events-none z-0 opacity-0",
@@ -107,8 +108,11 @@ export function FeaturedHeroSpotlight({
         return (
           <div
             key={movie.id}
+            aria-hidden={!isSelected}
+            inert={!isSelected}
             className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 z-10 p-4 transition-opacity duration-1000 ease-in-out sm:p-6 lg:p-8",
+              "pointer-events-none absolute inset-x-0 bottom-0 z-10 p-4 transition-opacity duration-1000 ease-in-out motion-reduce:transition-none sm:p-6 lg:p-8",
+              index !== 0 && "starting:opacity-0",
               isSelected ? "opacity-100" : "opacity-0",
             )}
           >
@@ -160,7 +164,7 @@ export function FeaturedHeroSpotlight({
                     </span>
                   </div>
 
-                  <Heading className="line-clamp-2 heading-card text-media-foreground drop-shadow-md transition-colors group-hover/text:text-primary sm:heading-page">
+                  <Heading className="line-clamp-2 font-heading text-4xl font-semibold tracking-tight text-media-foreground drop-shadow-md transition-colors group-hover/text:text-primary">
                     {movie.title}
                   </Heading>
 

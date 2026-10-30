@@ -194,7 +194,7 @@ export function MediaQuickRail({
         {/* Watchlist button */}
         <Button
           size="default"
-          variant={isWatchlist ? "default" : "secondary"}
+          variant={isWatchlist ? "default" : "translucent"}
           onClick={onToggleWatchlist}
           disabled={isWatchlistPending}
           className="w-full justify-start"
@@ -212,7 +212,7 @@ export function MediaQuickRail({
         {/* Favorite button */}
         <Button
           size="default"
-          variant={isFavorite ? "default" : "secondary"}
+          variant={isFavorite ? "default" : "translucent"}
           onClick={onToggleFavorite}
           disabled={isFavoritePending}
           className="w-full justify-start"
@@ -233,7 +233,7 @@ export function MediaQuickRail({
         {/* Rate button */}
         <Button
           size="default"
-          variant="secondary"
+          variant="translucent"
           onClick={onOpenRating}
           className="w-full justify-start"
         >
@@ -253,7 +253,7 @@ export function MediaQuickRail({
         {/* Share button */}
         <Button
           size="default"
-          variant="secondary"
+          variant="translucent"
           onClick={handleShare}
           className="w-full justify-start"
         >

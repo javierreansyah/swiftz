@@ -31,6 +31,7 @@ export interface TVDetailClientProps {
 
 export function TVDetailClient({ staticContent, show }: TVDetailClientProps) {
   const [activeModal, setActiveModal] = useState<TVModalType>(null);
+  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [initialVideoIndex, setInitialVideoIndex] = useState<
     number | undefined
@@ -165,7 +166,14 @@ export function TVDetailClient({ staticContent, show }: TVDetailClientProps) {
             {/* 3. Cast Excerpt */}
             <TVCastSection
               cast={cast}
-              onOpenCastModal={() => setActiveModal("cast")}
+              onOpenCastModal={() => {
+                setSelectedPersonId(null);
+                setActiveModal("cast");
+              }}
+              onSelectPerson={(id) => {
+                setSelectedPersonId(id);
+                setActiveModal("cast");
+              }}
             />
 
             {videosError}
@@ -219,6 +227,7 @@ export function TVDetailClient({ staticContent, show }: TVDetailClientProps) {
         videos={videos}
         initialVideoIndex={initialVideoIndex}
         selectedSeasonNumber={selectedSeasonNumber}
+        selectedPersonId={selectedPersonId}
       />
 
       {/* Unified Rating Dialog */}

@@ -110,7 +110,9 @@ export function getMovieStaticContent(
             </div>
           )}
 
-          <div className="h-px bg-border/50" />
+          {movie.genres?.length > 0 && movie.overview && (
+            <div className="h-px bg-border/50" />
+          )}
 
           {movie.overview && (
             <div className="grid grid-cols-12 gap-4">
@@ -123,7 +125,9 @@ export function getMovieStaticContent(
             </div>
           )}
 
-          <div className="h-px bg-border/50" />
+          {(movie.genres?.length > 0 || movie.overview) && (
+            <div className="h-px bg-border/50" />
+          )}
         </div>
       </>
     ),

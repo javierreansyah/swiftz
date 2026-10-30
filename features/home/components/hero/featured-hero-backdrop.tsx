@@ -38,7 +38,8 @@ export function FeaturedHeroBackdrop({
             <div
               key={movie.id}
               className={cn(
-                "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+                "absolute inset-0 transition-opacity duration-1000 ease-in-out motion-reduce:transition-none",
+                index !== 0 && "starting:opacity-0",
                 isSelected ? "opacity-100" : "opacity-0",
               )}
             >

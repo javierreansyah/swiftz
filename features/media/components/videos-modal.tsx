@@ -1,14 +1,8 @@
 "use client";
+import { ShowcaseFilmstrip } from "@/features/media/components/showcase-filmstrip";
 import { type ReactNode, useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
-import {
-  Share2,
-  Bookmark,
-  Check,
-  LayoutGrid,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Share2, Bookmark, Check, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import type { Video } from "@/lib/tmdb/types/common";
@@ -327,7 +321,7 @@ export function VideosModal({
         /* Showcase Player View: Stage + Identical Height Bottom Filmstrip */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Video Player Stage */}
-          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden bg-scrim p-2 sm:p-4">
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden p-2 sm:p-4">
             {/* Mobile Back to Gallery Button */}
             <Button
               variant="media"
@@ -349,77 +343,53 @@ export function VideosModal({
             </div>
 
             <div className="mt-2 w-full max-w-6xl text-center">
-              <h3 className="line-clamp-1 heading-card text-media-foreground">
+              <h3 className="line-clamp-1 heading-card text-foreground">
                 {selectedVideoModal.name}
               </h3>
             </div>
           </div>
 
-          {/* Standardized Bottom Filmstrip */}
-          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                {currentVideoIdx >= 0
-                  ? `${currentVideoIdx + 1} of ${filteredVideos.length}`
-                  : ""}
-              </span>
-              <div className="flex items-center gap-1.5">
-                <Button
-                  variant="secondary"
-                  size="icon-sm"
+          <ShowcaseFilmstrip
+            label={
+              currentVideoIdx >= 0
+                ? `${currentVideoIdx + 1} of ${filteredVideos.length}`
+                : ""
+            }
+            count={filteredVideos.length}
+            onPrevious={handlePrevVideo}
+            onNext={handleNextVideo}
+            media="video"
+            containerRef={thumbnailContainerRef}
+          >
+            {filteredVideos.map((video, idx) => {
+              const isActive = video.id === selectedVideoModal.id;
+              const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
+              return (
+                <button
+                  key={video.id}
+                  ref={(el) => {
+                    thumbnailRefs.current[idx] = el;
+                  }}
                   type="button"
-                  onClick={handlePrevVideo}
-                  disabled={filteredVideos.length <= 1}
-                  aria-label="Previous video"
+                  onClick={() => setSelectedVideoModal(video)}
+                  className={cn(
+                    "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
+                    isActive
+                      ? "scale-105 border-primary ring-2 ring-primary/40"
+                      : "border-transparent opacity-60 hover:opacity-100",
+                  )}
                 >
-                  <ChevronLeft className="size-4" />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon-sm"
-                  type="button"
-                  onClick={handleNextVideo}
-                  disabled={filteredVideos.length <= 1}
-                  aria-label="Next video"
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
-              </div>
-            </div>
-            <div
-              ref={thumbnailContainerRef}
-              className="flex scrollbar-none gap-3 overflow-x-auto p-2"
-            >
-              {filteredVideos.map((video, idx) => {
-                const isActive = video.id === selectedVideoModal.id;
-                const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
-                return (
-                  <button
-                    key={video.id}
-                    ref={(el) => {
-                      thumbnailRefs.current[idx] = el;
-                    }}
-                    type="button"
-                    onClick={() => setSelectedVideoModal(video)}
-                    className={cn(
-                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
-                      isActive
-                        ? "scale-105 border-primary ring-2 ring-primary/40"
-                        : "border-transparent opacity-60 hover:opacity-100",
-                    )}
-                  >
-                    <Image
-                      src={ytThumb}
-                      alt={video.name}
-                      fill
-                      sizes="144px"
-                      className="object-cover"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+                  <Image
+                    src={ytThumb}
+                    alt={video.name}
+                    fill
+                    sizes="144px"
+                    className="object-cover"
+                  />
+                </button>
+              );
+            })}
+          </ShowcaseFilmstrip>
         </div>
       ) : (
         /* Gallery Grid View */
@@ -429,7 +399,7 @@ export function VideosModal({
               No videos found matching the filter.
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 pb-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredVideos.map((video) => {
                 const ytThumb = `https://img.youtube.com/vi/${video.key}/hqdefault.jpg`;
 

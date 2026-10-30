@@ -2,7 +2,11 @@
 import { useState, useEffect } from "react";
 import type { HeroMovie } from "@/features/home/hero-payload";
 import { SaveFeedback } from "@/features/media/components/save-feedback";
-import { TrailerModal } from "@/components/common/trailer-modal";
+import { VideosModal } from "@/features/media/components/videos-modal";
+import { QueryFeedback } from "@/features/media/components/query-feedback";
+import { prioritizePlayableVideos } from "@/features/media/videos";
+import { useMovieVideosQuery } from "@/features/movies/hooks/queries";
+import type { Video } from "@/lib/tmdb/types/common";
 import { useAuth } from "@/features/auth/auth-provider";
 import {
   useMediaAccountStatesQuery,
@@ -14,6 +18,8 @@ import { FeaturedHeroUpNext } from "@/features/home/components/hero/featured-her
 export interface FeaturedHeroProps {
   movies: HeroMovie[];
 }
+
+const EMPTY_VIDEOS: Video[] = [];
 
 export function FeaturedHero({ movies }: FeaturedHeroProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -36,6 +42,15 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
   });
 
   const { isAuthenticated, sessionId, user } = useAuth();
+  const videoQuery = useMovieVideosQuery(
+    trailerModal.mediaId,
+    trailerModal.isOpen,
+  );
+  const videos = videoQuery.data?.results ?? EMPTY_VIDEOS;
+  const preferredVideo = prioritizePlayableVideos(videos)[0];
+  const initialVideoIndex = preferredVideo
+    ? videos.findIndex((video) => video.id === preferredVideo.id)
+    : undefined;
 
   const activeMovie = movies[selectedIndex] || movies[0];
 
@@ -104,7 +119,7 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
 
       {/* 2. Main Foreground Banner Grid */}
       <div className="relative z-10 container pt-20 pb-4 lg:pt-24 lg:pb-6">
-        <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-12 lg:gap-6">
+        <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-24 lg:gap-6">
           <FeaturedHeroSpotlight
             movies={movies}
             selectedIndex={selectedIndex}
@@ -134,15 +149,26 @@ export function FeaturedHero({ movies }: FeaturedHeroProps) {
         <SaveFeedback isError={toggleWatchlistMutation.isError} />
       </div>
 
-      {/* Shared Trailer Modal */}
-      <TrailerModal
+      <VideosModal
         isOpen={trailerModal.isOpen}
         onClose={() =>
-          setTrailerModal({ isOpen: false, mediaId: 0, title: "" })
+          setTrailerModal((current) => ({ ...current, isOpen: false }))
         }
         title={trailerModal.title}
-        mediaId={trailerModal.mediaId}
-        mediaType="movie"
+        videos={videos}
+        initialVideoIndex={initialVideoIndex}
+        loadError={
+          videoQuery.isLoading && trailerModal.isOpen ? (
+            <p className="p-4 text-sm text-muted-foreground">
+              Loading videos...
+            </p>
+          ) : videoQuery.isError ? (
+            <QueryFeedback
+              hasData={Boolean(videoQuery.data)}
+              onRetry={() => void videoQuery.refetch()}
+            />
+          ) : undefined
+        }
       />
     </section>
   );

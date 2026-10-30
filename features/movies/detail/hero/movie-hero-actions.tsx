@@ -1,6 +1,7 @@
 "use client";
 import type { DetailStaticContent } from "@/features/media/detail-static-content";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Star,
   TrendingUp,
@@ -24,6 +25,7 @@ export interface MovieHeroActionsProps {
   movie: MovieDetailView;
   cast: Cast[];
   crew: Crew[];
+  creditsLoading: boolean;
   reviewCount: number;
   isWatchlist: boolean;
   isFavorite: boolean;
@@ -40,6 +42,7 @@ export function MovieHeroActions({
   movie,
   cast,
   crew,
+  creditsLoading,
   reviewCount,
   isWatchlist,
   isFavorite,
@@ -187,91 +190,130 @@ export function MovieHeroActions({
             {/* Mobile divider before remaining info */}
             <div className="h-px bg-border/50 lg:hidden" />
 
-            {/* Director */}
-            {directors.length > 0 && (
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
-                <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
-                  {directors.length > 1 ? "Directors" : "Director"}
-                </span>
-                <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {directors.map((director, i) => (
-                    <span key={`${director.id}-${i}`}>
-                      <button
-                        type="button"
-                        onClick={() => onOpenPerson(director.id)}
-                        className="cursor-pointer font-semibold text-primary hover:underline"
+            {(creditsLoading ||
+              directors.length > 0 ||
+              writers.length > 0 ||
+              stars.length > 0) && (
+              <div
+                className="min-h-40 space-y-4 sm:min-h-28"
+                aria-busy={creditsLoading}
+              >
+                {creditsLoading ? (
+                  <div className="space-y-4" aria-label="Loading credits">
+                    {[0, 1, 2].map((row) => (
+                      <div
+                        key={row}
+                        className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4"
                       >
-                        {director.name}
-                      </button>
-                      {i < directors.length - 1 && (
-                        <span className="text-muted-foreground"> · </span>
-                      )}
-                    </span>
-                  ))}
-                </div>
+                        <Skeleton className="h-5 w-20 sm:col-span-3 lg:col-span-2" />
+                        <Skeleton className="h-5 w-48 sm:col-span-9 lg:col-span-10" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    {/* Director */}
+                    {directors.length > 0 && (
+                      <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
+                        <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
+                          {directors.length > 1 ? "Directors" : "Director"}
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
+                          {directors.map((director, i) => (
+                            <span key={`${director.id}-${i}`}>
+                              <button
+                                type="button"
+                                onClick={() => onOpenPerson(director.id)}
+                                className="cursor-pointer font-semibold text-primary hover:underline"
+                              >
+                                {director.name}
+                              </button>
+                              {i < directors.length - 1 && (
+                                <span className="text-muted-foreground">
+                                  {" "}
+                                  ·{" "}
+                                </span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Writers */}
+                    {writers.length > 0 && (
+                      <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
+                        <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
+                          {writers.length > 1 ? "Writers" : "Writer"}
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
+                          {writers.map((writer, i) => (
+                            <span key={`${writer.id}-${i}`}>
+                              <button
+                                type="button"
+                                onClick={() => onOpenPerson(writer.id)}
+                                className="cursor-pointer font-semibold text-primary hover:underline"
+                              >
+                                {writer.name}
+                              </button>
+                              {i < writers.length - 1 && (
+                                <span className="text-muted-foreground">
+                                  {" "}
+                                  ·{" "}
+                                </span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Stars */}
+                    {stars.length > 0 && (
+                      <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
+                        <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
+                          Stars
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
+                          {stars.map((star, i) => (
+                            <span key={star.id}>
+                              <button
+                                type="button"
+                                onClick={() => onOpenPerson(star.id)}
+                                className="cursor-pointer font-semibold text-primary hover:underline"
+                              >
+                                {star.name}
+                              </button>
+                              {i < stars.length - 1 && (
+                                <span className="text-muted-foreground">
+                                  {" "}
+                                  ·{" "}
+                                </span>
+                              )}
+                            </span>
+                          ))}
+                          <span>
+                            <span className="text-muted-foreground">· </span>
+                            <button
+                              type="button"
+                              onClick={() => onOpenModal("cast")}
+                              className="cursor-pointer font-semibold text-primary hover:underline"
+                            >
+                              View full cast
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             )}
 
-            {/* Writers */}
-            {writers.length > 0 && (
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
-                <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
-                  {writers.length > 1 ? "Writers" : "Writer"}
-                </span>
-                <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {writers.map((writer, i) => (
-                    <span key={`${writer.id}-${i}`}>
-                      <button
-                        type="button"
-                        onClick={() => onOpenPerson(writer.id)}
-                        className="cursor-pointer font-semibold text-primary hover:underline"
-                      >
-                        {writer.name}
-                      </button>
-                      {i < writers.length - 1 && (
-                        <span className="text-muted-foreground"> · </span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Stars */}
-            {stars.length > 0 && (
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-12 sm:gap-4">
-                <span className="text-sm font-bold text-muted-foreground sm:col-span-3 lg:col-span-2">
-                  Stars
-                </span>
-                <div className="flex flex-wrap items-center gap-2 text-sm sm:col-span-9 sm:text-base lg:col-span-10">
-                  {stars.map((star, i) => (
-                    <span key={star.id}>
-                      <button
-                        type="button"
-                        onClick={() => onOpenPerson(star.id)}
-                        className="cursor-pointer font-semibold text-primary hover:underline"
-                      >
-                        {star.name}
-                      </button>
-                      {i < stars.length - 1 && (
-                        <span className="text-muted-foreground"> · </span>
-                      )}
-                    </span>
-                  ))}
-                  <Button
-                    variant="link"
-                    size="inline"
-                    type="button"
-                    onClick={() => onOpenModal("cast")}
-                    className="ml-2"
-                  >
-                    View full cast
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            <div className="h-px bg-border/50" />
+            {(creditsLoading ||
+              directors.length > 0 ||
+              writers.length > 0 ||
+              stars.length > 0) && <div className="h-px bg-border/50" />}
 
             {staticContent.facts}
             {/* Reviews and TMDB score */}

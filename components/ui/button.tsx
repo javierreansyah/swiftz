@@ -14,15 +14,17 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-tactile-secondary hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] active:shadow-inner aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-tactile-secondary hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] active:shadow-inner aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        translucent:
+          "bg-background/20 text-foreground shadow-tactile-secondary backdrop-blur-lg hover:bg-background/40 active:shadow-inner",
         ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+          "hover:bg-muted hover:text-foreground active:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         navigation:
-          "text-muted-foreground hover:text-foreground aria-[current=location]:font-bold aria-[current=location]:text-foreground aria-[current=location]:[&_svg]:text-primary",
+          "text-muted-foreground hover:text-foreground active:text-primary aria-[current=location]:font-bold aria-[current=location]:text-foreground aria-[current=location]:[&_svg]:text-primary",
         destructive:
           "bg-destructive/15 text-destructive shadow-tactile-destructive hover:bg-destructive/25 focus-visible:ring-destructive/20 active:shadow-inner dark:bg-destructive/25 dark:hover:bg-destructive/35",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline active:opacity-70",
         "media-ghost":
-          "text-media-foreground hover:bg-media-foreground/10 hover:text-media-foreground",
+          "text-media-foreground hover:bg-media-foreground/10 hover:text-media-foreground active:bg-media-foreground/20",
         media:
           "bg-media/70 text-media-foreground shadow-tactile-media backdrop-blur-md hover:bg-media/90 active:shadow-inner",
       },

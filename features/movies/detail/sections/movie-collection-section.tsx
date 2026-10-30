@@ -58,15 +58,15 @@ export function MovieCollectionSection({
           </div>
         )}
 
-        <div className="relative z-10 flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:p-6 lg:p-8">
+        <div className="relative z-10 flex flex-col gap-5 p-2.5 pr-5 sm:flex-row sm:items-center sm:pr-6 lg:pr-8 xl:p-3 xl:pr-8">
           {/* Mini Poster */}
           {posterUrl && (
-            <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden rounded-xl bg-muted shadow-md sm:w-24">
+            <div className="relative aspect-2/3 w-32 shrink-0 overflow-hidden rounded-xl bg-muted shadow-md">
               <Image
                 src={posterUrl}
                 alt={collection.name}
                 fill
-                sizes="96px"
+                sizes="128px"
                 variant="thumbnail"
               />
             </div>
@@ -74,7 +74,7 @@ export function MovieCollectionSection({
 
           {/* Details */}
           <div className="flex-1 space-y-2">
-            <h3 className="heading-card text-foreground group-hover:text-primary">
+            <h3 className="font-heading text-lg leading-snug font-semibold text-foreground group-hover:text-primary">
               {collection.name}
             </h3>
             {details?.overview && (

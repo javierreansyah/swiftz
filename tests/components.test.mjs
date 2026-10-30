@@ -127,6 +127,7 @@ test("reopening a season card restores that season after changing seasons inside
     "TVSeasonsModal",
     {
       "@/lib/utils": { cn: () => "" },
+      "@/features/people/hooks/queries": { usePersonDetailsQuery: () => ({}) },
       "@/features/tv/hooks/queries": {
         useTVSeasonQuery: (_id, season) => {
           requested = season;
@@ -644,6 +645,58 @@ test("the collection card loads its API description when approaching the viewpor
   ]);
 });
 
+test("mobile search tracks keyboard resize and viewport panning without accumulating offsets", () => {
+  const listeners = new Map();
+  const styles = new Map();
+  const viewport = {
+    height: 800,
+    offsetTop: 0,
+    addEventListener: (name, handler) => listeners.set(name, handler),
+    removeEventListener: (name) => listeners.delete(name),
+  };
+  const render = component(
+    "features/search/components/header-search.tsx",
+    "HeaderSearch",
+    {
+      "next/navigation": {
+        useRouter: () => ({}),
+        usePathname: () => "/",
+        useSearchParams: () => new URLSearchParams(),
+      },
+      "@/features/search/hooks/queries": {
+        useMultiSearchQuery: () => ({ data: { results: [] } }),
+      },
+      "@/hooks/use-client-query-router": {
+        useClientQueryRouter: () => ({}),
+      },
+      "@/lib/utils": { cn: () => "" },
+    },
+    { window: { innerHeight: 800, visualViewport: viewport } },
+  );
+  const tree = render({});
+  nodes(tree).find((node) => node.type === "DrawerContent").props.ref.current =
+    {
+      style: { setProperty: (name, value) => styles.set(name, value) },
+    };
+  nodes(tree)
+    .find((node) => node.type === "Drawer")
+    .props.onOpenChange(true);
+  render({});
+  assert.equal(styles.get("--search-visible-height"), "720px");
+  viewport.height = 400;
+  listeners.get("resize")();
+  assert.equal(styles.get("--search-visible-height"), "360px");
+  assert.equal(styles.get("--search-keyboard-inset"), "400px");
+  viewport.offsetTop = 50;
+  listeners.get("scroll")();
+  assert.equal(styles.get("--search-keyboard-inset"), "350px");
+  viewport.height = 800;
+  viewport.offsetTop = 0;
+  listeners.get("resize")();
+  assert.equal(styles.get("--search-visible-height"), "720px");
+  assert.equal(styles.get("--search-keyboard-inset"), "0px");
+});
+
 test("header search follows query-only URL changes", () => {
   let query = "first";
   const render = component(
@@ -681,6 +734,7 @@ test("episode failures offer retry instead of claiming that episodes do not exis
     "features/tv/detail/modals/tv-seasons-modal.tsx",
     "TVSeasonsModal",
     {
+      "@/features/people/hooks/queries": { usePersonDetailsQuery: () => ({}) },
       "@/features/tv/hooks/queries": {
         useTVSeasonQuery: () => ({
           data: undefined,
@@ -723,4 +777,37 @@ test("death dates have no age annotation", () => {
     nodes(tree).some((node) => node.props?.children === "July 16, 2008"),
   );
   assert.doesNotMatch(text(tree), /years old/);
+});
+
+test("TV cast cards open the selected person and the cast sheet receives that ID", () => {
+  const section = component(
+    "features/tv/detail/sections/tv-cast-section.tsx",
+    "TVCastSection",
+  );
+  let selected;
+  const sectionTree = section({
+    cast: [],
+    onOpenCastModal() {},
+    onSelectPerson: (id) => {
+      selected = id;
+    },
+  });
+  sectionTree.props.onSelectPerson(42);
+  assert.equal(selected, 42);
+  const modals = component(
+    "features/tv/detail/modals/tv-bottom-modals.tsx",
+    "TVBottomModals",
+  );
+  const tree = modals({
+    activeModal: "cast",
+    onClose() {},
+    show: { id: 1, name: "Series" },
+    cast: [],
+    crew: [],
+    videos: [],
+    selectedPersonId: selected,
+  });
+  const castSheet = nodes(tree).find((node) => node.type === "CastModal");
+  assert.equal(castSheet.props.initialPersonId, 42);
+  assert.equal(castSheet.props.isOpen, true);
 });

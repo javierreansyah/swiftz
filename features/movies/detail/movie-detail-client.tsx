@@ -173,6 +173,7 @@ export function MovieDetailClient({
                 videos={videos}
                 cast={cast}
                 crew={crew}
+                creditsLoading={creditsQuery.isLoading}
                 reviewCount={totalReviews}
                 onOpenModal={handleOpenModal}
                 onOpenPerson={handleOpenPerson}

@@ -149,6 +149,7 @@
   --spacing-hero-xl: 26.25rem;
   --spacing-featured: 28.75rem;
   --spacing-detail-sheet: 92vh;
+  --spacing-mobile-sheet: 90dvh;
   --spacing-dialog: 85vh;
   --spacing-search-sheet: 90vh;
   --spacing-filter-sheet: 70vh;
@@ -343,15 +344,28 @@
     @apply font-sans;
   }
 
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  a:not([data-slot]):active,
+  button:not([data-slot]):not(:disabled):active {
+    opacity: 0.85;
+  }
+
   /* Prevent layout shift caused by dropdown and select scroll locks */
   body[data-scroll-locked] {
     margin-right: 0 !important;
     padding-right: 0 !important;
-    overflow: visible !important;
   }
 
   /* Desktop-only custom sleek scrollbars (mobile uses native overlay scrollbars) */
   @media (hover: hover) and (pointer: fine) {
+    /* Keep sticky sidebars anchored to the viewport while modal scroll is locked. */
+    body[data-scroll-locked] {
+      overflow: clip !important;
+    }
+
     html {
       overflow-y: scroll;
       scrollbar-gutter: stable;

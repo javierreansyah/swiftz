@@ -14,7 +14,7 @@ export function FeaturedHeroUpNext({
   if (upNextMovies.length === 0) return null;
 
   return (
-    <div className="hidden flex-col gap-3 py-1 lg:col-span-4 lg:flex lg:h-158 xl:h-176">
+    <div className="hidden flex-col gap-3 lg:col-span-7 lg:flex lg:h-158 xl:h-176">
       {upNextMovies.map((movie, idx) => {
         const itemBackdrop = movie.backdrop_path
           ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`
@@ -72,7 +72,7 @@ export function FeaturedHeroUpNext({
 
               {/* Top-aligned Info Column */}
               <div className="flex min-w-0 flex-1 flex-col justify-start space-y-1.5 pt-0.5">
-                <h3 className="line-clamp-2 heading-card text-media-foreground transition-colors group-hover/item:text-primary">
+                <h3 className="line-clamp-2 font-heading text-lg leading-snug font-semibold text-media-foreground transition-colors group-hover/item:text-primary">
                   {movie.title}
                 </h3>
                 <p className="line-clamp-3 text-xs text-media-foreground/80">

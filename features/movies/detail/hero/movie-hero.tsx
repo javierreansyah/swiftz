@@ -15,6 +15,7 @@ export interface MovieHeroProps {
   videos: Video[];
   cast: Cast[];
   crew: Crew[];
+  creditsLoading: boolean;
   reviewCount?: number;
   onOpenModal: (modal: "reviews" | "videos" | "photos" | "cast") => void;
   onOpenPerson: (personId: number) => void;
@@ -27,6 +28,7 @@ export function MovieHero({
   videos,
   cast,
   crew,
+  creditsLoading,
   reviewCount = 0,
   onOpenModal,
   onOpenPerson,
@@ -106,6 +108,7 @@ export function MovieHero({
         movie={movie}
         cast={cast}
         crew={crew}
+        creditsLoading={creditsLoading}
         reviewCount={reviewCount}
         isWatchlist={isWatchlist}
         isFavorite={isFavorite}

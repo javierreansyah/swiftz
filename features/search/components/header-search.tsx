@@ -43,6 +43,35 @@ export function HeaderSearch({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
+  const mobileSheetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const sheet = mobileSheetRef.current;
+    const viewport = window.visualViewport;
+    if (!sheet || !viewport) return;
+
+    // Use the visible viewport directly; keyboard size must not accumulate across resizes.
+    const updateViewport = () => {
+      sheet.style.setProperty(
+        "--search-visible-height",
+        `${viewport.height * 0.9}px`,
+      );
+      sheet.style.setProperty(
+        "--search-keyboard-inset",
+        `${Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop)}px`,
+      );
+    };
+    updateViewport();
+    viewport.addEventListener("resize", updateViewport);
+    viewport.addEventListener("scroll", updateViewport);
+    return () => {
+      viewport.removeEventListener("resize", updateViewport);
+      viewport.removeEventListener("scroll", updateViewport);
+      sheet.style.removeProperty("--search-visible-height");
+      sheet.style.removeProperty("--search-keyboard-inset");
+    };
+  }, [isMobileOpen]);
 
   // Debounce search query by 250ms
   useEffect(() => {
@@ -263,10 +292,15 @@ export function HeaderSearch({
       </Button>
 
       {/* Mobile Search Bottom Sheet */}
-      <Drawer open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+      <Drawer
+        open={isMobileOpen}
+        onOpenChange={setIsMobileOpen}
+        repositionInputs={false}
+      >
         <DrawerContent
+          ref={mobileSheetRef}
           surface="search"
-          className="inset-x-0 bottom-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
+          className="inset-x-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
         >
           <DrawerHandle className="md:hidden" />
           <DrawerTitle className="sr-only">Search Swiftz</DrawerTitle>
@@ -293,7 +327,6 @@ export function HeaderSearch({
                   placeholder="Search movies, TV shows, people..."
                   aria-label="Search query"
                   className="w-full"
-                  autoFocus
                 />
               </form>
             </div>

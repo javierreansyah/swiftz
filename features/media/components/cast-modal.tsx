@@ -150,7 +150,7 @@ export function CastModal({
   const personMobileControls = showPerson ? (
     <div className="flex items-center gap-2">
       {backButton}
-      <Button asChild variant="secondary" size="sm" className="flex-1">
+      <Button asChild variant="secondary" size="sm">
         <Link
           href={`/person/${selectedPersonId}`}
           prefetch={false}

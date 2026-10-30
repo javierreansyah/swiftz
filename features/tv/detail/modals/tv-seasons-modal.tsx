@@ -2,11 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Image from "@/components/ui/image";
+import Link from "next/link";
 import {
   Star,
   Clock,
   Calendar,
   Layers,
+  ChevronLeft,
+  ExternalLink,
   ChevronDown,
   ChevronUp,
   User,
@@ -19,6 +22,8 @@ import type { TVSeason } from "@/lib/tmdb/types/tv";
 import type { TVDetailView } from "@/features/tv/detail/payload";
 import { useTVSeasonQuery } from "@/features/tv/hooks/queries";
 import { cn } from "@/lib/utils";
+import { usePersonDetailsQuery } from "@/features/people/hooks/queries";
+import { PersonDetailContent } from "@/features/people/components/person-detail-content";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVSeasonsModalProps {
   isOpen: boolean;
@@ -45,6 +50,11 @@ export function TVSeasonsModal({
 
   const [activeSeasonNumber, setActiveSeasonNumber] =
     useState<number>(defaultSeason);
+  const [selectedPersonId, setSelectedPersonId] = useState<number | null>(null);
+  const personQuery = usePersonDetailsQuery(
+    selectedPersonId ?? 0,
+    isOpen && selectedPersonId !== null,
+  );
   const [expandedEpisodes, setExpandedEpisodes] = useState<
     Record<number, boolean>
   >({});
@@ -53,6 +63,7 @@ export function TVSeasonsModal({
     if (!isOpen) return;
     setActiveSeasonNumber(defaultSeason);
     setExpandedEpisodes({});
+    setSelectedPersonId(null);
   }, [isOpen, defaultSeason]);
 
   const {
@@ -122,270 +133,343 @@ export function TVSeasonsModal({
     </div>
   );
 
+  const personControls =
+    selectedPersonId !== null ? (
+      <div className="flex items-center gap-2">
+        <Button
+          variant="secondary"
+          size="icon-sm"
+          onClick={() => setSelectedPersonId(null)}
+          aria-label="Back to episode guide"
+        >
+          <ChevronLeft />
+        </Button>
+        <Button asChild variant="secondary" size="sm">
+          <Link
+            href={`/person/${selectedPersonId}`}
+            prefetch={false}
+            onClick={onClose}
+          >
+            <ExternalLink />
+            <span>Full Profile</span>
+          </Link>
+        </Button>
+      </div>
+    ) : undefined;
+
   return (
     <DetailBottomSheet
       isOpen={isOpen}
       onClose={onClose}
-      title={show.name}
-      subtitle="Seasons & Episode Guide"
-      sidebar={desktopSidebar}
+      title={
+        selectedPersonId !== null
+          ? (personQuery.data?.name ?? "Person")
+          : show.name
+      }
+      subtitle={
+        selectedPersonId !== null
+          ? personQuery.data?.known_for_department
+          : "Seasons & Episode Guide"
+      }
+      headerActions={personControls}
+      sidebar={selectedPersonId !== null ? undefined : desktopSidebar}
       sidebarWidth="w-64"
-      mobileControls={mobileSeasonSelector}
+      mobileControls={
+        selectedPersonId !== null ? personControls : mobileSeasonSelector
+      }
     >
-      <div className="space-y-8">
-        {/* Season Banner Card */}
-        {currentSeasonSummary && (
-          <div className="flex flex-col gap-4 rounded-3xl bg-card/60 p-4 shadow-xs sm:flex-row sm:items-start sm:p-5">
-            {/* Season Poster */}
-            <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-32">
-              {currentSeasonSummary.poster_path ? (
-                <Image
-                  src={`https://image.tmdb.org/t/p/w342${currentSeasonSummary.poster_path}`}
-                  alt={currentSeasonSummary.name}
-                  fill
-                  sizes="128px"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex size-full items-center justify-center text-muted-foreground">
-                  <Layers className="size-8" />
-                </div>
-              )}
-            </div>
-
-            {/* Season Details */}
-            <div className="min-w-0 flex-1 space-y-2">
-              <div className="flex flex-wrap items-baseline gap-2">
-                <h2 className="heading-section text-foreground">
-                  {currentSeasonSummary.name}
-                </h2>
-                {currentSeasonSummary.air_date && (
-                  <span className="text-xs text-muted-foreground sm:text-sm">
-                    · {currentSeasonSummary.air_date.substring(0, 4)}
-                  </span>
+      {selectedPersonId !== null ? (
+        <PersonDetailContent
+          personId={selectedPersonId}
+          enabled={isOpen}
+          onNavigate={onClose}
+        />
+      ) : (
+        <div className="space-y-8">
+          {/* Season Banner Card */}
+          {currentSeasonSummary && (
+            <div className="flex flex-col gap-4 rounded-3xl bg-card/60 p-4 shadow-xs sm:flex-row sm:items-start sm:p-5">
+              {/* Season Poster */}
+              <div className="relative aspect-2/3 w-28 shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-32">
+                {currentSeasonSummary.poster_path ? (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w342${currentSeasonSummary.poster_path}`}
+                    alt={currentSeasonSummary.name}
+                    fill
+                    sizes="128px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex size-full items-center justify-center text-muted-foreground">
+                    <Layers className="size-8" />
+                  </div>
                 )}
-                <span className="text-xs text-muted-foreground sm:text-sm">
-                  · {currentSeasonSummary.episode_count} Episodes
-                </span>
               </div>
 
-              {currentSeasonSummary.overview && (
-                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                  {currentSeasonSummary.overview}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Episodes List */}
-        <div className="space-y-4">
-          <h3 className="heading-card text-foreground">
-            Episodes ({isLoading ? "Loading..." : episodes.length})
-          </h3>
-
-          {isError && (
-            <QueryFeedback
-              hasData={Boolean(seasonDetails)}
-              onRetry={() => void refetch()}
-            />
-          )}
-          {isLoading ? (
-            <div className="space-y-4">
-              {Array.from({ length: 5 }, (_, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col gap-4 rounded-3xl bg-card/40 p-4 shadow-xs sm:flex-row"
-                >
-                  <Skeleton className="aspect-video w-full sm:w-56" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-5 w-48" />
-                    <Skeleton className="h-4 w-32" />
-                    <Skeleton className="h-12 w-full" />
-                  </div>
+              {/* Season Details */}
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <h2 className="heading-section text-foreground">
+                    {currentSeasonSummary.name}
+                  </h2>
+                  {currentSeasonSummary.air_date && (
+                    <span className="text-xs text-muted-foreground sm:text-sm">
+                      · {currentSeasonSummary.air_date.substring(0, 4)}
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-foreground sm:text-sm">
+                    · {currentSeasonSummary.episode_count} Episodes
+                  </span>
                 </div>
-              ))}
-            </div>
-          ) : isError && !seasonDetails ? null : episodes.length === 0 ? (
-            <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground">
-              No episode data available for this season.
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {episodes.map((ep) => {
-                const isExpanded = Boolean(expandedEpisodes[ep.id]);
-                const stillUrl = ep.still_path
-                  ? `https://image.tmdb.org/t/p/w500${ep.still_path}`
-                  : null;
 
-                const guestStars = ep.guest_stars || [];
-                const directors =
-                  ep.crew?.filter((c) => c.job === "Director") || [];
-                const writers =
-                  ep.crew?.filter((c) =>
-                    ["Writer", "Screenplay", "Story"].includes(c.job),
-                  ) || [];
-
-                return (
-                  <div
-                    key={ep.id}
-                    className="overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-shadow hover:shadow-md"
-                  >
-                    <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
-                      {/* 16:9 Episode Still Image */}
-                      <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-56">
-                        {stillUrl ? (
-                          <Image
-                            src={stillUrl}
-                            alt={ep.name}
-                            fill
-                            sizes="(max-width: 640px) 100vw, 224px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="flex size-full items-center justify-center text-muted-foreground">
-                            <Tv className="size-8" />
-                          </div>
-                        )}
-                        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-xl bg-scrim/80 px-2 py-0.5 text-xs font-bold text-media-foreground">
-                          <span>
-                            EP {String(ep.episode_number).padStart(2, "0")}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Episode Metadata & Synopsis */}
-                      <div className="min-w-0 flex-1 space-y-2">
-                        <div className="flex flex-wrap items-baseline justify-between gap-2">
-                          <h4 className="text-base font-bold text-foreground sm:text-lg">
-                            {ep.episode_number}. {ep.name}
-                          </h4>
-
-                          {ep.vote_average > 0 && (
-                            <div className="flex items-center gap-1 rounded-xl bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
-                              <Star className="size-3 fill-primary text-primary" />
-                              <span>{ep.vote_average.toFixed(1)}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                          {ep.air_date && (
-                            <span className="flex items-center gap-1">
-                              <Calendar className="size-3" />
-                              <span>{ep.air_date}</span>
-                            </span>
-                          )}
-                          {ep.runtime && ep.runtime > 0 && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="size-3" />
-                              <span>{ep.runtime} min</span>
-                            </span>
-                          )}
-                        </div>
-
-                        <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                          {ep.overview ||
-                            "No overview available for this episode."}
-                        </p>
-
-                        {/* Toggle Extra Details (Guest Stars / Crew) */}
-                        {(guestStars.length > 0 ||
-                          directors.length > 0 ||
-                          writers.length > 0) && (
-                          <Button
-                            variant="link"
-                            size="inline"
-                            type="button"
-                            onClick={() => toggleEpisodeExpand(ep.id)}
-                            className="inline-flex"
-                          >
-                            <span>
-                              {isExpanded
-                                ? "Hide guest stars & crew"
-                                : "View guest stars & crew"}
-                            </span>
-                            {isExpanded ? (
-                              <ChevronUp className="size-3" />
-                            ) : (
-                              <ChevronDown className="size-3" />
-                            )}
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Expanded Guest Stars & Crew */}
-                    {isExpanded && (
-                      <div className="space-y-3 border-t border-border/60 bg-muted/20 p-4 text-xs sm:px-5">
-                        {directors.length > 0 && (
-                          <div>
-                            <span className="font-bold text-foreground">
-                              Directed by:{" "}
-                            </span>
-                            <span className="text-muted-foreground">
-                              {directors.map((d) => d.name).join(", ")}
-                            </span>
-                          </div>
-                        )}
-
-                        {writers.length > 0 && (
-                          <div>
-                            <span className="font-bold text-foreground">
-                              Written by:{" "}
-                            </span>
-                            <span className="text-muted-foreground">
-                              {writers.map((w) => w.name).join(", ")}
-                            </span>
-                          </div>
-                        )}
-
-                        {guestStars.length > 0 && (
-                          <div className="space-y-2 pt-1">
-                            <p className="font-bold text-foreground">
-                              Guest Stars:
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {guestStars.map((guest) => (
-                                <div
-                                  key={guest.id}
-                                  className="flex items-center gap-1.5 rounded-3xl border border-border/70 bg-card/60 px-2.5 py-1 text-xs"
-                                >
-                                  {guest.profile_path ? (
-                                    <div className="relative size-5 overflow-hidden rounded-full bg-muted">
-                                      <Image
-                                        src={`https://image.tmdb.org/t/p/w185${guest.profile_path}`}
-                                        alt={guest.name}
-                                        fill
-                                        sizes="20px"
-                                        className="object-cover"
-                                      />
-                                    </div>
-                                  ) : (
-                                    <User className="size-3.5 text-muted-foreground" />
-                                  )}
-                                  <span className="font-medium text-foreground">
-                                    {guest.name}
-                                  </span>
-                                  {guest.character && (
-                                    <span className="text-muted-foreground">
-                                      as {guest.character}
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                {currentSeasonSummary.overview && (
+                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    {currentSeasonSummary.overview}
+                  </p>
+                )}
+              </div>
             </div>
           )}
+
+          {/* Episodes List */}
+          <div className="space-y-4">
+            <h3 className="heading-card text-foreground">
+              Episodes ({isLoading ? "Loading..." : episodes.length})
+            </h3>
+
+            {isError && (
+              <QueryFeedback
+                hasData={Boolean(seasonDetails)}
+                onRetry={() => void refetch()}
+              />
+            )}
+            {isLoading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col gap-4 rounded-3xl bg-card/40 p-4 shadow-xs sm:flex-row"
+                  >
+                    <Skeleton className="aspect-video w-full sm:w-56" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-5 w-48" />
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-12 w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : isError && !seasonDetails ? null : episodes.length === 0 ? (
+              <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border/70 p-8 text-center text-sm text-muted-foreground">
+                No episode data available for this season.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {episodes.map((ep) => {
+                  const isExpanded = Boolean(expandedEpisodes[ep.id]);
+                  const stillUrl = ep.still_path
+                    ? `https://image.tmdb.org/t/p/w500${ep.still_path}`
+                    : null;
+
+                  const guestStars = ep.guest_stars || [];
+                  const directors =
+                    ep.crew?.filter((c) => c.job === "Director") || [];
+                  const writers =
+                    ep.crew?.filter((c) =>
+                      ["Writer", "Screenplay", "Story"].includes(c.job),
+                    ) || [];
+
+                  return (
+                    <div
+                      key={ep.id}
+                      className="overflow-hidden rounded-3xl bg-card/60 shadow-xs transition-shadow hover:shadow-md"
+                    >
+                      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:p-5">
+                        {/* 16:9 Episode Still Image */}
+                        <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-2xl bg-muted sm:w-56">
+                          {stillUrl ? (
+                            <Image
+                              src={stillUrl}
+                              alt={ep.name}
+                              fill
+                              sizes="(max-width: 640px) 100vw, 224px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex size-full items-center justify-center text-muted-foreground">
+                              <Tv className="size-8" />
+                            </div>
+                          )}
+                          <div className="absolute top-2 left-2 flex items-center gap-1 rounded-xl bg-scrim/80 px-2 py-0.5 text-xs font-bold text-media-foreground">
+                            <span>
+                              EP {String(ep.episode_number).padStart(2, "0")}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Episode Metadata & Synopsis */}
+                        <div className="min-w-0 flex-1 space-y-2">
+                          <div className="flex flex-wrap items-baseline justify-between gap-2">
+                            <h4 className="text-base font-bold text-foreground sm:text-lg">
+                              {ep.episode_number}. {ep.name}
+                            </h4>
+
+                            {ep.vote_average > 0 && (
+                              <div className="flex items-center gap-1 rounded-xl bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                                <Star className="size-3 fill-primary text-primary" />
+                                <span>{ep.vote_average.toFixed(1)}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                            {ep.air_date && (
+                              <span className="flex items-center gap-1">
+                                <Calendar className="size-3" />
+                                <span>{ep.air_date}</span>
+                              </span>
+                            )}
+                            {ep.runtime && ep.runtime > 0 && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="size-3" />
+                                <span>{ep.runtime} min</span>
+                              </span>
+                            )}
+                          </div>
+
+                          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                            {ep.overview ||
+                              "No overview available for this episode."}
+                          </p>
+
+                          {/* Toggle Extra Details (Guest Stars / Crew) */}
+                          {(guestStars.length > 0 ||
+                            directors.length > 0 ||
+                            writers.length > 0) && (
+                            <Button
+                              variant="link"
+                              size="inline"
+                              type="button"
+                              onClick={() => toggleEpisodeExpand(ep.id)}
+                              className="inline-flex"
+                            >
+                              <span>
+                                {isExpanded
+                                  ? "Hide guest stars & crew"
+                                  : "View guest stars & crew"}
+                              </span>
+                              {isExpanded ? (
+                                <ChevronUp className="size-3" />
+                              ) : (
+                                <ChevronDown className="size-3" />
+                              )}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Expanded Guest Stars & Crew */}
+                      {isExpanded && (
+                        <div className="space-y-3 border-t border-border/60 bg-muted/20 p-4 text-xs sm:px-5">
+                          {directors.length > 0 && (
+                            <div>
+                              <span className="font-bold text-foreground">
+                                Directed by:{" "}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {directors.map((director, index) => (
+                                  <span key={director.credit_id}>
+                                    {index > 0 && ", "}
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setSelectedPersonId(director.id)
+                                      }
+                                      className="text-primary hover:underline focus-visible:underline"
+                                    >
+                                      {director.name}
+                                    </button>
+                                  </span>
+                                ))}
+                              </span>
+                            </div>
+                          )}
+
+                          {writers.length > 0 && (
+                            <div>
+                              <span className="font-bold text-foreground">
+                                Written by:{" "}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {writers.map((writer, index) => (
+                                  <span key={writer.credit_id}>
+                                    {index > 0 && ", "}
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setSelectedPersonId(writer.id)
+                                      }
+                                      className="text-primary hover:underline focus-visible:underline"
+                                    >
+                                      {writer.name}
+                                    </button>
+                                  </span>
+                                ))}
+                              </span>
+                            </div>
+                          )}
+
+                          {guestStars.length > 0 && (
+                            <div className="space-y-2 pt-1">
+                              <p className="font-bold text-foreground">
+                                Guest Stars:
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {guestStars.map((guest) => (
+                                  <button
+                                    key={guest.credit_id}
+                                    type="button"
+                                    onClick={() =>
+                                      setSelectedPersonId(guest.id)
+                                    }
+                                    className="flex items-center gap-1.5 rounded-3xl border border-border/70 bg-card/60 px-2.5 py-1 text-xs hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
+                                  >
+                                    {guest.profile_path ? (
+                                      <div className="relative size-5 overflow-hidden rounded-full bg-muted">
+                                        <Image
+                                          src={`https://image.tmdb.org/t/p/w185${guest.profile_path}`}
+                                          alt={guest.name}
+                                          fill
+                                          sizes="20px"
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                    ) : (
+                                      <User className="size-3.5 text-muted-foreground" />
+                                    )}
+                                    <span className="font-medium text-foreground">
+                                      {guest.name}
+                                    </span>
+                                    {guest.character && (
+                                      <span className="text-muted-foreground">
+                                        as {guest.character}
+                                      </span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </DetailBottomSheet>
   );
 }

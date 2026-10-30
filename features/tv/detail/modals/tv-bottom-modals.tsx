@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import type { TVDetailView } from "@/features/tv/detail/payload";
 import type { Cast, Crew, Video } from "@/lib/tmdb/types/common";
-import { TVCastModal } from "@/features/tv/detail/modals/tv-cast-modal";
+import { CastModal } from "@/features/media/components/cast-modal";
 import { TVSeasonsModal } from "@/features/tv/detail/modals/tv-seasons-modal";
 import { VideosModal } from "@/features/media/components/videos-modal";
 import { ReviewsModal } from "@/features/media/components/reviews-modal";
@@ -27,6 +27,7 @@ export interface TVBottomModalsProps {
   videos: Video[];
   initialVideoIndex?: number;
   selectedSeasonNumber?: number;
+  selectedPersonId?: number | null;
 }
 
 export function TVBottomModals({
@@ -40,6 +41,7 @@ export function TVBottomModals({
   videos,
   initialVideoIndex,
   selectedSeasonNumber,
+  selectedPersonId,
 }: TVBottomModalsProps) {
   return (
     <>
@@ -52,11 +54,12 @@ export function TVBottomModals({
       />
 
       {/* Full Cast & Crew Sheet Modal */}
-      <TVCastModal
+      <CastModal
         loadError={castError}
         isOpen={activeModal === "cast"}
         onClose={onClose}
-        show={show}
+        movie={show}
+        initialPersonId={selectedPersonId}
         cast={cast}
         crew={crew}
       />

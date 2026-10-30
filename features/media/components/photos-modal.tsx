@@ -1,14 +1,8 @@
 "use client";
+import { ShowcaseFilmstrip } from "@/features/media/components/showcase-filmstrip";
 import { type ReactNode, useState, useMemo, useEffect, useRef } from "react";
 import Image from "@/components/ui/image";
-import {
-  Share2,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  Check,
-  LayoutGrid,
-} from "lucide-react";
+import { Share2, Download, Check, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import type { MovieImagesData, MovieImageItem } from "@/lib/tmdb/types/common";
@@ -369,7 +363,7 @@ export function PhotosModal({
         /* Showcase View: Stage + Carousel */
         <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main Photo Stage */}
-          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-scrim/95 p-2 sm:p-4">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-2 sm:p-4">
             {/* Mobile Back to Gallery Button */}
             <Button
               variant="media"
@@ -392,68 +386,42 @@ export function PhotosModal({
             </div>
           </div>
 
-          {/* Standardized Bottom Filmstrip */}
-          <div className="shrink-0 border-t border-border/70 bg-card/90 px-6 py-3">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                {activePhotoIdx + 1} of {filteredPhotos.length}
-              </span>
-              <div className="flex items-center gap-1.5">
-                <Button
-                  variant="secondary"
-                  size="icon-sm"
+          <ShowcaseFilmstrip
+            label={`${activePhotoIdx + 1} of ${filteredPhotos.length}`}
+            count={filteredPhotos.length}
+            onPrevious={handlePrevPhoto}
+            onNext={handleNextPhoto}
+            media="photo"
+            containerRef={thumbnailContainerRef}
+          >
+            {filteredPhotos.map((photo, i) => {
+              const isActive = i === activePhotoIdx;
+              return (
+                <button
+                  key={photo.file_path + i}
+                  ref={(el) => {
+                    thumbnailRefs.current[i] = el;
+                  }}
                   type="button"
-                  onClick={handlePrevPhoto}
-                  disabled={filteredPhotos.length <= 1}
-                  aria-label="Previous photo"
+                  onClick={() => setActivePhotoIdx(i)}
+                  className={cn(
+                    "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
+                    isActive
+                      ? "scale-105 border-primary ring-2 ring-primary/40"
+                      : "border-transparent opacity-60 hover:opacity-100",
+                  )}
                 >
-                  <ChevronLeft className="size-4" />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon-sm"
-                  type="button"
-                  onClick={handleNextPhoto}
-                  disabled={filteredPhotos.length <= 1}
-                  aria-label="Next photo"
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
-              </div>
-            </div>
-            <div
-              ref={thumbnailContainerRef}
-              className="flex scrollbar-none gap-3 overflow-x-auto p-2"
-            >
-              {filteredPhotos.map((photo, i) => {
-                const isActive = i === activePhotoIdx;
-                return (
-                  <button
-                    key={photo.file_path + i}
-                    ref={(el) => {
-                      thumbnailRefs.current[i] = el;
-                    }}
-                    type="button"
-                    onClick={() => setActivePhotoIdx(i)}
-                    className={cn(
-                      "relative h-20 w-36 flex-none cursor-pointer overflow-hidden rounded-xl border-2 transition-all",
-                      isActive
-                        ? "scale-105 border-primary ring-2 ring-primary/40"
-                        : "border-transparent opacity-60 hover:opacity-100",
-                    )}
-                  >
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w300${photo.file_path}`}
-                      alt="Thumbnail"
-                      fill
-                      sizes="144px"
-                      className="object-cover"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w300${photo.file_path}`}
+                    alt="Thumbnail"
+                    fill
+                    sizes="144px"
+                    className="object-cover"
+                  />
+                </button>
+              );
+            })}
+          </ShowcaseFilmstrip>
         </div>
       ) : (
         /* Gallery Grid View */
@@ -463,7 +431,7 @@ export function PhotosModal({
               No photos found matching the filter.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+            <div className="grid grid-cols-2 gap-4 pb-4 sm:grid-cols-4 lg:grid-cols-6">
               {filteredPhotos.map((photo, idx) => {
                 const isBackdrop = photo.type === "backdrop";
                 return (
