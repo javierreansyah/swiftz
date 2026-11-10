@@ -47,8 +47,11 @@ export function FeaturedHeroBackdrop({
                 src={bgUrl}
                 alt={movie.title}
                 fill
-                priority={index === 0}
-                sizes="100vw"
+                // Heavily blurred: a small file looks identical and leaves
+                // bandwidth to the spotlight image (the page LCP).
+                loading="eager"
+                fetchPriority="low"
+                sizes="120px"
                 variant="ambient"
               />
             </div>

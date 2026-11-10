@@ -76,7 +76,7 @@ export function Navbar() {
       <div className="relative z-10 container flex h-full items-center gap-4">
         {/* Left: Brand Logo & Navigation */}
         <div className="flex shrink-0 items-center gap-6 lg:gap-8">
-          <Link href="/">
+          <Link href="/" aria-label="Swiftz home">
             <Logo className="size-16" />
           </Link>
 

@@ -8,6 +8,7 @@ import { PersonCard } from "@/features/people/components/person-card";
 import { SectionHeader } from "@/components/common/section-header";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/features/media/components/movie-card-skeleton";
+import { EAGER_GRID_CARDS } from "@/features/media/components/media-card";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export function PeopleClient() {
   const searchParams = useSearchParams();
@@ -50,8 +51,13 @@ export function PeopleClient() {
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {people.map((person) => (
-              <PersonCard key={person.id} person={person} />
+            {people.map((person, index) => (
+              <PersonCard
+                key={person.id}
+                person={person}
+                priority={index < EAGER_GRID_CARDS}
+                titleAs="h2"
+              />
             ))}
           </div>
 

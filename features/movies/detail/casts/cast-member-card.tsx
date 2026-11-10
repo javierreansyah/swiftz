@@ -5,6 +5,7 @@ export interface CastMemberCardProps {
   role: string;
   subtitle?: string;
   profilePath?: string | null;
+  priority?: boolean;
 }
 
 export function CastMemberCard({
@@ -12,6 +13,7 @@ export function CastMemberCard({
   role,
   subtitle,
   profilePath,
+  priority = false,
 }: CastMemberCardProps) {
   const profileUrl = profilePath
     ? `https://image.tmdb.org/t/p/w185${profilePath}`
@@ -26,6 +28,7 @@ export function CastMemberCard({
             alt={name}
             fill
             sizes="120px"
+            priority={priority}
             className="object-cover"
           />
         </div>

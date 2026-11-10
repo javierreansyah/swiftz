@@ -38,7 +38,7 @@ export function FeaturedHeroUpNext({
                 onSelectMovie(idx + 1);
               }
             }}
-            className="group/item relative flex min-h-0 flex-1 cursor-pointer items-stretch overflow-hidden rounded-2xl p-2.5 shadow-xl transition-all duration-300 xl:p-3"
+            className="group/item relative flex min-h-0 flex-1 cursor-pointer items-stretch overflow-hidden rounded-2xl p-2.5 shadow-xl transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-98 xl:p-3"
           >
             {/* Backdrop as Card Container */}
             <div className="absolute inset-0 z-0 overflow-hidden">
@@ -51,7 +51,7 @@ export function FeaturedHeroUpNext({
                 className="object-center"
               />
               {/* Dark overlay for contrast and text readability */}
-              <div className="absolute inset-0 bg-media/80 transition-colors duration-300 group-hover/item:bg-media/70" />
+              <div className="absolute inset-0 bg-media/80 transition-colors duration-300 group-hover/item:bg-media/70 group-active/item:bg-media/90" />
               <div className="absolute inset-0 bg-linear-to-r from-scrim/80 via-scrim/60 to-scrim/40" />
             </div>
 

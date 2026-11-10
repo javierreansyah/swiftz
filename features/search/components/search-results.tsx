@@ -3,6 +3,7 @@ import { useState } from "react";
 import { CollectionModal } from "@/features/movies/detail/modals/collection-modal";
 import Image from "@/components/ui/image";
 import Link from "next/link";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Tag, Building } from "lucide-react";
 import type { Movie } from "@/lib/tmdb/types/movie";
 import type { TVShow } from "@/lib/tmdb/types/tv";
@@ -105,10 +106,11 @@ function KeywordSearchResults({ items: keywords }: { items: TMDBKeyword[] }) {
         <Link
           key={kw.id}
           href={`/movie?with_keywords=${kw.id}&keywords_names=${encodeURIComponent(encodeURIComponent(kw.name))}`}
-          className="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:text-primary"
+          className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-border/70 bg-card/60 px-3.5 py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:text-primary active:scale-97 active:bg-muted"
         >
           <span className="line-clamp-1">{kw.name}</span>
           <Tag className="size-3 text-muted-foreground group-hover:text-primary" />
+          <LinkPendingOverlay surface="muted" />
         </Link>
       ))}
     </div>

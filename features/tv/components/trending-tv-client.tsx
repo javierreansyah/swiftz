@@ -7,6 +7,7 @@ import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/features/media/components/movie-card-skeleton";
 import { useTrendingTVShowsQuery } from "@/features/tv/hooks/queries";
 import { SectionHeader } from "@/components/common/section-header";
+import { EAGER_GRID_CARDS } from "@/features/media/components/media-card";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export function TrendingTVClient() {
   const searchParams = useSearchParams();
@@ -51,8 +52,13 @@ export function TrendingTVClient() {
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-            {shows.map((show) => (
-              <TVCard key={show.id} show={show} />
+            {shows.map((show, index) => (
+              <TVCard
+                key={show.id}
+                show={show}
+                priority={index < EAGER_GRID_CARDS}
+                titleAs="h2"
+              />
             ))}
           </div>
           <PaginationSystem

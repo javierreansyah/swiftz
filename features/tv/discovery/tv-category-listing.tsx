@@ -22,6 +22,7 @@ import {
   hasTVFilters,
 } from "@/features/tv/discovery/filter-utils";
 import { MediaListingLayout } from "@/features/media/components/media-listing-layout";
+import { EAGER_GRID_CARDS } from "@/features/media/components/media-card";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVCategoryListingProps {
   category: TVCategoryType;
@@ -250,8 +251,13 @@ export function TVCategoryListing({
       ) : (
         <div className="space-y-8">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {shows.map((show) => (
-              <TVCard key={show.id} show={show} />
+            {shows.map((show, index) => (
+              <TVCard
+                key={show.id}
+                show={show}
+                priority={index < EAGER_GRID_CARDS}
+                titleAs="h2"
+              />
             ))}
           </div>
 

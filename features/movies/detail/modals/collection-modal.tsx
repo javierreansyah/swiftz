@@ -149,7 +149,7 @@ export function CollectionModal({
                 year={part.release_date?.substring(0, 4)}
                 badge={`${parts.indexOf(part) + 1}${part.id === currentMovieId ? " · Currently viewing" : ""}`}
                 href={`/movie/${part.id}`}
-                onClick={onClose}
+                onClick={part.id === currentMovieId ? onClose : undefined}
                 variant="grid"
               />
             ))}

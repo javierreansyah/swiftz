@@ -61,7 +61,7 @@ export function LibraryUnauthenticated({ onLogin }: { onLogin: () => void }) {
             <div className="flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
               <Heart className="size-5" />
             </div>
-            <h3 className="heading-card">Favorites</h3>
+            <h2 className="heading-card">Favorites</h2>
             <p className="text-xs text-muted-foreground sm:text-sm">
               Bookmark the films you love most and quickly revisit them anytime.
             </p>
@@ -71,7 +71,7 @@ export function LibraryUnauthenticated({ onLogin }: { onLogin: () => void }) {
             <div className="flex size-10 items-center justify-center rounded-xl bg-info/10 text-info">
               <Bookmark className="size-5" />
             </div>
-            <h3 className="heading-card">Watchlist</h3>
+            <h2 className="heading-card">Watchlist</h2>
             <p className="text-xs text-muted-foreground sm:text-sm">
               Build your queue of upcoming releases and must-watch movies.
             </p>
@@ -81,7 +81,7 @@ export function LibraryUnauthenticated({ onLogin }: { onLogin: () => void }) {
             <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Star className="size-5" />
             </div>
-            <h3 className="heading-card">1-10 Ratings</h3>
+            <h2 className="heading-card">1-10 Ratings</h2>
             <p className="text-xs text-muted-foreground sm:text-sm">
               Rate films you have seen and maintain a personal record of your
               scores.
@@ -96,11 +96,11 @@ export function LibraryUnauthenticated({ onLogin }: { onLogin: () => void }) {
 export function LibraryEmptyState({ activeTab }: { activeTab: LibraryTab }) {
   return (
     <div className="space-y-2 py-16 text-center">
-      <h3 className="heading-card text-foreground">
+      <h2 className="heading-card text-foreground">
         {activeTab === "favorites" && "No favorite movies yet"}
         {activeTab === "watchlist" && "Your watchlist is empty"}
         {activeTab === "rated" && "No rated movies yet"}
-      </h3>
+      </h2>
       <p className="mx-auto max-w-md text-sm text-muted-foreground">
         {activeTab === "favorites" &&
           "Browse movies on Swiftz and click the heart icon to save films you love to your personal library."}

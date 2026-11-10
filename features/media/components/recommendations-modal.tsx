@@ -155,7 +155,6 @@ export function RecommendationsModal({
                   rating={item.vote_average}
                   year={itemYear}
                   href={href}
-                  onClick={onClose}
                   variant="grid"
                 />
               );

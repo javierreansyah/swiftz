@@ -129,6 +129,7 @@ export function MovieCastClient({ id }: { id: string }) {
                       <CastMemberCard
                         name={cast.name}
                         role={cast.character || "Unknown Character"}
+                        priority={index < 3}
                         subtitle={`Popularity: ${Number(cast.popularity).toFixed(1)}`}
                         profilePath={cast.profile_path}
                       />

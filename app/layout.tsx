@@ -38,7 +38,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("font-sans", inter.variable, loraHeading.variable)}
     >
-      <head />
+      <head>
+        {/* Catalog data and posters load straight from TMDB; warm both origins
+            before hydration so the first browser request skips connection setup. */}
+        <link
+          rel="preconnect"
+          href="https://api.themoviedb.org"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://image.tmdb.org" />
+      </head>
       <body className="font-sans antialiased">
         <ThemeProvider>
           <QueryProvider>
@@ -55,7 +64,8 @@ export default function RootLayout({
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
-        <Analytics />
+        {/* The insights script is only served on Vercel deployments. */}
+        {process.env.VERCEL === "1" && <Analytics />}
       </body>
     </html>
   );

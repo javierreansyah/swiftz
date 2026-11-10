@@ -4,12 +4,16 @@ export interface PersonCardProps {
   person: Person;
   variant?: "shelf" | "grid";
   className?: string;
+  priority?: boolean;
+  titleAs?: "h2" | "h3";
 }
 
 export function PersonCard({
   person,
   variant = "grid",
   className,
+  priority,
+  titleAs,
 }: PersonCardProps) {
   const topWorks = person.known_for
     ?.map((w) => w.title || w.name)
@@ -31,6 +35,8 @@ export function PersonCard({
       href={`/person/${person.id}`}
       variant={variant}
       className={className}
+      priority={priority}
+      titleAs={titleAs}
     />
   );
 }

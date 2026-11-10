@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo, Fragment } from "react";
 import Link from "next/link";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Search } from "lucide-react";
 import {
   prepareCredits,
@@ -238,7 +239,7 @@ export function PersonCreditsTimeline({
                         <Link
                           href={detailHref}
                           prefetch={false}
-                          className="group flex cursor-pointer items-start gap-3 px-4 py-3.5 transition-colors hover:bg-muted/40 sm:items-center sm:gap-4"
+                          className="group relative flex cursor-pointer items-start gap-3 px-4 py-3.5 transition-colors hover:bg-muted/40 active:bg-muted sm:items-center sm:gap-4"
                         >
                           {/* Title & Role Column */}
                           <div className="min-w-0 flex-1">
@@ -264,6 +265,7 @@ export function PersonCreditsTimeline({
                               <span>{credit.characterOrJob}</span>
                             </p>
                           </div>
+                          <LinkPendingOverlay surface="muted" />
                         </Link>
                       </Fragment>
                     );

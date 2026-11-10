@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,7 @@ export interface MenuListItem {
   content?: ReactNode;
   active?: boolean;
   href?: string;
+  prefetch?: boolean;
   onClick?: () => void;
   ariaLabel?: string;
 }
@@ -55,7 +57,8 @@ export function MenuList({ items, className }: MenuListProps) {
 
         const rowClassName = cn(
           "flex w-full items-center gap-3 px-4 py-3 text-left transition-colors select-none",
-          isClickable && "cursor-pointer hover:bg-muted/50 active:bg-muted",
+          isClickable &&
+            "relative cursor-pointer hover:bg-muted/50 active:bg-muted",
         );
 
         return (
@@ -69,11 +72,13 @@ export function MenuList({ items, className }: MenuListProps) {
             {item.href ? (
               <Link
                 href={item.href}
+                prefetch={item.prefetch}
                 onClick={item.onClick}
                 aria-label={item.ariaLabel}
                 className={rowClassName}
               >
                 {inner}
+                <LinkPendingOverlay surface="muted" />
               </Link>
             ) : item.onClick ? (
               <button

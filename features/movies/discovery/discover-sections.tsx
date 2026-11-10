@@ -33,6 +33,7 @@ export function DiscoverSections() {
   return (
     <div className="space-y-12">
       <MediaCarouselRow
+        priority
         title="Popular Movies"
         items={popularData?.results}
         isLoading={isPopularLoading}

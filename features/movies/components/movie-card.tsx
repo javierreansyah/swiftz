@@ -7,6 +7,8 @@ export interface MovieCardProps {
   year?: string;
   variant?: "shelf" | "grid";
   className?: string;
+  priority?: boolean;
+  titleAs?: "h2" | "h3";
 }
 
 export function MovieCard({
@@ -17,6 +19,8 @@ export function MovieCard({
   year,
   variant = "grid",
   className,
+  priority,
+  titleAs,
 }: MovieCardProps) {
   return (
     <MediaCard
@@ -29,6 +33,8 @@ export function MovieCard({
       href={`/movie/${id}`}
       variant={variant}
       className={className}
+      priority={priority}
+      titleAs={titleAs}
     />
   );
 }

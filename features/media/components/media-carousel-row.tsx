@@ -10,6 +10,8 @@ export interface MediaCarouselRowProps {
   isLoading: boolean;
   viewAllHref: string;
   type: "movie" | "tv";
+  /** Above-the-fold row: load its first visible posters eagerly. */
+  priority?: boolean;
 }
 
 export function MediaCarouselRow({
@@ -18,6 +20,7 @@ export function MediaCarouselRow({
   isLoading,
   viewAllHref,
   type,
+  priority = false,
 }: MediaCarouselRowProps) {
   const displayItems = items || [];
 
@@ -32,8 +35,13 @@ export function MediaCarouselRow({
         ? Array.from({ length: 6 }, (_, i) => (
             <Skeleton key={i} variant="shelf" />
           ))
-        : displayItems.map((item) => (
-            <CatalogCard key={item.id} item={item} type={type} />
+        : displayItems.map((item, index) => (
+            <CatalogCard
+              key={item.id}
+              item={item}
+              type={type}
+              priority={priority && index < 3}
+            />
           ))}
     </ContentCarousel>
   );

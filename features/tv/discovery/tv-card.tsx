@@ -4,9 +4,17 @@ export interface TVCardProps {
   show: TVShow;
   variant?: "shelf" | "grid";
   className?: string;
+  priority?: boolean;
+  titleAs?: "h2" | "h3";
 }
 
-export function TVCard({ show, variant = "grid", className }: TVCardProps) {
+export function TVCard({
+  show,
+  variant = "grid",
+  className,
+  priority,
+  titleAs,
+}: TVCardProps) {
   const year = show.first_air_date
     ? show.first_air_date.substring(0, 4)
     : undefined;
@@ -22,6 +30,8 @@ export function TVCard({ show, variant = "grid", className }: TVCardProps) {
       href={`/tv/${show.id}`}
       variant={variant}
       className={className}
+      priority={priority}
+      titleAs={titleAs}
     />
   );
 }

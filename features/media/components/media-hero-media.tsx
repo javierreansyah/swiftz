@@ -101,7 +101,6 @@ export function MediaHeroMedia({
                   type="button"
                   onClick={() => setIsPlayingTrailer(true)}
                   className="absolute bottom-4 left-4 sm:left-6"
-                  aria-label="Play Trailer"
                 >
                   <Play className="size-4 fill-current" />
                   <span>Watch Trailer</span>

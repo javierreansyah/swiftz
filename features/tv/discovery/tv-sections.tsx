@@ -32,6 +32,7 @@ export function TVSections() {
   return (
     <div className="space-y-12">
       <MediaCarouselRow
+        priority
         title="Trending TV Shows"
         items={trendingData?.results}
         isLoading={isTrendingLoading}

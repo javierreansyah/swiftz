@@ -344,7 +344,7 @@ export function MovieHeroActions({
                       tmdbScore >= 70
                         ? "bg-success"
                         : tmdbScore >= 50
-                          ? "bg-rating"
+                          ? "bg-primary"
                           : "bg-destructive"
                     }`}
                   >

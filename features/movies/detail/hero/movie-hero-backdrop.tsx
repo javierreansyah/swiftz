@@ -26,8 +26,11 @@ export function MovieHeroBackdrop({
           src={backdropUrl}
           alt={alt}
           fill
-          priority
-          sizes="100vw"
+          // Heavily blurred: a small file looks identical and leaves bandwidth
+          // to the poster and trailer artwork (the page LCP).
+          loading="eager"
+          fetchPriority="low"
+          sizes="120px"
           variant="ambient"
         />
 

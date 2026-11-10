@@ -13,7 +13,6 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { useMultiSearchQuery } from "@/features/search/hooks/queries";
-import type { MultiSearchResultItem } from "@/lib/tmdb/types/search";
 import { cn } from "@/lib/utils";
 import { searchResultSummary } from "@/features/search/result-summary";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
@@ -82,9 +81,12 @@ export function HeaderSearch({
   }, [searchQuery]);
 
   // Sync with current query if on /search page
+  // Result links keep the dropdown open (showing their pending state) until the
+  // destination renders; close every search surface once the route changes.
   useEffect(() => {
     setSearchQuery(urlQuery);
     setIsDropdownOpen(false);
+    setIsMobileOpen(false);
   }, [pathname, urlQuery]);
 
   // Open dropdown when query has length
@@ -134,13 +136,6 @@ export function HeaderSearch({
     const href = `/search?q=${encodeURIComponent(trimmed)}`;
     if (pathname === "/search") queryRouter.push(href);
     else router.push(href);
-  };
-
-  const handleSelectResult = (item: MultiSearchResultItem) => {
-    setIsDropdownOpen(false);
-    setIsMobileOpen(false);
-    setSearchQuery("");
-    router.push(searchResultSummary(item, item.media_type).href);
   };
 
   const clearSearch = () => {
@@ -221,7 +216,8 @@ export function HeaderSearch({
 
                   return {
                     key: `${item.media_type}-${item.id}`,
-                    onClick: () => handleSelectResult(item),
+                    href: searchResultSummary(item, item.media_type).href,
+                    prefetch: false,
                     content: (
                       <div className="flex min-w-0 flex-1 items-center gap-3">
                         {/* Thumbnail */}
@@ -365,7 +361,9 @@ export function HeaderSearch({
 
                           return {
                             key: `${item.media_type}-${item.id}`,
-                            onClick: () => handleSelectResult(item),
+                            href: searchResultSummary(item, item.media_type)
+                              .href,
+                            prefetch: false,
                             content: (
                               <div className="flex min-w-0 flex-1 items-center gap-3">
                                 <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">

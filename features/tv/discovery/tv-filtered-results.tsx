@@ -8,6 +8,7 @@ import { type TVFilterState, TV_GENRES } from "@/features/tv/discovery/types";
 import { PaginationSystem } from "@/components/common/pagination-system";
 import { MovieCardSkeleton } from "@/features/media/components/movie-card-skeleton";
 import { buildTVFilters } from "@/features/tv/discovery/filter-utils";
+import { EAGER_GRID_CARDS } from "@/features/media/components/media-card";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVFilteredResultsProps {
   filters: TVFilterState;
@@ -117,8 +118,13 @@ export function TVFilteredResults({
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-            {shows.map((show) => (
-              <TVCard key={show.id} show={show} />
+            {shows.map((show, index) => (
+              <TVCard
+                key={show.id}
+                show={show}
+                priority={index < EAGER_GRID_CARDS}
+                titleAs="h2"
+              />
             ))}
           </div>
 

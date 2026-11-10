@@ -74,6 +74,8 @@ export interface PersonOverviewProps {
   credits: PersonCombinedCredits;
   timeline: ReactNode;
   onNavigate?: () => void;
+  /** The profile photo is the page LCP on the person route (not in sheets). */
+  priority?: boolean;
 }
 
 export function PersonOverview({
@@ -82,6 +84,7 @@ export function PersonOverview({
   credits,
   timeline,
   onNavigate,
+  priority = false,
 }: PersonOverviewProps) {
   const profileUrl = person.profile_path
     ? `https://image.tmdb.org/t/p/h632${person.profile_path}`
@@ -104,6 +107,7 @@ export function PersonOverview({
               alt={person.name}
               fill
               sizes="(max-width: 1024px) 320px, 360px"
+              priority={priority}
               className="object-cover"
             />
           ) : (

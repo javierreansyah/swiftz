@@ -30,6 +30,7 @@ export function PersonDetail({
         person={person}
         externalIds={person.external_ids}
         credits={person.combined_credits}
+        priority
         timeline={
           <PersonCreditsTimelineLoader
             personId={person.id}

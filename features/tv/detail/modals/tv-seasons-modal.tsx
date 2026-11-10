@@ -23,6 +23,7 @@ import type { TVDetailView } from "@/features/tv/detail/payload";
 import { useTVSeasonQuery } from "@/features/tv/hooks/queries";
 import { cn } from "@/lib/utils";
 import { usePersonDetailsQuery } from "@/features/people/hooks/queries";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { PersonDetailContent } from "@/features/people/components/person-detail-content";
 import { QueryFeedback } from "@/features/media/components/query-feedback";
 export interface TVSeasonsModalProps {
@@ -144,14 +145,11 @@ export function TVSeasonsModal({
         >
           <ChevronLeft />
         </Button>
-        <Button asChild variant="secondary" size="sm">
-          <Link
-            href={`/person/${selectedPersonId}`}
-            prefetch={false}
-            onClick={onClose}
-          >
+        <Button asChild variant="secondary" size="sm" className="relative">
+          <Link href={`/person/${selectedPersonId}`} prefetch={false}>
             <ExternalLink />
             <span>Full Profile</span>
+            <LinkPendingOverlay surface="muted" />
           </Link>
         </Button>
       </div>
@@ -179,11 +177,7 @@ export function TVSeasonsModal({
       }
     >
       {selectedPersonId !== null ? (
-        <PersonDetailContent
-          personId={selectedPersonId}
-          enabled={isOpen}
-          onNavigate={onClose}
-        />
+        <PersonDetailContent personId={selectedPersonId} enabled={isOpen} />
       ) : (
         <div className="space-y-8">
           {/* Season Banner Card */}

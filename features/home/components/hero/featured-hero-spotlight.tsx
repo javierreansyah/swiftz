@@ -1,6 +1,11 @@
 "use client";
+import { useState } from "react";
 import Image from "@/components/ui/image";
 import Link from "next/link";
+import {
+  LinkPendingSignal,
+  PendingOverlay,
+} from "@/components/common/pending-feedback";
 import {
   Play,
   Star,
@@ -39,8 +44,24 @@ export function FeaturedHeroSpotlight({
   onPrev,
   onNext,
 }: FeaturedHeroSpotlightProps) {
+  // The banner, poster, and title all open the same page; any of them pending
+  // darkens the whole spotlight while the detail route renders.
+  const [isNavigating, setIsNavigating] = useState(false);
+  // The poster and title sit above the banner link; mirror their hover/press
+  // onto the banner so the whole spotlight reacts as one target.
+  const [linkFeedback, setLinkFeedback] = useState<"hover" | "press" | null>(
+    null,
+  );
+  const sharedLinkHandlers = {
+    onPointerEnter: () => setLinkFeedback("hover"),
+    onPointerLeave: () => setLinkFeedback(null),
+    onPointerDown: () => setLinkFeedback("press"),
+    onPointerUp: () => setLinkFeedback("hover"),
+    onPointerCancel: () => setLinkFeedback(null),
+  };
+
   return (
-    <div className="relative h-136 w-full overflow-hidden rounded-2xl bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-17 lg:aspect-auto lg:h-158 xl:h-176">
+    <div className="group/spotlight relative h-136 w-full overflow-hidden rounded-2xl bg-media/90 shadow-2xl backdrop-blur-xs sm:aspect-video sm:h-auto lg:col-span-17 lg:aspect-auto lg:h-158 xl:h-176">
       {/* Crossfading Crisp Backdrop Images */}
       {movies.slice(0, 8).map((movie, index) => {
         const isSelected = index === selectedIndex;
@@ -88,9 +109,15 @@ export function FeaturedHeroSpotlight({
       <Link
         href={`/movie/${activeMovie.id}`}
         prefetch={false}
-        className="absolute inset-0 z-3 block cursor-pointer"
+        data-hovered={linkFeedback === "hover" || undefined}
+        data-pressed={linkFeedback === "press" || undefined}
+        className="absolute inset-0 z-3 block cursor-pointer bg-scrim/0 transition-colors duration-150 hover:bg-scrim/10 active:bg-scrim/30 data-hovered:bg-scrim/10 data-pressed:bg-scrim/30"
         aria-label={`View details for ${activeMovie.title}`}
-      />
+      >
+        <LinkPendingSignal onPendingChange={setIsNavigating} />
+      </Link>
+
+      {isNavigating && <PendingOverlay label="Loading movie details" />}
 
       {/* Bottom Content Bars for all hero movies with smooth 1000ms crossfade */}
       {movies.slice(0, 8).map((movie, index) => {
@@ -122,9 +149,10 @@ export function FeaturedHeroSpotlight({
                 href={`/movie/${movie.id}`}
                 prefetch={false}
                 tabIndex={linkTabIndex}
+                {...(isSelected ? sharedLinkHandlers : {})}
                 aria-label={`View details for ${movie.title}`}
                 className={cn(
-                  "group/poster relative block aspect-2/3 w-28 shrink-0 overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-102 sm:w-36 lg:w-48",
+                  "group/poster relative block aspect-2/3 w-28 shrink-0 overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-102 active:scale-98 active:brightness-75 sm:w-36 lg:w-48",
                   interactive,
                 )}
               >
@@ -135,6 +163,9 @@ export function FeaturedHeroSpotlight({
                   sizes="(max-width: 640px) 112px, (max-width: 1024px) 144px, 192px"
                   variant="card"
                 />
+                {isSelected && (
+                  <LinkPendingSignal onPendingChange={setIsNavigating} />
+                )}
               </Link>
 
               <div className="w-full min-w-0 flex-1 space-y-1.5 sm:space-y-2">
@@ -143,8 +174,9 @@ export function FeaturedHeroSpotlight({
                   href={`/movie/${movie.id}`}
                   prefetch={false}
                   tabIndex={linkTabIndex}
+                  {...(isSelected ? sharedLinkHandlers : {})}
                   className={cn(
-                    "group/text block min-w-0 space-y-1 transition-colors sm:space-y-2",
+                    "group/text block min-w-0 space-y-1 transition-opacity active:opacity-70 sm:space-y-2",
                     interactive,
                   )}
                 >
@@ -171,6 +203,9 @@ export function FeaturedHeroSpotlight({
                   <p className="line-clamp-2 max-w-2xl text-xs text-media-foreground/80 sm:text-sm">
                     {movie.overview}
                   </p>
+                  {isSelected && (
+                    <LinkPendingSignal onPendingChange={setIsNavigating} />
+                  )}
                 </Link>
 
                 {/* Actions Row */}

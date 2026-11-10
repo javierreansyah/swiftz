@@ -2,6 +2,7 @@
 import { type ReactNode, useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ExternalLink } from "lucide-react";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/features/media/components/filter-sidebar-primitives";
 import { PersonnelGrid } from "@/features/media/components/personnel-grid";
@@ -134,14 +135,11 @@ export function CastModal({
   const personHeaderActions = showPerson ? (
     <div className="flex items-center gap-2">
       {backButton}
-      <Button asChild variant="secondary" size="sm">
-        <Link
-          href={`/person/${selectedPersonId}`}
-          prefetch={false}
-          onClick={handleClose}
-        >
+      <Button asChild variant="secondary" size="sm" className="relative">
+        <Link href={`/person/${selectedPersonId}`} prefetch={false}>
           <ExternalLink className="size-3.5" />
           <span>Full Profile</span>
+          <LinkPendingOverlay surface="muted" />
         </Link>
       </Button>
     </div>
@@ -150,14 +148,11 @@ export function CastModal({
   const personMobileControls = showPerson ? (
     <div className="flex items-center gap-2">
       {backButton}
-      <Button asChild variant="secondary" size="sm">
-        <Link
-          href={`/person/${selectedPersonId}`}
-          prefetch={false}
-          onClick={handleClose}
-        >
+      <Button asChild variant="secondary" size="sm" className="relative">
+        <Link href={`/person/${selectedPersonId}`} prefetch={false}>
           <ExternalLink className="size-3.5" />
           <span>Full Profile</span>
+          <LinkPendingOverlay surface="muted" />
         </Link>
       </Button>
     </div>
@@ -320,11 +315,7 @@ export function CastModal({
       {loadError &&
       cast.length === 0 &&
       crew.length === 0 ? null : showPerson ? (
-        <PersonDetailContent
-          personId={selectedPersonId}
-          enabled={isOpen}
-          onNavigate={handleClose}
-        />
+        <PersonDetailContent personId={selectedPersonId} enabled={isOpen} />
       ) : (
         <div className="space-y-8">
           <PersonnelGrid

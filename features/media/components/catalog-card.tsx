@@ -6,9 +6,11 @@ import { MediaCard } from "@/features/media/components/media-card";
 export function CatalogCard({
   item,
   type,
+  priority,
 }: {
   item: Movie | TVShow;
   type: "movie" | "tv";
+  priority?: boolean;
 }) {
   const title =
     type === "movie" ? (item as Movie).title : (item as TVShow).name;
@@ -27,6 +29,7 @@ export function CatalogCard({
       year={date ? date.substring(0, 4) : undefined}
       href={`/${type}/${item.id}`}
       variant="shelf"
+      priority={priority}
     />
   );
 }

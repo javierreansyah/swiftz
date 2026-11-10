@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Image from "@/components/ui/image";
-import Link, { useLinkStatus } from "next/link";
+import Link from "next/link";
+import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Film, Tv, User, Play, Camera, Star, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 export type MediaCardType =
@@ -9,19 +10,8 @@ export type MediaCardType =
 
 export type MediaCardAspectRatio = "poster" | "portrait" | "video" | "square";
 
-function MediaCardNavigationFeedback() {
-  const { pending } = useLinkStatus();
-  if (!pending) return null;
-
-  return (
-    <div
-      role="status"
-      className="pointer-events-none absolute inset-0 z-10 rounded-3xl bg-scrim/20"
-    >
-      <span className="sr-only">Loading details</span>
-    </div>
-  );
-}
+/** Grid cards visible in the first viewport on phones (two columns, two rows). */
+export const EAGER_GRID_CARDS = 4;
 
 const SHELF_IMAGE_SIZES = {
   sm: { poster: "8rem", portrait: "9rem", video: "16rem", square: "8rem" },
@@ -93,6 +83,8 @@ export interface MediaCardProps {
   className?: string;
   priority?: boolean;
   sizes?: string;
+  /** Heading level for the title; use h2 when cards sit directly under the page h1. */
+  titleAs?: "h2" | "h3";
 }
 
 export function MediaCard({
@@ -111,6 +103,7 @@ export function MediaCard({
   className,
   priority = false,
   sizes,
+  titleAs: Title = "h3",
 }: MediaCardProps) {
   // Default aspect ratio based on card type
   const effectiveAspectRatio: MediaCardAspectRatio =
@@ -161,7 +154,8 @@ export function MediaCard({
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={title}
+            // The visible title already names the card; avoid repeating it.
+            alt={variant === "image" ? title : ""}
             fill
             sizes={imageSizes}
             priority={priority}
@@ -184,9 +178,9 @@ export function MediaCard({
       {/* Standardized Info Section */}
       {variant !== "image" && (
         <div className="flex h-16 shrink-0 flex-col justify-between p-2.5 sm:h-20 sm:p-4">
-          <h3 className="line-clamp-1 font-sans text-sm leading-snug font-semibold text-foreground transition-colors group-hover:text-primary sm:text-base">
+          <Title className="line-clamp-1 font-sans text-sm leading-snug font-semibold text-foreground transition-colors group-hover:text-primary sm:text-base">
             {title}
-          </h3>
+          </Title>
 
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
             {rating !== undefined && rating > 0 ? (
@@ -217,10 +211,10 @@ export function MediaCard({
         href={href}
         prefetch={false}
         onClick={onClick}
-        className="relative block shrink-0 transition-opacity focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:opacity-85"
+        className="relative block shrink-0 transition duration-150 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-98 active:opacity-85"
       >
         {cardContent}
-        <MediaCardNavigationFeedback />
+        <LinkPendingOverlay shape="card" label="Loading details" />
       </Link>
     );
   }
@@ -237,7 +231,7 @@ export function MediaCard({
             onClick();
           }
         }}
-        className="block shrink-0 transition-opacity focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:opacity-85"
+        className="block shrink-0 transition duration-150 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-98 active:opacity-85"
       >
         {cardContent}
       </div>
