@@ -31,14 +31,8 @@ export function TVMobileFilterDrawer({
           defaultFilters={defaultFilters}
           activeFilters={activeFilters}
           bareActions
-          onApplyFilters={(filters) => {
-            onApplyFilters(filters);
-            close();
-          }}
-          onResetFilters={() => {
-            onResetFilters();
-            close();
-          }}
+          onApplyFilters={(filters) => close(() => onApplyFilters(filters))}
+          onResetFilters={() => close(onResetFilters)}
         />
       )}
     </FilterMobileDrawer>

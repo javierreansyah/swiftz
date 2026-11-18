@@ -14,7 +14,7 @@ export function LibraryHeader({
   onLogout,
 }: LibraryHeaderProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl border bg-card/60 p-6 shadow-lg backdrop-blur-md sm:p-8">
+    <div className="relative overflow-hidden rounded-3xl bg-card/60 p-6 shadow-lg backdrop-blur-md sm:p-8">
       <div className="flex flex-col items-center justify-between gap-6 sm:flex-row sm:items-start">
         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
           {/* Avatar */}

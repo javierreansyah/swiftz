@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "@/components/ui/image";
 import Link from "next/link";
+import { useDrawerLink } from "@/components/ui/drawer";
 import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Film, Tv, User, Play, Camera, Star, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -105,6 +106,7 @@ export function MediaCard({
   sizes,
   titleAs: Title = "h3",
 }: MediaCardProps) {
+  const getLinkProps = useDrawerLink();
   // Default aspect ratio based on card type
   const effectiveAspectRatio: MediaCardAspectRatio =
     aspectRatio ||
@@ -211,6 +213,7 @@ export function MediaCard({
         href={href}
         prefetch={false}
         onClick={onClick}
+        {...getLinkProps(href)}
         className="relative block shrink-0 transition duration-150 focus-visible:rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-98 active:opacity-85"
       >
         {cardContent}

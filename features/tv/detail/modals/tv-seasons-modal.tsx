@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Image from "@/components/ui/image";
-import Link from "next/link";
+import { DrawerLink } from "@/components/ui/drawer";
 import {
   Star,
   Clock,
@@ -146,11 +146,11 @@ export function TVSeasonsModal({
           <ChevronLeft />
         </Button>
         <Button asChild variant="secondary" size="sm" className="relative">
-          <Link href={`/person/${selectedPersonId}`} prefetch={false}>
+          <DrawerLink href={`/person/${selectedPersonId}`} prefetch={false}>
             <ExternalLink />
             <span>Full Profile</span>
             <LinkPendingOverlay surface="muted" />
-          </Link>
+          </DrawerLink>
         </Button>
       </div>
     ) : undefined;

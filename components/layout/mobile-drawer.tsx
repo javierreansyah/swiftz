@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import type { ReactElement } from "react";
 import Image from "@/components/ui/image";
 import { usePathname } from "next/navigation";
 import {
@@ -16,8 +16,10 @@ import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHandle,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { MenuList } from "@/components/common/menu-list";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
@@ -25,7 +27,8 @@ import { useAuth } from "@/features/auth/auth-provider";
 
 interface MobileDrawerProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (open: boolean) => void;
+  trigger: ReactElement;
 }
 
 interface NavigationRoute {
@@ -34,7 +37,11 @@ interface NavigationRoute {
   icon: LucideIcon;
 }
 
-export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
+export function MobileDrawer({
+  isOpen,
+  setIsOpen,
+  trigger,
+}: MobileDrawerProps) {
   const { user, isAuthenticated, login, logout } = useAuth();
   const pathname = usePathname();
 
@@ -61,17 +68,21 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent
         surface="fit"
         className="inset-x-0 bottom-0 mx-auto w-full max-w-(--max-container)"
       >
         <DrawerHandle className="md:hidden" />
         <DrawerTitle className="sr-only">Menu</DrawerTitle>
+        <DrawerDescription className="sr-only">
+          Browse Swiftz and manage your account.
+        </DrawerDescription>
 
         <div className="space-y-4 px-4 pt-5 pb-8">
           {/* User Profile Card (if authenticated) */}
           {isAuthenticated && user ? (
-            <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card p-3 shadow-xs">
+            <div className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-xs">
               {avatarUrl ? (
                 <div className="relative size-10 flex-none overflow-clip rounded-xl">
                   <Image
@@ -106,7 +117,6 @@ export function MobileDrawer({ isOpen, setIsOpen }: MobileDrawerProps) {
               label: item.name,
               active: isActiveRoute(item.route),
               href: item.route,
-              onClick: () => setIsOpen(false),
             }))}
           />
 

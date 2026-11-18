@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { AuthProvider } from "@/features/auth/auth-provider";
 import { MovieNavProvider } from "@/components/providers/movie-nav-provider";
+import { HeaderActionsProvider } from "@/components/providers/header-actions-provider";
 import { Navbar as Navigation } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -54,11 +55,13 @@ export default function RootLayout({
             <AuthProvider>
               <TooltipProvider delayDuration={200}>
                 <MovieNavProvider>
-                  <div className="overflow-clip">
-                    <Navigation />
-                    <div className="min-h-screen">{children}</div>
-                    <Footer />
-                  </div>
+                  <HeaderActionsProvider>
+                    <div className="overflow-clip">
+                      <Navigation />
+                      <div className="min-h-screen">{children}</div>
+                      <Footer />
+                    </div>
+                  </HeaderActionsProvider>
                 </MovieNavProvider>
               </TooltipProvider>
             </AuthProvider>

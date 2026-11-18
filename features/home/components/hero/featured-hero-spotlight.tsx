@@ -222,23 +222,22 @@ export function FeaturedHeroSpotlight({
 
                     {isAuthenticated && isSelected && (
                       <Button
-                        size="sm"
+                        size="icon-sm-mobile"
                         variant="ghost"
                         onClick={onToggleWatchlist}
                         disabled={isWatchlistPending}
+                        aria-label="Watchlist"
+                        aria-pressed={isWatchlist}
                         className={cn(interactive)}
                       >
                         {isWatchlist ? (
-                          <>
-                            <Check className="size-4 text-success" />
-                            <span>In Watchlist</span>
-                          </>
+                          <Check className="size-4 text-success" />
                         ) : (
-                          <>
-                            <Plus className="size-4" />
-                            <span>Watchlist</span>
-                          </>
+                          <Plus className="size-4" />
                         )}
+                        <span className="hidden sm:inline">
+                          {isWatchlist ? "In Watchlist" : "Watchlist"}
+                        </span>
                       </Button>
                     )}
                   </div>

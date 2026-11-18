@@ -1,5 +1,8 @@
+"use client";
+
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
+import { useDrawerLink } from "@/components/ui/drawer";
 import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,6 +25,7 @@ export interface MenuListProps {
 }
 
 export function MenuList({ items, className }: MenuListProps) {
+  const getLinkProps = useDrawerLink();
   if (items.length === 0) return null;
 
   return (
@@ -76,6 +80,7 @@ export function MenuList({ items, className }: MenuListProps) {
                 onClick={item.onClick}
                 aria-label={item.ariaLabel}
                 className={rowClassName}
+                {...getLinkProps(item.href)}
               >
                 {inner}
                 <LinkPendingOverlay surface="muted" />

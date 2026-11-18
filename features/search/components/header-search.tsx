@@ -11,6 +11,8 @@ import {
   DrawerHandle,
   DrawerTitle,
   DrawerDescription,
+  DrawerTrigger,
+  useDrawerClose,
 } from "@/components/ui/drawer";
 import { useMultiSearchQuery } from "@/features/search/hooks/queries";
 import { cn } from "@/lib/utils";
@@ -24,11 +26,26 @@ export interface HeaderSearchProps {
   isMovieDetailPage?: boolean;
 }
 
-export function HeaderSearch({
+export function HeaderSearch(props: HeaderSearchProps) {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  return (
+    <Drawer
+      open={isMobileOpen}
+      onOpenChange={setIsMobileOpen}
+      repositionInputs={false}
+    >
+      <HeaderSearchContent {...props} isMobileOpen={isMobileOpen} />
+    </Drawer>
+  );
+}
+
+function HeaderSearchContent({
   className,
   isScrolled = false,
   isMovieDetailPage = false,
-}: HeaderSearchProps) {
+  isMobileOpen,
+}: HeaderSearchProps & { isMobileOpen: boolean }) {
   const router = useRouter();
   const queryRouter = useClientQueryRouter();
   const pathname = usePathname();
@@ -38,7 +55,7 @@ export function HeaderSearch({
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const closeMobileSearch = useDrawerClose();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
@@ -86,7 +103,6 @@ export function HeaderSearch({
   useEffect(() => {
     setSearchQuery(urlQuery);
     setIsDropdownOpen(false);
-    setIsMobileOpen(false);
   }, [pathname, urlQuery]);
 
   // Open dropdown when query has length
@@ -132,10 +148,17 @@ export function HeaderSearch({
     if (!trimmed) return;
 
     setIsDropdownOpen(false);
-    setIsMobileOpen(false);
     const href = `/search?q=${encodeURIComponent(trimmed)}`;
-    if (pathname === "/search") queryRouter.push(href);
-    else router.push(href);
+    const navigate = () => {
+      if (pathname === "/search") queryRouter.push(href);
+      else router.push(href);
+    };
+    if (isMobileOpen && closeMobileSearch) closeMobileSearch(navigate);
+    else navigate();
+  };
+
+  const jumpToCategory = (href: string) => {
+    closeMobileSearch?.(() => router.push(href));
   };
 
   const clearSearch = () => {
@@ -277,197 +300,182 @@ export function HeaderSearch({
       )}
 
       {/* Mobile Search Button Trigger */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setIsMobileOpen(true)}
-        aria-label="Search"
-        className="md:hidden"
-      >
-        <Search className="size-5" />
-      </Button>
+      <DrawerTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Search"
+          className="md:hidden"
+        >
+          <Search className="size-5" />
+        </Button>
+      </DrawerTrigger>
 
       {/* Mobile Search Bottom Sheet */}
-      <Drawer
-        open={isMobileOpen}
-        onOpenChange={setIsMobileOpen}
-        repositionInputs={false}
+      <DrawerContent
+        ref={mobileSheetRef}
+        surface="search"
+        className="inset-x-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
       >
-        <DrawerContent
-          ref={mobileSheetRef}
-          surface="search"
-          className="inset-x-0 mx-auto flex w-full max-w-(--max-container) flex-col overflow-hidden"
-        >
-          <DrawerHandle className="md:hidden" />
-          <DrawerTitle className="sr-only">Search Swiftz</DrawerTitle>
-          <DrawerDescription className="sr-only">
-            Search movies, TV shows, and people
-          </DrawerDescription>
+        <DrawerHandle className="md:hidden" />
+        <DrawerTitle className="sr-only">Search Swiftz</DrawerTitle>
+        <DrawerDescription className="sr-only">
+          Search movies, TV shows, and people
+        </DrawerDescription>
 
-          <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-            {/* Search Input Bar (Full Width, No Divider) */}
-            <div className="p-4 pb-1">
-              <form onSubmit={handleSearchSubmit} className="relative w-full">
-                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  ref={mobileInputRef}
-                  leadingIcon
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    if (!e.target.value) {
-                      clearSearch();
-                    }
-                  }}
-                  placeholder="Search movies, TV shows, people..."
-                  aria-label="Search query"
-                  className="w-full"
-                />
-              </form>
-            </div>
-
-            {/* Scrollable Results Area */}
-            <div className="min-h-0 flex-1 overflow-y-auto p-4">
-              {debouncedQuery.length >= 2 ? (
-                <div className="flex flex-col">
-                  {isError && searchResults && (
-                    <QueryFeedback hasData onRetry={() => void refetch()} />
-                  )}
-                  {isLoading ? (
-                    <div className="flex items-center justify-center gap-2 p-6 text-xs text-muted-foreground">
-                      <Loader2 className="size-4 animate-spin text-primary" />
-                      <span>Searching...</span>
-                    </div>
-                  ) : isError && !searchResults ? (
-                    <QueryFeedback
-                      hasData={false}
-                      onRetry={() => void refetch()}
-                    />
-                  ) : liveResults.length === 0 ? (
-                    <div className="p-6 text-center text-xs text-muted-foreground">
-                      No results found for &quot;{debouncedQuery}&quot;. Press
-                      enter to search all.
-                    </div>
-                  ) : (
-                    <MenuList
-                      items={[
-                        ...liveResults.map((item) => {
-                          const {
-                            title,
-                            imagePath,
-                            subtitle: subText,
-                          } = searchResultSummary(item, item.media_type);
-
-                          return {
-                            key: `${item.media_type}-${item.id}`,
-                            href: searchResultSummary(item, item.media_type)
-                              .href,
-                            prefetch: false,
-                            content: (
-                              <div className="flex min-w-0 flex-1 items-center gap-3">
-                                <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">
-                                  <SearchResultImage
-                                    path={imagePath}
-                                    title={title}
-                                    icon={
-                                      item.media_type === "person"
-                                        ? User
-                                        : item.media_type === "tv"
-                                          ? Tv
-                                          : Film
-                                    }
-                                    size="compact"
-                                    fallback={false}
-                                  />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="line-clamp-1 text-xs font-bold text-foreground">
-                                      {title}
-                                    </span>
-                                    <span
-                                      className={`rounded-xl px-1.5 py-0.5 text-xs font-bold uppercase ${
-                                        item.media_type === "movie"
-                                          ? "bg-info/10 text-info"
-                                          : item.media_type === "tv"
-                                            ? "bg-highlight/10 text-highlight"
-                                            : "bg-success/10 text-success"
-                                      }`}
-                                    >
-                                      {item.media_type}
-                                    </span>
-                                  </div>
-                                  {subText && (
-                                    <p className="text-xs text-muted-foreground">
-                                      {subText}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            ),
-                          };
-                        }),
-                        {
-                          key: "see-all-results",
-                          icon: ArrowRight,
-                          label: `See all results for "${debouncedQuery}"`,
-                          onClick: () => handleSearchSubmit(),
-                        },
-                      ]}
-                    />
-                  )}
-                </div>
-              ) : (
-                /* Empty query state with quick category jumps */
-                <div className="py-1">
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      type="button"
-                      onClick={() => {
-                        setIsMobileOpen(false);
-                        router.push("/movie");
-                      }}
-                      className="justify-start"
-                    >
-                      <Film className="size-3.5 text-primary" />
-                      <span>Movies</span>
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      type="button"
-                      onClick={() => {
-                        setIsMobileOpen(false);
-                        router.push("/tv");
-                      }}
-                      className="justify-start"
-                    >
-                      <Tv className="size-3.5 text-primary" />
-                      <span>TV</span>
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      type="button"
-                      onClick={() => {
-                        setIsMobileOpen(false);
-                        router.push("/person");
-                      }}
-                      className="justify-start"
-                    >
-                      <User className="size-3.5 text-primary" />
-                      <span>People</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+        <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+          {/* Search Input Bar (Full Width, No Divider) */}
+          <div className="p-4 pb-1">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                ref={mobileInputRef}
+                leadingIcon
+                type="search"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (!e.target.value) {
+                    clearSearch();
+                  }
+                }}
+                placeholder="Search movies, TV shows, people..."
+                aria-label="Search query"
+                className="w-full"
+              />
+            </form>
           </div>
-        </DrawerContent>
-      </Drawer>
+
+          {/* Scrollable Results Area */}
+          <div className="min-h-0 flex-1 overflow-y-auto p-4">
+            {debouncedQuery.length >= 2 ? (
+              <div className="flex flex-col">
+                {isError && searchResults && (
+                  <QueryFeedback hasData onRetry={() => void refetch()} />
+                )}
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-2 p-6 text-xs text-muted-foreground">
+                    <Loader2 className="size-4 animate-spin text-primary" />
+                    <span>Searching...</span>
+                  </div>
+                ) : isError && !searchResults ? (
+                  <QueryFeedback
+                    hasData={false}
+                    onRetry={() => void refetch()}
+                  />
+                ) : liveResults.length === 0 ? (
+                  <div className="p-6 text-center text-xs text-muted-foreground">
+                    No results found for &quot;{debouncedQuery}&quot;. Press
+                    enter to search all.
+                  </div>
+                ) : (
+                  <MenuList
+                    items={[
+                      ...liveResults.map((item) => {
+                        const {
+                          title,
+                          imagePath,
+                          subtitle: subText,
+                        } = searchResultSummary(item, item.media_type);
+
+                        return {
+                          key: `${item.media_type}-${item.id}`,
+                          href: searchResultSummary(item, item.media_type).href,
+                          prefetch: false,
+                          content: (
+                            <div className="flex min-w-0 flex-1 items-center gap-3">
+                              <div className="relative aspect-2/3 w-10 shrink-0 overflow-hidden rounded-xl bg-muted">
+                                <SearchResultImage
+                                  path={imagePath}
+                                  title={title}
+                                  icon={
+                                    item.media_type === "person"
+                                      ? User
+                                      : item.media_type === "tv"
+                                        ? Tv
+                                        : Film
+                                  }
+                                  size="compact"
+                                  fallback={false}
+                                />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="line-clamp-1 text-xs font-bold text-foreground">
+                                    {title}
+                                  </span>
+                                  <span
+                                    className={`rounded-xl px-1.5 py-0.5 text-xs font-bold uppercase ${
+                                      item.media_type === "movie"
+                                        ? "bg-info/10 text-info"
+                                        : item.media_type === "tv"
+                                          ? "bg-highlight/10 text-highlight"
+                                          : "bg-success/10 text-success"
+                                    }`}
+                                  >
+                                    {item.media_type}
+                                  </span>
+                                </div>
+                                {subText && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {subText}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ),
+                        };
+                      }),
+                      {
+                        key: "see-all-results",
+                        icon: ArrowRight,
+                        label: `See all results for "${debouncedQuery}"`,
+                        onClick: () => handleSearchSubmit(),
+                      },
+                    ]}
+                  />
+                )}
+              </div>
+            ) : (
+              /* Empty query state with quick category jumps */
+              <div className="py-1">
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    type="button"
+                    onClick={() => jumpToCategory("/movie")}
+                    className="justify-start"
+                  >
+                    <Film className="size-3.5 text-primary" />
+                    <span>Movies</span>
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    type="button"
+                    onClick={() => jumpToCategory("/tv")}
+                    className="justify-start"
+                  >
+                    <Tv className="size-3.5 text-primary" />
+                    <span>TV</span>
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    type="button"
+                    onClick={() => jumpToCategory("/person")}
+                    className="justify-start"
+                  >
+                    <User className="size-3.5 text-primary" />
+                    <span>People</span>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </DrawerContent>
     </div>
   );
 }

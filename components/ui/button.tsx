@@ -41,6 +41,8 @@ const buttonVariants = cva(
         icon: "size-10",
         "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-8",
+        "icon-sm-mobile":
+          "size-8 sm:w-auto sm:gap-1 sm:px-3 sm:has-data-[icon=inline-end]:pr-2 sm:has-data-[icon=inline-start]:pl-2",
         "icon-lg": "size-12",
         inline: "h-auto gap-1 p-0 text-sm",
       },

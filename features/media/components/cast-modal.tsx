@@ -1,6 +1,6 @@
 "use client";
 import { type ReactNode, useState, useMemo, useEffect } from "react";
-import Link from "next/link";
+import { DrawerLink } from "@/components/ui/drawer";
 import { ChevronLeft, ExternalLink } from "lucide-react";
 import { LinkPendingOverlay } from "@/components/common/pending-feedback";
 import { Button } from "@/components/ui/button";
@@ -136,11 +136,11 @@ export function CastModal({
     <div className="flex items-center gap-2">
       {backButton}
       <Button asChild variant="secondary" size="sm" className="relative">
-        <Link href={`/person/${selectedPersonId}`} prefetch={false}>
+        <DrawerLink href={`/person/${selectedPersonId}`} prefetch={false}>
           <ExternalLink className="size-3.5" />
           <span>Full Profile</span>
           <LinkPendingOverlay surface="muted" />
-        </Link>
+        </DrawerLink>
       </Button>
     </div>
   ) : undefined;
@@ -149,11 +149,11 @@ export function CastModal({
     <div className="flex items-center gap-2">
       {backButton}
       <Button asChild variant="secondary" size="sm" className="relative">
-        <Link href={`/person/${selectedPersonId}`} prefetch={false}>
+        <DrawerLink href={`/person/${selectedPersonId}`} prefetch={false}>
           <ExternalLink className="size-3.5" />
           <span>Full Profile</span>
           <LinkPendingOverlay surface="muted" />
-        </Link>
+        </DrawerLink>
       </Button>
     </div>
   ) : undefined;

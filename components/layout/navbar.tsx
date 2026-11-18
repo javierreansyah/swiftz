@@ -11,6 +11,7 @@ import { UserNavDropdown } from "@/components/layout/user-nav-dropdown";
 import { HeaderSearch } from "@/features/search/components/header-search";
 import { useAuth } from "@/features/auth/auth-provider";
 import { useMovieNav } from "@/components/providers/movie-nav-provider";
+import { MobileHeaderActionsSlot } from "@/components/providers/header-actions-provider";
 interface NavigationRoute {
   route: string;
   name: string;
@@ -53,7 +54,6 @@ export function Navbar() {
     if (!isOpen && isMovieNavOpen) {
       closeMovieNav();
     }
-    setIsOpen(!isOpen);
   };
 
   const handleToggleMovieNav = () => {
@@ -120,11 +120,11 @@ export function Navbar() {
               variant="outline"
               size="default"
               asChild
-              className="shrink-0"
+              className="hidden lg:inline-flex"
             >
               <Link href="/library" aria-label="Library">
                 <Film className="size-4" />
-                <span className="hidden sm:inline">Library</span>
+                <span>Library</span>
               </Link>
             </Button>
           )}
@@ -134,7 +134,7 @@ export function Navbar() {
           </div>
 
           {/* User Auth Section */}
-          <div className="hidden items-center sm:flex">
+          <div className="hidden items-center lg:flex">
             <UserNavDropdown />
           </div>
 
@@ -153,21 +153,26 @@ export function Navbar() {
             </Button>
           )}
 
+          <MobileHeaderActionsSlot />
+
           {/* Mobile Main Menu Drawer Trigger */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="lg:hidden"
-            onClick={handleToggleMenu}
-            aria-label="Toggle navigation"
-          >
-            <Menu className="size-5" />
-            <span className="sr-only">Toggle navigation</span>
-          </Button>
+          <MobileDrawer
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            trigger={
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden"
+                onClick={handleToggleMenu}
+                aria-label="Toggle navigation"
+              >
+                <Menu className="size-5" />
+              </Button>
+            }
+          />
         </div>
       </div>
-
-      <MobileDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 }

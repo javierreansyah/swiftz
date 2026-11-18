@@ -1,14 +1,84 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Drawer as DrawerPrimitive } from "vaul";
 
+import { useDrawerHistory } from "@/hooks/use-drawer-history";
 import { cn } from "@/lib/utils";
 
+const DrawerHistoryContext = React.createContext<{
+  open: boolean;
+  close: (afterClose?: () => void) => void;
+} | null>(null);
+
 function Drawer({
+  open,
+  defaultOpen,
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
-  return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
+  const isOpen = open ?? internalOpen;
+
+  function changeOpen(next: boolean) {
+    if (open === undefined) setInternalOpen(next);
+    if (next !== isOpen) onOpenChange?.(next);
+  }
+
+  const close = useDrawerHistory(isOpen, () => changeOpen(false));
+
+  return (
+    <DrawerHistoryContext.Provider value={{ open: isOpen, close }}>
+      <DrawerPrimitive.Root
+        data-slot="drawer"
+        {...props}
+        open={isOpen}
+        onOpenChange={(next) => (next ? changeOpen(true) : close())}
+      />
+    </DrawerHistoryContext.Provider>
+  );
+}
+
+function useDrawerClose() {
+  return React.useContext(DrawerHistoryContext)?.close;
+}
+
+function useDrawerLink() {
+  const drawer = React.useContext(DrawerHistoryContext);
+  if (!drawer?.open) return () => undefined;
+
+  return (
+    href: string,
+  ): Pick<React.ComponentProps<typeof Link>, "replace" | "onNavigate"> => ({
+    // Use the drawer's entry for the destination. Back returns to the page
+    // underneath the drawer, even when the destination takes time to render.
+    replace: true,
+    onNavigate: (event) => {
+      const next = new URL(href, window.location.href);
+      if (
+        next.pathname === window.location.pathname &&
+        next.origin === window.location.origin
+      ) {
+        event.preventDefault();
+        if (next.href !== window.location.href) {
+          window.history.replaceState(null, "", next.href);
+          window.scrollTo(0, 0);
+        }
+        drawer.close();
+      }
+    },
+  });
+}
+
+function DrawerLink({
+  href,
+  ...props
+}: Pick<React.ComponentProps<typeof Link>, "children" | "prefetch"> & {
+  href: string;
+}) {
+  const getLinkProps = useDrawerLink();
+  return <Link {...props} href={href} {...getLinkProps(href)} />;
 }
 
 function DrawerTrigger({
@@ -145,6 +215,9 @@ export {
   DrawerPortal,
   DrawerOverlay,
   DrawerTrigger,
+  DrawerLink,
+  useDrawerClose,
+  useDrawerLink,
   DrawerClose,
   DrawerContent,
   DrawerHandle,

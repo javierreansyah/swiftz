@@ -5,7 +5,7 @@ import vm from "node:vm";
 import ts from "typescript";
 
 // Shallow checks exercise component handlers and effects without a browser.
-function component(file, name, mocks = {}, globals = {}) {
+function component(file, name, mocks = {}, globals = {}, expand) {
   const slots = [];
   const dependencies = [];
   let cursor, effects, dirty;
@@ -37,6 +37,11 @@ function component(file, name, mocks = {}, globals = {}) {
         dependencies[index] = deps;
         effects.push(effect);
       }
+    },
+    useEffectEvent(fn) {
+      const index = cursor++;
+      slots[index] = fn;
+      return (...args) => slots[index](...args);
     },
     useMemo: (fn) => {
       cursor++;
@@ -84,13 +89,98 @@ function component(file, name, mocks = {}, globals = {}) {
       cursor = 0;
       effects = [];
       dirty = false;
-      tree = render(props);
+      tree = render(props, exported[name]);
+      if (expand) {
+        const child = tree.props.children;
+        tree.props.children = child.type(child.props);
+      }
       effects.forEach((effect) => effect());
       if (!dirty) return tree;
     }
     throw new Error("Component did not settle");
   };
 }
+
+function headerSearch(mocks, globals) {
+  return component(
+    "features/search/components/header-search.tsx",
+    "HeaderSearch",
+    {
+      "@/components/ui/drawer": {
+        Drawer: "Drawer",
+        DrawerTrigger: "DrawerTrigger",
+        DrawerContent: "DrawerContent",
+        useDrawerClose: () => undefined,
+      },
+      ...mocks,
+    },
+    globals,
+    true,
+  );
+}
+
+test("drawer Back closes on the current URL and explicit close runs navigation after traversal", () => {
+  const base = { url: "/movie?page=2", state: null };
+  const stack = [base];
+  const listeners = new Map();
+  const scheduled = [];
+  let backCalls = 0;
+  let closes = 0;
+  const history = {
+    get state() {
+      return stack.at(-1).state;
+    },
+    pushState(state) {
+      stack.push({ url: stack.at(-1).url, state });
+    },
+    back() {
+      backCalls++;
+    },
+  };
+  const traverseBack = () => {
+    stack.pop();
+    listeners.get("popstate")({ state: history.state });
+  };
+  const render = component(
+    "hooks/use-drawer-history.ts",
+    "useDrawerHistory",
+    { "next/navigation": { usePathname: () => "/movie" } },
+    {
+      window: {
+        history,
+        addEventListener: (event, callback) => listeners.set(event, callback),
+        removeEventListener: (event) => listeners.delete(event),
+      },
+      queueMicrotask: (callback) => scheduled.push(callback),
+    },
+  );
+  const update = (open) =>
+    render(open, (value, useDrawer) => useDrawer(value, () => closes++));
+
+  update(true);
+  assert.equal(stack.length, 2);
+  assert.equal(stack.at(-1).url, base.url);
+  traverseBack();
+  assert.equal(closes, 1);
+  assert.equal(backCalls, 0);
+  assert.equal(stack.at(-1), base);
+  update(false);
+
+  const close = update(true);
+  let applied = false;
+  close(() => {
+    assert.equal(stack.at(-1), base);
+    applied = true;
+  });
+  close();
+  assert.equal(backCalls, 1);
+  assert.equal(applied, false);
+  traverseBack();
+  assert.equal(closes, 2);
+  assert.equal(applied, false);
+  scheduled.shift()();
+  assert.equal(applied, true);
+});
 
 test("legacy demo sessions are cleared before account requests are enabled", () => {
   const storage = new Map([
@@ -198,24 +288,20 @@ test("header searches use local navigation on search and route navigation from o
   let pathname = "/search";
   const local = [],
     routes = [];
-  const render = component(
-    "features/search/components/header-search.tsx",
-    "HeaderSearch",
-    {
-      "next/navigation": {
-        useRouter: () => ({ push: (href) => routes.push(href) }),
-        usePathname: () => pathname,
-        useSearchParams: () => new URLSearchParams({ q: "first" }),
-      },
-      "@/hooks/use-client-query-router": {
-        useClientQueryRouter: () => ({ push: (href) => local.push(href) }),
-      },
-      "@/features/search/hooks/queries": {
-        useMultiSearchQuery: () => ({ data: { results: [] } }),
-      },
-      "@/lib/utils": { cn: () => "" },
+  const render = headerSearch({
+    "next/navigation": {
+      useRouter: () => ({ push: (href) => routes.push(href) }),
+      usePathname: () => pathname,
+      useSearchParams: () => new URLSearchParams({ q: "first" }),
     },
-  );
+    "@/hooks/use-client-query-router": {
+      useClientQueryRouter: () => ({ push: (href) => local.push(href) }),
+    },
+    "@/features/search/hooks/queries": {
+      useMultiSearchQuery: () => ({ data: { results: [] } }),
+    },
+    "@/lib/utils": { cn: () => "" },
+  });
   let tree = render({});
   nodes(tree)
     .find((n) => n.type === "Input")
@@ -559,7 +645,6 @@ test("collection results open the existing sheet and keep it mounted when closed
 });
 
 test("collections use API text and numbered media cards that retain release order when searched", () => {
-  let closes = 0;
   const part = (id, title, release_date) => ({
     id,
     title,
@@ -587,7 +672,7 @@ test("collections use API text and numbered media cards that retain release orde
     isOpen: true,
     collectionId: 42,
     currentMovieId: 2,
-    onClose: () => closes++,
+    onClose() {},
   };
   const tree = render(props);
   assert.equal(tree.props.title, collection.name);
@@ -609,8 +694,6 @@ test("collections use API text and numbered media cards that retain release orde
   const card = nodes(render(props)).find((node) => node.type === "MediaCard");
   assert.equal(card.props.badge, "2 · Currently viewing");
   assert.equal(card.props.href, "/movie/2");
-  card.props.onClick();
-  assert.equal(closes, 1);
   assert.equal(collection.parts[0].id, 2);
 });
 
@@ -654,9 +737,7 @@ test("mobile search tracks keyboard resize and viewport panning without accumula
     addEventListener: (name, handler) => listeners.set(name, handler),
     removeEventListener: (name) => listeners.delete(name),
   };
-  const render = component(
-    "features/search/components/header-search.tsx",
-    "HeaderSearch",
+  const render = headerSearch(
     {
       "next/navigation": {
         useRouter: () => ({}),
@@ -699,24 +780,20 @@ test("mobile search tracks keyboard resize and viewport panning without accumula
 
 test("header search follows query-only URL changes", () => {
   let query = "first";
-  const render = component(
-    "features/search/components/header-search.tsx",
-    "HeaderSearch",
-    {
-      "next/navigation": {
-        useRouter: () => ({}),
-        usePathname: () => "/search",
-        useSearchParams: () => new URLSearchParams({ q: query }),
-      },
-      "@/features/search/hooks/queries": {
-        useMultiSearchQuery: () => ({ data: { results: [] } }),
-      },
-      "@/hooks/use-client-query-router": {
-        useClientQueryRouter: () => ({ push() {} }),
-      },
-      "@/lib/utils": { cn: () => "" },
+  const render = headerSearch({
+    "next/navigation": {
+      useRouter: () => ({}),
+      usePathname: () => "/search",
+      useSearchParams: () => new URLSearchParams({ q: query }),
     },
-  );
+    "@/features/search/hooks/queries": {
+      useMultiSearchQuery: () => ({ data: { results: [] } }),
+    },
+    "@/hooks/use-client-query-router": {
+      useClientQueryRouter: () => ({ push() {} }),
+    },
+    "@/lib/utils": { cn: () => "" },
+  });
   assert.equal(
     nodes(render({})).find((node) => node.type === "Input").props.value,
     "first",
