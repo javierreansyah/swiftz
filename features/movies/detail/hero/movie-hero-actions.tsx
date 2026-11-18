@@ -85,8 +85,7 @@ export function MovieHeroActions({
   return (
     <>
       <div className="space-y-6 pt-2">
-        {/* MOBILE ONLY: Swipable Buttons Carousel */}
-        <div className="flex snap-x scrollbar-none items-center gap-2 overflow-x-auto scroll-smooth pb-1 lg:hidden">
+        <div className="-mx-gutter flex snap-x scroll-px-gutter scrollbar-none items-center gap-2 overflow-x-auto scroll-smooth px-gutter py-1 lg:hidden">
           {/* Watchlist Button */}
           <Button
             size="sm"

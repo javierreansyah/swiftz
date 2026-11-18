@@ -2,7 +2,6 @@ import { toHeroMovie } from "@/features/home/hero-payload";
 import { getPopularMovies } from "@/features/movies/api/server";
 import { FeaturedHero } from "@/features/home/components/featured-hero";
 import { PopularMoviesShelf } from "@/features/home/components/popular-movies-shelf";
-import { GenresCard } from "@/features/movies/genres/genres-card";
 import { HomeSecondarySections } from "@/features/home/components/home-secondary-sections";
 import { pageMetadata, siteUrl } from "@/lib/seo";
 import { StructuredData } from "@/components/common/structured-data";
@@ -45,11 +44,6 @@ export default async function HomePage() {
 
       <div className="relative z-1">
         <HomeSecondarySections />
-      </div>
-
-      {/* 7. Explore by Genres */}
-      <div className="relative z-1">
-        <GenresCard />
       </div>
     </main>
   );
